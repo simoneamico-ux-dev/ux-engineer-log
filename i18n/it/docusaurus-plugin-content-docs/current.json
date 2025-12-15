@@ -1,0 +1,210 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Certifications": {
+    "message": "Certifications",
+    "description": "The label for category 'Certifications' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Survey Form": {
+    "message": "Survey Form",
+    "description": "The label for category 'Survey Form' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Tribute Page": {
+    "message": "Tribute Page",
+    "description": "The label for category 'Tribute Page' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Technical Documentation Page": {
+    "message": "Technical Documentation Page",
+    "description": "The label for category 'Technical Documentation Page' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Product Landing Page": {
+    "message": "Product Landing Page",
+    "description": "The label for category 'Product Landing Page' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Personal Portfolio": {
+    "message": "Personal Portfolio",
+    "description": "The label for category 'Personal Portfolio' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Palindrome Checker": {
+    "message": "Palindrome Checker",
+    "description": "The label for category 'Palindrome Checker' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Roman Numeral Converter": {
+    "message": "Roman Numeral Converter",
+    "description": "The label for category 'Roman Numeral Converter' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Telephone Number Validator": {
+    "message": "Telephone Number Validator",
+    "description": "The label for category 'Telephone Number Validator' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Cash Register": {
+    "message": "Cash Register",
+    "description": "The label for category 'Cash Register' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.RPG Creature Search App": {
+    "message": "RPG Creature Search App",
+    "description": "The label for category 'RPG Creature Search App' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Showcase": {
+    "message": "Showcase",
+    "description": "The label for category 'Showcase' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.City Skyline": {
+    "message": "City Skyline",
+    "description": "The label for category 'City Skyline' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Statistics Calculator": {
+    "message": "Statistics Calculator",
+    "description": "The label for category 'Statistics Calculator' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Spreadsheet": {
+    "message": "Spreadsheet",
+    "description": "The label for category 'Spreadsheet' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Learning-Path": {
+    "message": "Learning-Path",
+    "description": "The label for category 'Learning-Path' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.HTML-CSS": {
+    "message": "HTML-CSS",
+    "description": "The label for category 'HTML-CSS' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Cat Photo App": {
+    "message": "Cat Photo App",
+    "description": "The label for category 'Cat Photo App' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Cafe Menu": {
+    "message": "Cafe Menu",
+    "description": "The label for category 'Cafe Menu' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Colored Markers": {
+    "message": "Colored Markers",
+    "description": "The label for category 'Colored Markers' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Registration Form": {
+    "message": "Registration Form",
+    "description": "The label for category 'Registration Form' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Rothko Painting": {
+    "message": "Rothko Painting",
+    "description": "The label for category 'Rothko Painting' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.CSS Flexbox Photo Gallery": {
+    "message": "CSS Flexbox Photo Gallery",
+    "description": "The label for category 'CSS Flexbox Photo Gallery' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Nutrition Label": {
+    "message": "Nutrition Label",
+    "description": "The label for category 'Nutrition Label' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Accessibility Quiz": {
+    "message": "Accessibility Quiz",
+    "description": "The label for category 'Accessibility Quiz' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Balance Sheet": {
+    "message": "Balance Sheet",
+    "description": "The label for category 'Balance Sheet' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Cat Painting": {
+    "message": "Cat Painting",
+    "description": "The label for category 'Cat Painting' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Piano": {
+    "message": "Piano",
+    "description": "The label for category 'Piano' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Magazine": {
+    "message": "Magazine",
+    "description": "The label for category 'Magazine' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Ferris Wheel": {
+    "message": "Ferris Wheel",
+    "description": "The label for category 'Ferris Wheel' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Penguin": {
+    "message": "Penguin",
+    "description": "The label for category 'Penguin' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.JS-Algorithms": {
+    "message": "JS-Algorithms",
+    "description": "The label for category 'JS-Algorithms' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Pyramid Generator": {
+    "message": "Pyramid Generator",
+    "description": "The label for category 'Pyramid Generator' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Gradebook App": {
+    "message": "Gradebook App",
+    "description": "The label for category 'Gradebook App' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Role Playing Game": {
+    "message": "Role Playing Game",
+    "description": "The label for category 'Role Playing Game' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Random Background Color Changer": {
+    "message": "Random Background Color Changer",
+    "description": "The label for category 'Random Background Color Changer' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Calorie Counter": {
+    "message": "Calorie Counter",
+    "description": "The label for category 'Calorie Counter' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Rock, Paper, Scissors Game": {
+    "message": "Rock, Paper, Scissors Game",
+    "description": "The label for category 'Rock, Paper, Scissors Game' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Music Player": {
+    "message": "Music Player",
+    "description": "The label for category 'Music Player' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Date Formatter": {
+    "message": "Date Formatter",
+    "description": "The label for category 'Date Formatter' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Football Team Cards": {
+    "message": "Football Team Cards",
+    "description": "The label for category 'Football Team Cards' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Todo App": {
+    "message": "Todo App",
+    "description": "The label for category 'Todo App' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Decimal to Binary Converter": {
+    "message": "Decimal to Binary Converter",
+    "description": "The label for category 'Decimal to Binary Converter' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Spam Filter": {
+    "message": "Spam Filter",
+    "description": "The label for category 'Spam Filter' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Number Sorter": {
+    "message": "Number Sorter",
+    "description": "The label for category 'Number Sorter' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Shopping Cart": {
+    "message": "Shopping Cart",
+    "description": "The label for category 'Shopping Cart' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Platformer Game": {
+    "message": "Platformer Game",
+    "description": "The label for category 'Platformer Game' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Dice Game": {
+    "message": "Dice Game",
+    "description": "The label for category 'Dice Game' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.fCC News Authors Page": {
+    "message": "fCC News Authors Page",
+    "description": "The label for category 'fCC News Authors Page' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.fCC Forum Leaderboard": {
+    "message": "fCC Forum Leaderboard",
+    "description": "The label for category 'fCC Forum Leaderboard' in sidebar 'tutorialSidebar'"
+  },
+  "sidebar.tutorialSidebar.category.Vademecum": {
+    "message": "Vademecum",
+    "description": "The label for category 'Vademecum' in sidebar 'tutorialSidebar'"
+  }
+}

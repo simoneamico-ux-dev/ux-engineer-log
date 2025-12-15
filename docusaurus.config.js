@@ -35,9 +35,18 @@ const config = {
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
-  i18n: {
+i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'it'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+      },
+      it: {
+        label: 'Italiano',
+        htmlLang: 'it-IT', // Aggiungi questo per sicurezza
+      },
+    },
   },
 
   presets: [
@@ -101,6 +110,10 @@ const config = {
             label: 'GitHub',
             position: 'right',
           },
+          {
+            type: 'localeDropdown',
+            position: 'right',
+          },
         ],
       },
       footer: {
@@ -110,8 +123,8 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Certifications',
+                to: '/docs/Certifications/survey-form',
               },
             ],
           },
