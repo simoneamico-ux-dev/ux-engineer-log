@@ -1,0 +1,845 @@
+---
+sidebar_position: 8
+sidebar_label: 'Date Formatter'
+title: 'Date Formatter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Date Formatter
+
+<img width="100%" alt="Day, Month, Year Screenshot" src="https://github.com/user-attachments/assets/37dd6261-0dfb-41b4-b807-89ef88355c7a" /> 
+<img width="100%" alt="Year, Month, Day Screenshot" src="https://github.com/user-attachments/assets/65177172-7315-4303-bfbe-9c8c2bee0fa7" />
+<img width="100%" alt="Month, Day, Year, Hours, Minutes Screenshot" src="https://github.com/user-attachments/assets/6163888a-db9d-4978-b332-3ae1142d63c2" />
+
+### The Project
+Interactive date formatter developed with JavaScript Date Object, allowing users to view the current date in different formats through a dropdown selector. A short but content-rich project.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn the Date Object by Building a Date Formatter</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <div class="title-container">
+        <h1 class="title">Today's Date</h1>
+
+        <svg
+          class="date-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.0"
+          width="512.000000pt"
+          height="512.000000pt"
+          viewBox="0 0 512.000000 512.000000"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <g
+            transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+            fill="#fff"
+            stroke="none"
+          >
+            <path
+              d="M1145 4777 c-71 -24 -120 -54 -164 -102 -59 -64 -83 -124 -89 -216 l-4 -77 -147 -3 c-142 -4 -149 -5 -213 -37 -81 -40 -149 -111 -177 -188 -21 -54 -21 -64 -21 -1789 0 -1725 0 -1735 21 -1789 28 -77 96 -148 177 -188 l67 -33 1950 0 1950 0 67 33 c74 36 133 96 170 170 l23 47 0 1760 0 1760 -23 47 c-37 74 -96 134 -169 170 -63 31 -71 32 -213 36 l-148 4 -4 77 c-8 133 -82 242 -200 297 -54 25 -75 29 -148 29 -94 -1 -151 -20 -220 -75 -75 -59 -130 -181 -130 -287 l0 -43 -954 0 -954 0 -7 74 c-12 137 -89 251 -201 303 -66 30 -179 39 -239 20z m209 -164 c23 -16 52 -49 66 -73 l25 -45 0 -365 0 -365 -28 -47 c-30 -52 -88 -92 -149 -103 -54 -10 -137 17 -175 57 -65 69 -64 60 -61 471 l3 373 27 41 c17 26 45 50 80 68 71 35 151 31 212 -12z m2594 11 c41 -20 59 -37 82 -78 l30 -51 0 -360 c0 -329 -2 -364 -19 -401 -36 -79 -137 -133 -222 -119 -57 10 -125 58 -151 107 -23 42 -23 50 -26 388 -3 377 -1 403 51 465 62 76 162 95 255 49z m537 -2717 l0 -1239 -24 -19 c-23 -19 -67 -19 -1916 -19 -1849 0 -1893 0 -1916 19 l-24 19 -3 1241 -2 1241 1942 -2 1943 -3 0 -1238z"
+            />
+            <path
+              d="M1112 2493 l3 -158 318 -3 317 -2 0 160 0 160 -320 0 -321 0 3 -157z"
+            />
+            <path
+              d="M2230 2490 l0 -160 315 0 315 0 0 160 0 160 -315 0 -315 0 0 -160z"
+            />
+            <path
+              d="M3342 2493 l3 -158 310 0 310 0 3 158 3 157 -316 0 -316 0 3 -157z"
+            />
+            <path
+              d="M1110 1855 l0 -155 320 0 320 0 0 155 0 155 -320 0 -320 0 0 -155z"
+            />
+            <path
+              d="M2230 1855 l0 -155 315 0 315 0 0 155 0 155 -315 0 -315 0 0 -155z"
+            />
+            <path
+              d="M3340 1855 l0 -155 315 0 315 0 0 155 0 155 -315 0 -315 0 0 -155z"
+            />
+            <path
+              d="M1117 1383 c-4 -3 -7 -78 -7 -165 l0 -158 320 0 320 0 0 165 0 165 -313 0 c-173 0 -317 -3 -320 -7z"
+            />
+            <path
+              d="M2230 1225 l0 -165 315 0 315 0 0 165 0 165 -315 0 -315 0 0 -165z"
+            />
+            <path
+              d="M3347 1383 c-4 -3 -7 -78 -7 -165 l0 -158 315 0 315 0 -2 163 -3 162 -306 3 c-168 1 -308 -1 -312 -5z"
+            />
+          </g>
+        </svg>
+      </div>
+      <div class="divider"></div>
+
+      <div class="dropdown-container">
+        <select name="date-options" id="date-options">
+          <option value="dd-mm-yyyy">Day, Month, Year</option>
+          <option value="yyyy-mm-dd">Year, Month, Day</option>
+          <option value="mm-dd-yyyy-h-mm">
+            Month, Day, Year, Hours, Minutes
+          </option>
+        </select>
+        <div class="select-icon">
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="35"
+            viewBox="0 0 24 24"
+          >
+            <rect x="0" fill="none" width="24" height="24" />
+
+            <g>
+              <path d="M7 10l5 5 5-5" />
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <p id="current-date"></p>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+:root {
+--dark-grey: #0a0a23;
+--white: #ffffff;
+--yellow: #f1be32;
+}
+
+body {
+color: var(--white);
+background-color: var(--dark-grey);
+}
+
+.title-container {
+margin: 10px 0;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+
+.title {
+font-size: 2.5rem;
+}
+
+.date-svg {
+width: 30px;
+height: 30px;
+}
+
+.divider {
+margin: auto;
+width: 150px;
+height: 10px;
+background-color: var(--yellow);
+}
+
+.dropdown-container {
+width: 50%;
+margin: 40px auto;
+position: relative;
+}
+
+select {
+display: block;
+margin: 20px auto 0;
+width: 100%;
+height: 50px;
+font-size: 100%;
+font-weight: bold;
+cursor: pointer;
+background-color: var(--white);
+border: none;
+color: var(--dark-grey);
+appearance: none;
+padding: 10px;
+padding-right: 38px;
+-webkit-appearance: none;
+-moz-appearance: none;
+transition: color 0.3s ease, background-color 0.3s ease,
+    border-bottom-color 0.3s ease;
+}
+
+.select-icon {
+position: absolute;
+top: 4px;
+right: 4px;
+width: 30px;
+height: 36px;
+pointer-events: none;
+padding-left: 5px;
+transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.select-icon svg.icon {
+transition: fill 0.3s ease;
+fill: var(--dark-grey);
+}
+
+#current-date {
+font-size: 2rem;
+text-align: center;
+}
+
+@media (max-width: 375px) {
+.title {
+    font-size: 2rem;
+}
+
+.dropdown-container {
+    width: 80%;
+}
+
+.date-svg {
+    display: none;
+}
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const currentDateParagraph = document.getElementById("current-date");
+const dateOptionsSelectElement = document.getElementById("date-options");
+
+const date = new Date();
+const day = date.getDate();
+const month = date.getMonth() + 1;
+const year = date.getFullYear();
+const hours = date.getHours();
+const minutes = date.getMinutes();
+
+const formattedDate = `${day}-${month}-${year}`;
+currentDateParagraph.textContent = formattedDate;
+
+dateOptionsSelectElement.addEventListener("change", () => {
+
+switch (dateOptionsSelectElement.value) {
+    case "yyyy-mm-dd":
+    currentDateParagraph.textContent = formattedDate
+        .split("-")
+        .reverse()
+        .join("-");
+    break;
+    case "mm-dd-yyyy-h-mm":
+    currentDateParagraph.textContent = `${month}-${day}-${year} ${hours} Hours ${minutes} Minutes`;
+    break;
+    default:
+    currentDateParagraph.textContent = formattedDate;
+}
+});
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the world of JavaScript dates!" -->
+<!-- It's like opening an interactive digital calendar! 📅 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our date formatter -->
+<!-- lang="en" = English, the universal language of the web! 🌐 -->
+
+  <head>
+    <!-- 🧠 THE CONTROL CENTER: Where we set up everything for our calendar -->
+    <!-- It's like preparing the tools to work with dates -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for symbols and special characters! -->
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 🌐 BROWSER COMPATIBILITY: "Use the latest rendering engine version" -->
+    <!-- IE=edge tells Internet Explorer to use the most recent mode -->
+    <!-- It's like saying "use the most modern technology you have!" -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE DESIGN: Adapts to every screen! -->
+    <!-- width=device-width = width equal to the device -->
+    <!-- initial-scale=1.0 = initial zoom at 100% -->
+    
+    <title>Learn the Date Object by Building a Date Formatter</title>
+    <!-- 📑 TAB TITLE: Descriptive and educational -->
+    
+    <style>
+      /* 🎨 ===== STYLESHEETS: The Beauty of the Date Formatter ===== */
+      
+      /* 🔄 ===== UNIVERSAL RESET ===== */
+      *,
+      *::before,
+      *::after {
+        /* 🌟 UNIVERSAL SELECTOR + PSEUDO-ELEMENTS */
+        /* * = all elements */
+        /* ::before and ::after = content generated with CSS */
+        
+        margin: 0;
+        padding: 0;
+        /* 🚫 RESET SPACES: Let's start from zero! */
+        
+        box-sizing: border-box;
+        /* 📦 BORDER-BOX: Includes padding and borders in dimensions */
+        /* It's the golden rule of modern CSS! */
+      }
+      
+      /* 🎨 ===== CSS VARIABLES ===== */
+      :root {
+        /* 🌳 ROOT ELEMENT: Here we define global variables */
+        
+        --dark-grey: #0a0a23;
+        /* ⚫ DARK GREY: Main background */
+        /* #0a0a23 = almost black with a hint of blue */
+        
+        --white: #ffffff;
+        /* ⚪ PURE WHITE: For texts and elements */
+        
+        --yellow: #f1be32;
+        /* 🟡 GOLDEN YELLOW: Accent color */
+        /* #f1be32 = warm and welcoming yellow */
+      }
+      
+      /* 🎨 ===== BODY STYLES ===== */
+      body {
+        color: var(--white);
+        /* 🔤 WHITE TEXT: Using the CSS variable */
+        
+        background-color: var(--dark-grey);
+        /* 🌑 DARK BACKGROUND: For elegant contrast */
+        /* var() = calls the CSS variable */
+      }
+      
+      /* 📰 ===== TITLE CONTAINER ===== */
+      .title-container {
+        margin: 10px 0;
+        /* 📏 MARGINS: 10px top and bottom, 0 on sides */
+        
+        display: flex;
+        /* 🎯 FLEXBOX: Modern and flexible layout */
+        
+        align-items: center;
+        /* 📐 VERTICAL ALIGNMENT: Center elements */
+        
+        justify-content: center;
+        /* ⚖️ HORIZONTAL ALIGNMENT: Everything centered */
+        
+        gap: 8px;
+        /* 🌉 SPACE BETWEEN ELEMENTS: 8px between title and icon */
+        /* gap is cleaner than margins! */
+      }
+      
+      /* 📰 ===== MAIN TITLE ===== */
+      .title {
+        font-size: 2.5rem;
+        /* 📏 SIZE: 2.5rem = 40px (if base is 16px) */
+        /* rem = relative to root element */
+      }
+      
+      /* 📅 ===== CALENDAR SVG ICON ===== */
+      .date-svg {
+        width: 30px;
+        height: 30px;
+        /* 📐 DIMENSIONS: 30x30 pixel square icon */
+      }
+      
+      /* ➖ ===== DECORATIVE DIVIDER ===== */
+      .divider {
+        margin: auto;
+        /* ⚖️ CENTERING: margin auto centers horizontally */
+        
+        width: 150px;
+        height: 10px;
+        /* 📏 DIMENSIONS: 150x10 horizontal line */
+        
+        background-color: var(--yellow);
+        /* 🟡 YELLOW COLOR: Using the variable */
+        /* It's like a decorative underline */
+      }
+      
+      /* 📋 ===== DROPDOWN CONTAINER ===== */
+      .dropdown-container {
+        width: 50%;
+        /* 📏 WIDTH: Half of the screen */
+        
+        margin: 40px auto;
+        /* 📐 MARGINS: 40px top/bottom, auto = centered */
+        
+        position: relative;
+        /* 📍 RELATIVE POSITION: For the absolute icon */
+        /* Children with position: absolute will position relative to this */
+      }
+      
+      /* 🔽 ===== SELECT DROPDOWN ===== */
+      select {
+        display: block;
+        /* 📦 DISPLAY BLOCK: Occupies all available width */
+        
+        margin: 20px auto 0;
+        /* 📐 MARGINS: 20px top, auto on sides, 0 bottom */
+        
+        width: 100%;
+        height: 50px;
+        /* 📏 DIMENSIONS: As wide as the container, 50px high */
+        
+        font-size: 100%;
+        /* 🔤 FONT SIZE: 100% = inherits from parent */
+        
+        font-weight: bold;
+        /* 💪 BOLD: Highlighted text */
+        
+        cursor: pointer;
+        /* 👆 CURSOR: Hand to indicate it's clickable */
+        
+        background-color: var(--white);
+        /* ⚪ WHITE BACKGROUND: For contrast */
+        
+        border: none;
+        /* 🚫 NO BORDER: Clean style */
+        
+        color: var(--dark-grey);
+        /* ⚫ DARK TEXT: On white background */
+        
+        appearance: none;
+        /* 🚫 REMOVE DEFAULT STYLE: From the browser */
+        
+        padding: 10px;
+        padding-right: 38px;
+        /* 🏠 PADDING: 10px general, 38px on right for the icon */
+        
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        /* 🌐 VENDOR PREFIXES: For Safari and Firefox */
+        /* Remove the default select style */
+        
+        transition: color 0.3s ease, background-color 0.3s ease,
+          border-bottom-color 0.3s ease;
+        /* 🎭 MULTIPLE TRANSITIONS: 0.3 seconds for each property */
+        /* ease = naturally accelerates and decelerates */
+        /* Prepares for hover effects (even if not defined here) */
+      }
+      
+      /* 🔽 ===== SELECT ICON ===== */
+      .select-icon {
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: Relative to dropdown-container */
+        
+        top: 4px;
+        right: 4px;
+        /* 📍 POSITION: Top-right corner with small offset */
+        
+        width: 30px;
+        height: 36px;
+        /* 📐 DIMENSIONS: To contain the SVG */
+        
+        pointer-events: none;
+        /* 🚫 NO MOUSE EVENTS: The icon is not clickable */
+        /* Clicks pass through to the select below */
+        
+        padding-left: 5px;
+        /* ⬅️ PADDING: Small space on the left */
+        
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        /* 🎭 TRANSITIONS: For potential hover effects */
+      }
+      
+      /* 🔽 ===== SVG INSIDE THE ICON ===== */
+      .select-icon svg.icon {
+        transition: fill 0.3s ease;
+        /* 🎨 COLOR TRANSITION: For SVG fill */
+        
+        fill: var(--dark-grey);
+        /* 🖌️ SVG COLOR: Dark grey like the text */
+        /* fill is the property for coloring SVGs */
+      }
+      
+      /* 📅 ===== CURRENT DATE PARAGRAPH ===== */
+      #current-date {
+        font-size: 2rem;
+        /* 📏 LARGE: 2rem = 32px (if base 16px) */
+        
+        text-align: center;
+        /* ⚖️ CENTERED: Date at center of screen */
+      }
+      
+      /* 📱 ===== MOBILE MEDIA QUERY ===== */
+      @media (max-width: 375px) {
+        /* 📱 SMALL SCREENS: Up to 375px (iPhone SE size) */
+        
+        .title {
+          font-size: 2rem;
+          /* 📏 SMALLER TITLE: From 2.5rem to 2rem */
+        }
+      
+        .dropdown-container {
+          width: 80%;
+          /* 📏 WIDER: From 50% to 80% on mobile */
+          /* More space to touch */
+        }
+      
+        .date-svg {
+          display: none;
+          /* 🚫 HIDES THE ICON: Saves space on mobile */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🎨 ===== THE BODY OF THE PAGE ===== -->
+    
+    <main>
+      <!-- 📄 MAIN CONTENT: Semantically correct -->
+      
+      <div class="title-container">
+        <!-- 📰 TITLE CONTAINER: Flexbox for alignment -->
+        
+        <h1 class="title">Today's Date</h1>
+        <!-- 📅 TITLE: "Today's Date" -->
+
+        <svg
+          class="date-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.0"
+          width="512.000000pt"
+          height="512.000000pt"
+          viewBox="0 0 512.000000 512.000000"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <!-- 📅 CALENDAR SVG: Scalable vector icon -->
+          <!-- xmlns = XML namespace for SVG -->
+          <!-- width/height with "pt" = typographic points -->
+          <!-- viewBox = internal SVG coordinate system -->
+          <!-- preserveAspectRatio = maintains proportions when resizing -->
+          
+          <g
+            transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+            fill="#fff"
+            stroke="none"
+          >
+            <!-- 🎨 SVG GROUP: Contains all paths -->
+            <!-- transform = complex transformations -->
+            <!-- translate = moves the origin -->
+            <!-- scale = resizes by 10% -->
+            <!-- fill="#fff" = white fill -->
+            <!-- stroke="none" = no outline -->
+            
+            <path
+              d="M1145 4777 c-71 -24 -120 -54 -164 -102 -59 -64 -83 -124 -89 -216 l-4 -77 -147 -3 c-142 -4 -149 -5 -213 -37 -81 -40 -149 -111 -177 -188 -21 -54 -21 -64 -21 -1789 0 -1725 0 -1735 21 -1789 28 -77 96 -148 177 -188 l67 -33 1950 0 1950 0 67 33 c74 36 133 96 170 170 l23 47 0 1760 0 1760 -23 47 c-37 74 -96 134 -169 170 -63 31 -71 32 -213 36 l-148 4 -4 77 c-8 133 -82 242 -200 297 -54 25 -75 29 -148 29 -94 -1 -151 -20 -220 -75 -75 -59 -130 -181 -130 -287 l0 -43 -954 0 -954 0 -7 74 c-12 137 -89 251 -201 303 -66 30 -179 39 -239 20z m209 -164 c23 -16 52 -49 66 -73 l25 -45 0 -365 0 -365 -28 -47 c-30 -52 -88 -92 -149 -103 -54 -10 -137 17 -175 57 -65 69 -64 60 -61 471 l3 373 27 41 c17 26 45 50 80 68 71 35 151 31 212 -12z m2594 11 c41 -20 59 -37 82 -78 l30 -51 0 -360 c0 -329 -2 -364 -19 -401 -36 -79 -137 -133 -222 -119 -57 10 -125 58 -151 107 -23 42 -23 50 -26 388 -3 377 -1 403 51 465 62 76 162 95 255 49z m537 -2717 l0 -1239 -24 -19 c-23 -19 -67 -19 -1916 -19 -1849 0 -1893 0 -1916 19 l-24 19 -3 1241 -2 1241 1942 -2 1943 -3 0 -1238z"
+            />
+            <!-- 🖼️ MAIN PATH: Draws the calendar -->
+            <!-- d = path data, complex SVG commands -->
+            <!-- Numbers = coordinates and Bezier curves -->
+            <!-- It's like instructions for drawing with a pen -->
+            
+            <!-- 📅 OTHER PATHS: Calendar lines -->
+            <path
+              d="M1112 2493 l3 -158 318 -3 317 -2 0 160 0 160 -320 0 -321 0 3 -157z"
+            />
+            <path
+              d="M2230 2490 l0 -160 315 0 315 0 0 160 0 160 -315 0 -315 0 0 -160z"
+            />
+            <path
+              d="M3342 2493 l3 -158 310 0 310 0 3 158 3 157 -316 0 -316 0 3 -157z"
+            />
+            <path
+              d="M1110 1855 l0 -155 320 0 320 0 0 155 0 155 -320 0 -320 0 0 -155z"
+            />
+            <path
+              d="M2230 1855 l0 -155 315 0 315 0 0 155 0 155 -315 0 -315 0 0 -155z"
+            />
+            <path
+              d="M3340 1855 l0 -155 315 0 315 0 0 155 0 155 -315 0 -315 0 0 -155z"
+            />
+            <path
+              d="M1117 1383 c-4 -3 -7 -78 -7 -165 l0 -158 320 0 320 0 0 165 0 165 -313 0 c-173 0 -317 -3 -320 -7z"
+            />
+            <path
+              d="M2230 1225 l0 -165 315 0 315 0 0 165 0 165 -315 0 -315 0 0 -165z"
+            />
+            <path
+              d="M3347 1383 c-4 -3 -7 -78 -7 -165 l0 -158 315 0 315 0 -2 163 -3 162 -306 3 c-168 1 -308 -1 -312 -5z"
+            />
+          </g>
+        </svg>
+      </div>
+      
+      <div class="divider"></div>
+      <!-- ➖ DIVIDER: The decorative yellow line -->
+
+      <div class="dropdown-container">
+        <!-- 📋 SELECT CONTAINER: Position relative for the icon -->
+        
+        <select name="date-options" id="date-options">
+          <!-- 🔽 SELECT: Dropdown menu for date formats -->
+          <!-- name = for form submission (even if there's no form) -->
+          <!-- id = to select it with JavaScript -->
+          
+          <option value="dd-mm-yyyy">Day, Month, Year</option>
+          <!-- 📅 OPTION 1: Day-month-year format -->
+          <!-- value = the value JavaScript will read -->
+          
+          <option value="yyyy-mm-dd">Year, Month, Day</option>
+          <!-- 📅 OPTION 2: ISO format (year-month-day) -->
+          
+          <option value="mm-dd-yyyy-h-mm">
+            Month, Day, Year, Hours, Minutes
+          </option>
+          <!-- 📅 OPTION 3: Format with time -->
+        </select>
+        
+        <div class="select-icon">
+          <!-- 🔽 ICON CONTAINER: Position absolute -->
+          
+          <svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="25"
+            height="35"
+            viewBox="0 0 24 24"
+          >
+            <!-- 🔽 ARROW SVG: Custom dropdown icon -->
+            
+            <rect x="0" fill="none" width="24" height="24" />
+            <!-- 🔲 INVISIBLE RECTANGLE: Defines the clickable area -->
+            <!-- fill="none" = transparent -->
+
+            <g>
+              <!-- 🎨 GROUP: Contains the arrow path -->
+              
+              <path d="M7 10l5 5 5-5" />
+              <!-- 🔽 ARROW: Draws an upside-down V -->
+              <!-- M7 10 = move to coordinates 7,10 -->
+              <!-- l5 5 = relative line of 5,5 -->
+              <!-- l5 -5 = relative line of 5,-5 -->
+              <!-- Result: arrow pointing down -->
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <p id="current-date"></p>
+      <!-- 📅 DATE PARAGRAPH: Empty, filled by JavaScript -->
+      <!-- id to easily select it -->
+    </main>
+
+    <script>
+      // 🎯 ===== JAVASCRIPT: The Interactive Magic! =====
+      
+      // 📋 ===== DOM ELEMENTS SELECTION =====
+      const currentDateParagraph = document.getElementById("current-date");
+      // 📅 DATE PARAGRAPH: Where we'll show the formatted date
+      // document.getElementById() = finds element by ID
+      // const = variable that won't change reference
+      
+      const dateOptionsSelectElement = document.getElementById("date-options");
+      // 🔽 SELECT ELEMENT: The dropdown menu
+      // We'll use it to listen for changes
+      
+      // 📅 ===== DATE OBJECT AND VALUE EXTRACTION =====
+      const date = new Date();
+      // 📅 NEW DATE: Creates Date object with current date/time
+      // new Date() without parameters = current moment
+      // It's like taking a snapshot of the calendar and clock
+      
+      const day = date.getDate();
+      // 📅 DAY: Extracts the day of month (1-31)
+      // getDate() NOT getDay() which gives day of week!
+      
+      const month = date.getMonth() + 1;
+      // 📅 MONTH: getMonth() returns 0-11, so +1
+      // January = 0, December = 11
+      // It's one of JavaScript's quirks!
+      
+      const year = date.getFullYear();
+      // 📅 YEAR: Full 4-digit year (e.g.: 2024)
+      // getFullYear() not getYear() which is deprecated
+      
+      const hours = date.getHours();
+      // 🕐 HOURS: 0-23 (24-hour format)
+      
+      const minutes = date.getMinutes();
+      // 🕐 MINUTES: 0-59
+      
+      // 📝 ===== INITIAL FORMATTING =====
+      const formattedDate = `${day}-${month}-${year}`;
+      // 📅 FORMATTED DATE: Uses template literal
+      // ${} = variable interpolation
+      // Backtick `` not quotes '' or ""
+      // Result: "25-12-2024" for example
+      
+      currentDateParagraph.textContent = formattedDate;
+      // 📝 SHOW THE DATE: Inserts into paragraph
+      // textContent = safe text (not HTML)
+      // It's the default "dd-mm-yyyy" format
+      
+      // 🎧 ===== EVENT LISTENER FOR CHANGES =====
+      dateOptionsSelectElement.addEventListener("change", () => {
+        // 🎧 LISTEN FOR CHANGES: When user selects an option
+        // "change" = event triggered when value changes
+        // () => {} = arrow function, modern syntax
+        
+        // 🔀 ===== SWITCH FOR DIFFERENT FORMATS =====
+        switch (dateOptionsSelectElement.value) {
+          // 🔀 SWITCH: Checks the selected value
+          // .value = the value of the selected option
+          
+          case "yyyy-mm-dd":
+            // 📅 CASE 1: Year-month-day format
+            
+            currentDateParagraph.textContent = formattedDate
+              .split("-")
+              .reverse()
+              .join("-");
+            // 🔄 STRING MANIPULATION:
+            // .split("-") = splits "25-12-2024" into ["25", "12", "2024"]
+            // .reverse() = reverses the array ["2024", "12", "25"]
+            // .join("-") = joins with "-" = "2024-12-25"
+            // It's like taking apart and reassembling the pieces!
+            
+            break;
+            // 🛑 BREAK: Exits the switch
+            
+          case "mm-dd-yyyy-h-mm":
+            // 📅 CASE 2: Format with time
+            
+            currentDateParagraph.textContent = `${month}-${day}-${year} ${hours} Hours ${minutes} Minutes`;
+            // 📝 COMPLEX FORMAT: Includes time
+            // Template literal to build the string
+            // Result: "12-25-2024 14 Hours 30 Minutes"
+            
+            break;
+            // 🛑 BREAK: Exits the switch
+            
+          default:
+            // 📅 DEFAULT: Any other case (including "dd-mm-yyyy")
+            
+            currentDateParagraph.textContent = formattedDate;
+            // 📝 ORIGINAL FORMAT: Day-month-year
+            // Reuses the already calculated variable
+        }
+        // End of switch
+      });
+      // End of event listener
+    </script>
+  </body>
+</html>
+
+<!-- 🎯 ===== DATE FORMATTER SUMMARY ===== -->
+<!-- 
+📅 APPLICATION ARCHITECTURE:
+│
+├── 🧠 HEAD (setup and styles)
+│   └── 🎨 CSS with:
+│       ├── 🎨 CSS variables for colors
+│       ├── 📐 Flexbox for layout
+│       ├── 🔽 Custom select
+│       ├── 📱 Media query for mobile
+│       └── 🎭 Prepared transitions
+│
+├── 📄 BODY (interface)
+│   └── 📅 Main
+│       ├── 📰 Title + calendar SVG
+│       ├── ➖ Decorative divider
+│       ├── 🔽 Format dropdown
+│       └── 📅 Paragraph for the date
+│
+└── 🎯 SCRIPT (logic)
+    ├── 📋 DOM elements selection
+    ├── 📅 Date object and extraction
+    ├── 📝 Initial formatting
+    └── 🎧 Event listener with switch
+
+🎨 TECHNIQUES USED:
+├── 📅 JavaScript Date Object
+├── 🔤 Template literals (`${}`)
+├── 🎧 Event listeners ("change")
+├── 🔀 Switch statement
+├── 🔄 Array methods (split, reverse, join)
+└── 📝 DOM manipulation (textContent)
+
+💡 KEY CONCEPTS:
+├── getMonth() returns 0-11 (not 1-12!)
+├── Template literals vs concatenation
+├── Arrow functions for event handlers
+├── String manipulation for reformatting
+└── Switch vs if/else for multiple cases
+
+It's like having a digital clock and calendar that speaks different languages! ⏰📅✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### A Fast but Rich Project
+
+This was a quick project with 27 steps, of which I spent half the time solving challenges and the other half deepening all the new concepts learned. Paradoxically, I learned many more concepts and real use cases this way, as well as anticipated concepts I would have learned in subsequent challenges.
+
+### The New Organizational Approach
+
+Therefore, I save all the extra material I found in a note in AppFlowy, with the title "Add vademecum". I've been doing this for quite some time now, but this time I tried to structure the deepened concepts in a more orderly way, ready to be "pasted" into the vademecum.<br />
+The other times I would create "raw" notes, not realizing that it would require more time and cause considerable mental clutter to organize them later: a real mountain of extra work. By structuring everything right away, step-by-step, my understanding is deeper from the start, because I already have a piece of the vademecum ready. It's a true form of mental organization.<br />
+The old method had the advantage of a "forced review," as I had to re-understand the concepts to organize them. Now, however, I prefer to fully assimilate them once and move on to the next topic, because, thanks to the freeCodeCamp method, I'll review them along the way, project after project.
+
+### What I Learned
+
+**Date Object Mastery:**
+- `new Date()` constructor for current date
+- `getDate()` for the day of the month (1-31)
+- `getMonth()` for the month (0-11, +1 for human format)
+- `getFullYear()` for the full year
+- `getHours()` and `getMinutes()` for time
+
+**Advanced Switch Statements:**
+- Switch with multiple cases for format selection
+- Break statements and default case handling
+- Dynamic content switching based on user input
+
+**Event Handling:**
+- `addEventListener("change")` for dropdown selections
+- Dynamic content updates based on user choices
+- Real-time format switching without page reload
+
+**Template Literals & Formatting:**
+- String interpolation for date formatting
+- Custom format creation (`mm-dd-yyyy-h-mm`)
+- Conditional text insertion ("Hours", "Minutes")
+
+### Reflection
+
+I'm ready for the next project!
+
+***
+
+**Next Project**: Learn Modern JavaScript Methods by Building Football Team Cards

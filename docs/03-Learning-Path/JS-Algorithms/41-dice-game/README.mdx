@@ -1,0 +1,1639 @@
+---
+sidebar_position: 16
+sidebar_label: 'Dice Game'
+title: 'Dice Game'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Dice Game
+
+<img width="100%" alt="Dice game main interface showing game rules and 5 dice" src="https://github.com/user-attachments/assets/bcd9d61b-26eb-430e-aa25-0343060dcba2" />
+<img width="100%" alt="Game interface showing a small straight pattern with score of 30 points" src="https://github.com/user-attachments/assets/1b41c462-c3d7-4a61-85bb-994a4d2a0217" />
+<img width="100%" alt="Score history panel showing total score of 30 from one small straight worth 30 points" src="https://github.com/user-attachments/assets/82cf4a0c-8b3d-4588-8a12-6acc9319de0c" />
+<img width="100%" alt="Game over screen displaying final score" src="https://github.com/user-attachments/assets/496e8e87-4a19-4d0c-b21f-57070f7174c2" />
+
+### The Project
+
+Dice Game developed with vanilla JavaScript, focused on algorithmic logic, state management, and DOM manipulation. A project that requires putting together multiple concepts previously learned in a context with minimal structured guidance.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Dice Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Advanced Dice Game</h1>
+    <button class="btn" id="rules-btn" type="button">Show rules</button>
+    <div class="rules-container">
+      <h2>Rules</h2>
+      <ul>
+        <li>There are total of six rounds</li>
+        <li>You can only roll the dice three times per round</li>
+        <li>To start the game, roll the dice</li>
+        <li>
+          Then, choose from one of the selected scores or roll the dice again
+        </li>
+        <li>
+          If you choose a selected score, then you will move to the next round
+        </li>
+        <li>
+          If you decline to choose a selected score, then you can roll the
+          dice again two more times
+        </li>
+      </ul>
+      <h2 class="points">Points</h2>
+      <ul>
+        <li>Three of a kind: Sum of all five dice</li>
+        <li>Four of a kind: Sum of all five dice</li>
+        <li>Full house: Three of a kind and a pair - 25 points</li>
+        <li>
+          Small straight: Four of the dice have consecutive values - 30 points
+        </li>
+        <li>
+          Large straight: All five dice have consecutive values - 40 points
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <form id="game">
+      <div id="dice">
+        <div class="die"></div>
+        <div class="die"></div>
+        <div class="die"></div>
+        <div class="die"></div>
+        <div class="die"></div>
+      </div>
+
+      <p class="rounds-text">
+        <strong>Rolls:</strong> <span id="current-round-rolls">0</span> |
+        <strong>Round:</strong> <span id="current-round">1</span>
+      </p>
+
+      <div id="score-options">
+        <div>
+          <input type="radio" name="score-options" id="three-of-a-kind" value="three-of-a-kind" disabled />
+          <label for="three-of-a-kind">Three of a kind<span></span></label>
+        </div>
+        <div>
+          <input type="radio" name="score-options" id="four-of-a-kind" value="four-of-a-kind" disabled />
+          <label for="four-of-a-kind">Four of a kind<span></span></label>
+        </div>
+        <div>
+          <input type="radio" name="score-options" id="full-house" value="full-house" disabled />
+          <label for="full-house">Full house<span></span></label>
+        </div>
+        <div>
+          <input type="radio" name="score-options" id="small-straight" value="small-straight" disabled />
+          <label for="small-straight">Small straight<span></span></label>
+        </div>
+        <div>
+          <input type="radio" name="score-options" id="large-straight" value="large-straight" disabled />
+          <label for="large-straight">Large straight<span></span></label>
+        </div>
+
+        <div>
+          <input type="radio" name="score-options" id="none" value="none" disabled />
+          <label for="none">None of the above<span></span></label>
+        </div>
+      </div>
+
+      <button class="btn" id="keep-score-btn" type="button">
+        Keep the above selected score
+      </button>
+      <button class="btn" id="roll-dice-btn" type="button">
+        Roll the dice
+      </button>
+    </form>
+
+    <div id="scores">
+      <h3>Score history (Total score: <span id="total-score">0</span>)</h3>
+      <ol id="score-history"></ol>
+    </div>
+  </main>
+  <script src="./script.js"></script>
+</body>
+
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --dark-grey: #1b1b32;
+  --light-grey: #f5f6f7;
+  --black: #000;
+  --white: #fff;
+  --grey: #3b3b4f;
+  --golden-yellow: #fecc4c;
+  --yellow: #ffcc4c;
+  --gold: #feac32;
+  --orange: #ffac33;
+  --dark-orange: #f89808;
+}
+
+body {
+  background-color: var(--dark-grey);
+}
+
+header {
+  color: var(--light-grey);
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 25px 0;
+}
+
+.rules-container {
+  display: none;
+  background-color: var(--light-grey);
+  color: var(--black);
+  width: 50%;
+  margin: 20px auto;
+  height: 300px;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
+
+.rules-container ul {
+  list-style-type: none;
+}
+
+.points {
+  margin-top: 15px;
+}
+
+main {
+  background-color: var(--light-grey);
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 1rem;
+  margin: auto;
+  justify-items: center;
+  width: 50%;
+  border-radius: 10px;
+}
+
+#dice {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.die {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  margin-right: 15px;
+  border: 4px solid var(--black);
+  padding: 10px;
+}
+
+.rounds-text {
+  text-align: center;
+}
+
+input[type="radio"]:disabled + label {
+  color: var(--grey);
+}
+
+#score-history {
+  margin-top: 15px;
+  text-align: center;
+  list-style-position: inside;
+}
+
+.btn {
+  cursor: pointer;
+  width: 200px;
+  margin: 10px 0 10px 0.5rem;
+  color: var(--black);
+  background-color: var(--gold);
+  background-image: linear-gradient(var(--golden-yellow), var(--orange));
+  border-color: var(--gold);
+  border-width: 3px;
+}
+
+.btn:hover:enabled {
+  background-image: linear-gradient(var(--yellow), var(--dark-orange));
+}
+
+@media (max-width: 992px) {
+  main {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .btn {
+    width: 120px;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const listOfAllDice = document.querySelectorAll(".die");
+const scoreInputs = document.querySelectorAll("#score-options input");
+const scoreSpans = document.querySelectorAll("#score-options span");
+const roundElement = document.getElementById("current-round");
+const rollsElement = document.getElementById("current-round-rolls");
+const totalScoreElement = document.getElementById("total-score");
+const scoreHistory = document.getElementById("score-history");
+const rollDiceBtn = document.getElementById("roll-dice-btn");
+const keepScoreBtn = document.getElementById("keep-score-btn");
+const rulesContainer = document.querySelector(".rules-container");
+const rulesBtn = document.getElementById("rules-btn");
+
+let diceValuesArr = [];
+let isModalShowing = false;
+let score = 0;
+let round = 1;
+let rolls = 0;
+
+const rollDice = () => {
+  diceValuesArr = [];
+
+  for (let i = 0; i < 5; i++) {
+    const randomDice = Math.floor(Math.random() * 6) + 1;
+    diceValuesArr.push(randomDice);
+  };
+
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
+};
+
+const updateStats = () => {
+  rollsElement.textContent = rolls;
+  roundElement.textContent = round;
+};
+
+const updateRadioOption = (index, score) => {
+  scoreInputs[index].disabled = false;
+  scoreInputs[index].value = score;
+  scoreSpans[index].textContent = `, score = ${score}`;
+};
+
+const updateScore = (selectedValue, achieved) => {
+  score += parseInt(selectedValue);
+  totalScoreElement.textContent = score;
+
+  scoreHistory.innerHTML += `<li>${achieved} : ${selectedValue}</li>`;
+};
+
+
+const getHighestDuplicates = (arr) => {
+  const counts = {};
+
+  for (const num of arr) {
+    if (counts[num]) {
+      counts[num]++;
+    } else {
+      counts[num] = 1;
+    }
+  }
+
+  let highestCount = 0;
+
+  for (const num of arr) {
+    const count = counts[num];
+    if (count >= 3 && count > highestCount) {
+      highestCount = count;
+    }
+    if (count >= 4 && count > highestCount) {
+      highestCount = count;
+    }
+  }
+
+  const sumOfAllDice = arr.reduce((a, b) => a + b, 0);
+
+  if (highestCount >= 4) {
+    updateRadioOption(1, sumOfAllDice);
+  }
+
+  if (highestCount >= 3) {
+    updateRadioOption(0, sumOfAllDice);
+  }
+
+};
+
+const detectFullHouse = (arr) => {
+  const counts = {};
+
+  for (const num of arr) {
+    counts[num] = counts[num] ? counts[num] + 1 : 1;
+  }
+
+  const hasThreeOfAKind = Object.values(counts).includes(3);
+  const hasPair = Object.values(counts).includes(2);
+
+  if (hasThreeOfAKind && hasPair) {
+    updateRadioOption(2, 25);
+  }
+
+};
+
+const checkForStraights = (arr) => {
+  const sortedNumbersArr = arr.sort((a, b) => a - b);
+  const uniqueNumbersArr = [...new Set(sortedNumbersArr)];
+  const uniqueNumbersStr = uniqueNumbersArr.join("");
+
+  const smallStraightsArr = ["1234", "2345", "3456"];
+  const largeStraightsArr = ["12345", "23456"];
+
+  if (smallStraightsArr.some(straight => uniqueNumbersStr.includes(straight))) {
+    updateRadioOption(3, 30);
+  }
+
+  if (largeStraightsArr.includes(uniqueNumbersStr)) {
+    updateRadioOption(4, 40);
+  }
+
+};
+
+const resetRadioOptions = () => {
+  scoreInputs.forEach((input) => {
+    input.disabled = true;
+    input.checked = false;
+  });
+
+  scoreSpans.forEach((span) => {
+    span.textContent = "";
+  });
+};
+
+const resetGame = () => {
+  diceValuesArr = [0, 0, 0, 0, 0];
+  score = 0;
+  round = 1;
+  rolls = 0;
+
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
+
+  totalScoreElement.textContent = score;
+  scoreHistory.innerHTML = "";
+
+  rollsElement.textContent = rolls;
+  roundElement.textContent = round;
+
+  resetRadioOptions();
+};
+
+rollDiceBtn.addEventListener("click", () => {
+  if (rolls === 3) {
+    alert("You have made three rolls this round. Please select a score.");
+  } else {
+    rolls++;
+    resetRadioOptions();
+    rollDice();
+    updateStats();
+    getHighestDuplicates(diceValuesArr);
+    detectFullHouse(diceValuesArr);
+    checkForStraights(diceValuesArr);
+    updateRadioOption(5, 0);
+  }
+});
+
+rulesBtn.addEventListener("click", () => {
+  isModalShowing = !isModalShowing;
+
+  if (isModalShowing) {
+    rulesBtn.textContent = "Hide rules";
+    rulesContainer.style.display = "block";
+  } else {
+    rulesBtn.textContent = "Show rules";
+    rulesContainer.style.display = "none";
+  }
+});
+
+keepScoreBtn.addEventListener("click", () => {
+  let selectedValue;
+  let achieved;
+
+  for (const radioButton of scoreInputs) {
+    if (radioButton.checked) {
+      selectedValue = radioButton.value;
+      achieved = radioButton.id;
+      break;
+    }
+  }
+
+  if (selectedValue) {
+    rolls = 0;
+    round++;
+    updateStats();
+    resetRadioOptions();
+    updateScore(selectedValue, achieved);
+    if (round > 6) {
+      setTimeout(() => {
+        alert(`Game Over! Your total score is ${score}`);
+        resetGame();
+      }, 500);
+    }
+  } else {
+    alert("Please select an option or roll the dice");
+  }
+});
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the dice game universe!" -->
+<!-- It's like announcing the rules of play before a board game night! 🎲 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our interactive dice game application -->
+<!-- lang="en" = English, making our game internationally accessible -->
+
+<head>
+  <!-- 🧠 THE COMMAND CENTER: Where we set up the game environment -->
+  <!-- Just like preparing a table before playing a board game - laying out the rules and pieces! -->
+  
+  <meta charset="utf-8" />
+  <!-- 📝 CHARACTER ENCODING: UTF-8 ensures symbols like dice (⚀ ⚁ ⚂ ⚃ ⚄ ⚅) display correctly -->
+  <!-- Without proper encoding, special characters could appear broken -->
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 📱 RESPONSIVE DESIGN: "Play this game on any device!" -->
+  <!-- Just like how board games can be played on tables of any size -->
+  
+  <title>Advanced Dice Game</title>
+  <!-- 📑 GAME TITLE: Appears in the browser tab -->
+  <!-- Simple and descriptive - tells players exactly what they're getting! -->
+  
+  <style>
+    /* 🎨 ===== CSS STYLES: The Game's Visual Design ===== */
+    
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      /* 📦 BOX-SIZING: Includes padding and border in element sizes */
+      /* Prevents layout issues - like making sure game pieces fit in their spaces! */
+      
+      margin: 0;
+      padding: 0;
+      /* 🧹 RESET: Clears default browser spacing */
+      /* Like clearing a table before setting up a board game */
+    }
+    
+    :root {
+      /* 🎨 COLOR PALETTE: Game theme colors defined as variables */
+      /* Like choosing a specific color theme for your game pieces */
+      
+      --dark-grey: #1b1b32;
+      /* ⚫ DARK BACKGROUND: Deep blue-grey for the game table */
+      
+      --light-grey: #f5f6f7;
+      /* ⚪ LIGHT GREY: For game areas and cards */
+      
+      --black: #000;
+      /* ⚫ TRUE BLACK: For text and borders */
+      
+      --white: #fff;
+      /* ⚪ TRUE WHITE: For contrast elements */
+      
+      --grey: #3b3b4f;
+      /* 🔘 MEDIUM GREY: For disabled elements */
+      
+      --golden-yellow: #fecc4c;
+      /* 🟡 GOLDEN YELLOW: Bright accent color */
+      
+      --yellow: #ffcc4c;
+      /* 💛 YELLOW: Slightly different for gradients */
+      
+      --gold: #feac32;
+      /* 🥇 GOLD: Primary button color */
+      
+      --orange: #ffac33;
+      /* 🟠 ORANGE: For button gradients */
+      
+      --dark-orange: #f89808;
+      /* 🔶 DARK ORANGE: For button hover effects */
+    }
+    
+    body {
+      background-color: var(--dark-grey);
+      /* 🎮 GAME BACKGROUND: Dark theme like a casino table */
+      /* Creates an immersive gaming environment */
+    }
+    
+    header {
+      color: var(--light-grey);
+      /* ⚪ HEADER TEXT: Light text on dark background */
+      /* High contrast makes the title and rules easy to read */
+      
+      text-align: center;
+      /* ⚖️ CENTERED TEXT: Title and rules aligned in the middle */
+      /* Like having the game title centered on the box cover */
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      /* 📏 LARGE TITLE: 2.5 times the base font size */
+      /* Makes the game title stand out, like on a box cover */
+      
+      margin: 25px 0;
+      /* 🌬️ VERTICAL SPACING: Room above and below the title */
+      /* Creates breathing space between elements */
+    }
+    
+    .rules-container {
+      display: none;
+      /* 🙈 INITIALLY HIDDEN: Rules start hidden */
+      /* Like keeping the rulebook closed until needed */
+      
+      background-color: var(--light-grey);
+      /* 📄 LIGHT BACKGROUND: Rules on light paper for readability */
+      
+      color: var(--black);
+      /* 🖋️ BLACK TEXT: Maximum contrast for easy reading */
+      
+      width: 50%;
+      /* 📏 CONTAINER WIDTH: Takes half the available width */
+      /* Keeps rules readable without overwhelming the screen */
+      
+      margin: 20px auto;
+      /* ⚖️ CENTERED: Equal margins on left and right */
+      /* Positions the rules box in the middle of the screen */
+      
+      height: 300px;
+      /* 📏 FIXED HEIGHT: Scroll for additional content */
+      /* Like a compact rulebook with multiple pages */
+      
+      border-radius: 10px;
+      /* 🔄 ROUNDED CORNERS: Softer visual appearance */
+      /* Makes the rules card look like a game card */
+      
+      overflow-y: scroll;
+      /* 📜 VERTICAL SCROLL: For rules that don't fit */
+      /* Allows all content to be accessible without taking up too much space */
+    }
+    
+    .rules-container ul {
+      list-style-type: none;
+      /* 🚫 NO BULLETS: Clean list appearance */
+      /* Makes rules look more like a professional rulebook */
+    }
+    
+    .points {
+      margin-top: 15px;
+      /* ⬆️ TOP SPACING: Gap before the points section */
+      /* Visually separates sections of the rules */
+    }
+    
+    main {
+      background-color: var(--light-grey);
+      /* 📄 LIGHT BACKGROUND: Game area stands out against dark background */
+      /* Like the felt on a game table */
+      
+      padding: 20px;
+      /* 🌬️ INNER SPACING: Room around all content */
+      /* Prevents elements from touching the edges */
+      
+      display: grid;
+      /* 📦 GRID LAYOUT: Organizes game elements in columns */
+      /* Like organizing different areas on a board game */
+      
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      /* 📏 RESPONSIVE GRID: Columns adapt to available space */
+      /* Columns must be at least 500px wide, then share available space */
+      /* On smaller screens, they stack vertically */
+      
+      gap: 1rem;
+      /* 📏 GRID GAP: Space between grid items */
+      /* Separates the game sections clearly */
+      
+      margin: auto;
+      /* ⚖️ CENTERED: Horizontally centered on the page */
+      
+      justify-items: center;
+      /* ⚖️ CENTERED ITEMS: Grid items centered in their cells */
+      
+      width: 50%;
+      /* 📏 CONTAINER WIDTH: Takes half the available width */
+      /* Keeps the game area from being too wide on large screens */
+      
+      border-radius: 10px;
+      /* 🔄 ROUNDED CORNERS: Softer visual appearance */
+      /* Makes the game board look like a card or game mat */
+    }
+    
+    #dice {
+      display: flex;
+      /* 📦 FLEX LAYOUT: Arranges dice in a row */
+      /* Like lining up dice after a roll */
+      
+      justify-content: space-around;
+      /* ⚖️ SPREAD EVENLY: Space distributed between dice */
+      /* Gives each die room to breathe */
+      
+      margin-bottom: 15px;
+      /* ⬇️ BOTTOM SPACE: Gap after the dice */
+      /* Separates dice from the options below */
+    }
+    
+    .die {
+      width: 40px;
+      /* 📏 DIE WIDTH: Square dimensions */
+      
+      height: 40px;
+      /* 📏 DIE HEIGHT: Square dimensions */
+      
+      text-align: center;
+      /* ⚖️ CENTERED TEXT: Die value centered */
+      /* Like real dice having centered pips */
+      
+      margin-right: 15px;
+      /* ➡️ RIGHT SPACE: Gap between dice */
+      /* Prevents dice from touching each other */
+      
+      border: 4px solid var(--black);
+      /* 🔲 THICK BORDER: Bold outline for each die */
+      /* Makes dice stand out like physical game pieces */
+      
+      padding: 10px;
+      /* 🌬️ INNER SPACING: Room around the die value */
+      /* Ensures the number doesn't touch the borders */
+    }
+    
+    .rounds-text {
+      text-align: center;
+      /* ⚖️ CENTERED TEXT: Rounds counter centered */
+      /* Emphasizes this important game information */
+    }
+    
+    input[type="radio"]:disabled + label {
+      color: var(--grey);
+      /* 🔘 DISABLED COLOR: Grey text for unavailable options */
+      /* Visual feedback that these options can't be selected */
+    }
+    
+    #score-history {
+      margin-top: 15px;
+      /* ⬆️ TOP SPACE: Gap before score history */
+      /* Separates history from other elements */
+      
+      text-align: center;
+      /* ⚖️ CENTERED TEXT: History centered on page */
+      
+      list-style-position: inside;
+      /* 📌 BULLET POSITION: Bullets inside the container */
+      /* Keeps list aligned properly even when centered */
+    }
+    
+    .btn {
+      cursor: pointer;
+      /* 👆 HAND CURSOR: Shows buttons are clickable */
+      /* Interactive feedback for users */
+      
+      width: 200px;
+      /* 📏 BUTTON WIDTH: Fixed width for consistency */
+      
+      margin: 10px 0 10px 0.5rem;
+      /* 🌬️ BUTTON MARGINS: Space around all buttons */
+      /* Prevents buttons from touching each other */
+      
+      color: var(--black);
+      /* ⚫ TEXT COLOR: Dark text for contrast */
+      
+      background-color: var(--gold);
+      /* 🟡 BASE COLOR: Fallback if gradient fails */
+      
+      background-image: linear-gradient(var(--golden-yellow), var(--orange));
+      /* 🌅 GRADIENT FILL: From yellow to orange */
+      /* Creates a 3D button effect */
+      
+      border-color: var(--gold);
+      /* 🔲 BORDER COLOR: Matches the button theme */
+      
+      border-width: 3px;
+      /* 📏 BORDER THICKNESS: Substantial border */
+      /* Makes buttons look more tactile and clickable */
+    }
+    
+    .btn:hover:enabled {
+      background-image: linear-gradient(var(--yellow), var(--dark-orange));
+      /* 🔆 HOVER STATE: Brighter gradient when mouse hovers */
+      /* Only applies when button is enabled (:enabled) */
+      /* Visual feedback for interactive elements */
+    }
+    
+    @media (max-width: 992px) {
+      /* 📱 MEDIUM SCREENS: Tablets and smaller laptops */
+      
+      main {
+        width: 100%;
+        /* 📏 FULL WIDTH: Game area expands to full width */
+        /* Makes better use of available space on smaller screens */
+      }
+    }
+    
+    @media (max-width: 500px) {
+      /* 📱 SMALL SCREENS: Mobile phones */
+      
+      .btn {
+        width: 120px;
+        /* 📏 NARROWER BUTTONS: Fit better on small screens */
+        /* Ensures buttons don't overflow on tiny devices */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🎲 ===== THE BODY: Where Our Dice Game Lives! ===== -->
+  
+  <header>
+    <!-- 📜 GAME HEADER: Title and rules section -->
+    
+    <h1>Advanced Dice Game</h1>
+    <!-- 🎮 GAME TITLE: Bold, clear announcement of what we're playing -->
+    
+    <button class="btn" id="rules-btn" type="button">Show rules</button>
+    <!-- 📜 RULES TOGGLE: Button to show/hide game rules -->
+    <!-- Keeps the interface clean until rules are needed -->
+    
+    <div class="rules-container">
+      <!-- 📜 RULES SECTION: Initially hidden, shows when requested -->
+      
+      <h2>Rules</h2>
+      <!-- 📝 SECTION TITLE: Clearly labels this as the rules -->
+      
+      <ul>
+        <!-- 📋 RULES LIST: Structured game instructions -->
+        
+        <li>There are total of six rounds</li>
+        <!-- 🔢 GAME LENGTH: Sets clear expectations for game duration -->
+        
+        <li>You can only roll the dice three times per round</li>
+        <!-- 🎲 ROLL LIMIT: Critical rule limiting player actions -->
+        
+        <li>To start the game, roll the dice</li>
+        <!-- 🎬 STARTING ACTION: First step for the player -->
+        
+        <li>
+          Then, choose from one of the selected scores or roll the dice again
+        </li>
+        <!-- 🔄 PLAYER CHOICE: Explains decision point after rolling -->
+        
+        <li>
+          If you choose a selected score, then you will move to the next round
+        </li>
+        <!-- ➡️ ROUND ADVANCEMENT: How to progress in the game -->
+        
+        <li>
+          If you decline to choose a selected score, then you can roll the
+          dice again two more times
+        </li>
+        <!-- 🔄 REROLL OPTION: Alternative to score selection -->
+      </ul>
+      
+      <h2 class="points">Points</h2>
+      <!-- 💯 SCORING SECTION: Explains how points are earned -->
+      
+      <ul>
+        <!-- 📋 SCORING LIST: Different ways to score points -->
+        
+        <li>Three of a kind: Sum of all five dice</li>
+        <!-- 🎲 SCORING OPTION: Three matching dice scores the sum -->
+        
+        <li>Four of a kind: Sum of all five dice</li>
+        <!-- 🎲 SCORING OPTION: Four matching dice scores the sum -->
+        
+        <li>Full house: Three of a kind and a pair - 25 points</li>
+        <!-- 🎲 SCORING OPTION: Three matching + a pair scores fixed 25 -->
+        
+        <li>
+          Small straight: Four of the dice have consecutive values - 30 points
+        </li>
+        <!-- 🎲 SCORING OPTION: Four consecutive dice scores fixed 30 -->
+        
+        <li>
+          Large straight: All five dice have consecutive values - 40 points
+        </li>
+        <!-- 🎲 SCORING OPTION: Five consecutive dice scores fixed 40 -->
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- 🎮 MAIN GAME AREA: Where gameplay happens -->
+    
+    <form id="game">
+      <!-- 📋 GAME FORM: Container for interactive elements -->
+      <!-- Forms provide structure for user inputs -->
+      
+      <div id="dice">
+        <!-- 🎲 DICE CONTAINER: Holds the five dice -->
+        
+        <div class="die"></div>
+        <div class="die"></div>
+        <div class="die"></div>
+        <div class="die"></div>
+        <div class="die"></div>
+        <!-- 🎲 INDIVIDUAL DICE: Five dice for the game -->
+        <!-- Each will display a random number when rolled -->
+      </div>
+
+      <p class="rounds-text">
+        <!-- 📊 GAME STATUS: Shows current round and rolls -->
+        
+        <strong>Rolls:</strong> <span id="current-round-rolls">0</span> |
+        <!-- 🎲 ROLL COUNTER: Tracks rolls within current round -->
+        <!-- Limited to 3 per round as per the rules -->
+        
+        <strong>Round:</strong> <span id="current-round">1</span>
+        <!-- 🔢 ROUND COUNTER: Tracks which of the six rounds we're on -->
+      </p>
+
+      <div id="score-options">
+        <!-- 📊 SCORING OPTIONS: Available combinations to select -->
+        
+        <div>
+          <input type="radio" name="score-options" id="three-of-a-kind" value="three-of-a-kind" disabled />
+          <label for="three-of-a-kind">Three of a kind<span></span></label>
+          <!-- 🎲 SCORE OPTION: Three matching dice -->
+          <!-- Initially disabled until this combination is rolled -->
+          <!-- <span> will show the calculated score -->
+        </div>
+        
+        <div>
+          <input type="radio" name="score-options" id="four-of-a-kind" value="four-of-a-kind" disabled />
+          <label for="four-of-a-kind">Four of a kind<span></span></label>
+          <!-- 🎲 SCORE OPTION: Four matching dice -->
+        </div>
+        
+        <div>
+          <input type="radio" name="score-options" id="full-house" value="full-house" disabled />
+          <label for="full-house">Full house<span></span></label>
+          <!-- 🎲 SCORE OPTION: Three matching + pair -->
+        </div>
+        
+        <div>
+          <input type="radio" name="score-options" id="small-straight" value="small-straight" disabled />
+          <label for="small-straight">Small straight<span></span></label>
+          <!-- 🎲 SCORE OPTION: Four consecutive values -->
+        </div>
+        
+        <div>
+          <input type="radio" name="score-options" id="large-straight" value="large-straight" disabled />
+          <label for="large-straight">Large straight<span></span></label>
+          <!-- 🎲 SCORE OPTION: Five consecutive values -->
+        </div>
+
+        <div>
+          <input type="radio" name="score-options" id="none" value="none" disabled />
+          <label for="none">None of the above<span></span></label>
+          <!-- 🎲 FALLBACK OPTION: When no scoring combination is achieved -->
+          <!-- Allows player to move on with zero points -->
+        </div>
+      </div>
+
+      <button class="btn" id="keep-score-btn" type="button">
+        Keep the above selected score
+      </button>
+      <!-- ✅ CONFIRM BUTTON: Locks in the selected score option -->
+      <!-- Advances to next round after selection -->
+      
+      <button class="btn" id="roll-dice-btn" type="button">
+        Roll the dice
+      </button>
+      <!-- 🎲 ROLL BUTTON: Generates new random dice values -->
+      <!-- Limited to 3 uses per round -->
+    </form>
+
+    <div id="scores">
+      <!-- 📊 SCORE SECTION: Tracks game progress -->
+      
+      <h3>Score history (Total score: <span id="total-score">0</span>)</h3>
+      <!-- 📊 RUNNING TOTAL: Shows accumulated points -->
+      
+      <ol id="score-history"></ol>
+      <!-- 📋 SCORE LIST: Ordered list of all scoring selections -->
+      <!-- Each round's score will be added here -->
+    </div>
+  </main>
+  <script>
+    /* 🎲 ===== JAVASCRIPT: The Brain of Our Dice Game! ===== */
+    
+    /* 🔍 ===== DOM ELEMENT SELECTION: Connecting to Our Interface ===== */
+    
+    const listOfAllDice = document.querySelectorAll(".die");
+    /* 🎲 DICE ELEMENTS: All five dice on the screen */
+    /* querySelectorAll gets MULTIPLE elements matching ".die" */
+    /* Returns a NodeList (similar to an array) with all 5 dice */
+    
+    const scoreInputs = document.querySelectorAll("#score-options input");
+    /* 📋 SCORING RADIOS: All radio button inputs */
+    /* #score-options input = finds all inputs inside the score-options div */
+    /* Descendant selector pattern - finds any inputs at any level within that container */
+    
+    const scoreSpans = document.querySelectorAll("#score-options span");
+    /* 📊 SCORE DISPLAYS: The empty spans that will show point values */
+    /* These will be filled with text like ", score = 25" when options become available */
+    
+    const roundElement = document.getElementById("current-round");
+    /* 🔢 ROUND DISPLAY: Shows which round we're on (1-6) */
+    /* getElementById gets a SINGLE element with the exact ID */
+    
+    const rollsElement = document.getElementById("current-round-rolls");
+    /* 🎲 ROLLS DISPLAY: Shows how many rolls in the current round (0-3) */
+    
+    const totalScoreElement = document.getElementById("total-score");
+    /* 📊 TOTAL SCORE: Shows the accumulated score so far */
+    
+    const scoreHistory = document.getElementById("score-history");
+    /* 📋 SCORE HISTORY: The list that will show all scores earned */
+    /* This starts empty and gets filled as the game progresses */
+    
+    const rollDiceBtn = document.getElementById("roll-dice-btn");
+    /* 🎲 ROLL BUTTON: Reference to the "Roll the dice" button */
+    
+    const keepScoreBtn = document.getElementById("keep-score-btn");
+    /* ✅ KEEP BUTTON: Reference to the "Keep score" button */
+    
+    const rulesContainer = document.querySelector(".rules-container");
+    /* 📜 RULES BOX: The expandable rules section */
+    
+    const rulesBtn = document.getElementById("rules-btn");
+    /* 📜 RULES TOGGLE: Button to show/hide rules */
+    
+    /* 🏁 ===== GAME STATE VARIABLES: Tracking Game Progress ===== */
+    
+    let diceValuesArr = []; 
+    /* 🎲 DICE VALUES: Array storing current dice numbers */
+    /* Starts empty, will hold five numbers (1-6) after rolling */
+    
+    let isModalShowing = false; 
+    /* 📜 RULES VISIBILITY: Tracks if rules are shown/hidden */
+    /* false = hidden (default), true = visible */
+    
+    let score = 0; 
+    /* 📊 TOTAL SCORE: Player's accumulated points */
+    /* Increases when player keeps a score option */
+    
+    let round = 1; 
+    /* 🔢 CURRENT ROUND: Which round we're on (1-6) */
+    /* Game ends after round 6 */
+    
+    let rolls = 0; 
+    /* 🎲 ROLL COUNT: Number of times dice rolled this round */
+    /* Limited to 3 per round */
+    
+    /* 🎲 ===== DICE ROLLING FUNCTION: Generate Random Values ===== */
+    
+    const rollDice = () => {
+      /* 🎲 DICE ROLLER: Creates random values for all five dice */
+      
+      diceValuesArr = [];
+      /* 🧹 CLEAR ARRAY: Reset the dice values */
+      /* Ensures we don't keep adding to the previous values */
+    
+      for (let i = 0; i < 5; i++) {
+        /* 🔄 LOOP 5 TIMES: Once for each die */
+        
+        const randomDice = Math.floor(Math.random() * 6) + 1;
+        /* 🎲 RANDOM NUMBER: Generates 1-6 like a real die */
+        /* Math.random() = 0 to less than 1 (e.g., 0.74382) */
+        /* * 6 = 0 to less than 6 (e.g., 4.46292) */
+        /* Math.floor() = rounds down to integer (e.g., 4) */
+        /* + 1 = gives us 1-6 instead of 0-5 (e.g., 5) */
+        
+        diceValuesArr.push(randomDice);
+        /* ➕ ADD TO ARRAY: Store each die value */
+        /* After loop completes, array will have 5 values */
+      };
+    
+      listOfAllDice.forEach((dice, index) => {
+        /* 🔄 UPDATE DISPLAY: Set each die's visible number */
+        /* forEach loops through all dice elements */
+        /* index = 0,1,2,3,4 (position in the NodeList) */
+        
+        dice.textContent = diceValuesArr[index];
+        /* 📝 SET NUMBER: Updates the text inside each die */
+        /* textContent is safer than innerHTML for simple text */
+      });
+    };
+    
+    /* 📊 ===== STATS UPDATE FUNCTION: Refresh Display ===== */
+    
+    const updateStats = () => {
+      /* 📊 UPDATE DISPLAY: Refresh the round and roll counters */
+      
+      rollsElement.textContent = rolls;
+      /* 🎲 UPDATE ROLLS: Show current roll count (0-3) */
+      
+      roundElement.textContent = round;
+      /* 🔢 UPDATE ROUND: Show current round number (1-6) */
+    };
+    
+    /* 🔘 ===== RADIO OPTION UPDATE FUNCTION: Enable Scoring Options ===== */
+    
+    const updateRadioOption = (index, score) => {
+      /* 🔘 ENABLE OPTION: Activate a scoring option when available */
+      /* index = which radio button to update (0-5) */
+      /* score = the point value to assign (e.g., 25) */
+      
+      scoreInputs[index].disabled = false;
+      /* ✅ ENABLE INPUT: Make the radio button clickable */
+      /* Changes from greyed-out to normal appearance */
+      
+      scoreInputs[index].value = score;
+      /* 💯 SET VALUE: Store the point value in the input */
+      /* This value will be used when keeping score */
+      
+      scoreSpans[index].textContent = `, score = ${score}`;
+      /* 📝 SHOW SCORE: Display the points next to the option */
+      /* Uses template literal to create ", score = 25" */
+    };
+    
+    /* 📊 ===== SCORE UPDATE FUNCTION: Record Selected Score ===== */
+    
+    const updateScore = (selectedValue, achieved) => {
+      /* 📊 RECORD SCORE: Add the selected points to total */
+      /* selectedValue = point value as string (e.g., "25") */
+      /* achieved = which combination was earned (e.g., "full-house") */
+      
+      score += parseInt(selectedValue);
+      /* ➕ ADD TO TOTAL: Convert string to number and add */
+      /* parseInt() ensures proper addition (not string concatenation) */
+      
+      totalScoreElement.textContent = score;
+      /* 📝 UPDATE DISPLAY: Show new total score */
+    
+      scoreHistory.innerHTML += `<li>${achieved} : ${selectedValue}</li>`;
+      /* ➕ ADD HISTORY ITEM: Record this score in the list */
+      /* Template literal creates an HTML list item */
+      /* Displays something like "full-house : 25" */
+    };
+    
+    /* 🔍 ===== DUPLICATES DETECTION FUNCTION: Find Matching Dice ===== */
+    
+    const getHighestDuplicates = (arr) => {
+      /* 🔍 FIND MATCHES: Detect three or four of a kind */
+      /* arr = array of dice values to analyze */
+      
+      const counts = {};
+      /* 📊 COUNTER OBJECT: Tracks occurrences of each number */
+      /* Will contain entries like { 3: 2, 5: 3 } meaning "two 3's, three 5's" */
+    
+      for (const num of arr) {
+        /* 🔄 COUNT OCCURRENCES: Loop through each die value */
+        
+        if (counts[num]) {
+          counts[num]++; 
+          /* ➕ INCREMENT: This number was seen before */
+        } else {
+          counts[num] = 1; 
+          /* 🆕 NEW ENTRY: First time seeing this number */
+        }
+      }
+    
+      let highestCount = 0;
+      /* 🔢 TRACK MAXIMUM: Highest number of matching dice */
+      /* Starts at 0, will be updated to 3, 4, or 5 if matches found */
+    
+      for (const num of arr) {
+        /* 🔄 FIND MAX: Loop through dice again */
+        
+        const count = counts[num];
+        /* 🔢 GET COUNT: How many times this value appears */
+        
+        if (count >= 3 && count > highestCount) {
+          highestCount = count;
+          /* ⬆️ UPDATE MAX: New highest count found */
+          /* Only if at least 3 matching dice (minimum for scoring) */
+        }
+        if (count >= 4 && count > highestCount) {
+          highestCount = count;
+          /* ⬆️ UPDATE MAX: Four matching dice */
+          /* This condition seems redundant with the above, but keeps code clear */
+        }
+      }
+    
+      const sumOfAllDice = arr.reduce((a, b) => a + b, 0);
+      /* ➕ CALCULATE SUM: Total of all dice values */
+      /* reduce() is like rolling all dice into a single sum */
+      /* (a, b) => a + b means "add each element to the accumulator" */
+      /* 0 is the starting value for the accumulator */
+    
+      if (highestCount >= 4) {
+        updateRadioOption(1, sumOfAllDice);
+        /* ✅ ENABLE FOUR KIND: If 4+ matching dice found */
+        /* Uses index 1 (second option in the list) */
+      }
+    
+      if (highestCount >= 3) {
+        updateRadioOption(0, sumOfAllDice);
+        /* ✅ ENABLE THREE KIND: If 3+ matching dice found */
+        /* Uses index 0 (first option in the list) */
+        /* Note: If 4+ found, both options are enabled */
+      }
+    };
+    
+    /* 🏠 ===== FULL HOUSE DETECTION FUNCTION: Find 3 + 2 Pattern ===== */
+    
+    const detectFullHouse = (arr) => {
+      /* 🏠 FIND FULL HOUSE: Detect three of a kind plus a pair */
+      /* arr = array of dice values to analyze */
+      
+      const counts = {};
+      /* 📊 COUNTER OBJECT: Same counting technique as before */
+    
+      for (const num of arr) {
+        /* 🔄 COUNT OCCURRENCES: Using ternary operator */
+        
+        counts[num] = counts[num] ? counts[num] + 1 : 1;
+        /* ➕ COUNT: If exists, increment; otherwise initialize to 1 */
+        /* Compact version of the if/else from previous function */
+      }
+    
+      const hasThreeOfAKind = Object.values(counts).includes(3);
+      /* 🔍 CHECK FOR THREE: Does any number appear exactly 3 times? */
+      /* Object.values(counts) gets just the counts: [2,3] */
+      /* .includes(3) checks if exactly 3 appears in that array */
+      
+      const hasPair = Object.values(counts).includes(2);
+      /* 🔍 CHECK FOR PAIR: Does any number appear exactly 2 times? */
+    
+      if (hasThreeOfAKind && hasPair) {
+        updateRadioOption(2, 25); 
+        /* ✅ ENABLE FULL HOUSE: If both conditions are true */
+        /* Uses index 2 (third option) with fixed score of 25 */
+      }
+    };
+    
+    /* 📈 ===== STRAIGHTS DETECTION FUNCTION: Find Sequential Dice ===== */
+    
+    const checkForStraights = (arr) => {
+      /* 📈 FIND STRAIGHTS: Detect consecutive dice values */
+      /* arr = array of dice values to analyze */
+      
+      const sortedNumbersArr = arr.sort((a, b) => a - b);
+      /* 📊 SORT NUMBERS: Arrange dice in ascending order */
+      /* (a, b) => a - b is a comparison function for numeric sort */
+      /* Transforms [3,1,5,4,2] to [1,2,3,4,5] */
+      
+      const uniqueNumbersArr = [...new Set(sortedNumbersArr)];
+      /* 🔄 REMOVE DUPLICATES: Keep only unique values */
+      /* new Set() creates collection with no duplicates */
+      /* [...Set] spreads it back into an array */
+      /* Transforms [1,2,2,3,4] to [1,2,3,4] */
+      
+      const uniqueNumbersStr = uniqueNumbersArr.join("");
+      /* 🔗 CREATE STRING: Join numbers without separators */
+      /* Makes pattern matching much easier */
+      /* Transforms [1,2,3,4] to "1234" */
+    
+      const smallStraightsArr = ["1234", "2345", "3456"]; 
+      /* 📋 SMALL STRAIGHT PATTERNS: Four consecutive numbers */
+      
+      const largeStraightsArr = ["12345", "23456"];      
+      /* 📋 LARGE STRAIGHT PATTERNS: Five consecutive numbers */
+    
+      if (smallStraightsArr.some(straight => uniqueNumbersStr.includes(straight))) {
+        updateRadioOption(3, 30); 
+        /* ✅ ENABLE SMALL STRAIGHT: If pattern found */
+        /* .some() checks if ANY pattern matches */
+        /* .includes() checks if the string contains the pattern */
+        /* Uses index 3 (fourth option) with fixed score of 30 */
+      }
+    
+      if (largeStraightsArr.includes(uniqueNumbersStr)) {
+        updateRadioOption(4, 40); 
+        /* ✅ ENABLE LARGE STRAIGHT: If exact pattern found */
+        /* Here we need EXACT match, not just containing the pattern */
+        /* Uses index 4 (fifth option) with fixed score of 40 */
+      }
+    };
+    
+    /* 🧹 ===== RESET RADIO OPTIONS FUNCTION: Clear Selections ===== */
+    
+    const resetRadioOptions = () => {
+      /* 🧹 RESET OPTIONS: Clear and disable all scoring options */
+      
+      scoreInputs.forEach((input) => {
+        /* 🔄 PROCESS EACH INPUT: Loop through all radio buttons */
+        
+        input.disabled = true;
+        /* 🔒 DISABLE: Make option unclickable */
+        /* Grey out the option until it becomes available */
+        
+        input.checked = false;
+        /* 🔘 UNCHECK: Remove any previous selection */
+      });
+    
+      scoreSpans.forEach((span) => {
+        /* 🔄 PROCESS EACH SPAN: Loop through all score displays */
+        
+        span.textContent = "";
+        /* 🧹 CLEAR TEXT: Remove previous scores */
+        /* Removes ", score = 25" text from previous roll */
+      });
+    };
+    
+    /* 🔄 ===== RESET GAME FUNCTION: Start Fresh ===== */
+    
+    const resetGame = () => {
+      /* 🔄 RESET GAME: Return everything to initial state */
+      /* Called after game completes (after 6 rounds) */
+      
+      diceValuesArr = [0, 0, 0, 0, 0];
+      /* 🧹 RESET DICE: Back to all zeros */
+      /* These will display until first roll */
+      
+      score = 0;
+      /* 🧹 RESET SCORE: Back to zero points */
+      
+      round = 1;
+      /* 🧹 RESET ROUND: Back to first round */
+      
+      rolls = 0;
+      /* 🧹 RESET ROLLS: Back to zero rolls */
+    
+      listOfAllDice.forEach((dice, index) => {
+        dice.textContent = diceValuesArr[index];
+        /* 🧹 RESET DICE DISPLAY: Show zeros on screen */
+      });
+    
+      totalScoreElement.textContent = score;
+      /* 🧹 RESET SCORE DISPLAY: Show zero points */
+      
+      scoreHistory.innerHTML = "";
+      /* 🧹 CLEAR HISTORY: Remove all previous scores */
+      /* innerHTML = "" replaces all content with nothing */
+    
+      rollsElement.textContent = rolls;
+      roundElement.textContent = round;
+      /* 🧹 RESET COUNTERS: Update displays to initial values */
+    
+      resetRadioOptions();
+      /* 🧹 RESET OPTIONS: Reuse existing function */
+      /* Follows DRY principle (Don't Repeat Yourself) */
+    };
+    
+    /* 🎲 ===== ROLL DICE BUTTON EVENT: Main Game Action ===== */
+    
+    rollDiceBtn.addEventListener("click", () => {
+      /* 🎲 ROLL BUTTON CLICK: Handle dice rolling action */
+      
+      if (rolls === 3) {
+        /* 🛑 CHECK LIMIT: Has player already rolled 3 times? */
+        
+        alert("You have made three rolls this round. Please select a score.");
+        /* ⚠️ ALERT USER: Show error message */
+        /* Prevents exceeding the roll limit per round */
+      } else {
+        /* ✅ PROCEED: Roll is allowed */
+        
+        rolls++; 
+        /* ⬆️ INCREMENT ROLLS: Count this roll */
+        
+        resetRadioOptions(); 
+        /* 🧹 RESET OPTIONS: Clear previous options */
+        
+        rollDice(); 
+        /* 🎲 ROLL DICE: Generate new random numbers */
+        
+        updateStats(); 
+        /* 📊 UPDATE DISPLAY: Show new roll count */
+        
+        getHighestDuplicates(diceValuesArr);
+        detectFullHouse(diceValuesArr);
+        checkForStraights(diceValuesArr);
+        /* 🔍 DETECT COMBINATIONS: Check for all possible scoring options */
+        
+        updateRadioOption(5, 0);
+        /* ✅ ENABLE "NONE" OPTION: Always allow skipping */
+        /* Index 5 = "None of the above" with 0 points */
+        /* This option is always available after rolling */
+      }
+    });
+    
+    /* 📜 ===== RULES BUTTON EVENT: Toggle Rules Display ===== */
+    
+    rulesBtn.addEventListener("click", () => {
+      /* 📜 RULES BUTTON CLICK: Show or hide the rules */
+      
+      isModalShowing = !isModalShowing;
+      /* 🔄 TOGGLE STATE: Flip between true/false */
+      /* ! (logical NOT) reverses the boolean value */
+    
+      if (isModalShowing) {
+        /* ✅ RULES SHOWING: Update UI for visible rules */
+        
+        rulesBtn.textContent = "Hide rules";
+        /* 📝 UPDATE BUTTON: Change text to reflect action */
+        
+        rulesContainer.style.display = "block";
+        /* 📝 SHOW RULES: Make rules container visible */
+      } else {
+        /* ❌ RULES HIDDEN: Update UI for hidden rules */
+        
+        rulesBtn.textContent = "Show rules";
+        /* 📝 UPDATE BUTTON: Change text to reflect action */
+        
+        rulesContainer.style.display = "none";
+        /* 📝 HIDE RULES: Make rules container invisible */
+      }
+    });
+    
+    /* 💾 ===== KEEP SCORE BUTTON EVENT: Save Selected Score ===== */
+    
+    keepScoreBtn.addEventListener("click", () => {
+      /* 💾 KEEP SCORE CLICK: Record selected points and advance */
+      
+      let selectedValue; 
+      /* 🔢 SELECTED POINTS: Will store chosen score value */
+      
+      let achieved;     
+      /* 📋 ACHIEVED COMBO: Will store the type of scoring */
+    
+      for (const radioButton of scoreInputs) {
+        /* 🔄 CHECK SELECTIONS: Loop through all radio buttons */
+        
+        if (radioButton.checked) {
+          /* ✅ FOUND SELECTION: This radio is checked */
+          
+          selectedValue = radioButton.value; 
+          /* 💾 STORE VALUE: Get the points value */
+          
+          achieved = radioButton.id;         
+          /* 💾 STORE TYPE: Get the combination name */
+          
+          break; 
+          /* 🛑 STOP SEARCHING: We found the selection */
+          /* break exits the loop early for efficiency */
+        }
+      }
+    
+      if (selectedValue) {
+        /* ✅ VALID SELECTION: User has chosen an option */
+        
+        rolls = 0;  
+        /* 🧹 RESET ROLLS: Start fresh for new round */
+        
+        round++;   
+        /* ⬆️ NEXT ROUND: Increment round counter */
+        
+        updateStats(); 
+        /* 📊 UPDATE DISPLAY: Show new round */
+        
+        resetRadioOptions(); 
+        /* 🧹 RESET OPTIONS: Clear for next round */
+        
+        updateScore(selectedValue, achieved); 
+        /* 📊 RECORD SCORE: Add to total and history */
+        
+        if (round > 6) {
+          /* 🏁 GAME OVER CHECK: Have all 6 rounds been played? */
+          
+          setTimeout(() => {
+            /* ⏱️ SLIGHT DELAY: Wait 500ms before showing alert */
+            /* This ensures UI updates are visible first */
+            
+            alert(`Game Over! Your total score is ${score}`);
+            /* 🏆 FINAL SCORE: Show game over message */
+            
+            resetGame();
+            /* 🔄 START OVER: Reset everything for a new game */
+          }, 500);
+        }
+      } else {
+        /* ❌ NO SELECTION: User hasn't chosen an option */
+        
+        alert("Please select an option or roll the dice");
+        /* ⚠️ ALERT USER: Show error message */
+        /* Reminds player they need to select an option or roll */
+      }
+    });
+  </script>
+</body>
+
+</html>
+
+<!-- 🎯 ===== DICE GAME ARCHITECTURE SUMMARY ===== -->
+<!-- 
+🎲 GAME STRUCTURE:
+│
+├── 🧠 HEAD (setup)
+│   └── 🎨 CSS with gaming theme:
+│       ├── 🎮 Dark background with gold accents
+│       ├── 📦 Grid and flex layouts for game areas
+│       ├── 🎲 Visual styling for dice elements
+│       └── 📱 Responsive design for all devices
+│
+├── 📄 BODY (interface)
+│   ├── 📜 Header with rules section
+│   └── 🎮 Main game area
+│       ├── 🎲 Five dice elements
+│       ├── 📊 Round and roll counters
+│       ├── 🔘 Scoring options (radio buttons)
+│       ├── 🔘 Game control buttons
+│       └── 📋 Score history section
+│
+└── 🧮 JAVASCRIPT (game logic)
+    ├── 🎲 Dice rolling mechanics
+    ├── 🔍 Pattern detection algorithms
+    │   ├── Three/four of a kind
+    │   ├── Full house detection
+    │   └── Straight sequences
+    ├── 📊 Scoring system
+    ├── 🎮 Game state management
+    └── 🔄 Round progression logic
+
+🎮 GAME MECHANICS:
+├── 6 total rounds with 3 rolls per round
+├── 5 scoring options with different point values
+├── Strategic decisions between rerolling and keeping score
+└── Game state tracking via DOM updates
+
+🧠 PROGRAMMING CONCEPTS:
+├── 📦 Array manipulation (sort, filter, reduce)
+├── 🔍 Pattern detection with string comparison
+├── 🎲 Randomization with Math.random()
+├── 🔄 Event-driven architecture
+└── 📊 Object-oriented data tracking
+
+A perfect example of combining HTML, CSS, and JavaScript to create an interactive dice game! 🎲✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Most Difficult Project
+
+It was by far the most difficult project I've completed. There were few steps but they were extremely complex. Now I understand why this is the freeCodeCamp course with the highest abandonment rate.<br />
+I didn't like it due to the subject matter: it wasn't a game I knew and it didn't excite me to play it before starting the project to understand the logic, nor after implementing it. The fact is, I learned a lot. In projects like this one, that leave you with "blank canvas", just like in certification projects, the main difficulty lies in putting the pieces together and thus summarizing everything you've learned before.<br />
+I missed not having a single complete guide but I was still able to find the information since it's like having two guides. I was waiting to finish the course to merge them but it's possible I'll do it sooner, because it's a step that has always helped me reorganize concepts in my mind.
+
+### The Reflection: Learning Strategy
+
+I'm undecided between doing the Google UX Course 6 or starting the certification project right away, but reading what I've written, the most logical thing that emerges is: merge the guide, do the Google UX course to break away from the full immersion with freeCodeCamp, then start the 4th certification project at full speed.<br />
+Thinking about it, it would also be smart to see if the guide needs modifications. After all, I made most of these changes while using it for certification projects, where it became essential. When I have doubts, consulting the guide is my first step, the second is MDN Web Docs, even though lately less so, the third, as a last resort, is the code tutor.<br />
+AI for deepening concepts is exceptional, although it's like playing heads or tails hoping what it says is correct. It's also excellent for suggesting alternatives, but it's a tool that makes you lazy quite a bit. A bike with training wheels that if you don't learn to remove them you keep for life.<br />
+To mitigate the hallucination risk, for almost 2 months I've replaced Claude with Perplexity, always setting Claude or Gemini as the model, both with chain of thought active, switching between models based on the desired temperament. This way I ensure the performance of the best models accompanied by verifiable sources. Sometimes I check actively, even though I should do it more often, and I discover really interesting sites.
+
+### The Three Critical Concepts
+
+I've noted down some concepts based on comparisons between freeCodeCamp's approach and better alternatives. Nothing was wrong, after all who am I to say otherwise? But exploring the alternatives led me to think critically.
+
+#### 1. style.display vs classList.toggle() - The SRP
+
+FreeCodeCamp proposed:
+
+```javascript
+if (isModalShowing) {
+  rulesBtn.textContent = "Hide rules";
+  rulesContainer.style.display = "block";
+} else {
+  rulesBtn.textContent = "Show rules";
+  rulesContainer.style.display = "none";
+}
+```
+
+This solution directly modifies the inline styles of the HTML element. Following the Single Responsibility Principle it makes much more sense to separate CSS from JavaScript:
+
+```css
+.rules-container {
+  display: none;
+}
+
+.rules-container.show {
+  display: block;
+}
+```
+
+And in JavaScript:
+
+```javascript
+rulesContainer.classList.toggle("show");
+rulesBtn.textContent = isModalShowing ? "Hide rules" : "Show rules";
+```
+
+This way we don't have CSS pieces in JavaScript, but rather two distinct documents: JavaScript only deals with calling the style from CSS, not creating it.
+
+#### 2. parseInt() vs Number() - Semantic Rigor
+
+FreeCodeCamp's approach was `score += parseInt(selectedValue);`
+
+I had inserted `score += Number(selectedValue);`
+
+Both are correct, but **Number() seems to be more rigorous**. Here's why:
+
+| Aspect | parseInt() | Number() |
+|--------|-----------|----------|
+| "15" | 15 ✅ | 15 ✅ |
+| "15.7" | 15 (truncates decimals) | 15.7 (keeps decimals) |
+| "15px" | 15 (ignores rest) | NaN (error) |
+| "" | NaN | 0 |
+
+Number() is more rigorous because it fails when it encounters invalid input, while parseInt() does "optimistic" conversions. Depending on the context, the rigor of Number() can be preferable for catching input errors.
+
+#### 3. innerHTML += vs createElement() - Performance and DOM Integrity
+
+This point emerged from the code tutor who rightly pointed out that:
+
+```javascript
+scoreHistory.innerHTML += `<li>${achieved} : ${selectedValue}</li>`;
+```
+
+It's short and readable, but the better solution, albeit more verbose, is:
+
+```javascript
+const historyItem = document.createElement("li");
+historyItem.textContent = `${achieved} : ${selectedValue}`;
+scoreHistory.appendChild(historyItem);
+```
+
+The reason why is really interesting: with `innerHTML +=`, having elements already present:
+
+```html
+<li>Three of a kind : 15</li>
+<li>Four of a kind : 20</li>
+<li>Full house : 25</li>
+```
+
+Adding the 4th element with `innerHTML +=`, the browser destroys the first 3 and recreates all 4 from scratch! With `appendChild()` a new element is simply added, leaving the others intact.<br />
+This happens because in scoreHistory, with the other 3 elements present, the browser will read all existing HTML (referring only to scoreHistory in this case), convert it to a string, add the new one and destroy the other elements from the DOM, risking changes to their states from what they were before.<br />
+`innerHTML` remains excellent when you want to create the content of an element from scratch (with assignment, not concatenation), but for iterative appends `createElement()` + `appendChild()` is decidedly superior.<br />
+
+### What I Learned
+
+**Pattern Matching Algorithms:**
+- Detecting Three/Four of a Kind by counting occurrences of numbers
+- Detecting Full House by verifying the presence of groups of 3 and 2
+- Detecting Straight by converting arrays to strings for pattern matching
+- Using `Set` to remove duplicates: `[...new Set(arr)]`
+
+**Array Methods and Iteration:**
+- `.forEach()` to iterate and modify DOM elements
+- `.reduce()` to accumulate values (sum of dice)
+- `.sort()` with numeric callback to sort arrays
+- `.includes()` to search patterns in strings
+- `.some()` to verify if at least one element satisfies a condition
+
+**Object Manipulation:**
+- Counting element occurrences by creating objects `{ number: count }`
+- `Object.values()` to extract only values from an object
+- Inline ternary operator: `counts[num] = counts[num] ? counts[num] + 1 : 1`
+
+**Event Handling and Validation:**
+- Guard clauses to check preconditions before executing code
+- Input validation before processing user selections
+- `addEventListener()` to handle interactions
+- `setTimeout()` to delay execution (allows UI update before alert)
+
+**Professional Code Patterns:**
+- DRY (Don't Repeat Yourself): refactoring the `updateRadioOption(5, 0)` call to a single location
+- Separation of concerns: specific functions for each type of detection
+- Early exit: using `break` to exit loops when finding what you seek
+- Semantic naming that explains the "what" not the "how"
+
+**Critical Differences Between Methods:**
+- `textContent` vs `innerHTML`: textContent is safer, innerHTML recreates DOM
+- Assignment vs concatenation: `=` vs `+=` have different performance implications
+- `style.display` vs `classList.toggle()`: CSS/JS separation vs inline styles
+
+***
+
+**Next Project**: Build a Cash Register (CERTIFICATION PROJECT!)

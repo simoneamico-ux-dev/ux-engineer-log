@@ -1,0 +1,281 @@
+---
+sidebar_position: 3
+sidebar_label: 'Colored Markers'
+title: 'Colored Markers'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+CSS Color Practice
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colored Markers</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1>CSS Color Markers</h1>
+    <div class="container">
+      <div class="marker red">
+        <div class="cap"></div>
+        <div class="sleeve"></div>
+      </div>
+      <div class="marker green">
+        <div class="cap"></div>
+        <div class="sleeve"></div>
+      </div>
+      <div class="marker blue">
+        <div class="cap"></div>
+        <div class="sleeve"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+h1 {
+  text-align: center;
+}
+
+.container {
+  background-color: rgb(255, 255, 255);
+  padding: 10px 0;
+}
+
+.marker {
+  width: 200px;
+  height: 25px;
+  margin: 10px auto;
+}
+
+.cap {
+  width: 60px;
+  height: 25px;
+}
+
+.sleeve {
+  width: 110px;
+  height: 25px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-left: 10px double rgba(0, 0, 0, 0.75);
+}
+
+.cap, .sleeve {
+  display: inline-block;
+}
+
+.red {
+  background: linear-gradient(rgb(122, 74, 14), rgb(245, 62, 113), rgb(162, 27, 27));
+  box-shadow: 0 0 20px 0 rgba(83, 14, 14, 0.8);
+}
+
+.green {
+  background: linear-gradient(#55680D, #71F53E, #116C31);
+  box-shadow: 0 0 20px 0 #3B7E20CC;
+}
+
+.blue {
+  background: linear-gradient(hsl(186, 76%, 16%), hsl(223, 90%, 60%), hsl(240, 56%, 42%));
+  box-shadow: 0 0 20px 0 blue;
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- Declares the document type: HTML5.
+     ALWAYS goes as the first line.
+     Used to indicate to the browser that it should use the modern standard. -->
+<html lang="en">
+<!-- Root of the HTML document.
+     lang="en": indicates that the content is in English (improves accessibility, SEO and automatic translations). -->
+  <head>
+    <!-- <head>: Contains information about the document, not directly visible (metadata). -->
+    <meta charset="utf-8">
+    <!-- Specifies the character encoding (UTF-8 supports all symbols, emojis, special characters). -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Makes the layout responsive on mobile devices.
+         Sets the viewport width = device width. -->
+    <title>Colored Markers</title>
+    <!-- Title displayed in the browser tab and in search engine results. -->
+    <style>
+      /* === TITLE STYLE === */
+      h1 {
+        text-align: center; /* Centers the text horizontally within the container */
+      }
+
+      /* === MARKERS CONTAINER === */
+      .container {
+        background-color: rgb(255, 255, 255); 
+        /* rgb(255, 255, 255): white color.
+           - 255 = maximum value for red
+           - 255 = maximum value for green
+           - 255 = maximum value for blue
+           → combined they give pure white. */
+        padding: 10px 0;
+        /* vertical padding = 10px (top and bottom)
+           horizontal padding = 0px (right and left) */
+      }
+
+      /* === MARKER BLOCK === */
+      .marker {
+        width: 200px;      /* Total marker width (cap + sleeve) */
+        height: 25px;      /* Constant marker height */
+        margin: 10px auto;
+        /* margin-top and margin-bottom: 10px
+           margin-left and margin-right: auto → horizontally centered in the container */
+      }
+
+      /* === CAP === */
+      .cap {
+        width: 60px;       /* Cap length (about 30% of the marker) */
+        height: 25px;      /* Same height as the marker */
+      }
+
+      /* === MARKER SLEEVE === */
+      .sleeve {
+        width: 110px;      /* Transparent sleeve width */
+        height: 25px;      /* Same height as the cap → continuous line */
+        background-color: rgba(255, 255, 255, 0.5);
+        /* rgba = red, green, blue, alpha
+           255, 255, 255 = white
+           0.5 = 50% opacity → half-transparent */
+        border-left: 10px double rgba(0, 0, 0, 0.75);
+        /* Left border:
+           - 10px = thickness
+           - double = double line style
+           - rgba(0, 0, 0, 0.75) = black (0,0,0) with 75% opacity */
+      }
+
+      /* === HORIZONTAL CAP + SLEEVE === */
+      .cap, .sleeve {
+        display: inline-block;
+        /* inline-block = elements on the same line but with customizable dimensions (width/height).
+           Essential to make cap and sleeve stay side by side. */
+      }
+
+      /* === RED MARKER === */
+      .red {
+        background: linear-gradient(rgb(122, 74, 14), rgb(245, 62, 113), rgb(162, 27, 27));
+        /* Vertical linear gradient (default):
+           - first color: rgb(122, 74, 14) = dark brown (base tone of the cap)
+           - second color: rgb(245, 62, 113) = bright pink (middle part)
+           - third color: rgb(162, 27, 27) = blood red (final base)
+           Each color is a stop in the vertical transition.
+           The colors blend into each other in vertical sequence. */
+        box-shadow: 0 0 20px 0 rgba(83, 14, 14, 0.8);
+        /* box-shadow syntax:
+           offset-x: 0px → no horizontal displacement
+           offset-y: 0px → no vertical displacement
+           blur-radius: 20px → how much the shadow blurs
+           spread-radius: 0px → no extra expansion
+           color: rgba(83, 14, 14, 0.8) = very dark red, 80% opaque */
+      }
+
+      /* === GREEN MARKER === */
+      .green {
+        background: linear-gradient(#55680D, #71F53E, #116C31);
+        /* Gradient with hexadecimal notation:
+           - #55680D = dark olive green
+           - #71F53E = bright lime green
+           - #116C31 = forest green */
+        box-shadow: 0 0 20px 0 #3B7E20CC;
+        /* Green shadow with transparency:
+           - #3B7E20 = medium green
+           - CC = hexadecimal alpha value → about 80% opaque (CC = 204 / 255) */
+      }
+
+      /* === BLUE MARKER === */
+      .blue {
+        background: linear-gradient(hsl(186, 76%, 16%), hsl(223, 90%, 60%), hsl(240, 56%, 42%));
+        /* Gradient with HSL notation (Hue, Saturation, Lightness):
+           - hsl(186, 76%, 16%) = very dark aqua green
+           - hsl(223, 90%, 60%) = bright azure
+           - hsl(240, 56%, 42%) = medium blue
+           Hue: from 0 to 360 → selects the shade (red = 0°, green = 120°, blue = 240°)
+           Saturation: 76%, 90%, 56% → color intensity (0% = gray, 100% = full color)
+           Lightness: 16%, 60%, 42% → brightness (0% = black, 100% = white) */
+        box-shadow: 0 0 20px 0 blue;
+        /* Classic blue shadow, no transparency */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Everything that is displayed on the page is contained in the <body>. -->
+    <h1>CSS Color Markers</h1>
+    <!-- <h1>: Main page title. Unique for each document. -->
+    <div class="container">
+    <!-- Main container for the markers.
+         class="container": used to style this block with padding and white background. -->
+      <div class="marker red">
+        <!-- Red marker: shared base structure, different color through "red" class. -->
+        <div class="cap"></div>
+        <!-- Initial part of the marker, simulates the cap. -->
+        <div class="sleeve"></div>
+        <!-- Middle part of the marker, simulates the transparent sleeve. -->
+      </div>
+      <div class="marker green">
+        <!-- Green marker -->
+        <div class="cap"></div>
+        <div class="sleeve"></div>
+      </div>
+      <div class="marker blue">
+        <!-- Blue marker -->
+        <div class="cap"></div>
+        <div class="sleeve"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+What I Learned:
+- CSS syntax and selector structure
+- Using class-based styling for reusable components
+- display: inline-block for horizontal layout while maintaining block features
+- Understanding the box model: width, height, margin
+
+- Applying different color models:
+- rgb() for red-green-blue definitions
+- rgba() for transparency control
+- hex for compact color values
+- hsl() for hue-saturation-lightness control
+
+- Creating linear gradients with linear-gradient()
+- Using box-shadow for depth and highlight effects
+- Structuring HTML with nested divs to simulate real-world components
+- Importance of separating visual parts into semantic building blocks (cap, sleeve, body)
+
+Interesting takeaway:
+Learning how to combine gradients with shadows to simulate lighting and 3D effects was particularly engaging. It helped solidify the idea that CSS is not just for color but also for mood and dimension.
+
+Time:
+3 hours 5 min of learning + 46 min of documentation and comments
+
+Personal Note:
+This exercise reminded me of skeuomorphism, an interface style I’ve always been fond of. 
+As a child, I had an iPod Touch running iOS 5, with an interface full of realistic visual details and textures that I found fascinating. 
+I still remember when I jailbroke the device — a process that allowed me to customize and modify the system in ways not intended by Apple.
+That experience sparked my curiosity for customization and design.
+
+Next:
+Learn HTML Forms by Building a Registration Form

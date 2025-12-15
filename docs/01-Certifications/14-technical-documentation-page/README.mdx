@@ -1,0 +1,1041 @@
+---
+sidebar_position: 3
+sidebar_label: 'Technical Documentation Page'
+title: 'Technical Documentation Page'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Technical Documentation Page
+
+### The Project
+Technical documentation page about Git and GitHub, developed as a freeCodeCamp certification project. A comprehensive manual that serves both as reference and personal learning tool.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Git & GitHub Documentation</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <nav id="navbar">
+            <header><h1>Git & GitHub</h1></header>
+
+            <a class="nav-link" href="#Introduction_to_Git">Introduction to Git</a>
+
+            <a class="nav-link" href="#Basic_Git_Commands">Basic Git Commands</a>
+            
+            <a class="nav-link" href="#Understanding_GitHub">Understanding GitHub</a>
+
+            <a class="nav-link" href="#Working_with_Branches">Working with Branches</a>
+
+            <a class="nav-link" href="#Collaboration_and_Pull_Requests">Collaboration and Pull Requests</a>
+
+            <a class="nav-link" href="#Git_Configuration">Git Configuration</a>
+
+            <a class="nav-link" href="#Remote_Repositories">Remote Repositories</a>
+
+            <a class="nav-link" href="#Merge_Conflicts">Merge Conflicts</a>
+
+            <a class="nav-link" href="#Git_History_and_Logs">Git History and Logs</a>
+
+            <a class="nav-link" href="#GitHub_Issues_and_Projects">GitHub Issues and Projects</a>
+
+            <a class="nav-link" href="#Git_Best_Practices">Git Best Practices</a>
+
+            <a class="nav-link" href="#Troubleshooting_Common_Issues">Troubleshooting Common Issues</a>
+        </nav>
+        <main id="main-doc">
+
+            <section class="main-section" id="Introduction_to_Git">
+                <header><h2>Introduction to Git</h2></header>
+                <p>Git is like a "magic diary" for your code. Imagine writing a book: every time you finish a chapter, you take a photo of the page. If you mess something up later, you can always go back to that photo!</p>
+                <p>Git keeps track of all the changes you make to your files. It's like having a time machine for your project: you can see what you changed, when you changed it, and why you changed it.</p>
+                <code>git --version</code>
+                <ul>
+                    <li>Keeps track of modifications</li>
+                    <li>Allows you to go back in time</li>
+                    <li>Facilitates teamwork</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Basic_Git_Commands">
+                <header><h2>Basic Git Commands</h2></header>
+                <p>Basic Git commands are like the most important words of a foreign language. With these few commands you can already do a lot!</p>
+                <p>The first command you'll always use is git init, which transforms a normal folder into a "Git warehouse". It's like saying "from today this folder is special, keep track of everything!"</p>
+                <p>Then there's git add, which is like putting files in a box before shipping it. And git commit is like sealing the box and writing on it what it contains.</p>
+                <code>git init
+git add .
+git commit -m "My first commit"</code>
+                <ul>
+                    <li>git init: initializes a repository</li>
+                    <li>git add: prepares files for commit</li>
+                    <li>git commit: saves changes permanently</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Understanding_GitHub">
+                <header><h2>Understanding GitHub</h2></header>
+                <p>GitHub is like a "social network for programmers". It's a place where you can store your Git projects online and share them with the world.</p>
+                <p>Think of it as Instagram, but instead of photos, you share code. You can follow other programmers, "like" (star) their projects, and even contribute to them!</p>
+                <p>GitHub makes collaboration incredibly easy. It's like having a shared workspace where everyone can see what others are doing and contribute their ideas.</p>
+                <code>git clone https://github.com/username/repository.git
+git remote add origin https://github.com/username/repository.git</code>
+                <ul>
+                    <li>Repository hosting: store projects online</li>
+                    <li>Collaboration tools: work with others</li>
+                    <li>Open source community: share and contribute</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Working_with_Branches">
+                <header><h2>Working with Branches</h2></header>
+                <p>Branches are one of Git's most powerful features. Imagine your project as a tree: the main trunk is the "main" branch, and you can create branches to try new features.</p>
+                <p>If you're working on a new feature, you create a separate branch. It's like having a copy of your project where you can experiment without breaking the original!</p>
+                <p>When your feature is ready, you can "merge" the branch with the main one. It's like grafting the branch onto the main tree.</p>
+                <code>git branch new-feature
+git checkout new-feature
+git switch -c another-feature</code>
+                <ul>
+                    <li>main/master: main branch</li>
+                    <li>feature branches: for new functionalities</li>
+                    <li>hotfix branches: for urgent bug fixes</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Collaboration_and_Pull_Requests">
+                <header><h2>Collaboration and Pull Requests</h2></header>
+                <p>Pull Requests are the heart of collaboration on GitHub. It's like knocking on the door and saying "Hey, I improved your project, want to see?"</p>
+                <p>When you make a Pull Request, you're asking the project owner to "pull" your changes into their repository. It's a polite way to propose changes.</p>
+                <p>Before your changes get accepted, other developers can review your code, suggest improvements, or approve the changes. It's like having a group of friends check your homework before you turn it in!</p>
+                <code>git push origin my-feature</code>
+                <ul>
+                    <li>Fork: copy a repository to your account</li>
+                    <li>Pull Request: propose changes</li>
+                    <li>Code Review: other developers check your code</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Git_Configuration">
+                <header><h2>Git Configuration</h2></header>
+                <p>Before using Git for the first time, it's like introducing yourself: you need to say who you are! Git needs to know your name and email to "sign" your commits.</p>
+                <p>Configuration is done once on your computer, and it's like filling out a digital ID card. Every time you make a commit, Git will use this information.</p>
+                <p>You can also configure your preferred text editor and many other details to customize Git according to your preferences.</p>
+                <code>git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+git config --global core.editor "code --wait"</code>
+                <ul>
+                    <li>Global configuration: applies to all projects</li>
+                    <li>Local configuration: only for one project</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Remote_Repositories">
+                <header><h2>Remote Repositories</h2></header>
+                <p>Remote repositories are like "backup copies" of your project stored on the internet. The most famous is GitHub, but there are others like GitLab and Bitbucket.</p>
+                <p>It's like having your personal diary (local repository) and a copy in a bank vault (remote repository). If your computer breaks, the copy is always safe!</p>
+                <p>You can connect your local project to multiple remote repositories simultaneously. It's useful when you want to backup on different services.</p>
+                <code>git remote -v
+git push origin main
+git pull origin main</code>
+                <ul>
+                    <li>origin: standard name for the main repository</li>
+                    <li>upstream: original repository when you fork</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Merge_Conflicts">
+                <header><h2>Merge Conflicts</h2></header>
+                <p>Merge conflicts are like when two people modify the same sentence of a document simultaneously. Git doesn't know which version to keep!</p>
+                <p>Don't be scared of conflicts: they're completely normal when working in teams. It's like two chefs modifying the same recipe - someone has to decide which ingredient to use.</p>
+                <p>When it happens, Git shows you exactly where the differences are and you have to choose what to keep. It's like being a judge deciding between two versions.</p>
+                <code><<<<<<< HEAD
+My version of the code
+=======
+Someone else's version
+>>>>>>> branch-name</code>
+                <ul>
+                    <li>HEAD: the version in your current branch</li>
+                    <li>Markers: <<<<<<< ======= >>>>>>> show the conflict</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Git_History_and_Logs">
+                <header><h2>Git History and Logs</h2></header>
+                <p>Git history is like a detailed log of everything that happened to your project. Each commit is like a diary entry with date, time, and description.</p>
+                <p>With git log you can see who did what and when. It's incredibly useful for understanding how the project evolved or finding when a bug was introduced.</p>
+                <p>You can also see differences between different versions, like comparing two photos of the same place taken at different times.</p>
+                <code>git log --oneline
+git show commit-hash
+git diff HEAD~1</code>
+                <ul>
+                    <li>git log: shows complete history</li>
+                    <li>git show: details of a specific commit</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="GitHub_Issues_and_Projects">
+                <header><h2>GitHub Issues and Projects</h2></header>
+                <p>GitHub Issues are like a public "to-do list" for your project. You can report bugs, propose new features, or ask questions.</p>
+                <p>It's like having a bulletin board where anyone can stick post-it notes with suggestions or problem reports. Much more organized than scattered comments!</p>
+                <p>Projects are like digital Kanban boards: you can organize Issues in columns like "To Do", "In Progress", "Done". Perfect for managing complex projects!</p>
+                <code># In a commit message
+git commit -m "Fix login bug - closes #42"</code>
+                <ul>
+                    <li>Bug reports: error notifications</li>
+                    <li>Feature requests: proposals for new functions</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Git_Best_Practices">
+                <header><h2>Git Best Practices</h2></header>
+                <p>Using Git well is like driving: there are unwritten rules that make everything safer and more organized for everyone.</p>
+                <p>Commit messages should be clear and descriptive, like photo captions: "Add login function" is much better than "random stuff".</p>
+                <p>Make small and frequent commits instead of one giant one at the end. It's like saving a document every paragraph instead of only at the end - if something goes wrong, you've lost less work!</p>
+                <code># Good example
+git commit -m "Add user authentication system"
+# Bad example
+git commit -m "stuff"</code>
+                <ul>
+                    <li>Frequent and small commits</li>
+                    <li>Descriptive messages</li>
+                    <li>Branch for each feature</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Troubleshooting_Common_Issues">
+                <header><h2>Troubleshooting Common Issues</h2></header>
+                <p>Everyone makes mistakes with Git, even experienced programmers! It's normal and there are always solutions. It's like learning to ride a bike - some falls are inevitable.</p>
+                <p>The most useful command ever is git status. It's like asking "where am I?" when you're lost. It always tells you what's happening and what you can do.</p>
+                <p>If you made a wrong commit, don't panic! Git keeps track of everything and you can almost always go back. It's like having a very powerful "undo" button.</p>
+                <code>git status
+git reset --soft HEAD~1
+git stash</code>
+                <ul>
+                    <li>git status: to always orient yourself</li>
+                    <li>git reset: to undo commits</li>
+                    <li>git stash: to save temporary work</li>
+                </ul>
+            </section>
+
+        </main>
+    </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+* {
+    font-family: apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.900);
+    background-color: #161616;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 18px;
+    padding-left: 8px;
+    margin-top: 48px;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 32px;
+    padding-top: 24px;
+    margin-bottom: 16px;
+}
+
+#main-doc > .main-section:first-child h2 {
+    padding-top: 0;
+}
+
+p {
+    max-width: 75em;
+    margin-bottom: 16px;
+}
+
+#navbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 270px;
+    height: calc(100vh - 8px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    border-right: 2px solid #33333379;
+}
+
+#main-doc {
+    margin-left: 280px;
+    margin-top: 16px;
+    max-width: 800px;
+}
+
+.nav-link {
+    display: block;
+    text-decoration: none;
+    padding: 16px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-link:hover {
+    padding-left: 20px;
+    transition: all 0.3s ease;
+    background-color: #0A558C;
+    color: white;
+}
+
+section {
+    padding-left: 4px;
+}
+
+main {
+    padding-bottom: 12px;
+}
+
+code {
+    display: block;
+    background-color: #2d2d2d;
+    padding: 12px;
+    margin: 16px 0;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-line;
+}
+
+ul {
+    margin: 16px 0;
+    padding-left: 20px;
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+    #navbar {
+        position: static;
+        width: 100%;
+        height: auto;
+        margin-top: 0;
+        text-align: center;
+    }
+    
+    #main-doc {
+        margin-left: 0;
+        margin-top: 0;
+        padding: 16px;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    * {
+        font-size: 14px;
+    }
+
+    .nav-link {
+        font-size: 16px;
+    }
+
+    .nav-link:hover {
+        padding-left: 16px;
+        background-color: #0A558C;
+        color: white;
+        transform: scale(1.02); 
+    }
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the digital Git library!" -->
+<!-- It's like opening a technical but fun manual 📖 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: The complete Git encyclopedia -->
+<!-- lang="en" = in English, the universal language of coding! 💻 -->
+
+    <head>
+        <!-- 🧠 CONTROL CENTER: Where we set the appearance of our documentation -->
+        <!-- It's like preparing a library with the right lighting and perfect shelves -->
+        
+        <title>Git & GitHub Documentation</title>
+        <!-- 📑 TAB TITLE: What you see in the browser tab -->
+        <!-- Clear and professional, like a label on a manual -->
+        
+        <meta charset="UTF-8" />
+        <!-- 📝 UNIVERSAL CHARACTER SUPPORT: UTF-8 understands all coding symbols! <>{}[] -->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 📱 RESPONSIVE ADAPTATION: "Read me well on every device!" -->
+        <!-- It's like having a book that magically resizes itself -->
+        
+        <style>
+            /* 🎨 ===== THE STYLES OF OUR DOCUMENTATION ===== */
+            
+            * {
+                /* 🌟 UNIVERSAL RULE: Applied to ALL elements! */
+                /* * = "Hey, all you elements, listen up!" */
+                
+                font-family: apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue;
+                /* 🔤 MODERN FONTS: A cascade of system fonts */
+                /* apple-system = Mac, Segoe UI = Windows, Roboto = Android... */
+                /* It's like saying "use the most beautiful font you have on your system!" */
+                
+                font-weight: 400;
+                /* 📏 NORMAL WEIGHT: 400 = regular, not too thin or bold */
+                
+                color: rgba(255, 255, 255, 0.900);
+                /* ⚪ WHITE AT 90%: Not pure white to reduce eye strain */
+                /* rgba = red, green, blue, alpha (transparency) */
+                /* 0.900 = 90% opaque, slightly transparent */
+                
+                background-color: #161616;
+                /* ⚫ DEEP BLACK: Dark mode theme for real programmers! */
+                /* #161616 = almost black but not completely, softer */
+            }
+
+            html {
+                scroll-behavior: smooth;
+                /* 🎢 SMOOTH SCROLLING: When you click a link, it glides gently */
+                /* It's like taking an elevator instead of the stairs! */
+                /* Perfect for navigation with # anchors */
+            }
+
+            h1 {
+                font-weight: 600;
+                /* 🔤 SEMI-BOLD: 600 = heavier than normal but not bold */
+                
+                font-size: 18px;
+                /* 📏 MODEST SIZE: For the title in the navbar */
+                
+                padding-left: 8px;
+                /* ⬅️ SMALL INDENT: 8px of breathing room from the edge */
+                
+                margin-top: 48px;
+                /* ⬆️ SPACE ABOVE: Distances the title from the top edge */
+            }
+
+            h2 {
+                font-weight: 600;
+                /* 🔤 SEMI-BOLD: Same weight as h1 for consistency */
+                
+                font-size: 32px;
+                /* 📏 IMPORTANT SIZE: Section titles need to stand out! */
+                
+                padding-top: 24px;
+                /* ⬆️ UPPER BREATHING ROOM: Space before each section */
+                
+                margin-bottom: 16px;
+                /* ⬇️ SPACE BELOW: Separates the title from content */
+            }
+
+            #main-doc > .main-section:first-child h2 {
+                /* 🎯 SPECIFIC SELECTOR: The first h2 of the first section */
+                /* > = direct child, :first-child = first element */
+                
+                padding-top: 0;
+                /* 🚫 NO PADDING: The first title doesn't need space above */
+                /* It's like removing the first empty line of a document */
+            }
+
+            p {
+                max-width: 75em;
+                /* 📏 MAXIMUM READABLE WIDTH: 75em ≈ 75 characters */
+                /* em = unit relative to font size */
+                /* Texts that are too wide are difficult to read! */
+                /* It's like newspaper columns - not too wide */
+                
+                margin-bottom: 16px;
+                /* ⬇️ SPACE BETWEEN PARAGRAPHS: For comfortable reading */
+            }
+
+            /* 🧭 ===== SIDE NAVBAR ===== */
+            
+            #navbar {
+                position: fixed;
+                /* 🔒 FIXED POSITION: Always visible as you scroll! */
+                /* It's like having the book's index always open beside you */
+                
+                left: 0;
+                top: 0;
+                /* 📍 TOP LEFT CORNER: Glued to the edge */
+                
+                width: 270px;
+                /* 📏 FIXED WIDTH: Enough for section titles */
+                
+                height: calc(100vh - 8px);
+                /* 🧮 CALCULATED HEIGHT: 100vh = 100% viewport height */
+                /* calc() = CSS calculator! */
+                /* 100vh - 8px = full height minus a small margin */
+                /* It's like saying "as tall as the screen minus a breath" */
+                
+                overflow-y: auto;
+                /* 📜 VERTICAL SCROLL: If links are too many, you can scroll */
+                /* auto = show scrollbar only when needed */
+                
+                box-sizing: border-box;
+                /* 📦 INTELLIGENT CALCULATION: Includes padding and borders in width */
+                
+                border-right: 2px solid #33333379;
+                /* 🎯 RIGHT BORDER: Separates navbar from content */
+                /* #33333379 = gray with transparency (79 at the end) */
+                /* It's like a thin line that divides the index from the text */
+            }
+
+            #main-doc {
+                margin-left: 280px;
+                /* ⬅️ SPACE FOR NAVBAR: 270px navbar + 10px breathing room */
+                /* It's like leaving space for the index on the left */
+                
+                margin-top: 16px;
+                /* ⬆️ SMALL TOP MARGIN: To avoid sticking to the edge */
+                
+                max-width: 800px;
+                /* 📏 MAXIMUM WIDTH: For optimal reading */
+                /* Texts that are too wide tire the eyes! */
+            }
+
+            /* 🔗 ===== NAVIGATION LINKS ===== */
+            
+            .nav-link {
+                display: block;
+                /* 📦 BLOCK BEHAVIOR: Each link occupies the full width */
+                /* It's like transforming an inline link into a wide button */
+                
+                text-decoration: none;
+                /* 🚫 NO UNDERLINE: Away with that ugly line underneath! */
+                
+                padding: 16px;
+                /* 🏠 INTERNAL SPACE: Generous clickable area */
+                /* It's like making the target bigger and easier to hit */
+                
+                color: rgba(255, 255, 255, 0.7);
+                /* ⚪ WHITE AT 70%: More muted than main text */
+                /* Creates visual hierarchy - less important = less bright */
+            }
+
+            .nav-link:hover {
+                /* 🖱️ HOVER EFFECT: When you mouse over */
+                
+                padding-left: 20px;
+                /* ➡️ MICRO-SHIFT: From 16px to 20px = small indentation */
+                /* It's like the link slightly moving to greet you! */
+                
+                transition: all 0.3s ease;
+                /* 🎢 SMOOTH TRANSITION: 0.3 seconds with "ease" curve */
+                /* all = animate all properties that change */
+                /* ease = accelerate, then slow down (natural movement) */
+                /* It's like a door that opens smoothly instead of slamming */
+                
+                background-color: #0A558C;
+                /* 🔵 BLUE HIGHLIGHTER: Selection color */
+                /* It's like highlighting with a blue marker */
+                
+                color: white;
+                /* ⚪ FULL WHITE: From 0.7 to 1.0 opacity */
+                /* The text becomes brighter to indicate "I'm here!" */
+            }
+
+            section {
+                padding-left: 4px;
+                /* ⬅️ MICRO-PADDING: Small indent for sections */
+            }
+
+            main {
+                padding-bottom: 12px;
+                /* ⬇️ FINAL SPACE: A bit of breathing room at the bottom of the document */
+                /* It's like leaving white space at the end of a page */
+            }
+
+            /* 💻 ===== CODE BLOCKS ===== */
+            
+            code {
+                display: block;
+                /* 📦 BLOCK BEHAVIOR: Code is on separate lines */
+                
+                background-color: #2d2d2d;
+                /* ⬛ DARK GRAY: Different background to distinguish code */
+                /* It's like putting code in a gray box */
+                
+                padding: 12px;
+                /* 🏠 INTERNAL SPACE: Code doesn't touch the edges */
+                
+                margin: 16px 0;
+                /* 🌬️ VERTICAL MARGINS: Space above and below */
+                
+                border-radius: 4px;
+                /* 🔄 ROUNDED CORNERS: 4px of softness */
+                /* Modern terminals have rounded corners! */
+                
+                font-family: 'Courier New', monospace;
+                /* 🔤 MONOSPACE FONT: Every character has the same width */
+                /* Essential for aligning code! */
+                /* It's like a digital typewriter */
+                
+                white-space: pre-line;
+                /* 📝 PRESERVE LINES: Maintains line breaks in code */
+                /* pre-line = preserves newlines but collapses multiple spaces */
+            }
+
+            /* 📝 ===== LISTS ===== */
+            
+            ul {
+                margin: 16px 0;
+                /* 🌬️ VERTICAL MARGINS: Space before and after the list */
+                
+                padding-left: 20px;
+                /* ⬅️ INDENT: Space for list bullets */
+            }
+
+            li {
+                margin-bottom: 8px;
+                /* ⬇️ SPACE BETWEEN ITEMS: Each point has its breathing room */
+                /* Lists that are too compact are difficult to read! */
+            }
+
+            /* 📱 ===== MEDIA QUERY: The Magic of Responsive! ===== */
+            
+            @media (max-width: 768px) {
+                /* 📱 TABLET AND MOBILE: When screen is smaller than 768px */
+                /* It's like transforming a book into a pocket-sized one! */
+                
+                #navbar {
+                    position: static;
+                    /* 🔓 NORMAL POSITION: No longer fixed! */
+                    /* static = returns to normal document flow */
+                    /* The navbar now sits above instead of on the side */
+                    
+                    width: 100%;
+                    /* 📏 FULL WIDTH: Occupies the entire screen */
+                    
+                    height: auto;
+                    /* 📐 AUTOMATIC HEIGHT: Adapts to content */
+                    /* No longer screen height */
+                    
+                    margin-top: 0;
+                    text-align: center;
+                    /* ⚖️ CENTERED TEXT: Links are centered on mobile */
+                }
+                
+                #main-doc {
+                    margin-left: 0;
+                    /* 🔄 MARGIN RESET: No more space needed for side navbar */
+                    
+                    margin-top: 0;
+                    padding: 16px;
+                    /* 🏠 UNIFORM PADDING: Breathing room on all sides */
+                }
+                
+                h1 {
+                    text-align: center;
+                    /* ⚖️ CENTERED TITLE: More elegant on mobile */
+                    
+                    margin-top: 16px;
+                    /* ⬆️ REDUCED MARGIN: Less space on small screens */
+                }
+
+                h2 {
+                    font-size: 24px;
+                    /* 📏 SMALLER TITLES: From 32px to 24px */
+                    /* Huge titles on mobile seem like shouting! */
+                }
+
+                * {
+                    font-size: 14px;
+                    /* 📏 SMALLER BASE TEXT: More visible content */
+                    /* But be careful: below 14px becomes unreadable! */
+                }
+
+                .nav-link {
+                    font-size: 16px;
+                    /* 📏 LARGER LINKS: They must be easy to touch! */
+                    /* Human finger = about 44px minimum target */
+                }
+
+                .nav-link:hover {
+                    padding-left: 16px;
+                    /* ➡️ REDUCED HOVER: Less movement on mobile */
+                    
+                    background-color: #0A558C;
+                    color: white;
+                    
+                    transform: scale(1.02); 
+                    /* 🔍 SLIGHT ZOOM: 102% of normal size */
+                    /* scale() enlarges the element */
+                    /* It's like the link slightly inflating! */
+                    /* Touch-friendly effect for mobile devices */
+                }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <!-- 📚 ===== DOCUMENTATION BODY ===== -->
+        
+        <nav id="navbar">
+            <!-- 🧭 NAVIGATION BAR: The always visible index -->
+            <!-- nav = HTML5 semantic element for navigation -->
+            
+            <header><h1>Git & GitHub</h1></header>
+            <!-- 📑 NAVBAR HEADER: Documentation title -->
+            <!-- header inside nav = clear context for screen readers -->
+
+            <!-- 🔗 NAVIGATION LINKS: Each link goes to a section -->
+            <!-- href="#id" = internal links that use scroll-behavior: smooth -->
+            
+            <a class="nav-link" href="#Introduction_to_Git">Introduction to Git</a>
+            <!-- 🎯 FIRST LINK: Introduction is always first! -->
+
+            <a class="nav-link" href="#Basic_Git_Commands">Basic Git Commands</a>
+            <!-- 💻 BASIC COMMANDS: The daily bread of Git -->
+            
+            <a class="nav-link" href="#Understanding_GitHub">Understanding GitHub</a>
+            <!-- 🐙 GITHUB: The social network for programmers -->
+
+            <a class="nav-link" href="#Working_with_Branches">Working with Branches</a>
+            <!-- 🌳 BRANCHES: The branches of our code tree -->
+
+            <a class="nav-link" href="#Collaboration_and_Pull_Requests">Collaboration and Pull Requests</a>
+            <!-- 🤝 COLLABORATION: Working together is better! -->
+
+            <a class="nav-link" href="#Git_Configuration">Git Configuration</a>
+            <!-- ⚙️ CONFIGURATION: Personalize Git -->
+
+            <a class="nav-link" href="#Remote_Repositories">Remote Repositories</a>
+            <!-- ☁️ REMOTE REPOSITORIES: The code cloud -->
+
+            <a class="nav-link" href="#Merge_Conflicts">Merge Conflicts</a>
+            <!-- ⚔️ CONFLICTS: When two changes clash -->
+
+            <a class="nav-link" href="#Git_History_and_Logs">Git History and Logs</a>
+            <!-- 📜 HISTORY: The project diary -->
+
+            <a class="nav-link" href="#GitHub_Issues_and_Projects">GitHub Issues and Projects</a>
+            <!-- 📋 ISSUES: The public to-do list -->
+
+            <a class="nav-link" href="#Git_Best_Practices">Git Best Practices</a>
+            <!-- ✨ BEST PRACTICES: The golden rules -->
+
+            <a class="nav-link" href="#Troubleshooting_Common_Issues">Troubleshooting Common Issues</a>
+            <!-- 🔧 TROUBLESHOOTING: When things go wrong -->
+        </nav>
+        
+        <main id="main-doc">
+            <!-- 📄 MAIN DOCUMENT: The actual content -->
+            <!-- main = semantic element for the main content -->
+
+            <section class="main-section" id="Introduction_to_Git">
+                <!-- 📖 SECTION: Each section has an ID that corresponds to navbar links -->
+                <!-- The ID must match EXACTLY the href of the link! -->
+                
+                <header><h2>Introduction to Git</h2></header>
+                <!-- 📰 SECTION HEADER: Each section has its header with h2 -->
+                
+                <p>Git is like a "magic diary" for your code. Imagine writing a book: every time you finish a chapter, you take a photo of the page. If you mess something up later, you can always go back to that photo!</p>
+                <!-- 📝 PARAGRAPH: Explanation with friendly analogies -->
+                
+                <p>Git keeps track of all the changes you make to your files. It's like having a time machine for your project: you can see what you changed, when you changed it, and why you changed it.</p>
+                <!-- 🕰️ TEMPORAL ANALOGY: Git as a time machine -->
+                
+                <code>git --version</code>
+                <!-- 💻 CODE EXAMPLE: Command to verify Git -->
+                
+                <ul>
+                    <!-- 📋 UNORDERED LIST: Key points -->
+                    <li>Keeps track of modifications</li>
+                    <li>Allows you to go back in time</li>
+                    <li>Facilitates teamwork</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Basic_Git_Commands">
+                <header><h2>Basic Git Commands</h2></header>
+                <p>Basic Git commands are like the most important words of a foreign language. With these few commands you can already do a lot!</p>
+                <p>The first command you'll always use is git init, which transforms a normal folder into a "Git warehouse". It's like saying "from today this folder is special, keep track of everything!"</p>
+                <p>Then there's git add, which is like putting files in a box before shipping it. And git commit is like sealing the box and writing on it what it contains.</p>
+                <code>git init
+git add .
+git commit -m "My first commit"</code>
+                <!-- 💡 MULTILINE CODE: white-space: pre-line preserves lines! -->
+                <ul>
+                    <li>git init: initializes a repository</li>
+                    <li>git add: prepares files for commit</li>
+                    <li>git commit: saves changes permanently</li>
+                </ul>
+            </section>
+
+            <!-- 🔄 REPEATED PATTERN: All other sections follow the same structure -->
+            <!-- section > header > h2 + paragraphs + code + lists -->
+            <!-- It's like book chapters, all with the same structure! -->
+
+            <section class="main-section" id="Understanding_GitHub">
+                <header><h2>Understanding GitHub</h2></header>
+                <p>GitHub is like a "social network for programmers". It's a place where you can store your Git projects online and share them with the world.</p>
+                <p>Think of it as Instagram, but instead of photos, you share code. You can follow other programmers, "like" (star) their projects, and even contribute to them!</p>
+                <p>GitHub makes collaboration incredibly easy. It's like having a shared workspace where everyone can see what others are doing and contribute their ideas.</p>
+                <code>git clone https://github.com/username/repository.git
+git remote add origin https://github.com/username/repository.git</code>
+                <ul>
+                    <li>Repository hosting: store projects online</li>
+                    <li>Collaboration tools: work with others</li>
+                    <li>Open source community: share and contribute</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Working_with_Branches">
+                <header><h2>Working with Branches</h2></header>
+                <p>Branches are one of Git's most powerful features. Imagine your project as a tree: the main trunk is the "main" branch, and you can create branches to try new features.</p>
+                <p>If you're working on a new feature, you create a separate branch. It's like having a copy of your project where you can experiment without breaking the original!</p>
+                <p>When your feature is ready, you can "merge" the branch with the main one. It's like grafting the branch onto the main tree.</p>
+                <code>git branch new-feature
+git checkout new-feature
+git switch -c another-feature</code>
+                <ul>
+                    <li>main/master: main branch</li>
+                    <li>feature branches: for new functionalities</li>
+                    <li>hotfix branches: for urgent bug fixes</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Collaboration_and_Pull_Requests">
+                <header><h2>Collaboration and Pull Requests</h2></header>
+                <p>Pull Requests are the heart of collaboration on GitHub. It's like knocking on the door and saying "Hey, I improved your project, want to see?"</p>
+                <p>When you make a Pull Request, you're asking the project owner to "pull" your changes into their repository. It's a polite way to propose changes.</p>
+                <p>Before your changes get accepted, other developers can review your code, suggest improvements, or approve the changes. It's like having a group of friends check your homework before you turn it in!</p>
+                <code>git push origin my-feature</code>
+                <ul>
+                    <li>Fork: copy a repository to your account</li>
+                    <li>Pull Request: propose changes</li>
+                    <li>Code Review: other developers check your code</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Git_Configuration">
+                <header><h2>Git Configuration</h2></header>
+                <p>Before using Git for the first time, it's like introducing yourself: you need to say who you are! Git needs to know your name and email to "sign" your commits.</p>
+                <p>Configuration is done once on your computer, and it's like filling out a digital ID card. Every time you make a commit, Git will use this information.</p>
+                <p>You can also configure your preferred text editor and many other details to customize Git according to your preferences.</p>
+                <code>git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+git config --global core.editor "code --wait"</code>
+                <ul>
+                    <li>Global configuration: applies to all projects</li>
+                    <li>Local configuration: only for one project</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Remote_Repositories">
+                <header><h2>Remote Repositories</h2></header>
+                <p>Remote repositories are like "backup copies" of your project stored on the internet. The most famous is GitHub, but there are others like GitLab and Bitbucket.</p>
+                <p>It's like having your personal diary (local repository) and a copy in a bank vault (remote repository). If your computer breaks, the copy is always safe!</p>
+                <p>You can connect your local project to multiple remote repositories simultaneously. It's useful when you want to backup on different services.</p>
+                <code>git remote -v
+git push origin main
+git pull origin main</code>
+                <ul>
+                    <li>origin: standard name for the main repository</li>
+                    <li>upstream: original repository when you fork</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Merge_Conflicts">
+                <header><h2>Merge Conflicts</h2></header>
+                <p>Merge conflicts are like when two people modify the same sentence of a document simultaneously. Git doesn't know which version to keep!</p>
+                <p>Don't be scared of conflicts: they're completely normal when working in teams. It's like two chefs modifying the same recipe - someone has to decide which ingredient to use.</p>
+                <p>When it happens, Git shows you exactly where the differences are and you have to choose what to keep. It's like being a judge deciding between two versions.</p>
+                <code><<<<<<< HEAD
+My version of the code
+=======
+Someone else's version
+>>>>>>> branch-name</code>
+                <ul>
+                    <li>HEAD: the version in your current branch</li>
+                    <li>Markers: <<<<<<< ======= >>>>>>> show the conflict</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Git_History_and_Logs">
+                <header><h2>Git History and Logs</h2></header>
+                <p>Git history is like a detailed log of everything that happened to your project. Each commit is like a diary entry with date, time, and description.</p>
+                <p>With git log you can see who did what and when. It's incredibly useful for understanding how the project evolved or finding when a bug was introduced.</p>
+                <p>You can also see differences between different versions, like comparing two photos of the same place taken at different times.</p>
+                <code>git log --oneline
+git show commit-hash
+git diff HEAD~1</code>
+                <ul>
+                    <li>git log: shows complete history</li>
+                    <li>git show: details of a specific commit</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="GitHub_Issues_and_Projects">
+                <header><h2>GitHub Issues and Projects</h2></header>
+                <p>GitHub Issues are like a public "to-do list" for your project. You can report bugs, propose new features, or ask questions.</p>
+                <p>It's like having a bulletin board where anyone can stick post-it notes with suggestions or problem reports. Much more organized than scattered comments!</p>
+                <p>Projects are like digital Kanban boards: you can organize Issues in columns like "To Do", "In Progress", "Done". Perfect for managing complex projects!</p>
+                <code># In a commit message
+git commit -m "Fix login bug - closes #42"</code>
+                <ul>
+                    <li>Bug reports: error notifications</li>
+                    <li>Feature requests: proposals for new functions</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Git_Best_Practices">
+                <header><h2>Git Best Practices</h2></header>
+                <p>Using Git well is like driving: there are unwritten rules that make everything safer and more organized for everyone.</p>
+                <p>Commit messages should be clear and descriptive, like photo captions: "Add login function" is much better than "random stuff".</p>
+                <p>Make small and frequent commits instead of one giant one at the end. It's like saving a document every paragraph instead of only at the end - if something goes wrong, you've lost less work!</p>
+                <code># Good example
+git commit -m "Add user authentication system"
+# Bad example
+git commit -m "stuff"</code>
+                <ul>
+                    <li>Frequent and small commits</li>
+                    <li>Descriptive messages</li>
+                    <li>Branch for each feature</li>
+                </ul>
+            </section>
+
+            <section class="main-section" id="Troubleshooting_Common_Issues">
+                <header><h2>Troubleshooting Common Issues</h2></header>
+                <p>Everyone makes mistakes with Git, even experienced programmers! It's normal and there are always solutions. It's like learning to ride a bike - some falls are inevitable.</p>
+                <p>The most useful command ever is git status. It's like asking "where am I?" when you're lost. It always tells you what's happening and what you can do.</p>
+                <p>If you made a wrong commit, don't panic! Git keeps track of everything and you can almost always go back. It's like having a very powerful "undo" button.</p>
+                <code>git status
+git reset --soft HEAD~1
+git stash</code>
+                <ul>
+                    <li>git status: to always orient yourself</li>
+                    <li>git reset: to undo commits</li>
+                    <li>git stash: to save temporary work</li>
+                </ul>
+            </section>
+
+        </main>
+    </body>
+</html>
+
+<!-- 🎯 ===== DOCUMENT ARCHITECTURE SUMMARY ===== -->
+<!-- 
+📚 DOCUMENTATION STRUCTURE:
+│
+├── 🧠 HEAD (dark mode configuration)
+│   └── 🎨 CSS with:
+│       ├── 🌑 Dark theme for developers
+│       ├── 🧭 Fixed side navbar
+│       ├── 🎢 Smooth scrolling for navigation
+│       ├── 🖱️ Elegant hover effects
+│       └── 📱 Complete responsive design
+│
+└── 📖 BODY (the documentation)
+    ├── 🧭 Navbar (always visible index)
+    │   ├── 📑 Main title
+    │   └── 🔗 12 links to sections
+    └── 📄 Main-doc (content)
+        └── 📖 12 sections, each with:
+            ├── 📰 Header with h2
+            ├── 📝 Explanatory paragraphs
+            ├── 💻 Code blocks
+            └── 📋 Lists of key points
+
+🎨 NOTABLE CSS TRICKS:
+├── 📐 calc(100vh - 8px): CSS math for precise heights
+├── 🎢 transition: all 0.3s ease: Smooth animations
+├── 👻 rgba() with transparency: Sophisticated colors
+├── 📱 Elaborate media query: From desktop to mobile
+└── 🔤 Modern font stack: System fonts for every OS
+
+📱 RESPONSIVE DESIGN:
+├── Desktop: Fixed side navbar + content side by side
+└── Mobile: Navbar on top + everything stacked vertically
+
+It's like a technical manual that magically transforms for every device! 📱💻✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Evolution of Approach
+
+I applied everything I'm learning from Refactoring UI. In these 3 days I also finished the 2nd Google UX course (2/8) and it was fascinating to learn **persona** and **user journey** and apply them directly to the project, especially because they're taught differently compared to Breccia's course.
+
+### The Disciplined Method
+
+I rigorously followed the requirements for names and elements requested by freeCodeCamp. Other times I went freestyle, then adjusted according to required specifications. It was much faster this way, even though I had less fun. I like that sense of freedom, but I understand I still need to learn all methods before autonomously choosing the best one.
+
+### The Driver's License Analogy
+
+A bit like getting a driver's license: you learn exactly as the instructor wants, but then the steering wheel height, gear changes, maneuvers will be up to you to decide.
+
+### Reflection on Work Teams
+
+I understand it's also necessary at a corporate level. Startups and very small teams are one thing where your work has a huge impact, in larger teams you'll necessarily be a small percentage and won't be able to decide everything, even though I'm sure you can still have enormous impact there too.
+
+### The Content Choice
+
+I decided to choose **Git and GitHub** as the documentation subject. I could have chosen HTML and CSS which I'm starting to understand, but I already have the Handbook for that. I opted to learn something I don't know thoroughly like the platform I'm writing on, researching and then reporting on the page.
+
+**Surprise:** I was amazed that I already knew the vast majority of functions from when I first researched them about 2 months ago.
+
+### The Refactoring UI Method in Practice
+
+I approached it following the Refactoring UI method:
+
+1. **Last night** until late I reviewed my notes
+2. **This morning** I transferred everything I'd need for the project to a txt file
+3. **I called it "in advance"** - colors, distances, fonts, everything predefined
+4. **Grayscale design** first to establish hierarchies and distances without being "distracted" by color
+5. **Design something functional** then iterate until perfect
+
+I really liked this method!
+
+### The Discovered Limit and Discipline
+
+I would have also liked to add that when scrolling the page, the navbar would show exactly where you were. I immediately discovered that was **JavaScript** territory, which I'm still waiting to learn. With pure CSS I could only achieve having a nav link stay highlighted after clicking it, but I wanted something interactive.
+
+I decided to **be patient** even though I can't wait to start JavaScript. This is my path: it doesn't make sense to pick things here and there that I haven't studied, until I've internalized and thoroughly understood them.
+
+### The Final Goal
+
+I want to internalize all this. I'd like to reach the **confidence** of sitting down and already knowing what's best to do, a bit like when I use Figma. Nevertheless, I admit I have much more fun coding, as I said in some past README.
+
+### What I Learned
+
+- **Technical documentation** structured and navigable
+- **Rigorous implementation** of specific requirements
+- **Refactoring UI methodology** applied to a real project
+- **Git/GitHub** deepened while documenting them
+- **Design system planning** with "in advance" file
+
+---
+
+**Next Project**: Learn CSS Variables by Building a City Skyline

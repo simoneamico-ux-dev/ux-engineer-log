@@ -1,0 +1,564 @@
+---
+sidebar_position: 13
+sidebar_label: 'Ferris Wheel'
+title: 'Ferris Wheel'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Ferris Wheel
+
+![ezgif-389208d40ff848](https://github.com/user-attachments/assets/178f3272-e5fc-48f4-894b-0d271d4d3ce2)
+
+
+### The Project
+Animated ferris wheel developed with CSS Animations, @keyframes and advanced transforms. A project that marked a turning point in connecting Figma and code.
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ferris Wheel</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="wheel">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+
+      <div class="cabin"></div>
+      <div class="cabin"></div>
+      <div class="cabin"></div>
+      <div class="cabin"></div>
+      <div class="cabin"></div>
+      <div class="cabin"></div>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+.wheel {
+  border: 2px solid black;
+  border-radius: 50%;
+  margin-left: 50px;
+  position: absolute;
+  height: 55vw;
+  width: 55vw;
+  max-width: 500px;
+  max-height: 500px;
+  animation-name: wheel;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.line {
+  background-color: black;
+  width: 50%;
+  height: 2px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0% 0%;
+}
+
+.line:nth-of-type(2) {
+  transform: rotate(60deg);
+}
+.line:nth-of-type(3) {
+  transform: rotate(120deg);
+}
+.line:nth-of-type(4) {
+  transform: rotate(180deg);
+}
+.line:nth-of-type(5) {
+  transform: rotate(240deg);
+}
+.line:nth-of-type(6) {
+  transform: rotate(300deg);
+}
+
+.cabin {
+  background-color: red;
+  width: 20%;
+  height: 20%;
+  position: absolute;
+  border: 2px solid;
+  transform-origin: 50% 0%;
+  animation: cabins 10s ease-in-out infinite;
+}
+
+.cabin:nth-of-type(1) {
+  right: -8.5%;
+  top: 50%;
+}
+.cabin:nth-of-type(2) {
+  right: 17%;
+  top: 93.5%;
+}
+.cabin:nth-of-type(3) {
+  right: 67%;
+  top: 93.5%;
+}
+.cabin:nth-of-type(4) {
+  left: -8.5%;
+  top: 50%;
+}
+.cabin:nth-of-type(5) {
+  left: 17%;
+  top: 7%;
+}
+.cabin:nth-of-type(6) {
+  right: 17%;
+  top: 7%;
+}
+
+@keyframes wheel {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+}
+
+@keyframes cabins {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    background-color: yellow;
+  }
+  50% {
+    background-color: purple;
+  }
+
+  75% {
+    background-color: yellow;
+  }
+
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the CSS amusement park!" -->
+<!-- It's like opening the gates of a digital theme park! 🎡 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our virtual playground -->
+<!-- lang="en" = English, but the fun is universal! 🎠 -->
+
+  <head>
+    <!-- 🧠 THE CONTROL CABIN: Where we program the rides -->
+    <!-- It's like the control room of the amusement park! -->
+    
+    <meta charset="UTF-8">
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for all the symbols of fun! 🎪🎨🎭 -->
+    
+    <title>Ferris Wheel</title>
+    <!-- 📑 TAB TITLE: Simple and direct like the sign of a ride -->
+    
+    <style>
+      /* 🎡 ===== THE CSS MAGIC OF THE FERRIS WHEEL ===== */
+      
+      .wheel {
+        /* 🎡 THE MAIN WHEEL: The giant circle that spins! */
+        
+        border: 2px solid black;
+        /* 🖤 BLACK BORDER: The metal frame of the wheel */
+        
+        border-radius: 50%;
+        /* ⭕ PERFECT CIRCLE: 50% transforms a square into a circle! */
+        /* It's the magic formula for creating circles in CSS */
+        
+        margin-left: 50px;
+        /* ⬅️ LEFT MARGIN: Moves the wheel from the edge */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: Positions itself relative to the window */
+        /* It's like being able to place the ride anywhere in the park */
+        
+        height: 55vw;
+        width: 55vw;
+        /* 📏 RESPONSIVE DIMENSIONS: 55% of the viewport width! */
+        /* vw = viewport width, adapts to the screen */
+        /* A perfect square that resizes! */
+        
+        max-width: 500px;
+        max-height: 500px;
+        /* 🚫 MAXIMUM LIMIT: Not larger than 500px */
+        /* It's like saying "ok, but let's not exaggerate with the dimensions!" */
+        
+        animation-name: wheel;
+        /* 🎬 ANIMATION NAME: It's called "wheel" */
+        /* Connected to the @keyframes wheel below */
+        
+        animation-duration: 10s;
+        /* ⏱️ DURATION: A complete rotation in 10 seconds */
+        /* It's the speed of our Ferris wheel */
+        
+        animation-iteration-count: infinite;
+        /* ♾️ INFINITE REPETITIONS: It spins forever! */
+        /* Like a real Ferris wheel that never stops */
+        
+        animation-timing-function: linear;
+        /* 📈 CONSTANT SPEED: No acceleration or deceleration */
+        /* linear = always at the same speed, realistic for a wheel */
+      }
+      
+      /* 📏 ===== THE SPOKES OF THE WHEEL ===== */
+      
+      .line {
+        /* 📏 BASE LINE: The model for all the spokes */
+        
+        background-color: black;
+        /* ⚫ BLACK COLOR: Like steel beams */
+        
+        width: 50%;
+        /* 📏 WIDTH: Half the diameter of the wheel */
+        /* Starts from the center and reaches the edge */
+        
+        height: 2px;
+        /* 📏 HEIGHT: Only 2px, a thin line */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: To position them precisely */
+        
+        top: 50%;
+        left: 50%;
+        /* 📍 STARTING POINT: Exactly at the center of the wheel */
+        /* 50% and 50% = the perfect center */
+        
+        transform-origin: 0% 0%;
+        /* 🎯 ROTATION POINT: The top-left corner */
+        /* 0% 0% = rotates from its beginning, not from the center */
+        /* It's like hammering a nail at the beginning of the line */
+      }
+      
+      .line:nth-of-type(2) {
+        transform: rotate(60deg);
+        /* 🔄 60° ROTATION: Second spoke */
+        /* 360° ÷ 6 spokes = 60° between each spoke */
+      }
+      
+      .line:nth-of-type(3) {
+        transform: rotate(120deg);
+        /* 🔄 120° ROTATION: Third spoke */
+        /* 60° × 2 = 120° */
+      }
+      
+      .line:nth-of-type(4) {
+        transform: rotate(180deg);
+        /* 🔄 180° ROTATION: Fourth spoke, perfectly opposite */
+        /* Forms the horizontal diameter */
+      }
+      
+      .line:nth-of-type(5) {
+        transform: rotate(240deg);
+        /* 🔄 240° ROTATION: Fifth spoke */
+        /* 60° × 4 = 240° */
+      }
+      
+      .line:nth-of-type(6) {
+        transform: rotate(300deg);
+        /* 🔄 300° ROTATION: Sixth and final spoke */
+        /* 60° × 5 = 300° */
+        /* Together they form a 6-pointed star! */
+      }
+      
+      /* 🎪 ===== THE WHEEL CABINS ===== */
+      
+      .cabin {
+        /* 🎪 BASE CABIN: Where passengers sit! */
+        
+        background-color: red;
+        /* 🔴 BRIGHT RED: Initial color of cabins */
+        
+        width: 20%;
+        height: 20%;
+        /* 📏 DIMENSIONS: 20% of the wheel, proportionate */
+        /* Big enough to be visible */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: To place them precisely */
+        
+        border: 2px solid;
+        /* 🖤 BORDER: Black outline (inherited color) */
+        
+        transform-origin: 50% 0%;
+        /* 🎯 ROTATION POINT: Center-top of the cabin */
+        /* 50% 0% = the center of the top side */
+        /* It's like they're hanging from above! */
+        /* BRILLIANT: this way they stay upright while the wheel turns! */
+        
+        animation: cabins 10s ease-in-out infinite;
+        /* 🎬 CABIN ANIMATION: Name "cabins" */
+        /* 10s = same duration as the wheel */
+        /* ease-in-out = accelerates and decelerates smoothly */
+        /* infinite = spins forever */
+      }
+      
+      /* 📍 ===== POSITIONING OF THE 6 CABINS ===== */
+      
+      .cabin:nth-of-type(1) {
+        right: -8.5%;
+        top: 50%;
+        /* 📍 CABIN 1: On the right, at mid-height */
+        /* right: -8.5% = sticks out slightly! */
+      }
+      
+      .cabin:nth-of-type(2) {
+        right: 17%;
+        top: 93.5%;
+        /* 📍 CABIN 2: Bottom right */
+        /* Positioned with millimeter precision */
+      }
+      
+      .cabin:nth-of-type(3) {
+        right: 67%;
+        top: 93.5%;
+        /* 📍 CABIN 3: Bottom left */
+        /* right: 67% = more towards the left */
+      }
+      
+      .cabin:nth-of-type(4) {
+        left: -8.5%;
+        top: 50%;
+        /* 📍 CABIN 4: On the left, at mid-height */
+        /* Mirror image of cabin 1 */
+      }
+      
+      .cabin:nth-of-type(5) {
+        left: 17%;
+        top: 7%;
+        /* 📍 CABIN 5: Top left */
+        /* top: 7% = almost at the top */
+      }
+      
+      .cabin:nth-of-type(6) {
+        right: 17%;
+        top: 7%;
+        /* 📍 CABIN 6: Top right */
+        /* Completes the circle of cabins! */
+        /* 🎯 The cabins form a perfect hexagon! */
+      }
+      
+      /* 🎬 ===== WHEEL ANIMATION ===== */
+      
+      @keyframes wheel {
+        /* 🎡 WHEEL ROTATION: The main animation */
+        
+         0% {
+           transform: rotate(0deg);
+           /* 🔄 START: Starting position, 0 degrees */
+         }
+         
+         100% {
+           transform: rotate(360deg);
+           /* 🔄 END: A complete rotation, 360 degrees */
+           /* Completes one rotation in 10 seconds */
+         }
+      }
+      
+      /* 🎨 ===== CABIN ANIMATION ===== */
+      
+      @keyframes cabins {
+        /* 🎪 COUNTER-ROTATION + COLORS: Double magic! */
+        
+        0% {
+          transform: rotate(0deg);
+          /* 🔄 START: Normal position */
+        }
+        
+        25% {
+          background-color: yellow;
+          /* 💛 25% OF THE ROTATION: Turns yellow! */
+          /* Like lights that change color */
+        }
+        
+        50% {
+          background-color: purple;
+          /* 💜 HALF ROTATION: Turns purple! */
+          /* The highest point of the rotation */
+        }
+        
+        75% {
+          background-color: yellow;
+          /* 💛 75% OF THE ROTATION: Returns to yellow! */
+          /* Symmetry in color changes */
+        }
+        
+        100% {
+          transform: rotate(-360deg);
+          /* 🔄 BRILLIANT COUNTER-ROTATION! */
+          /* -360deg = spins in the OPPOSITE direction */
+          /* While the wheel rotates clockwise... */
+          /* ...the cabins rotate COUNTERCLOCKWISE! */
+          /* RESULT: The cabins stay UPRIGHT! */
+          /* It's like walking on a treadmill in the opposite direction */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🎡 ===== THE FERRIS WHEEL COMES TO LIFE! ===== -->
+    
+    <div class="wheel">
+      <!-- 🎡 WHEEL CONTAINER: The main circle that spins -->
+      
+      <!-- 📏 THE 6 SPOKES OF THE WHEEL: Like bicycle spokes -->
+      <span class="line"></span>
+      <!-- 📏 SPOKE 1: Horizontal (0°) -->
+      
+      <span class="line"></span>
+      <!-- 📏 SPOKE 2: 60° -->
+      
+      <span class="line"></span>
+      <!-- 📏 SPOKE 3: 120° -->
+      
+      <span class="line"></span>
+      <!-- 📏 SPOKE 4: 180° (opposite to the first) -->
+      
+      <span class="line"></span>
+      <!-- 📏 SPOKE 5: 240° -->
+      
+      <span class="line"></span>
+      <!-- 📏 SPOKE 6: 300° -->
+      
+      <!-- 🎪 THE 6 CABINS: Where visitors sit -->
+      <div class="cabin"></div>
+      <!-- 🎪 CABIN 1: 3 o'clock position -->
+      
+      <div class="cabin"></div>
+      <!-- 🎪 CABIN 2: 5 o'clock position -->
+      
+      <div class="cabin"></div>
+      <!-- 🎪 CABIN 3: 7 o'clock position -->
+      
+      <div class="cabin"></div>
+      <!-- 🎪 CABIN 4: 9 o'clock position -->
+      
+      <div class="cabin"></div>
+      <!-- 🎪 CABIN 5: 11 o'clock position -->
+      
+      <div class="cabin"></div>
+      <!-- 🎪 CABIN 6: 1 o'clock position -->
+    </div>
+  </body>
+</html>
+
+<!-- 🎯 ===== CSS RIDE SUMMARY ===== -->
+<!-- 
+🎡 FERRIS WHEEL ARCHITECTURE:
+│
+├── 🧠 HEAD (ride control)
+│   └── 🎨 CSS with animations:
+│       ├── 🎡 .wheel: main circle that rotates
+│       ├── 📏 .line: 6 spokes positioned with rotate()
+│       ├── 🎪 .cabin: 6 cabins that counter-rotate
+│       └── 🎬 @keyframes: 2 synchronized animations
+│
+└── 🎡 BODY (the assembled ride)
+    └── 🎡 div.wheel
+        ├── 📏 6 span.line (spokes at 60° from each other)
+        └── 🎪 6 div.cabin (cabins in a hexagon)
+
+🎨 BRILLIANT CSS TRICKS:
+├── ⭕ border-radius: 50% = perfect circle!
+├── 📏 vw units: responsive dimensions (55vw)
+├── 🎯 transform-origin: strategic rotation points
+├── 🔄 nth-of-type(): selectors for each element
+├── 🎬 Synchronized animations at 10 seconds
+└── 💡 COUNTER-ROTATION: The cabins stay upright!
+
+🎭 THE MAGIC OF COUNTER-ROTATION:
+├── Wheel: rotate(360deg) in 10s
+├── Cabins: rotate(-360deg) in 10s
+└── Result: Cabins always vertical! 🤯
+
+It's like building a real Ferris wheel with just HTML and CSS! 🎡✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Revolutionary Connection
+
+**This project was amazing!** Here I connected **Figma with code** like never before.
+
+As usual I didn't stop at learning what freeCodeCamp taught me, but I deepened many parts. One in particular where I want to focus is **animations**.
+
+### The Animation Deep Dive
+
+With this project I should have only learned `linear` and `ease-in-out`, but remembering the names I decided to **deepen animations** to know all those I learned in Breccia's UI/UX design course, making a complete selection that I'll add to the handbook.
+
+### The Figma → CSS Translation Table
+
+| **IN FIGMA READ** | **IN CSS WRITE** | **WHEN** |
+|-------------------|-------------------|------------|
+| Linear | `linear` | 🤖 Mechanical |
+| Ease | `ease` | 😌 Natural |
+| Ease In | `ease-in` | 🚀 Accelerates |
+| Ease Out | `ease-out` | 🛑 Slows down |
+| Ease In and Out | `ease-in-out` | 🎢 Smooth |
+| Custom Bezier | `cubic-bezier(0.87,0,0.24,0.99)` | 🎭 Your style |
+| Smart Animate | `animation: name 300ms ease;` | 🎬 Animate |
+
+### Immediate Practical Application
+
+It was an **important step** that will surely be useful in the prototyping phase. Just yesterday I finished the wireframes to complete **Google UX course 3** where I used a Smart Animate Custom Bezier with values `0.87, 0, 0.24, 0.99` 800ms that gave animations **like a rocket that gently brakes**.
+
+**Today I learned** that I can translate it to CSS with:
+```css
+animation: animationname 800ms cubic-bezier(0.87, 0, 0.24, 0.99);
+```
+
+### What I Learned
+
+**CSS Animations:**
+- **@keyframes** to define animation sequences
+- **animation-name, animation-duration, animation-iteration-count**
+- **animation-timing-function** with all variants
+- **transform-origin** for custom rotation points
+
+**CSS Transforms:**
+- **rotate()** for precise rotations
+- **transform-origin** for pivot point control
+- **nth-of-type()** to select specific elements
+
+**Figma-CSS Integration:**
+- **Direct translation** from Smart Animate to CSS animation
+- **Custom Bezier curves** for personalized animations
+- **Perfect timing** between prototype and implementation
+
+### Reflection
+
+This project demonstrated how powerful it is to **not stop** at minimum requirements. Deepening animations will allow me to prototype in Figma knowing exactly how to implement everything in CSS. It's the perfect union between design and development.
+
+---
+
+**Next Project**: Learn CSS Transforms by Building a Penguin

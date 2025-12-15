@@ -1,0 +1,319 @@
+---
+sidebar_position: 1
+sidebar_label: 'Cat Photo App'
+title: 'Cat Photo App'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Il Mio Primo Progetto HTML
+
+### Codice Sorgente
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+   <title>CatPhotoApp</title>
+ </head>
+  <body>
+    <main>
+      <h1>CatPhotoApp</h1>
+      <section>
+        <h2>Cat Photos</h2>
+<p>Everyone loves <a href="https://cdn.freecodecamp.org/curriculum/cat-photo-app/running-cats.jpg">cute cats</a> online!</p>
+<p>See more <a target="_blank" href="https://freecatphotoapp.com">cat photos</a> in our gallery.</p>
+<a href="https://freecatphotoapp.com">
+  <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back.">
+</a>
+     <section>
+  <h2>Cat Lists</h2>
+  <h3>Things cats love:</h3>
+ <ul>
+   <li>catnip</li>
+    <li>laser pointers</li>
+    <li>lasagna</li>
+  </ul>
+  <figure>
+    <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/lasagna.jpg" alt="A slice of lasagna on a plate.">
+   <figcaption>Cats <em>love</em> lasagna.</figcaption>
+ </figure>
+  <h3>Top 3 things cats hate:</h3>
+  <ol>
+   <li>flea treatment</li>
+    <li>thunder</li>
+    <li>other cats</li>
+  </ol>
+
+  <figure>
+    <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/cats.jpg" alt="Five cats looking around a field.">
+    <figcaption>Cats <strong>hate</strong> other cats.</figcaption>
+  </figure>
+</section>
+<section>
+  <h2>Cat Form</h2>
+  <form action="https://freecatphotoapp.com/submit-cat-photo">
+    <fieldset>
+      <legend>Is your cat an indoor or outdoor cat?</legend>
+<label>
+  <input id="indoor" type="radio" name="indoor-outdoor" value="indoor" checked> Indoor
+</label>
+      <label>
+        <input id="outdoor" type="radio" name="indoor-outdoor" value="outdoor"> Outdoor
+      </label>
+    </fieldset>
+    <fieldset>
+      <legend>What's your cat's personality?</legend>
+      <input id="loving" type="checkbox" name="personality" value="loving" checked>
+      <label for="loving">Loving</label>
+      <input id="lazy" type="checkbox" name="personality" value="lazy">
+      <label for="lazy">Lazy</label>
+
+      <input id="energetic" type="checkbox" name="personality" value="energetic">
+      <label for="energetic">Energetic</label>
+    </fieldset>
+
+    <input type="text" name="catphotourl" placeholder="cat photo URL" required>
+    <button type="submit">Submit</button>
+  </form>
+</section>
+<footer>
+  <p>
+    No Copyright -
+    <a href="https://www.freecodecamp.org">freeCodeCamp.org</a>
+  </p>
+</footer>
+</body>
+</html>
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- DOCTYPE: Tells the browser this is HTML5 (latest version). 
+     ALWAYS first line. Without this, browser might use 
+     old compatibility mode (quirks mode) -->
+
+<html lang="en">
+<!-- <html></html>: Root tag that contains the entire HTML document.
+     lang="en": Helps browsers, screen readers and SEO, acronym for Search Engine Optimization,
+     is a set of techniques and strategies aimed at improving the visibility and positioning of a website in organic results (not paid) of search engines like Google.
+     In practice, SEO helps your site appear higher when people search for information relevant to your content.
+     lang="en": Tells the browser what language the site is in
+     Knowing the site's language, the browser can offer translations -->
+
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta charset=: Specifies the character encoding.
+         "utf-8"> is the modern standard and also supports symbols, accented letters, emojis, etc..., practically all characters existing in the world -->
+         
+    <title>CatPhotoApp</title>
+    <!-- title: Page title displayed in the browser tab. Also useful for SEO -->
+  </head>
+
+  <body>
+    <main>
+    <!-- <main></main>: Main content of the page. Helps with semantics, thus improving the readability of the html code. In this case it contains all the page content except the footer (copyright and "end credits") -->
+
+      <h1>CatPhotoApp</h1>
+      <!-- <h1></h1>: Main heading of the page. Each page should have only one -->
+
+      <section>
+        <!-- <section></section>: Distinct thematic blocks. This one is about cat photos, helps SEO and at the same time helps reading the HTML code -->
+
+        <h2>Cat Photos</h2>
+        <!-- <h2></h2>: Subheading of the content -->
+
+<p>Everyone loves <a href="https://cdn.freecodecamp.org/curriculum/cat-photo-app/running-cats.jpg">cute cats</a> online!</p>
+<!-- <p></p>: HTML paragraph, used for text blocks.
+     <a></a>: Anchor tag, hyperlink.
+     If you don't use the target attribute, the link opens in the same browser tab (default behavior).
+     This means the new page replaces the current one.
+     If instead you use target="_blank", the link opens in a new tab, leaving the current page open. -->
+
+<p>See more <a target="_blank" href="https://freecatphotoapp.com">cat photos</a> in our gallery.</p>
+<!-- <p></p>: Paragraph containing a link.
+     <a target="_blank"></a>: The link opens in a new tab.
+     target="_blank" is useful for external links or when you don't want the user to leave your site. -->
+
+<a href="https://freecatphotoapp.com">
+  <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back.">
+</a>
+<!-- <a></a>: Images can also be made clickable by placing them inside an anchor.
+     <img>: Inserts an image into the page. It's a "void element", so it doesn't have a closing tag.
+     src: URL of the image to load.
+     alt: Text description used by screen readers and displayed if the image fails to load.
+     Very important for accessibility and SEO. -->
+
+     <section>
+     <!-- <section></section>: Independent thematic section. Here it contains lists and images related to cat behavior.
+          Used to logically organize content and improve readability and SEO. -->
+
+  <h2>Cat Lists</h2>
+  <!-- <h2></h2>: Section subtitle. Correct hierarchical structure: h1 > h2 > h3... -->
+
+  <h3>Things cats love:</h3>
+  <!-- <h3></h3>: Sub-section within the main section.
+       Introduces a specific list: "things that cats love". -->
+
+  <ul>
+    <!-- <ul></ul>: Unordered list, used when the order of elements is not important. -->
+    <li>catnip</li>
+    <li>laser pointers</li>
+    <li>lasagna</li>
+    <!-- <li></li>: List item. Each element represents an item in the list. -->
+  </ul>
+
+  <figure>
+  <!-- <figure></figure>: Semantic tag for associating images with a caption.
+         Improves accessibility and logical organization. -->
+
+    <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/lasagna.jpg" alt="A slice of lasagna on a plate.">
+    <!-- <img>: Displays an image. Void element (has no closing tag).
+         alt: alternative text described for users with visual disabilities or in case of loading error. -->
+
+    <figcaption>Cats <em>love</em> lasagna.</figcaption>
+    <!-- <figcaption></figcaption>: Caption that describes the image.
+         <em></em>: Textual emphasis, usually displayed in italics. Used to highlight concepts. -->
+  </figure>
+
+  <h3>Top 3 things cats hate:</h3>
+  <!-- New subsection, this time dedicated to what cats hate -->
+
+  <ol>
+    <!-- <ol></ol>: Ordered list, used when order is important or ranked -->
+    <li>flea treatment</li>
+    <li>thunder</li>
+    <li>other cats</li>
+    <!-- As above, each <li></li> represents an item in the list. -->
+  </ol>
+
+  <figure>
+    <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/cats.jpg" alt="Five cats looking around a field.">
+    <!-- Representative image of the last item in the list: "other cats" -->
+
+    <figcaption>Cats <strong>hate</strong> other cats.</figcaption>
+    <!-- <strong></strong>: Emphasizes importance or strength. Usually displayed in bold.
+         Semantic, useful for screen readers and for structuring the importance of text. -->
+  </figure>
+</section>
+<!-- Closing of the "Cat Lists" section. Excellent hierarchical structure: section > h2 > h3 > ul/ol + figure -->
+
+<section>
+<!-- <section></section>: Section dedicated to the form for submitting information.
+       Separating forms in a section helps keep the layout clean and semantic. -->
+
+  <h2>Cat Form</h2>
+  <!-- <h2></h2>: Section title. Hierarchical structure consistent with the rest of the page -->
+
+  <form action="https://freecatphotoapp.com/submit-cat-photo">
+  <!-- <form></form>: Collects and sends data to a server.
+         action="...": Specifies the destination URL where the data will be sent when "Submit" is pressed. -->
+
+    <fieldset>
+    <!-- <fieldset></fieldset>: Logically groups related inputs.
+           Improves accessibility and visually organizes forms -->
+
+      <legend>Is your cat an indoor or outdoor cat?</legend>
+      <!-- <legend></legend>: Title of the input group. Provides a visual and semantic context to the block. -->
+
+<label>
+  <input id="indoor" type="radio" name="indoor-outdoor" value="indoor" checked> Indoor
+</label>
+<!-- <input>: Creates a radio button, which is a single-choice button (circle shaped).
+     Radio buttons are used when you want the user to choose only one option among multiple alternatives (e.g.: Yes/No, Male/Female, Indoor/Outdoor).
+
+     type="radio": Specifies that this input is a radio button.
+     name="indoor-outdoor": Group membership. All radios with the same name are linked together: the user can select only one per group.
+     id="indoor": Unique identifier. Used to connect it to a <label> with for="indoor", or to use it with CSS/JS.
+     value="indoor": The value that will be sent to the server when this radio is selected. This is what the backend receives.
+     checked: Sets this radio as selected by default when the page loads.
+
+     <label></label>: Makes the text ("Indoor") clickable too, not just the circle. Improves accessibility and usability.
+     In this case, the text is nested inside the label, so the for attribute is not necessary. -->
+
+
+      <label>
+        <input id="outdoor" type="radio" name="indoor-outdoor" value="outdoor"> Outdoor
+      </label>
+      <!-- Same structure as the previous radio, but with different value and id. -->
+    </fieldset>
+
+    <fieldset>
+      <legend>What's your cat's personality?</legend>
+      <!-- New logical group: multiple checkboxes with cat personality -->
+
+      <input id="loving" type="checkbox" name="personality" value="loving" checked>
+      <label for="loving">Loving</label>
+      <!-- <input>: Checkbox allows multiple selection (selection control in ux)
+           name="personality": Same for all → allows sending multiple values under the same key.
+           value="loving": Data that will be sent.
+           checked: selected by default.
+           <label for="loving">: Connects the label to the checkbox using the id -->
+
+      <input id="lazy" type="checkbox" name="personality" value="lazy">
+      <label for="lazy">Lazy</label>
+
+      <input id="energetic" type="checkbox" name="personality" value="energetic">
+      <label for="energetic">Energetic</label>
+      <!-- All three checkboxes share the same name, but have different ids and values.
+           Useful for collecting multiple characteristics under the same key. -->
+    </fieldset>
+
+    <input type="text" name="catphotourl" placeholder="cat photo URL" required>
+    <!-- <input>: Text field for entering an image URL.
+         name="catphotourl": Field identifier.
+         placeholder: Guide text visible until the user writes something.
+         required: Forces the user to fill in this field to submit the form. -->
+
+    <button type="submit">Submit</button>
+    <!-- <button></button>: Button that submits the form.
+         type="submit": It's the default type in forms, but specifying it explicitly is good practice. -->
+  </form>
+</section>
+<!-- Closing of the "Cat Form" section. Great organization with fieldsets for logically grouped inputs. -->
+
+<footer>
+<!-- <footer></footer>: Semantic section used for "closing" contents of a page.
+       Usually includes: legal info, copyright, contacts, reference links.
+       Appears at the bottom of the page. -->
+
+  <p>
+    No Copyright -
+    <a href="https://www.freecodecamp.org">freeCodeCamp.org</a>
+  </p>
+  <!-- <p></p>: Paragraph containing text and a link.
+       <a></a>: Link to external freeCodeCamp site. In this case there is no target="_blank", so it opens in the same tab.
+       You might consider using target="_blank" if you want the link not to make the user leave your site. -->
+
+</footer>
+</body>
+<!-- </body>: Closing tag for the page body.
+     All elements visible to the user (texts, images, forms, etc.) are inside <body>.
+     Must always be present and close before the </html> tag. -->
+
+</html>
+<!-- </html>: Final tag of the document.
+     Closes the opening <html> tag.
+     All HTML content must be contained within <html></html>. -->
+```
+</TabItem>
+
+</Tabs>
+
+What I Learned:
+Struttura HTML5 (head, body, main),
+Elementi semantici vs div,
+Form con radio button e checkbox,
+Nozioni base di accessibilità (alt text, label)
+
+Tempo: 5 ore di studio + 44 min di commenti
+
+Prossimo: CSS con il progetto Cafe Menu

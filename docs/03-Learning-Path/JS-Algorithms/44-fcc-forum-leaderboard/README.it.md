@@ -1,0 +1,1217 @@
+---
+sidebar_position: 18
+sidebar_label: 'fCC Forum Leaderboard'
+title: 'fCC Forum Leaderboard'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# fCC Forum Leaderboard
+
+![Tabella della classifica del forum fCC con argomenti, categorie e avatar degli utenti](https://github.com/user-attachments/assets/d742419f-9aea-4493-a0c7-ca645b2b7e4d)
+
+### Il Progetto
+
+fCC Forum Leaderboard sviluppato con JavaScript vanilla, Fetch API e programmazione asincrona, combinando manipolazione del DOM, destrutturazione avanzata e formattazione dei dati in una tabella responsive. Un progetto che rappresenta il passaggio naturale dalla gestione delle Promises con `.then()` a una sintassi più espressiva e leggibile con `async/await`.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fCC Forum Leaderboard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <img
+          class="fcc-logo"
+          src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg"
+          alt="freeCodeCamp logo"
+        />
+      </nav>
+      <h1 class="title">Latest Topics</h1>
+    </header>
+    <main>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th id="topics">Topics</th>
+              <th id="avatars">Avatars</th>
+              <th id="replies">Replies</th>
+              <th id="views">Views</th>
+              <th id="activity">Activity</th>
+            </tr>
+          </thead>
+          <tbody id="posts-container"></tbody>
+        </table>
+      </div>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --main-bg-color: #2a2a40;
+  --black: #000;
+  --dark-navy: #0a0a23;
+  --dark-grey: #d0d0d5;
+  --medium-grey: #dfdfe2;
+  --light-grey: #f5f6f7;
+  --peach: #f28373;
+  --salmon-color: #f0aea9;
+  --light-blue: #8bd9f6;
+  --light-orange: #f8b172;
+  --light-green: #93cb5b;
+  --golden-yellow: #f1ba33;
+  --gold: #f9aa23;
+  --green: #6bca6b;
+}
+
+body {
+  background-color: var(--main-bg-color);
+}
+
+nav {
+  background-color: var(--dark-navy);
+  padding: 10px 0;
+}
+
+.fcc-logo {
+  width: 210px;
+  display: block;
+  margin: auto;
+}
+
+.title {
+  margin: 25px 0;
+  text-align: center;
+  color: var(--light-grey);
+}
+
+.table-wrapper {
+  padding: 0 25px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  color: var(--dark-grey);
+  margin: auto;
+  table-layout: fixed;
+  border-collapse: collapse;
+  overflow-x: scroll;
+}
+
+#topics {
+  text-align: start;
+  width: 60%;
+}
+
+th {
+  border-bottom: 2px solid var(--dark-grey);
+  padding-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+td:not(:first-child) {
+  text-align: center;
+}
+
+td {
+  border-bottom: 1px solid var(--dark-grey);
+  padding: 20px 0;
+}
+
+.post-title {
+  font-size: 1.2rem;
+  color: var(--medium-grey);
+  text-decoration: none;
+}
+
+.category {
+  padding: 3px;
+  color: var(--black);
+  text-decoration: none;
+  display: block;
+  width: fit-content;
+  margin: 10px 0 10px;
+}
+
+.career {
+  background-color: var(--salmon-color);
+}
+
+.feedback,
+.html-css {
+  background-color: var(--light-blue);
+}
+
+.support {
+  background-color: var(--light-orange);
+}
+
+.general {
+  background-color: var(--light-green);
+}
+
+.javascript {
+  background-color: var(--golden-yellow);
+}
+
+.backend {
+  background-color: var(--gold);
+}
+
+.python {
+  background-color: var(--green);
+}
+
+.motivation {
+  background-color: var(--peach);
+}
+
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.avatar-container img {
+  width: 30px;
+  height: 30px;
+}
+
+@media (max-width: 750px) {
+  .table-wrapper {
+    padding: 0 15px;
+  }
+
+  table {
+    width: 700px;
+  }
+
+  th {
+    font-size: 1.2rem;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const forumLatest = "https://cdn.freecodecamp.org/curriculum/forum-latest/latest.json";
+const forumTopicUrl = "https://forum.freecodecamp.org/t/";
+const forumCategoryUrl = "https://forum.freecodecamp.org/c/";
+const avatarUrl = "https://sea1.discourse-cdn.com/freecodecamp";
+
+const postsContainer = document.getElementById("posts-container");
+
+const allCategories = {
+  299: { category: "Career Advice", className: "career" },
+  409: { category: "Project Feedback", className: "feedback" },
+  417: { category: "freeCodeCamp Support", className: "support" },
+  421: { category: "JavaScript", className: "javascript" },
+  423: { category: "HTML - CSS", className: "html-css" },
+  424: { category: "Python", className: "python" },
+  432: { category: "You Can Do This!", className: "motivation" },
+  560: { category: "Backend Development", className: "backend" },
+};
+
+const forumCategory = (id) => {
+  let selectedCategory = {};
+
+  if (allCategories.hasOwnProperty(id)) {
+    const { className, category } = allCategories[id];
+
+    selectedCategory.className = className;
+    selectedCategory.category = category;
+  } else {
+    selectedCategory.className = "general";
+    selectedCategory.category = "General";
+    selectedCategory.id = 1;
+  }
+  const url = `${forumCategoryUrl}${selectedCategory.className}/${id}`;
+  const linkText = selectedCategory.category;
+  const linkClass = `category ${selectedCategory.className}`;
+
+  return `<a href="${url}" class="${linkClass}" target="_blank">
+    ${linkText}
+  </a>`;
+};
+
+const timeAgo = (time) => {
+  const currentTime = new Date();
+  const lastPost = new Date(time);
+
+  const timeDifference = currentTime - lastPost;
+  const msPerMinute = 1000 * 60;
+
+  const minutesAgo = Math.floor(timeDifference / msPerMinute);
+  const hoursAgo = Math.floor(minutesAgo / 60);
+  const daysAgo = Math.floor(hoursAgo / 24);
+
+  if (minutesAgo < 60) {
+    return `${minutesAgo}m ago`;
+  }
+
+  if (hoursAgo < 24) {
+    return `${hoursAgo}h ago`;
+  }
+
+  return `${daysAgo}d ago`;
+};
+
+const viewCount = (views) => {
+  const thousands = Math.floor(views / 1000);
+
+  if (views >= 1000) {
+    return `${thousands}k`;
+  }
+
+  return views;
+};
+
+const avatars = (posters, users) => {
+  return posters
+    .map((poster) => {
+      const user = users.find((user) => user.id === poster.user_id);
+      if (user) {
+        const avatar = user.avatar_template.replace(/{size}/, 30);
+        const userAvatarUrl = avatar.startsWith("/user_avatar/")
+          ? avatarUrl.concat(avatar)
+          : avatar;
+        return `<img src="${userAvatarUrl}" alt="${user.name}" />`;
+      }
+    })
+    .join("");
+};
+
+const fetchData = async () => {
+  try {
+    const res = await fetch(forumLatest);
+    const data = await res.json();
+    showLatestPosts(data);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+fetchData();
+
+const showLatestPosts = (data) => {
+  const { topic_list, users } = data;
+  const { topics } = topic_list;
+
+  postsContainer.innerHTML = topics.map((item) => {
+    const {
+      id,
+      title,
+      views,
+      posts_count,
+      slug,
+      posters,
+      category_id,
+      bumped_at,
+    } = item;
+
+    return `
+    <tr>
+      <td>
+        <a class="post-title" target="_blank" href="${forumTopicUrl}${slug}/${id}">${title}</a>
+
+        ${forumCategory(category_id)}
+      </td>
+      <td>
+        <div class="avatar-container">
+          ${avatars(posters, users)}
+        </div>
+      </td>
+      <td>${posts_count - 1}</td>
+      <td>${viewCount(views)}</td>
+      <td>${timeAgo(bumped_at)}</td>
+    </tr>`;
+  }).join("");
+};
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the fCC Forum Leaderboard!" -->
+<!-- It's like putting the sign outside our digital community hub! 🏛️ -->
+
+<html lang="en">
+  <!-- 🌍 MAIN CONTAINER: The entire forum leaderboard application -->
+  <!-- lang="en" = English, for internationalization and accessibility -->
+  
+  <head>
+    <!-- 🧠 THE COMMAND CENTER: Setup and resource management -->
+    <!-- Like the backstage area before a community forum event! -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 CHARACTER ENCODING: UTF-8 supports global language characters -->
+    <!-- Essential for a global community like freeCodeCamp! -->
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 🔄 BROWSER COMPATIBILITY: Ensures best rendering in IE -->
+    <!-- "IE=edge" tells Internet Explorer to use its latest rendering engine -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE DESIGN: "This forum looks great on any device!" -->
+    <!-- Makes the site adapt to mobile, tablet, and desktop screens -->
+    
+    <title>fCC Forum Leaderboard</title>
+    <!-- 📑 PAGE TITLE: Appears in the browser tab -->
+    <!-- Clear and concise - users instantly know what they're viewing -->
+    
+    <style>
+      /* 🎨 ===== CSS STYLES: Forum Visual Design ===== */
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        /* 🧹 CSS RESET: Clean slate for consistent styling */
+        /* Removes browser default spacing and ensures consistent box model */
+        /* Like wiping the whiteboard before starting a new lesson */
+      }
+      
+      :root {
+        --main-bg-color: #2a2a40;
+        --black: #000;
+        --dark-navy: #0a0a23;
+        --dark-grey: #d0d0d5;
+        --medium-grey: #dfdfe2;
+        --light-grey: #f5f6f7;
+        --peach: #f28373;
+        --salmon-color: #f0aea9;
+        --light-blue: #8bd9f6;
+        --light-orange: #f8b172;
+        --light-green: #93cb5b;
+        --golden-yellow: #f1ba33;
+        --gold: #f9aa23;
+        --green: #6bca6b;
+        /* 🎨 CSS VARIABLES: Central color palette */
+        /* Creates a consistent theme across the leaderboard */
+        /* Just like a forum has consistent category colors! */
+      }
+      
+      body {
+        background-color: var(--main-bg-color);
+        /* 🖼️ BACKGROUND: Deep blue-purple like fCC's brand */
+        /* Creates the space where our forum data lives */
+      }
+      
+      nav {
+        background-color: var(--dark-navy);
+        padding: 10px 0;
+        /* 📊 NAVIGATION BAR: Top container with branding */
+        /* Dark navy background matches fCC's actual site */
+        /* Padding gives the logo breathing room */
+      }
+      
+      .fcc-logo {
+        width: 210px;
+        display: block;
+        margin: auto;
+        /* 🖼️ LOGO STYLING: Centered and properly sized */
+        /* Width preserves the logo's aspect ratio */
+        /* margin: auto centers it horizontally */
+        /* Like the sign above a conference hall */
+      }
+      
+      .title {
+        margin: 25px 0;
+        text-align: center;
+        color: var(--light-grey);
+        /* 📑 PAGE TITLE: "Latest Topics" heading */
+        /* Generous margins provide vertical spacing */
+        /* Light color on dark background for readability */
+        /* Like the welcome banner at a forum event */
+      }
+      
+      .table-wrapper {
+        padding: 0 25px;
+        overflow-x: auto;
+        /* 📦 TABLE CONTAINER: Horizontal scrolling on small screens */
+        /* Side padding prevents table from touching screen edges */
+        /* overflow-x enables horizontal scrolling when needed */
+        /* Like a viewing window into our forum data */
+      }
+      
+      table {
+        width: 100%;
+        color: var(--dark-grey);
+        margin: auto;
+        table-layout: fixed;
+        border-collapse: collapse;
+        overflow-x: scroll;
+        /* 📊 MAIN TABLE: Forum topics display */
+        /* 100% width uses available space in container */
+        /* fixed layout maintains column widths */
+        /* border-collapse removes gaps between cells */
+        /* Like a well-organized bulletin board */
+      }
+      
+      #topics {
+        text-align: start;
+        width: 60%;
+        /* 📝 TOPICS COLUMN: Contains post titles and categories */
+        /* Left alignment for easier reading of titles */
+        /* Takes 60% of table width - most important data */
+        /* Like the main subject line of forum posts */
+      }
+      
+      th {
+        border-bottom: 2px solid var(--dark-grey);
+        padding-bottom: 10px;
+        font-size: 1.3rem;
+        /* 📋 TABLE HEADERS: Column labeling */
+        /* Border creates visual separation from data */
+        /* Padding adds space between text and border */
+        /* Larger font size emphasizes the headers */
+        /* Like section dividers in a conference agenda */
+      }
+      
+      td:not(:first-child) {
+        text-align: center;
+        /* ⚖️ DATA ALIGNMENT: Centers all columns except first */
+        /* First column (topics) stays left-aligned for readability */
+        /* Centered data looks clean for numerical/avatar content */
+        /* The :not pseudo-class targets everything except topics */
+      }
+      
+      td {
+        border-bottom: 1px solid var(--dark-grey);
+        padding: 20px 0;
+        /* 📊 TABLE CELLS: Individual data items */
+        /* Border creates subtle row separation */
+        /* Generous vertical padding improves readability */
+        /* Like individual forum posts in a list */
+      }
+      
+      .post-title {
+        font-size: 1.2rem;
+        color: var(--medium-grey);
+        text-decoration: none;
+        /* 📝 POST TITLES: Forum topic headlines */
+        /* Slightly larger font emphasizes importance */
+        /* Medium grey is softer than pure white */
+        /* No underline for cleaner appearance */
+        /* Like clickable subject lines in a forum */
+      }
+      
+      .category {
+        padding: 3px;
+        color: var(--black);
+        text-decoration: none;
+        display: block;
+        width: fit-content;
+        margin: 10px 0 10px;
+        /* 🏷️ CATEGORY TAGS: Topic classification */
+        /* Padding creates space around the text */
+        /* Black text for readability on colored backgrounds */
+        /* fit-content sizes the tag to its content */
+        /* Margin provides spacing from surrounding elements */
+        /* Like category badges worn at a conference */
+      }
+      
+      .career {
+        background-color: var(--salmon-color);
+        /* 🏷️ CAREER CATEGORY: Salmon background */
+        /* Color-coding helps users quickly identify topics */
+      }
+      
+      .feedback,
+      .html-css {
+        background-color: var(--light-blue);
+        /* 🏷️ FEEDBACK & HTML-CSS CATEGORIES: Blue background */
+        /* Grouped selectors apply the same style to multiple classes */
+      }
+      
+      .support {
+        background-color: var(--light-orange);
+        /* 🏷️ SUPPORT CATEGORY: Orange background */
+      }
+      
+      .general {
+        background-color: var(--light-green);
+        /* 🏷️ GENERAL CATEGORY: Green background */
+      }
+      
+      .javascript {
+        background-color: var(--golden-yellow);
+        /* 🏷️ JAVASCRIPT CATEGORY: Yellow background */
+      }
+      
+      .backend {
+        background-color: var(--gold);
+        /* 🏷️ BACKEND CATEGORY: Gold background */
+      }
+      
+      .python {
+        background-color: var(--green);
+        /* 🏷️ PYTHON CATEGORY: Green background */
+      }
+      
+      .motivation {
+        background-color: var(--peach);
+        /* 🏷️ MOTIVATION CATEGORY: Peach background */
+      }
+      
+      .avatar-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        /* 👥 AVATAR CONTAINER: Holds user profile pictures */
+        /* Flexbox creates a row of images that can wrap */
+        /* justify-content centers them horizontally */
+        /* gap provides consistent spacing between avatars */
+        /* flex-wrap allows overflow to create additional rows */
+        /* Like a group photo of forum participants */
+      }
+      
+      .avatar-container img {
+        width: 30px;
+        height: 30px;
+        /* 👤 AVATAR IMAGES: User profile pictures */
+        /* Fixed dimensions keep avatars consistently sized */
+        /* 30x30px is large enough to be visible but small enough to be compact */
+      }
+      
+      @media (max-width: 750px) {
+        /* 📱 MOBILE STYLES: Adjustments for smaller screens */
+        /* Activates when viewport width is 750px or less */
+        
+        .table-wrapper {
+          padding: 0 15px;
+          /* 📏 REDUCED PADDING: Saves space on small screens */
+          /* 15px instead of 25px gives more space to content */
+        }
+      
+        table {
+          width: 700px;
+          /* 📊 FIXED TABLE WIDTH: Enables horizontal scrolling */
+          /* 700px ensures consistent column widths */
+          /* Combined with overflow-x:auto, allows scrolling on small screens */
+          /* Like a map that's bigger than its viewing window */
+        }
+      
+        th {
+          font-size: 1.2rem;
+          /* 🔤 SMALLER HEADERS: Better fit for mobile */
+          /* Reduced from 1.3rem to save space */
+        }
+      
+        .post-title {
+          font-size: 1.1rem;
+          /* 🔤 SMALLER POST TITLES: Better fit for mobile */
+          /* Reduced from 1.2rem to save space */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 📊 ===== THE BODY: Forum Leaderboard Display ===== -->
+    
+    <header>
+      <!-- 🏛️ SITE HEADER: Branding and title area -->
+      
+      <nav>
+        <!-- 🧭 NAVIGATION: Houses the fCC logo -->
+        
+        <img
+          class="fcc-logo"
+          src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg"
+          alt="freeCodeCamp logo"
+          /* 🖼️ FCC LOGO: Official branding image */
+          /* SVG format ensures crisp display at any size */
+          /* alt text provides accessibility for screen readers */
+        />
+      </nav>
+      <h1 class="title">Latest Topics</h1>
+      <!-- 📑 MAIN HEADING: Page title -->
+      <!-- Simple, clear text explains the page's purpose -->
+    </header>
+
+    <main>
+      <!-- 📋 MAIN CONTENT: The forum leaderboard data -->
+      
+      <div class="table-wrapper">
+        <!-- 📦 TABLE CONTAINER: Enables responsive scrolling -->
+        
+        <table>
+          <!-- 📊 DATA TABLE: Structured display of forum topics -->
+          
+          <thead>
+            <!-- 🏷️ TABLE HEADER: Column titles -->
+            
+            <tr>
+              <!-- 📋 HEADER ROW: Contains column labels -->
+              
+              <th id="topics">Topics</th>
+              <!-- 📝 TOPICS HEADER: Main content column -->
+              <!-- id attribute connects to CSS selector and improves accessibility -->
+              
+              <th id="avatars">Avatars</th>
+              <!-- 👥 AVATARS HEADER: User pictures column -->
+              
+              <th id="replies">Replies</th>
+              <!-- 💬 REPLIES HEADER: Post count column -->
+              
+              <th id="views">Views</th>
+              <!-- 👁️ VIEWS HEADER: Visibility metrics column -->
+              
+              <th id="activity">Activity</th>
+              <!-- ⏰ ACTIVITY HEADER: Recency information column -->
+            </tr>
+          </thead>
+          <tbody id="posts-container"></tbody>
+          <!-- 📋 TABLE BODY: Will be filled by JavaScript -->
+          <!-- Empty initially, JavaScript will inject forum data here -->
+          <!-- id="posts-container" provides a hook for the JS to target -->
+        </table>
+      </div>
+    </main>
+    <script>
+      /* 🧠 ===== JAVASCRIPT: The Dynamic Forum Data Engine ===== */
+      
+      const forumLatest = "https://cdn.freecodecamp.org/curriculum/forum-latest/latest.json";
+      /* 📡 DATA SOURCE URL: API endpoint for latest forum posts */
+      /* CDN hosted JSON file with forum data */
+      
+      const forumTopicUrl = "https://forum.freecodecamp.org/t/";
+      /* 🔗 TOPIC URL PREFIX: Base link for individual topics */
+      /* Used to construct clickable links to specific forum posts */
+      /* Will be combined with slug and ID to create full URLs */
+      
+      const forumCategoryUrl = "https://forum.freecodecamp.org/c/";
+      /* 🔗 CATEGORY URL PREFIX: Base link for categories */
+      /* Used to create links to category pages */
+      /* Will be combined with category name and ID */
+      
+      const avatarUrl = "https://sea1.discourse-cdn.com/freecodecamp";
+      /* 🖼️ AVATAR URL PREFIX: Base link for user images */
+      /* Used to construct complete image URLs */
+      /* Discourse CDN hosts user avatars */
+      
+      const postsContainer = document.getElementById("posts-container");
+      /* 🎯 DOM REFERENCE: The container for forum posts */
+      /* getElementById retrieves the element with matching ID */
+      /* This is where we'll insert our forum data */
+      
+      // --- PRO TIP: THE "MAGIC OBJECT" ---
+      // This object is a hardcoded map. If fCC changed category IDs tomorrow,
+      // this app would stop showing correct colors.
+      // IN PRODUCTION: We'd make a second `fetch` to a `/categories.json` endpoint
+      // to dynamically get this list and cross-reference with the posts.
+      const allCategories = {
+        299: { category: "Career Advice", className: "career" },
+        409: { category: "Project Feedback", className: "feedback" },
+        417: { category: "freeCodeCamp Support", className: "support" },
+        421: { category: "JavaScript", className: "javascript" },
+        423: { category: "HTML - CSS", className: "html-css" },
+        424: { category: "Python", className: "python" },
+        432: { category: "You Can Do This!", className: "motivation" },
+        560: { category: "Backend Development", className: "backend" },
+        /* 🗂️ CATEGORY MAPPING: Links IDs to names and classes */
+        /* Each property is a category ID with an object value containing: */
+        /* - category: Human-readable name */
+        /* - className: CSS class for styling */
+        /* Acts like a translator between database IDs and user-friendly names */
+      };
+      
+      const forumCategory = (id) => {
+        /* 🏷️ CATEGORY FORMATTER: Creates category links with proper styling */
+        /* Arrow function takes a category ID and returns formatted HTML */
+        
+        let selectedCategory = {};
+        /* 📦 INITIALIZATION: Empty object to store category data */
+        /* Will be populated based on the ID match */
+        
+        if (allCategories.hasOwnProperty(id)) {
+          /* 🔍 CATEGORY LOOKUP: Check if ID exists in our mapping */
+          /* hasOwnProperty checks if object has the specific key */
+          /* Like looking up a conference room number in the directory */
+          
+          const { className, category } = allCategories[id];
+          /* 📦 OBJECT DESTRUCTURING: Extract needed properties */
+          /* Pulls out className and category from the matched object */
+          /* Like grabbing just the name and color from a badge template */
+          
+          selectedCategory.className = className;
+          selectedCategory.category = category;
+        } else {
+          /* ⚠️ FALLBACK: Handle unknown category IDs */
+          /* Executes if ID wasn't found in allCategories */
+          
+          selectedCategory.className = "general";
+          selectedCategory.category = "General";
+          selectedCategory.id = 1;
+          /* 📝 DEFAULT VALUES: Generic labeling for unknown categories */
+          /* Prevents errors when new categories appear */
+          /* Like having a "Miscellaneous" box for items that don't fit elsewhere */
+        }
+        const url = `${forumCategoryUrl}${selectedCategory.className}/${id}`;
+        /* 🔗 FULL URL: Construct link to category page */
+        /* Template literal combines base URL, className, and ID */
+        /* Creates a clickable destination for the category */
+        
+        const linkText = selectedCategory.category;
+        /* 📝 DISPLAY TEXT: What users will see */
+        /* Human-readable category name */
+        
+        const linkClass = `category ${selectedCategory.className}`;
+        /* 🎨 CSS CLASSES: Styling for category badges */
+        /* Combines base 'category' class with specific color class */
+        /* Determines both basic styling and category-specific color */
+        
+        return `<a href="${url}" class="${linkClass}" target="_blank">
+          ${linkText}
+        </a>`;
+        /* 🔙 RETURN HTML: Category link with proper styling */
+        /* Template literal constructs complete anchor tag */
+        /* target="_blank" opens link in new tab */
+        /* Like creating a custom badge for each forum section */
+      };
+      
+      const timeAgo = (time) => {
+        /* ⏰ TIME FORMATTER: Converts timestamps to relative time */
+        /* Takes ISO date string and returns "X ago" format */
+        /* Helps users understand recency without precise dates */
+        
+        const currentTime = new Date();
+        /* 🕒 CURRENT TIME: Now, as a JavaScript Date object */
+        /* Creates reference point for comparison */
+        
+        const lastPost = new Date(time);
+        /* 🕒 POST TIME: When the activity occurred */
+        /* Converts ISO string to JavaScript Date object */
+        
+        const timeDifference = currentTime - lastPost;
+        /* ⏱️ TIME DIFFERENCE: Milliseconds between now and post time */
+        /* JavaScript dates can be subtracted to get millisecond difference */
+        /* Like measuring the distance between two points on a timeline */
+        
+        const msPerMinute = 1000 * 60;
+        /* ⏱️ MILLISECONDS PER MINUTE: Conversion constant */
+        /* 1000ms * 60s = milliseconds in a minute */
+        /* Used for time unit conversions */
+        
+        const minutesAgo = Math.floor(timeDifference / msPerMinute);
+        /* ⏱️ MINUTES AGO: Rounded down to whole number */
+        /* Converts raw milliseconds to minutes */
+        /* Math.floor ensures we don't round up partially elapsed minutes */
+        
+        const hoursAgo = Math.floor(minutesAgo / 60);
+        /* ⏱️ HOURS AGO: Minutes converted to hours */
+        /* 60 minutes per hour */
+        
+        const daysAgo = Math.floor(hoursAgo / 24);
+        /* ⏱️ DAYS AGO: Hours converted to days */
+        /* 24 hours per day */
+        
+        // --- CASCADE LOGIC ---
+        // Here there were doubts about the order and syntax.
+        // We use `if...` `if...` `return` (or `else if`) to check
+        // in sequence: minutes -> hours -> days.
+        // Remember: it's `minutesAgo < 60` not `minutesAgo(60)`!
+        if (minutesAgo < 60) {
+          return `${minutesAgo}m ago`;
+          /* ⏱️ MINUTES FORMAT: For very recent activity */
+          /* If less than an hour, show in minutes */
+          /* "5m ago" is more intuitive than "0.08h ago" */
+        }
+      
+        if (hoursAgo < 24) {
+          return `${hoursAgo}h ago`;
+          /* ⏱️ HOURS FORMAT: For same-day activity */
+          /* If less than a day but more than an hour */
+          /* "5h ago" is more intuitive than "0.2d ago" */
+        }
+      
+        return `${daysAgo}d ago`;
+        /* ⏱️ DAYS FORMAT: For older activity */
+        /* Default for activity older than a day */
+        /* Like saying "posted 3 days ago" on a forum */
+      };
+      
+      const viewCount = (views) => {
+        /* 👁️ VIEW FORMATTER: Simplifies large numbers */
+        /* Converts view counts to K format for readability */
+        /* 1500 becomes "1k" instead of showing all digits */
+        
+        // --- ROUNDING ---
+        // The error here was missing `Math.floor`.
+        // Without it, 1500 views would become "1.5k" instead of "1k".
+        const thousands = Math.floor(views / 1000);
+        /* 🔢 THOUSANDS CALCULATION: Division with floor rounding */
+        /* Divides by 1000 and rounds down to nearest integer */
+        /* Math.floor ensures we don't show "1.5k" for 1500 views */
+      
+        if (views >= 1000) {
+          return `${thousands}k`;
+          /* 🔢 THOUSANDS FORMAT: Simplified large numbers */
+          /* Adds "k" suffix for thousands */
+          /* Like saying "1k followers" instead of "1000 followers" */
+        }
+      
+        return views;
+        /* 🔢 DIRECT FORMAT: For smaller numbers */
+        /* Numbers under 1000 displayed as-is */
+        /* No need to simplify smaller numbers */
+      };
+      
+      const avatars = (posters, users) => {
+        /* 👥 AVATAR PROCESSOR: Creates HTML for user images */
+        /* Takes poster IDs and user objects, returns image HTML */
+        /* Maps each poster to their corresponding avatar image */
+        
+        return posters
+          .map((poster) => {
+            /* 🔄 MAP TRANSFORMATION: Process each poster */
+            /* map creates a new array by transforming each element */
+            /* Each poster gets converted to HTML */
+            
+            const user = users.find((user) => user.id === poster.user_id);
+            /* 🔍 USER LOOKUP: Find matching user in users array */
+            /* find returns the first array element that passes a test */
+            /* Matches user_id from poster with id from users */
+            /* Like finding a person's full profile from their ID number */
+            
+            if (user) {
+              /* ✅ USER EXISTS CHECK: Proceed only if user found */
+              /* Prevents errors if user data is missing */
+              
+              const avatar = user.avatar_template.replace(/{size}/, 30);
+              /* 🖼️ SIZE REPLACEMENT: Convert template to actual URL */
+              /* Replaces {size} placeholder with actual pixel dimensions */
+              /* 30 matches our CSS size for avatar images */
+              
+              // --- THE PHILOSOPHICAL QUESTION OF .CONCAT() ---
+              // The question was "isn't this overcomplicating things?". Yes, it is :)
+              // `avatarUrl.concat(avatar)` is Object-Oriented style (Subject.Verb(Object)).
+              // In the real world, you'd use `${avatarUrl}${avatar}`.
+              const userAvatarUrl = avatar.startsWith("/user_avatar/")
+                ? avatarUrl.concat(avatar)
+                /* 🔍 PATH CHECK: Handle relative URLs */
+                /* If path starts with "/user_avatar/", add the base URL */
+                /* Uses string concatenation for combining URL parts */
+                : avatar;
+                /* 🔍 ABSOLUTE URL: Use as-is if already complete */
+                /* Some avatars might already have full URLs (eg. Gravatar) */
+              
+              return `<img src="${userAvatarUrl}" alt="${user.name}" />`;
+              /* 🔙 RETURN IMAGE TAG: Complete HTML for avatar */
+              /* src attribute contains the full image URL */
+              /* alt attribute uses user's name for accessibility */
+              /* Like creating a name badge with photo for each participant */
+            }
+          })
+          .join("");
+          /* 🔗 JOIN ARRAY: Combine all avatar HTML */
+          /* join("") concatenates array elements with empty string */
+          /* Converts array of HTML strings to single HTML string */
+          /* Required because map returns an array, but we need a string */
+      };
+      
+      // --- ASYNC/AWAIT: THE AUTOMATIC TRANSMISSION ---
+      // Compared to the old project with `.then()` (manual transmission),
+      // here we use `async/await` to write asynchronous code that *looks* synchronous.
+      // `try...catch` here catches BOTH network errors (async) AND code errors (sync).
+      const fetchData = async () => {
+        /* 📡 DATA FETCHER: Gets forum data from API */
+        /* async function enables await syntax */
+        /* Returns a promise that resolves when data is processed */
+        
+        try {
+          /* 🛡️ ERROR HANDLING: Begins a try/catch block */
+          /* Catches both network and code errors */
+          /* Like a safety net for our API request */
+          
+          // --- PRO TIP: LOADING STATE ---
+          // HERE is where you'd insert a loading indicator!
+          // postsContainer.innerHTML = '<div class="loader">Loading...</div>';
+          // 
+          // Otherwise the user sees an empty table momentarily (flicker).
+          
+          const res = await fetch(forumLatest);
+          /* 📡 FETCH REQUEST: Get forum data from API */
+          /* await pauses execution until fetch resolves */
+          /* fetch returns a Response object */
+          /* Like sending a request to the forum database */
+          
+          const data = await res.json();
+          /* 📦 JSON PARSING: Extract data from response */
+          /* await pauses execution until JSON parsing completes */
+          /* Converts JSON string to JavaScript object */
+          /* Like opening a package to see what's inside */
+          
+          showLatestPosts(data);
+          /* 📊 DISPLAY FUNCTION: Process and render the data */
+          /* Passes retrieved data to rendering function */
+          /* Like taking the forum data and putting it on the bulletin board */
+        } catch (err) {
+          /* 🛡️ ERROR CATCH: Handle any failures */
+          /* Executes if any error occurs in try block */
+          /* Provides graceful failure handling */
+          
+          // --- PRO TIP: ERROR UX ---
+          // HERE, besides console.log (which is for you), you should update the UI.
+          // postsContainer.innerHTML = '<p>Connection error. Please try again.</p>';
+          // 
+          // If the forum is down, the user needs to know, not think it's empty.
+          console.log(err);
+          /* 🛠️ ERROR LOGGING: Output error to console */
+          /* Helps with debugging for developers */
+          /* Should be paired with user-facing error message in production */
+        }
+      };
+      
+      fetchData();
+      /* 🚀 INITIAL LOAD: Execute data fetch immediately */
+      /* Calls the async function when page loads */
+      /* Starts the data retrieval process */
+      
+      const showLatestPosts = (data) => {
+        /* 📊 DATA RENDERER: Processes and displays forum data */
+        /* Takes raw API data and converts to HTML table rows */
+        /* The final transformation from data to UI elements */
+        
+        // --- THE NESTED DOLL OF DESTRUCTURING ---
+        // There were questions about why do this in two steps.
+        // 1. Open the big box (`data`) -> find `topic_list` (snake_case because it's from Python/Ruby API).
+        const { topic_list, users } = data;
+        /* 📦 FIRST LEVEL DESTRUCTURING: Extract main components */
+        /* topic_list contains topics information */
+        /* users contains user profile information */
+        /* Destructuring pulls these out into separate constants */
+        
+        // 2. Open the inner box (`topic_list`) -> find `topics`.
+        const { topics } = topic_list;
+        /* 📦 SECOND LEVEL DESTRUCTURING: Extract topics array */
+        /* topics contains the actual forum post data */
+        /* Further destructuring to get directly to the data we need */
+        /* Like opening nested containers to find the specific items */
+      
+        postsContainer.innerHTML = topics.map((item) => {
+          /* 📝 RENDER TOPICS: Convert each topic to HTML */
+          /* map transforms each topic object to an HTML string */
+          /* innerHTML replaces container content with our generated HTML */
+          
+          const {
+            id,
+            title,
+            views,
+            posts_count,
+            slug,
+            posters,
+            category_id,
+            bumped_at,
+          } = item;
+          /* 📦 TOPIC DESTRUCTURING: Extract needed properties */
+          /* Pulls out individual pieces of data from each topic */
+          /* Makes code more readable by using direct variable names */
+          /* Like sorting the important information from a forum post */
+      
+          return `
+          <tr>
+            <td>
+              <a class="post-title" target="_blank" href="${forumTopicUrl}${slug}/${id}">${title}</a>
+              <!-- 🔗 POST LINK: Clickable title linking to actual forum post -->
+      
+              ${forumCategory(category_id)}
+              <!-- 🏷️ CATEGORY BADGE: Color-coded category indicator -->
+            </td>
+            <td>
+              <div class="avatar-container">
+                ${avatars(posters, users)}
+                <!-- 👥 USER AVATARS: Profile pictures of participants -->
+              </div>
+            </td>
+            <td>${posts_count - 1}</td>
+            <!-- 💬 REPLY COUNT: Number of responses (total - 1) -->
+            
+            <td>${viewCount(views)}</td>
+            <!-- 👁️ VIEW COUNT: How many times the topic was seen -->
+            
+            <td>${timeAgo(bumped_at)}</td>
+            <!-- ⏰ ACTIVITY TIME: How long since last update -->
+          </tr>`;
+          /* 🔙 RETURN TABLE ROW: Complete HTML for one topic */
+          /* Template literal constructs row with all topic data */
+          /* Each cell contains formatted data from our helper functions */
+          /* Like creating one complete row on the forum leaderboard */
+        }).join("");
+        /* 🔗 JOIN ROWS: Combine all HTML rows into one string */
+        /* Converts array of row HTML to single string for insertion */
+        /* Final step before updating the DOM */
+      };
+    </script>
+  </body>
+</html>
+
+<!-- 🎯 ===== FORUM LEADERBOARD SUMMARY ===== -->
+<!-- 
+📊 APP ARCHITECTURE:
+│
+├── 🧠 HEAD (setup)
+│   └── 🎨 CSS with fCC styling:
+│       ├── 📊 Responsive table design
+│       ├── 🎨 Color-coded category system
+│       ├── 👥 Avatar display layout
+│       └── 📱 Mobile adaptations
+│
+├── 📄 BODY (interface)
+│   ├── 🏛️ Header with logo
+│   └── 📊 Data table
+│       ├── 📋 Column headers
+│       └── 📊 Dynamic content area
+│
+└── 🧮 JAVASCRIPT (data handling)
+    ├── 📡 Data fetching with async/await
+    ├── 🔄 Data transformation functions
+    │   ├── 🏷️ Category formatting
+    │   ├── ⏰ Relative time calculation
+    │   ├── 👁️ View count formatting
+    │   └── 👥 Avatar HTML generation
+    ├── 🛡️ Error handling
+    └── 📊 HTML rendering
+
+🚀 KEY JAVASCRIPT TECHNIQUES:
+├── 📦 Destructuring (multiple levels)
+├── 🔄 Array methods (.map, .find, .join)
+├── ➡️ Arrow functions
+├── 📡 Fetch API with async/await
+├── 🧩 Template literals for HTML construction
+└── 🔍 Conditional logic with ternary operators
+
+🎨 DESIGN FEATURES:
+├── 📊 Responsive table with horizontal scroll
+├── 🎨 Color-coded categories for visual organization
+├── 📱 Mobile-friendly adaptations
+└── 👥 Compact avatar display system
+
+A real-world example of a dynamic data dashboard for community content! 📊✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### Il Progetto e la "Sensazione Giusta"
+
+È stato un progetto davvero interessante, e ho capito il perché.<br />
+Mi sono reso conto che gli esercizi che mi piacciono di più sono quelli in cui posso mischiare JavaScript con HTML: percepisco l’esercizio come bellissimo, non lo faccio apposta ma ad ogni `innerHTML` sorrido. Credo che non ci sia modo migliore per concludere questa parte di JavaScript, dato che React è esattamente questo, ovvero, JavaScript che abbraccia l’HTML (o meglio, JSX). Ad ogni passo successivo sento sempre di più di essere nel posto giusto, e questa sensazione mi riempie di gioia.
+
+### Il "Level Up": Da `.then()` a `async/await`
+
+In questo progetto ho fatto un vero salto di qualità nel modo di pensare l’asincrono.<br />
+Il progetto precedente (fCC News Authors Page) utilizzava la catena `.then().catch()`, che è come il **cambio manuale** di un’auto, quindi potente, ma più verboso, con tanti passaggi da esplicitare al fine di gestirli. Con questo progetto, invece, ho iniziato a usare `async/await`, ovvero lo **stesso motore** (le Promises) ma con **cambio automatico**: il codice scorre dall’alto verso il basso come se fosse sincrono, ma resta pienamente asincrono sotto il cofano.
+<br />
+
+Nel codice sincrono ogni istruzione aspetta che la precedente abbia finito prima di partire, ho capito appieno il concetto con questa analogia: il codice sincrono è come un cuoco che mette il pane nel tostapane e resta fermo a fissarlo finché non scatta, bloccando tutto il resto. <br />
+Nel codice asincrono, invece, avvii un’operazione lenta (come un fetch verso il server, il “tostapane”), e mentre quella operazione procede in background il programma continua ad eseguire altre istruzioni, esattamente come un cuoco efficiente che mette il pane a tostare e nel frattempo prende il latte, prepara la tazza e torna al tostapane solo quando suona. <br />
+Ho imparato un concetto estremamente utile, perché grazie all’asincronia, puoi far partire il fetch, mostrare un indicatore di caricamento, mantenere l’interfaccia reattiva e aggiornare la UI solo quando la Promise è risolta, offrendo un’esperienza fluida anche quando il server impiega diverso tempo a rispondere.
+
+Tornando al concetto di `async/await` l’aspetto fondamentale è che non introducono un nuovo modello mentale: è l'ennesimo caso di **zucchero sintattico** ma questa volta per le Promises. Quello che prima scrivevo come catena di `.then()` e `.catch()`, ora lo esprimo con:
+- `async function` per "marcare" la funzione come asincrona
+- `await` per aspettare il risultato delle Promises (es. `fetch`, `res.json()`)
+- `try...catch` per gestire gli errori in modo molto simile al codice sincrono (come facevo con `.catch((err) => {}`)
+
+Risultato? Stessa logica, ma molto più leggibile.
+
+Una delle cose che avrei voluto fare diversamente è l'uso del metodo `.concat()` per unire le stringhe. Penso che con l'utilizzo dei **Template Literals** (`${...}`) il codice sarebbe stato più leggibile, evitando quella sintassi soggetto-verbo-oggetto che complica inutilmente operazioni semplici come questa.
+
+Ecco nello specifico cosa intendo:
+
+trasformare:
+
+```javascript
+// Soluzione richiesta dal tutorial (Metodo .concat)
+const userAvatarUrl = avatar.startsWith("/user_avatar/")
+  ? avatarUrl.concat(avatar)
+  : avatar;
+```
+
+in:
+
+```javascript
+// Soluzione con Template Literal (Più leggibile)
+const userAvatarUrl = avatar.startsWith("/user_avatar/")
+  ? `${avatarUrl}${avatar}`
+  : avatar;
+```
+
+### Cosa Ho Imparato
+
+**Async/Await e try/catch:**
+- Dichiarare una funzione con `async` permette di usare `await` al suo interno per "mettere in pausa" l’esecuzione finché una Promise non si risolve, pur restando non bloccante a livello di thread principale.  
+- `await fetch(url)` e poi `await res.json()` sostituiscono la catena di `.then()`, rendendo il flusso molto più simile al codice sincrono e quindi più leggibile.  
+- Il blocco `try { ... } catch (err) { ... }` diventa il nuovo modo idiomatico di gestire errori asincroni, unificando in un solo punto errori di rete, di parsing e logici.
+
+**Destructuring su oggetti annidati:**
+- La destrutturazione multipla `const { topic_list, users } = data; const { topics } = topic_list;` aiuta a navigare risposte JSON complesse senza accedere continuamente con notazione a punti annidata.  
+- Destrutturare direttamente gli oggetti `topic` in `showLatestPosts`  
+  ```js
+  const { id, title, views, posts_count, slug, posters, category_id, bumped_at } = item;
+  ```
+  rende più chiaro quali campi vengono effettivamente usati e riduce rumore visivo.
+
+**Metodi Array per trasformare dati in UI:**
+- `.map()` è stato centrale per trasformare l’array `topics` in righe HTML della tabella, restituendo una stringa con `join("")` da assegnare una sola volta a `innerHTML`.  
+- `.find()` è stato usato per incrociare `posters` con `users` e ricavare i dati necessari per gli avatar, mostrando come sia possibile combinare più collezioni in un unico passaggio.  
+- `.join("")` dopo `.map()` evita concatenazioni ripetute con `+=` e risulta più efficiente e leggibile.
+
+**Funzioni helper pure per formattare i dati:**
+- `timeAgo(bumped_at)` incapsula la logica di differenza temporale in minuti, ore e giorni, trasformando timestamp grezzi in stringhe leggibili come `10m ago`, `3h ago` o `2d ago`.  
+- `viewCount(views)` introduce la logica di formattazione compatta (`1500` → `1k`), mostrando come separare responsabilità di presentazione dal resto del codice.  
+- Queste funzioni pure sono facili da testare e riutilizzare in contesti diversi.
+
+**Uso pratico di Map e oggetti di configurazione:**
+- L’oggetto `allCategories` funziona come una piccola mappa di configurazione per tradurre `category_id` in `category` e `className`, dimostrando come centralizzare le regole di mapping fra dati API e UI.  
+- La funzione `forumCategory(category_id)` genera il markup del link di categoria combinando questi metadati in modo dinamico, invece di avere logica sparsa nel template.
+
+**Template literal per HTML dinamico:**
+- L’uso di template literal multi-linea per generare `<tr>...</tr>` e `<a>...</a>` ha reso naturale interpolare variabili JavaScript dentro l’HTML.  
+- Questo approccio avvicina molto al modo di pensare di librerie come React, dove si mappa direttamente da dati strutturati a componenti UI.
+
+**Pattern di rendering “One-shot”:**
+- Assegnare `postsContainer.innerHTML = topics.map(...).join("");` in un unico passaggio evita continui accessi e ricalcoli del layout rispetto ad aggiornare il DOM dentro un loop.  
+- Questo pattern è stato un passo importante verso un modo più dichiarativo di ragionare sul rendering, piuttosto che imperativo.
+
+***
+
+**Prossimo Progetto**: Costruire un RPG Creature Search App (Certification Project)

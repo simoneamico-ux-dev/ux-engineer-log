@@ -1,0 +1,502 @@
+---
+sidebar_position: 11
+sidebar_label: 'Piano'
+title: 'Piano'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Piano
+
+### The Project
+Interactive piano developed with responsive CSS, where the number of keys automatically adapts to screen size using media queries.
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Piano</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div id="piano">
+      <img class="logo" src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp Logo" />
+      <div class="keys">
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+html {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+#piano {
+  background-color: #00471b;
+  width: 992px;
+  height: 290px;
+  margin: 80px auto;
+  padding: 90px 20px 0 20px;
+  position: relative;
+  border-radius: 10px;
+}
+
+.keys {
+  background-color: #040404;
+  width: 949px;
+  height: 180px;
+  padding-left: 2px;
+  overflow: hidden;
+}
+
+.key {
+  background-color: #ffffff;
+  position: relative;
+  width: 41px;
+  height: 175px;
+  margin: 2px;
+  float: left;
+  border-radius: 0 0 3px 3px;
+}
+
+.key.black--key::after {
+  background-color: #1d1e22;
+  content: "";
+  position: absolute;
+  left: -18px;
+  width: 32px;
+  height: 100px;
+  border-radius: 0 0 3px 3px;
+}
+
+.logo {
+  width: 200px;
+  position: absolute;
+  top: 23px;
+}
+
+@media (max-width: 768px) {
+  #piano {
+    width: 358px;
+  }
+
+  .keys {
+    width: 318px;
+  }
+
+  .logo {
+    width: 150px;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 769px) {
+  #piano {width: 675px;}
+  .keys {width: 633px;}
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!-- 🎯 HTML5 DECLARATION: "Get ready for a CSS concert!" -->
+<!-- It's like tuning the instruments before playing 🎵 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: The stage for our piano -->
+<!-- lang="en" = English language, but music is universal! 🎼 -->
+
+  <head>
+    <!-- 🧠 THE MUSICAL MIND: Where we write the CSS scores -->
+    <!-- It's like preparing the sheet music before the concert -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 understands all notes in the world! ♪♫♬ -->
+    
+    <title>Piano</title>
+    <!-- 📑 TAB TITLE: Simple and direct like a C note -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE ADAPTATION: "Plays well on every device!" -->
+    <!-- It's like having a piano that magically resizes -->
+    
+    <style>
+      /* 🎨 ===== THE CSS SCORES: The Magic of the Digital Piano ===== */
+      
+      html {
+        box-sizing: border-box;
+        /* 📦 INTELLIGENT CALCULATION: Includes padding and borders in the dimensions */
+        /* It's like saying "when I order a 992px piano, I want EVERYTHING included" */
+      }
+      
+      *, *::before, *::after {
+        box-sizing: inherit;
+        /* 🧬 UNIVERSAL INHERITANCE: All elements inherit the rule from the parent */
+        /* * = ALL elements */
+        /* ::before and ::after = also the pseudo-elements! */
+        /* It's like saying "all keys follow the same measurement rule" */
+        /* inherit = "take the rule from the parent" */
+      }
+      
+      /* 🎹 ===== THE PIANO ===== */
+      
+      #piano {
+        background-color: #00471b;
+        /* 🎨 DARK FOREST GREEN: The classic color of the piano felt */
+        /* It's like the green cloth that protects the piano wood */
+        
+        width: 992px;
+        height: 290px;
+        /* 📏 MAJESTIC DIMENSIONS: An almost life-sized piano! */
+        /* 992px ≈ almost a meter in width on the monitor */
+        
+        margin: 80px auto;
+        /* ⚖️ CENTERING WITH BREATHING ROOM: 80px top/bottom, auto on the sides */
+        /* auto = "browser, center it horizontally yourself!" */
+        /* It's like positioning the piano in the center of the stage */
+        
+        padding: 90px 20px 0 20px;
+        /* 🏠 INTERNAL SPACE: 90px top (for the logo), 20px on the sides */
+        /* It's the space between the edge of the piano and the keys */
+        
+        position: relative;
+        /* 📍 REFERENCE CONTAINER: For positioning the logo */
+        /* relative = "my children will position themselves with respect to me" */
+        
+        border-radius: 10px;
+        /* 🔄 SOFT CORNERS: 10px of rounding */
+        /* Modern pianos have rounded corners for safety */
+      }
+      
+      /* 🎼 ===== THE KEYBOARD ===== */
+      
+      .keys {
+        background-color: #040404;
+        /* ⚫ ALMOST ABSOLUTE BLACK: The space between the keys */
+        /* It's like the black gap you see between one key and another */
+        
+        width: 949px;
+        height: 180px;
+        /* 📏 KEYBOARD DIMENSIONS: Slightly narrower than the piano */
+        /* Leaves a bit of the green border visible */
+        
+        padding-left: 2px;
+        /* 🔧 MICRO-ADJUSTMENT: 2px to perfectly align the keys */
+        /* It's like giving a little push to make everything fit together */
+        
+        overflow: hidden;
+        /* ✂️ CUTS THE EXCESS: Hides anything that goes beyond the borders */
+        /* FUNDAMENTAL when using float! Contains the floating keys */
+        /* It's like a frame that cuts off everything that sticks out */
+      }
+      
+      /* ⚪ ===== WHITE KEYS ===== */
+      
+      .key {
+        background-color: #ffffff;
+        /* ⚪ PURE WHITE: Like the ivory of classic keys */
+        
+        position: relative;
+        /* 📍 RELATIVE POSITION: Needed for the black keys! */
+        /* The black keys will be positioned relative to these */
+        
+        width: 41px;
+        height: 175px;
+        /* 📏 REALISTIC PROPORTIONS: Long and narrow like real keys */
+        
+        margin: 2px;
+        /* 🌬️ SPACE BETWEEN KEYS: 2px of separation */
+        /* It's the black space you see between white keys */
+        
+        float: left;
+        /* 🏊 FLOAT LEFT: The keys align one after another */
+        /* float: left = "float to the left and let others follow you" */
+        /* It's like lining up wooden blocks in a row */
+        
+        border-radius: 0 0 3px 3px;
+        /* 🔄 ROUNDING ONLY AT THE BOTTOM: 0 0 3px 3px */
+        /* Top-left: 0, Top-right: 0, Bottom-right: 3px, Bottom-left: 3px */
+        /* Piano keys are rounded only at the bottom! */
+      }
+      
+      /* ⚫ ===== BLACK KEYS (THE GENIUS TRICK!) ===== */
+      
+      .key.black--key::after {
+        /* 🎩 MAGIC PSEUDO-ELEMENT: Creates the black keys WITHOUT additional HTML! */
+        /* ::after = "add a ghost element after the content" */
+        /* It's like having an invisible assistant positioning the black keys */
+        
+        background-color: #1d1e22;
+        /* ⚫ ANTHRACITE BLACK: Not completely black for realism */
+        /* Real black keys are never pure black */
+        
+        content: "";
+        /* 📭 EMPTY CONTENT: Necessary to make the pseudo-element appear */
+        /* Without content, ::after doesn't exist! */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITIONING: Positions itself relative to the white key */
+        /* It's like overlaying one piece on top of another */
+        
+        left: -18px;
+        /* ⬅️ LEFT SHIFT: -18px to center it between two whites */
+        /* Negative value = goes beyond the left edge of the white key */
+        /* It's positioned ACROSS two white keys! */
+        
+        width: 32px;
+        height: 100px;
+        /* 📏 BLACK KEY DIMENSIONS: Narrower and shorter than the white ones */
+        /* Just like on a real piano! */
+        
+        border-radius: 0 0 3px 3px;
+        /* 🔄 SAME CURVATURE: Rounded only at the bottom like the white ones */
+      }
+      
+      /* 🎨 ===== LOGO FREECODECAMP ===== */
+      
+      .logo {
+        width: 200px;
+        /* 📏 LOGO WIDTH: Respectful but visible size */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITIONING: Relative to the piano (position: relative) */
+        
+        top: 23px;
+        /* 📍 DISTANCE FROM THE TOP EDGE: In the piano "lid" */
+        /* It's like putting the manufacturer's mark on the piano */
+      }
+      
+      /* 📱 ===== MEDIA QUERIES: The Piano that Adapts! ===== */
+      
+      @media (max-width: 768px) {
+        /* 📱 TABLET AND MOBILE: Screens up to 768px */
+        /* It's like having a portable piano for small spaces! */
+        
+        #piano {
+          width: 358px;
+          /* 🎹 MINI PIANO: About 1/3 of the original size */
+          /* From 992px to 358px = travel piano! */
+        }
+        
+        .keys {
+          width: 318px;
+          /* 🎼 REDUCED KEYBOARD: Proportional to the small piano */
+        }
+        
+        .logo {
+          width: 150px;
+          /* 🔄 SMALLER LOGO: Adapts to the reduced piano */
+        }
+      }
+      
+      @media (max-width: 1199px) and (min-width: 769px) {
+        /* 💻 LAPTOPS AND LARGE TABLETS: Between 769px and 1199px */
+        /* It's the medium size, like an upright piano instead of a grand */
+        
+        #piano {
+          width: 675px;
+          /* 🎹 MEDIUM PIANO: About 2/3 of the original size */
+        }
+        
+        .keys {
+          width: 633px;
+          /* 🎼 MEDIUM KEYBOARD: Always proportional */
+        }
+        /* 📝 NOTE: The logo maintains its original size here */
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🎭 ===== THE STAGE: Where the Piano Comes to Life ===== -->
+    
+    <div id="piano">
+      <!-- 🎹 THE PIANO: The main green container -->
+      
+      <img class="logo" src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg" alt="freeCodeCamp Logo" />
+      <!-- 🎨 LOGO: The trademark on our digital piano -->
+      <!-- alt="..." = description for accessibility -->
+      
+      <div class="keys">
+        <!-- 🎼 THE KEYBOARD: Container for all keys -->
+        
+        <!-- ⚪⚫ KEY PATTERN: Like a real piano keyboard! -->
+        <!-- Pattern: C, C#/Db, D, D#/Eb, E, F, F#/Gb, G, G#/Ab, A, A#/Bb, B -->
+        
+        <div class="key"></div>
+        <!-- ⚪ C: First white key -->
+        
+        <div class="key black--key"></div>
+        <!-- ⚫ C#: The ::after creates the black key! -->
+        
+        <div class="key black--key"></div>
+        <!-- ⚪ D: Has a black key (D#) -->
+        
+        <div class="key"></div>
+        <!-- ⚪ E: No black key after (E# doesn't exist) -->
+        
+        <div class="key black--key"></div>
+        <!-- ⚪ F: Has the black key F# -->
+        
+        <div class="key black--key"></div>
+        <!-- ⚪ G: Has the black key G# -->
+        
+        <div class="key black--key"></div>
+        <!-- ⚪ A: Has the black key A# -->
+        
+        <div class="key"></div>
+        <!-- ⚪ B: No black key after (B# doesn't exist) -->
+        
+        <!-- 🔄 THE PATTERN REPEATS: Second octave -->
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        
+        <!-- 🔄 PARTIAL THIRD OCTAVE -->
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+        <div class="key black--key"></div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!-- 🎯 ===== SUMMARY OF THE CSS SYMPHONY ===== -->
+<!-- 
+🎹 PIANO ARCHITECTURE:
+│
+├── 🧠 HEAD (musical preparation)
+│   └── 🎨 CSS with brilliant tricks:
+│       ├── 📦 Box-sizing for precise calculations
+│       ├── 🎩 ::after to create black keys from nothing!
+│       ├── 🏊 Float to align the keys
+│       ├── ✂️ Overflow: hidden to contain the floats
+│       └── 📱 Media queries for responsive piano
+│
+└── 🎼 BODY (the assembled piano)
+    └── 🎹 Piano (green container)
+        ├── 🎨 freeCodeCamp Logo
+        └── 🎼 Keys (black keyboard)
+            ├── ⚪ White keys (normal divs)
+            └── ⚫ Black keys (created with ::after!)
+
+🎩 MASTERFUL CSS TRICKS:
+├── 🎯 Pseudo-element ::after: A black key without extra HTML!
+├── 🏊 Float: left: The keys align automatically
+├── ✂️ Overflow: hidden: Contains the floats (historic trick!)
+├── 📍 Position relative/absolute: To overlap the black keys
+└── 📱 Media queries: 3 piano sizes!
+
+🎵 MUSICAL PATTERN:
+├── Octave pattern: C-D-E-F-G-A-B
+├── Black keys: Between all except E-F and B-C
+└── 2.5 total octaves in our piano
+
+It's like building a real musical instrument with just CSS! 🎵✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Development Experience
+
+It was very quick and at the same time extremely useful regarding the responsive side (not coincidentally the course is called "Responsive Web Design"). Indeed, the number of piano keys varies based on screen size.
+
+### The Connection with Refactoring UI
+
+I connected this project with a fundamental concept from Refactoring UI that I'm studying: **perfect proportions change with context**.
+
+**The revelation:** It's not enough to "shrink everything" for mobile. Each screen has ITS optimal proportions!
+
+### The Discovered Principle
+
+❌ **Wrong thinking:** "If desktop has a 2.5x proportion, mobile must have 2.5x"
+
+✅ **Right thinking:** "Each screen has ITS optimal proportions"
+
+### Analogy That Struck Me
+
+It's like the difference between speaking in a **large room** vs a **small room**:
+
+- **Desktop (large room):** Shout loud for the title (48px), speak normally for text (16px)
+- **Mobile (small room):** Speak loud but don't shout for the title (24px), whisper for text (14px)
+
+### Concrete Example from the Project
+
+```css
+/* Desktop - lots of available space */
+#piano { width: 992px; }
+.keys { width: 949px; }
+
+/* Mobile - limited space */
+@media (max-width: 768px) {
+  #piano { width: 358px; }
+  .keys { width: 318px; }
+}
+```
+
+It's not just "smaller", it's **proportionally different** for each context.
+
+### What I Learned
+
+- **Media queries** for responsive design
+- **Float and positioning** for key layout
+- **Pseudo-elements** (::after) to create black keys
+- **The principle of contextual proportions** from Refactoring UI
+- **Overflow hidden** to manage layout
+
+### Reflection
+
+This project solidified a fundamental understanding: responsive design isn't just a technical matter, but about **intelligent proportions** that adapt to the context of use.
+
+---
+
+**Next Project**: Technical Documentation Page (Certification Project)

@@ -1,0 +1,1173 @@
+---
+sidebar_position: 12
+sidebar_label: 'Magazine'
+title: 'Magazine'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Magazine
+
+<img alt="Magazine-Desktop" src="https://github.com/user-attachments/assets/a7be7d2d-b81e-48b4-b6e3-c0bdd039a798" />
+
+
+<img alt="Magazine-Mobile" src="https://github.com/user-attachments/assets/bb56658e-f429-4765-8142-256805630f26" />
+
+
+### The Project
+Digital magazine developed with CSS Grid, replicating the typical layout of a magazine with columns, sections, and complex graphic elements. A return to the origins of editorial design applied to the web.
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magazine</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Anton%7CBaskervville%7CRaleway&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    />
+    <link
+      rel="stylesheet"
+      href="styles.css"
+    />
+  </head>
+  <body>
+    <main>
+      <section class="heading">
+        <header class="hero">
+          <img
+            src="https://cdn.freecodecamp.org/platform/universal/fcc_meta_1920X1080-indigo.png"
+            alt="freecodecamp logo"
+            loading="lazy"
+            class="hero-img"
+          />
+          <h1 class="hero-title">OUR NEW CURRICULUM</h1>
+          <p class="hero-subtitle">
+            Our efforts to restructure our curriculum with a more project-based
+            focus
+          </p>
+        </header>
+        <div class="author">
+          <p class="author-name">
+            By
+            <a href="https://freecodecamp.org" target="_blank" rel="noreferrer"
+              >freeCodeCamp</a
+            >
+          </p>
+          <p class="publish-date">March 7, 2019</p>
+        </div>
+        <div class="social-icons">
+          <a href="https://www.facebook.com/freecodecamp/">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://twitter.com/freecodecamp/">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://instagram.com/freecodecamp">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.linkedin.com/school/free-code-camp/">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          <a href="https://www.youtube.com/freecodecamp">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </section>
+      <section class="text">
+        <p class="first-paragraph">
+          Soon the freeCodeCamp curriculum will be 100% project-driven learning. Instead of a series of coding challenges, you'll learn through building projects - step by step. Before we get into the details, let me emphasize: we are not changing the certifications. All 6 certifications will still have the same 5 required projects. We are only changing the optional coding challenges.
+        </p>
+        <p>
+          After years - years - of pondering these two problems and how to solve them, I slipped, hit my head on the sink, and when I came to I had a revelation! A vision! A picture in my head! A picture of this! This is what makes time travel possible: the flux capacitor!
+        </p>
+        <p>
+          It wasn't as dramatic as Doc's revelation in Back to the Future. It
+          just occurred to me while I was going for a run. The revelation: the entire curriculum should be a series of projects. Instead of individual coding challenges, we'll just have projects, each with their own seamless series of tests. Each test gives you just enough information to figure out how to get it to pass. (And you can view hints if that isn't enough.)
+        </p>
+        <blockquote>
+          <hr />
+          <p class="quote">
+            The entire curriculum should be a series of projects
+          </p>
+          <hr />
+        </blockquote>
+        <p>
+          No more walls of explanatory text. No more walls of tests. Just one
+          test at a time, as you build up a working project. Over the course of passing thousands of tests, you build up projects and your own understanding of coding fundamentals. There is no transition between lessons and projects, because the lessons themselves are baked into projects. And there's plenty of repetition to help you retain everything because - hey - building projects in real life has plenty of repetition.
+        </p>
+        <p>
+          The main design challenge is taking what is currently paragraphs of explanation and instructions and packing them into a single test description text. Each project will involve dozens of tests like this. People will be coding the entire time, rather than switching back and forth from "reading mode" to "coding mode".
+        </p>
+        <p>
+          Instead of a series of coding challenges, people will be in their code editor passing one test after another, quickly building up a project. People will get into a real flow state, similar to what they experience when they build the required projects at the end of each certification. They'll get that sense of forward progress right from the beginning. And freeCodeCamp will be a much smoother experience.
+        </p>
+      </section>
+      <section class="text text-with-images">
+        <article class="brief-history">
+          <h3 class="list-title">A Brief History</h3>
+          <p>Of the Curriculum</p>
+          <ul class="lists">
+            <li>
+              <h4 class="list-subtitle">V1 - 2014</h4>
+              <p>
+                We launched freeCodeCamp with a simple list of 15 resources,
+                including Harvard's CS50 and Stanford's Database Class.
+              </p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V2 - 2015</h4>
+              <p>We added interactive algorithm challenges.</p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V3 - 2015</h4>
+              <p>
+                We added our own HTML+CSS challenges (before we'd been relying on
+                General Assembly's Dash course for these).
+              </p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V4 - 2016</h4>
+              <p>
+                We expanded the curriculum to 3 certifications, including Front
+                End, Back End, and Data Visualization. They each had 10 required
+                projects, but only the Front End section had its own challenges.
+                For the other certs, we were still using external resources like
+                Node School.
+              </p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V5 - 2017</h4>
+              <p>We added the back end and data visualization challenges.</p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V6 - 2018</h4>
+              <p>
+                We launched 6 new certifications to replace our old ones. This was
+                the biggest curriculum improvement to date.
+              </p>
+            </li>
+          </ul>
+        </article>
+        <aside class="image-wrapper">
+          <img
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/images/random-quote-machine.png"
+            alt="image of the quote machine project"
+            loading="lazy"
+            class="image-1"
+            width="600"
+            height="400"
+          />
+          <img
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/images/calc.png"
+            alt="image of a calculator project"
+            loading="lazy"
+            class="image-2"
+            width="400"
+            height="400"
+          />
+          <blockquote class="image-quote">
+            <hr />
+            <p class="quote">
+              The millions of people who are learning to code through freeCodeCamp
+              will have an even better resource to help them learn these
+              fundamentals.
+            </p>
+            <hr />
+          </blockquote>
+          <img
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/images/survey-form-background.jpeg"
+            alt="four people working on code"
+            loading="lazy"
+            class="image-3"
+            width="600"
+            height="400"
+          />
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
+
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+::before,
+::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Baskervville', serif;
+  color: linen;
+  background-color: rgb(20, 30, 40);
+}
+
+h1 {
+  font-family: 'Anton', sans-serif;
+}
+
+h2, h3, h4, h5, h6 {
+  font-family: 'Raleway', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: linen;
+}
+
+main {
+  display: grid;
+  grid-template-columns: minmax(2rem, 1fr) minmax(min-content, 94rem) minmax(2rem, 1fr);
+  row-gap: 3rem;
+}
+
+img {
+  width: 100%;
+  object-fit: cover;
+}
+
+hr {
+  margin: 1.5rem 0;
+  border: 1px solid rgba(120, 120, 120, 0.6);
+}
+
+.heading {
+  grid-column: 2 / 3;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 1.5rem;
+}
+
+.text {
+  grid-column: 2 / 3;
+  font-size: 1.8rem;
+  letter-spacing: 0.6px;
+  column-width: 25rem;
+  text-align: justify;
+}
+
+.hero {
+  grid-column: 1 / -1;
+  position: relative;
+}
+
+.hero-title {
+  text-align: center;
+  color: orangered;
+  font-size: 8rem;
+}
+
+.hero-subtitle {
+  font-size: 2.4rem;
+  color: orangered;
+  text-align: center;
+}
+
+.author {
+  font-size: 2rem;
+  font-family: "Raleway", sans-serif;
+}
+
+.author-name a:hover {
+  background-color: #306203;
+}
+
+.publish-date {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.social-icons {
+  display: grid;
+  font-size: 3rem;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  align-items: center;
+}
+
+.first-paragraph::first-letter {
+  font-size: 6rem;
+  color: orangered;
+  float: left;
+  margin-right: 1rem;
+}
+
+.quote {
+  color: #00beef;
+  font-size: 2.4rem;
+  text-align: center;
+  font-family: "Raleway", sans-serif;
+}
+
+.quote::before {
+  content: '" ';
+}
+
+.quote::after {
+  content: ' "';
+}
+
+.text-with-images {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.lists {
+  list-style-type: none;
+  margin-top: 2rem;
+}
+
+.lists li {
+  margin-bottom: 1.5rem;
+}
+
+.list-title, .list-subtitle {
+  color: #00beef;
+}
+
+.image-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: repeat(3, min-content);
+  gap: 2rem;
+  place-items: center;
+}
+
+.image-1, .image-3 {
+  grid-column: 1 / -1;
+}
+
+@media only screen and (max-width: 720px) {
+  .image-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .text-with-images {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .hero-title {
+    font-size: 6rem;
+  }
+  
+  .hero-subtitle,
+  .author,
+  .quote,
+  .list-title {
+    font-size: 1.8rem;
+  }
+  
+  .social-icons {
+    font-size: 2rem;
+  }
+
+  .text {
+    font-size: 1.6rem;
+  } 
+}
+
+@media only screen and (max-width: 420px) {
+  .hero-title {
+    font-size: 4.5rem;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the digital newsroom!" -->
+<!-- It's like opening the doors to a modern publishing house 📰 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our digital magazine -->
+<!-- lang="en" = English, the language of international web journalism! 🗞️ -->
+
+  <head>
+    <!-- 🧠 THE EDITORIAL OFFICE: Where we prepare fonts, styles and everything needed -->
+    <!-- It's like the editor's desk before printing -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for all editorial symbols! "✍️📰" -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE DESIGN: "Read me well on paper, tablet or smartphone!" -->
+    <!-- It's like having a magazine that magically adapts to the device -->
+    
+    <title>Magazine</title>
+    <!-- 📑 TAB TITLE: Simple and elegant like a newspaper header -->
+    
+    <link
+      href="https://fonts.googleapis.com/css?family=Anton%7CBaskervville%7CRaleway&display=swap"
+      rel="stylesheet"
+    />
+    <!-- 🔤 GOOGLE FONTS: Three fonts for three different purposes! -->
+    <!-- Anton = impact titles (very bold sans-serif) -->
+    <!-- Baskervville = elegant text (classic serif) -->
+    <!-- Raleway = modern subtitles (clean sans-serif) -->
+    <!-- %7C = "|" encoded in the URL (pipe separator) -->
+    <!-- display=swap = loads fonts without blocking the page -->
+    <!-- It's like choosing three types of characters for typography! -->
+    
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    />
+    <!-- 🎨 FONT AWESOME: The most famous icon library on the web! -->
+    <!-- For social media icons: Facebook, Twitter, Instagram... -->
+    <!-- v5.8.2 = specific version for compatibility -->
+    
+    <style>
+      /* 📰 ===== THE EDITORIAL LAYOUT: Professional Magazine Style ===== */
+      
+      *,
+      ::before,
+      ::after {
+        /* 🔄 UNIVERSAL RESET: Reset everything for a clean start! */
+        /* * = all elements */
+        /* ::before and ::after = also pseudo-elements */
+        
+        padding: 0;
+        margin: 0;
+        /* 🚫 ZERO SPACES: Removes browser's default padding and margins */
+        /* It's like cleaning the page before layout */
+        
+        box-sizing: border-box;
+        /* 📦 SMART CALCULATION: Includes padding and borders in dimensions */
+      }
+
+      html {
+        font-size: 62.5%;
+        /* 🔢 THE 62.5% TRICK: Makes 1rem = 10px! */
+        /* Default browser: 16px, so 62.5% of 16px = 10px */
+        /* Now it's super easy: 1.8rem = 18px, 2.4rem = 24px... */
+        /* It's like having a built-in calculator for dimensions! */
+      }
+
+      body {
+        font-family: 'Baskervville', serif;
+        /* ✍️ MAIN FONT: Elegant serif for the body text */
+        /* serif = with "serifs", perfect for long readings */
+        
+        color: linen;
+        /* 🏻 LINEN COLOR: A warm and sophisticated white */
+        /* linen = #FAF0E6, softer than pure white */
+        
+        background-color: rgb(20, 30, 40);
+        /* 🌑 DARK BACKGROUND: Deep blue-black for elegant contrast */
+        /* rgb(20, 30, 40) = almost black with a hint of blue */
+        /* It's like reading on black paper with light ink */
+      }
+
+      h1 {
+        font-family: 'Anton', sans-serif;
+        /* 🗣️ MAIN TITLE: Impact font to capture attention */
+        /* Anton = bold and compressed, perfect for big headlines */
+      }
+
+      h2, h3, h4, h5, h6 {
+        font-family: 'Raleway', sans-serif;
+        /* 📰 SUBTITLES: Modern and clean font for hierarchy */
+        /* Raleway = elegant but readable, perfect for secondary headings */
+      }
+
+      a {
+        text-decoration: none;
+        /* 🚫 NO UNDERLINE: Clean and modern links */
+        
+        color: linen;
+        /* 🔗 SAME COLOR AS TEXT: Discreet and integrated links */
+      }
+
+      /* 🏗️ ===== MAIN LAYOUT WITH CSS GRID ===== */
+      
+      main {
+        display: grid;
+        /* 🎯 GRID CONTAINER: The most powerful layout in modern CSS! */
+        
+        grid-template-columns: minmax(2rem, 1fr) minmax(min-content, 94rem) minmax(2rem, 1fr);
+        /* 🏛️ THREE BRILLIANT COLUMNS: margin | content | margin */
+        /* FIRST COLUMN: minmax(2rem, 1fr) = minimum 2rem, maximum all available space */
+        /* CENTER COLUMN: minmax(min-content, 94rem) = the content, max 94rem (940px) */
+        /* THIRD COLUMN: like the first, balances the layout */
+        /* It's like having automatic margins that adapt! */
+        /* On large screens: wide margins */
+        /* On small screens: margins of at least 2rem */
+        
+        row-gap: 3rem;
+        /* 🌬️ SPACE BETWEEN ROWS: 3rem of breathing room between sections */
+      }
+
+      img {
+        width: 100%;
+        /* 📏 FULL WIDTH: Images fill their container */
+        
+        object-fit: cover;
+        /* 🖼️ SMART CROPPING: Covers the area without distortion */
+        /* cover = crops if necessary but maintains proportions */
+        /* It's like cropping a photo to fit it in a frame */
+      }
+
+      hr {
+        margin: 1.5rem 0;
+        /* 🌬️ VERTICAL SPACE: Breathing room above and below the line */
+        
+        border: 1px solid rgba(120, 120, 120, 0.6);
+        /* 📏 THIN LINE: Semi-transparent gray */
+        /* rgba with 0.6 alpha = 60% opacity */
+      }
+
+      /* 📰 ===== HEADING SECTION ===== */
+      
+      .heading {
+        grid-column: 2 / 3;
+        /* 📍 POSITIONING: Occupies only the center column */
+        /* 2 / 3 = from line 2 to line 3 of the grid */
+        /* Automatically skips the side margins! */
+        
+        display: grid;
+        /* 🎯 SUB-GRID: Grid within grid! */
+        
+        grid-template-columns: repeat(2, 1fr);
+        /* 📏 TWO EQUAL COLUMNS: repeat(2, 1fr) = two columns 50/50 */
+        /* For author and social icons side by side */
+        
+        row-gap: 1.5rem;
+        /* 🌬️ ROW GAP: More compact than the main grid */
+      }
+
+      /* 📄 ===== MAIN TEXT ===== */
+      
+      .text {
+        grid-column: 2 / 3;
+        /* 📍 CENTER COLUMN: Like .heading */
+        
+        font-size: 1.8rem;
+        /* 📏 TEXT SIZE: 18px (thanks to the 62.5% trick) */
+        
+        letter-spacing: 0.6px;
+        /* 🔤 LETTER SPACING: Slightly more airy */
+        /* Improves readability on long texts */
+        
+        column-width: 25rem;
+        /* 📰 AUTOMATIC COLUMNS: Like a real newspaper! */
+        /* If there's space for 25rem columns, it creates them automatically */
+        /* It's the magic of CSS multi-column layout! */
+        
+        text-align: justify;
+        /* 📐 JUSTIFIED TEXT: Aligned edges like in newspapers */
+        /* Creates a uniform and professional text block */
+      }
+
+      /* 🦸 ===== HERO SECTION ===== */
+      
+      .hero {
+        grid-column: 1 / -1;
+        /* 📍 FULL WIDTH: 1 / -1 = from first to last column */
+        /* -1 = the last column (CSS Grid trick!) */
+        /* The hero image goes from edge to edge! */
+        
+        position: relative;
+        /* 📍 CONTAINER: For positioning elements inside it */
+      }
+
+      .hero-title {
+        text-align: center;
+        /* ⚖️ CENTERED: The big title at the center of attention */
+        
+        color: orangered;
+        /* 🔥 FIERY ORANGE: Impact color for the main title */
+        
+        font-size: 8rem;
+        /* 📏 GIANT: 80px of pure visual impact! */
+        /* It's like a front-page headline that shouts */
+      }
+
+      .hero-subtitle {
+        font-size: 2.4rem;
+        /* 📏 SUBTITLE: 24px, more modest but readable */
+        
+        color: orangered;
+        /* 🔥 SAME COLOR: Visual consistency with the title */
+        
+        text-align: center;
+        /* ⚖️ CENTERED: Aligned with the main title */
+      }
+
+      /* ✍️ ===== AUTHOR INFORMATION ===== */
+      
+      .author {
+        font-size: 2rem;
+        /* 📏 SIZE: 20px for good readability */
+        
+        font-family: "Raleway", sans-serif;
+        /* 🔤 MODERN FONT: Override of Baskervville for variety */
+      }
+
+      .author-name a:hover {
+        background-color: #306203;
+        /* 🟢 DARK GREEN: Unusual but effective hover effect */
+        /* It's like highlighting with a green marker */
+      }
+
+      .publish-date {
+        color: rgba(255, 255, 255, 0.5);
+        /* ⚪ WHITE 50%: Semi-transparent for secondary info */
+        /* The date is important but shouldn't dominate */
+      }
+
+      /* 🔗 ===== SOCIAL ICONS ===== */
+      
+      .social-icons {
+        display: grid;
+        /* 🎯 GRID FOR ICONS: Perfect for alignment */
+        
+        font-size: 3rem;
+        /* 📏 LARGE ICONS: 30px, easily clickable */
+        
+        grid-template-columns: repeat(5, 1fr);
+        /* 📏 FIVE COLUMNS: One for each social network */
+        
+        grid-auto-flow: column;
+        /* ➡️ HORIZONTAL FLOW: Icons arrange in a row */
+        
+        grid-auto-columns: 1fr;
+        /* 📏 AUTOMATIC COLUMNS: If you add social networks, they adapt */
+        
+        align-items: center;
+        /* ⚖️ VERTICALLY CENTERED: Perfect alignment */
+      }
+
+      /* 🔤 ===== DECORATIVE DROP CAP ===== */
+      
+      .first-paragraph::first-letter {
+        /* 🎨 MAGIC PSEUDO-ELEMENT: Selects ONLY the first letter! */
+        
+        font-size: 6rem;
+        /* 📏 GIANT LETTER: 60px, like in medieval manuscripts */
+        
+        color: orangered;
+        /* 🔥 ACCENT COLOR: Visually connects to the title */
+        
+        float: left;
+        /* 🏊 FLOATING: Text flows around the letter */
+        /* It's like in ancient books with decorated initials */
+        
+        margin-right: 1rem;
+        /* ➡️ SPACE: Between the letter and the text surrounding it */
+      }
+
+      /* 💬 ===== QUOTES ===== */
+      
+      .quote {
+        color: #00beef;
+        /* 🔵 CYAN BLUE: Distinctive color for quotes */
+        /* #00beef = "beef" is a programmer's joke! */
+        
+        font-size: 2.4rem;
+        /* 📏 LARGER: Quotes need to stand out */
+        
+        text-align: center;
+        /* ⚖️ CENTERED: Like in a presentation slide */
+        
+        font-family: "Raleway", sans-serif;
+        /* 🔤 DIFFERENT FONT: To distinguish them from normal text */
+      }
+
+      .quote::before {
+        content: '" ';
+        /* 🔤 OPENING QUOTES: Added automatically! */
+      }
+
+      .quote::after {
+        content: ' "';
+        /* 🔤 CLOSING QUOTES: CSS does the dirty work */
+        /* It's like having an assistant who adds the quotation marks */
+      }
+
+      /* 🖼️ ===== TEXT WITH IMAGES ===== */
+      
+      .text-with-images {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        /* 📏 ASYMMETRICAL COLUMNS: 1/3 text, 2/3 images */
+        /* 1fr + 2fr = text occupies 1 part, images 2 parts */
+        
+        column-gap: 3rem;
+        /* 🌬️ COLUMN GAP: Separates text and images */
+        
+        margin-bottom: 3rem;
+        /* ⬇️ BOTTOM MARGIN: Space before the next section */
+      }
+
+      /* 📋 ===== STYLED LISTS ===== */
+      
+      .lists {
+        list-style-type: none;
+        /* 🚫 NO BULLETS: Clean and modern lists */
+        
+        margin-top: 2rem;
+        /* ⬆️ SPACE ABOVE: Separates from the introduction */
+      }
+
+      .lists li {
+        margin-bottom: 1.5rem;
+        /* ⬇️ SPACE BETWEEN ELEMENTS: Each item has its breathing room */
+      }
+
+      .list-title, .list-subtitle {
+        color: #00beef;
+        /* 🔵 ACCENT COLOR: Like the quotes, for consistency */
+      }
+
+      /* 🖼️ ===== COMPLEX IMAGE GRID ===== */
+      
+      .image-wrapper {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        /* 📏 ASYMMETRICAL COLUMNS: Large + small */
+        
+        grid-template-rows: repeat(3, min-content);
+        /* 📏 THREE ROWS: They adapt to the content */
+        /* min-content = as tall as needed, not more */
+        
+        gap: 2rem;
+        /* 🌬️ GAP: Between all grid cells */
+        
+        place-items: center;
+        /* ⚖️ TOTAL CENTERING: Horizontal AND vertical */
+        /* Shorthand for align-items + justify-items */
+      }
+
+      .image-1, .image-3 {
+        grid-column: 1 / -1;
+        /* 📍 FULL WIDTH: Occupy both columns */
+        /* While image-2 and blockquote are side by side */
+      }
+
+      /* 📱 ===== MEDIA QUERIES: The Magazine Adapts! ===== */
+      
+      @media only screen and (max-width: 720px) {
+        /* 📱 TABLET: Below 720px */
+        
+        .image-wrapper {
+          grid-template-columns: 1fr;
+          /* 📏 SINGLE COLUMN: Images stack */
+          /* There's no more space to place them side by side */
+        }
+      }
+
+      @media only screen and (max-width: 600px) {
+        /* 📱 PHABLET: Below 600px */
+        
+        .text-with-images {
+          grid-template-columns: 1fr;
+          /* 📏 ALL STACKED: Text and images one above the other */
+        }
+      }
+
+      @media only screen and (max-width: 550px) {
+        /* 📱 SMARTPHONE: Below 550px */
+        
+        .hero-title {
+          font-size: 6rem;
+          /* 📏 REDUCED TITLE: From 80px to 60px */
+        }
+        
+        .hero-subtitle,
+        .author,
+        .quote,
+        .list-title {
+          font-size: 1.8rem;
+          /* 📏 STANDARDIZED TEXTS: All at 18px for consistency */
+        }
+        
+        .social-icons {
+          font-size: 2rem;
+          /* 📏 SMALLER ICONS: But still touchable */
+        }
+
+        .text {
+          font-size: 1.6rem;
+          /* 📏 REDUCED TEXT: 16px for more visible content */
+        } 
+      }
+
+      @media only screen and (max-width: 420px) {
+        /* 📱 SMALL SMARTPHONES: The last breakpoint */
+        
+        .hero-title {
+          font-size: 4.5rem;
+          /* 📏 COMPACT TITLE: 45px to avoid line breaks */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 📰 ===== THE MAGAZINE COMES TO LIFE ===== -->
+    
+    <main>
+      <!-- 📰 MAIN CONTAINER: The grid that orchestrates everything -->
+      
+      <section class="heading">
+        <!-- 📰 HEADER SECTION: Hero + info + social -->
+        
+        <header class="hero">
+          <!-- 🦸 HERO SECTION: The image and impact title -->
+          
+          <img
+            src="https://cdn.freecodecamp.org/platform/universal/fcc_meta_1920X1080-indigo.png"
+            alt="freecodecamp logo"
+            loading="lazy"
+            class="hero-img"
+          />
+          <!-- 🖼️ HERO IMAGE: The main banner -->
+          <!-- loading="lazy" = loads only when needed (performance!) -->
+          <!-- It's like saying "load this image only when you're about to see it" -->
+          
+          <h1 class="hero-title">OUR NEW CURRICULUM</h1>
+          <!-- 📰 BIG HEADLINE: In Anton, impossible to ignore -->
+          
+          <p class="hero-subtitle">
+            Our efforts to restructure our curriculum with a more project-based
+            focus
+          </p>
+          <!-- 📝 SUBTITLE: Explains what the article is about -->
+        </header>
+        
+        <div class="author">
+          <!-- ✍️ AUTHOR INFO: Who wrote it and when -->
+          
+          <p class="author-name">
+            By
+            <a href="https://freecodecamp.org" target="_blank" rel="noreferrer"
+              >freeCodeCamp</a
+            >
+            <!-- 🔗 AUTHOR LINK: target="_blank" = opens in new tab -->
+            <!-- rel="noreferrer" = security, doesn't pass referrer info -->
+          </p>
+          <p class="publish-date">March 7, 2019</p>
+          <!-- 📅 DATE: In semi-transparent gray to be discreet -->
+        </div>
+        
+        <div class="social-icons">
+          <!-- 🔗 SOCIAL ICONS: Font Awesome in action! -->
+          
+          <a href="https://www.facebook.com/freecodecamp/">
+            <i class="fab fa-facebook-f"></i>
+            <!-- 📘 FACEBOOK: fab = font awesome brands -->
+          </a>
+          <a href="https://twitter.com/freecodecamp/">
+            <i class="fab fa-twitter"></i>
+            <!-- 🐦 TWITTER: The class defines the icon -->
+          </a>
+          <a href="https://instagram.com/freecodecamp">
+            <i class="fab fa-instagram"></i>
+            <!-- 📷 INSTAGRAM: Just one class for an icon! -->
+          </a>
+          <a href="https://www.linkedin.com/school/free-code-camp/">
+            <i class="fab fa-linkedin-in"></i>
+            <!-- 💼 LINKEDIN: -in is the version of the icon -->
+          </a>
+          <a href="https://www.youtube.com/freecodecamp">
+            <i class="fab fa-youtube"></i>
+            <!-- 📺 YOUTUBE: Grid aligns them perfectly -->
+          </a>
+        </div>
+      </section>
+      
+      <section class="text">
+        <!-- 📄 MAIN TEXT: The body of the article -->
+        
+        <p class="first-paragraph">
+          <!-- 🔤 FIRST PARAGRAPH: With decorative drop cap! -->
+          Soon the freeCodeCamp curriculum will be 100% project-driven learning. Instead of a series of coding challenges, you'll learn through building projects - step by step. Before we get into the details, let me emphasize: we are not changing the certifications. All 6 certifications will still have the same 5 required projects. We are only changing the optional coding challenges.
+        </p>
+        
+        <p>
+          After years - years - of pondering these two problems and how to solve them, I slipped, hit my head on the sink, and when I came to I had a revelation! A vision! A picture in my head! A picture of this! This is what makes time travel possible: the flux capacitor!
+          <!-- 🎬 REFERENCE: Back to the Future! -->
+        </p>
+        
+        <p>
+          It wasn't as dramatic as Doc's revelation in Back to the Future. It
+          just occurred to me while I was going for a run. The revelation: the entire curriculum should be a series of projects. Instead of individual coding challenges, we'll just have projects, each with their own seamless series of tests. Each test gives you just enough information to figure out how to get it to pass. (And you can view hints if that isn't enough.)
+        </p>
+        
+        <blockquote>
+          <!-- 💬 QUOTE: With hr for visual emphasis -->
+          <hr />
+          <p class="quote">
+            The entire curriculum should be a series of projects
+          </p>
+          <hr />
+        </blockquote>
+        
+        <p>
+          No more walls of explanatory text. No more walls of tests. Just one
+          test at a time, as you build up a working project. Over the course of passing thousands of tests, you build up projects and your own understanding of coding fundamentals. There is no transition between lessons and projects, because the lessons themselves are baked into projects. And there's plenty of repetition to help you retain everything because - hey - building projects in real life has plenty of repetition.
+        </p>
+        
+        <p>
+          The main design challenge is taking what is currently paragraphs of explanation and instructions and packing them into a single test description text. Each project will involve dozens of tests like this. People will be coding the entire time, rather than switching back and forth from "reading mode" to "coding mode".
+        </p>
+        
+        <p>
+          Instead of a series of coding challenges, people will be in their code editor passing one test after another, quickly building up a project. People will get into a real flow state, similar to what they experience when they build the required projects at the end of each certification. They'll get that sense of forward progress right from the beginning. And freeCodeCamp will be a much smoother experience.
+        </p>
+      </section>
+      
+      <section class="text text-with-images">
+        <!-- 📰 MIXED SECTION: Text on the left, images on the right -->
+        
+        <article class="brief-history">
+          <!-- 📜 HISTORY: Curriculum timeline -->
+          
+          <h3 class="list-title">A Brief History</h3>
+          <p>Of the Curriculum</p>
+          
+          <ul class="lists">
+            <!-- 📋 TIMELINE: List without bullets -->
+            
+            <li>
+              <h4 class="list-subtitle">V1 - 2014</h4>
+              <p>
+                We launched freeCodeCamp with a simple list of 15 resources,
+                including Harvard's CS50 and Stanford's Database Class.
+              </p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V2 - 2015</h4>
+              <p>We added interactive algorithm challenges.</p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V3 - 2015</h4>
+              <p>
+                We added our own HTML+CSS challenges (before we'd been relying on
+                General Assembly's Dash course for these).
+              </p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V4 - 2016</h4>
+              <p>
+                We expanded the curriculum to 3 certifications, including Front
+                End, Back End, and Data Visualization. They each had 10 required
+                projects, but only the Front End section had its own challenges.
+                For the other certs, we were still using external resources like
+                Node School.
+              </p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V5 - 2017</h4>
+              <p>We added the back end and data visualization challenges.</p>
+            </li>
+            <li>
+              <h4 class="list-subtitle">V6 - 2018</h4>
+              <p>
+                We launched 6 new certifications to replace our old ones. This was
+                the biggest curriculum improvement to date.
+              </p>
+            </li>
+          </ul>
+        </article>
+        
+        <aside class="image-wrapper">
+          <!-- 🖼️ IMAGE GALLERY: Complex grid layout -->
+          
+          <img
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/images/random-quote-machine.png"
+            alt="image of the quote machine project"
+            loading="lazy"
+            class="image-1"
+            width="600"
+            height="400"
+          />
+          <!-- 🖼️ IMAGE 1: Occupies both columns -->
+          <!-- width/height = native dimensions for better performance -->
+          
+          <img
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/images/calc.png"
+            alt="image of a calculator project"
+            loading="lazy"
+            class="image-2"
+            width="400"
+            height="400"
+          />
+          <!-- 🖼️ IMAGE 2: In the 2x1 grid -->
+          
+          <blockquote class="image-quote">
+            <!-- 💬 QUOTE BETWEEN IMAGES: For visual variety -->
+            <hr />
+            <p class="quote">
+              The millions of people who are learning to code through freeCodeCamp
+              will have an even better resource to help them learn these
+              fundamentals.
+            </p>
+            <hr />
+          </blockquote>
+          
+          <img
+            src="https://cdn.freecodecamp.org/testable-projects-fcc/images/survey-form-background.jpeg"
+            alt="four people working on code"
+            loading="lazy"
+            class="image-3"
+            width="600"
+            height="400"
+          />
+          <!-- 🖼️ IMAGE 3: Full width again -->
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>
+
+<!-- 🎯 ===== EDITORIAL LAYOUT SUMMARY ===== -->
+<!-- 
+📰 MAGAZINE STRUCTURE:
+│
+├── 🧠 HEAD (editorial preparation)
+│   └── 🎨 Resources and styles:
+│       ├── 🔤 Google Fonts (3 fonts for 3 purposes)
+│       ├── 🎨 Font Awesome (social icons)
+│       └── 📐 CSS with:
+│           ├── 🏗️ Advanced CSS Grid (main layout)
+│           ├── 📰 Multi-column text (automatic columns)
+│           ├── 🔤 ::first-letter (drop cap)
+│           ├── 💬 ::before/::after (automatic quotation marks)
+│           └── 📱 4 responsive breakpoints
+│
+└── 📰 BODY (the magazine)
+    └── 📄 Main (3-column grid)
+        ├── 📰 Heading section
+        │   ├── 🦸 Hero (image + big headline)
+        │   ├── ✍️ Author info
+        │   └── 🔗 Social icons
+        ├── 📄 Text section (multi-column)
+        │   ├── 🔤 Paragraphs with drop cap
+        │   └── 💬 Styled blockquotes
+        └── 📰 Text-with-images
+            ├── 📜 Article (history timeline)
+            └── 🖼️ Aside (image grid)
+
+🎨 CSS EDITORIAL TECHNIQUES:
+├── 📐 Main Grid: brilliant automatic margins
+├── 📰 column-width: automatic multi-column text
+├── 🔤 Hierarchical typography: 3 different fonts
+├── 💡 rem trick: 62.5% for easy calculations
+├── 🖼️ Nested grids: complex layouts
+└── 📱 Fluid responsive: 4 targeted breakpoints
+
+It's like InDesign but made entirely in CSS! 📰✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Return of HTML
+
+Finally I'm back to adding **HTML** concepts beyond CSS! In recent projects they were purely (the vast majority) about new CSS functions.
+
+**Learning compromise:**
+- **CSS:** Advanced grid layout, pseudo-elements, complex media queries, responsive typography
+- **HTML:** Semantic structure (`<main>`, `<section>`, `<article>`, `<aside>`), accessibility, Font Awesome icons
+
+The balance was perfect for consolidating both aspects.
+
+### The Portfolio Temptation and the Wisdom of Waiting
+
+Right between adding the commented HTML and creating this README, I realized it would have been much better to add **screenshots** of the final results of projects on GitHub. I got to researching GitHub Pages, custom domains, etc...
+
+But at a certain point I asked myself: "Okay the enthusiasm, but you haven't finished Responsive Web Design from freeCodeCamp yet. Okay, you're at the end, okay, you've come a long way, a few months ago you didn't even know how to head an HTML, but you still haven't learned JavaScript or React."
+
+### The Decision for Authenticity
+
+I decided to be true from the first project and tell my whole journey, and I'm still doing it now. **I'll add screenshots from now on**, but the best portfolio is one I make **after learning**, not while I'm learning.
+
+Regarding having decided to be authentic, I could have improved the README files of the first projects that were really "bare", but I didn't do it because the goal here is to show the entire process. I'm not on Instagram where everyone shows the best version of themselves - here I show my real learning story.
+
+Given that I already know I'll never stop learning, because when you seriously and passionately do a profession you're a **professional** and at the same time a **lifelong student**. At least create it properly after completing the path I've created for myself:
+
+### My Learning Path
+
+- **Responsive Web Design** (freeCodeCamp)
+- **JavaScript Algorithms and Data Structures** (freeCodeCamp)
+- **Front End Development Libraries** (freeCodeCamp)
+- **Epic React** (Kent C. Dodds)
+- **Become a Designer** (Breccia)
+- **Google UX Design**
+- **Degree in Industrial Design**
+- **Refactoring UI**
+- **Many design and code books**
+- **Maybe a nice bootcamp**
+
+### The Project Itself
+
+Returning to the project, I liked it just as I had predicted in the other README. Although I'm not a fan of articles written in newspaper style with columns, I understood where freeCodeCamp was going: **start from where it all began** - the printed newspaper.
+
+It's a brilliant didactic approach: first you learn the layout that has defined visual communication for centuries, then you can innovate consciously. The principles of hierarchy, columns, spacing of newspapers are the foundation of every modern editorial design.
+
+### CSS Grid: When It Makes Sense
+
+Refactoring UI tends to prefer simpler solutions, but CSS Grid has its legitimate use cases:
+- **Editorial layouts** like this magazine
+- **Dashboards** with defined functional areas
+- **Complex image galleries**
+- **Landing pages** with overlapping sections
+
+I believe (but I could be wrong) that the important thing is not to abuse it when Flexbox would do the same job more simply.
+
+### Final Reflection
+
+The time spent exploring GitHub Pages won't be wasted. **One day I'll connect the dots**.
+
+### What I Learned
+
+**CSS:**
+- **CSS Grid** for complex bidimensional layouts
+- **Responsive typography** with precise media queries
+- **Object-fit** for intelligent image management
+- **Pseudo-elements** for automatic quotation marks
+- **Optimized font loading** with Google Fonts
+- **The font-size: 62.5% trick** - converts the base from 16px to 10px (16px × 62.5% = 10px), making rem calculations super simple!
+
+**HTML:**
+- **`<aside>`** for semantically related content
+- **loading="lazy"** for optimized image loading
+- **rel="noreferrer"** - though I discovered it's like closing one window while leaving 10 others open! It only blocks the referrer header, but Google Analytics and other trackers do the rest of the work. It's more a "gesture of courtesy" than real protection.
+
+---
+
+**Next Project**: Product Landing Page (Certification Project!)

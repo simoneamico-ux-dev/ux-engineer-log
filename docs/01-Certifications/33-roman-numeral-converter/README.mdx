@@ -1,0 +1,1377 @@
+---
+sidebar_position: 7
+sidebar_label: 'Roman Numeral Converter'
+title: 'Roman Numeral Converter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Roman Numeral Converter
+
+![Screen Recording - Roman Converter](https://github.com/user-attachments/assets/75268854-fe60-4b41-90dc-7c543d745772)
+![Mobile UI](https://github.com/user-attachments/assets/610ec440-6bd4-4cad-9dee-3d2a25d8ada2)
+![Desktop UI](https://github.com/user-attachments/assets/901eec57-8ef1-49ea-8195-c52eb873860b)
+
+### The Project
+Arabic to Roman numeral converter developed with vanilla JavaScript, advanced input validation and component-based architecture. A complete application with Material Design 3 UI and professional commenting system.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!-- DESIGN 
+   ------
+   * This HTML is characterized by:
+   * - importing Roboto Slab and Roboto fonts from Google Fonts.
+   *   I chose these fonts because Roboto Slab has classic shapes
+   *   that evoke ancient Rome,
+   *   Roboto (for input and button) provides modernity, 
+   *   readability and consistency with Material Design 3
+   * - a div structure with exception of the card container, where
+   *   I chose <main> for semantic purposes
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Roman Numeral Converter</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- * freeCodeCamp instructions:
+             * - You should have an input element with an id of "number".
+             * - You should have a button element with an id of "convert-btn".
+             * - You should have a div, span or p element with an id of output. 
+             
+             * I'll create separate divs to allow me in CSS phase to position
+             * each component exactly as in Figma
+             
+             * I must remember to write "number" for type of input to restrict
+             * input to numeric characters, which is more efficient than using 
+             * regex in JavaScript
+             * I did some research and found out that input type="number" uses
+             * browser native validation operating with an underlying C/C++ engine,
+             * while regex is executed by the JavaScript interpreter.
+             * However, I still need to use JavaScript to avoid "e" and ","
+        -->
+        
+        <main id="card-container">
+            <div id="title-container">
+                <h1 id="first-h1">Roman Numeral <span id="second-h1">Converter</span></h1>
+            </div>
+            <div id="output-container">
+                <p id="output"></p>
+            </div>
+
+            <!-- * Adding min/max attributes provides defense in depth. 
+                 * Although this approach is typically used in more complex, 
+                 * cybersecurity scenarios, it provides a fallback in case JavaScript
+                 * rule validation fails or is disabled.
+            -->
+
+            <div id="input-container">
+                <input value="" type="number" name="arabic-number-input" class="number" id="number" placeholder="Enter a Number" min="1" max="3999" autocomplete="off">
+            </div>
+            <div id="convert-btn-container">
+                <button id="convert-btn">Convert</button>
+            </div>
+        </main>
+        
+        <script src="script.js"></script>
+    </body>
+
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+/* DESIGN 
+   ------
+   * The structure I propose is a mix from Component-Based Architecture,
+   * Utility-First Variables and Flat Component Hierarchy, for this reason:
+   * - Component-Based Architecture because I organized it into components (card, 
+   *   title, output, input, button)
+   * - Utility-First Variables because all changes (almost) are centralized
+   *   in :root and organized as atomic terms (--button-width , --input-height).
+   *   This approach made it very quick to create the media query for mobile
+   * - Flat Component Hierarchy because the primary use of ID-based selectors
+   *   predominates
+*/
+
+
+:root {
+
+    /*  * I have an internal conflict:  follow DRY rule or add same property in
+        * all component which avoids the DRY rule? With the first approach I would
+        * guarantee for anyone to understand exactly which property to modify for
+        * each specific element
+    */
+
+
+    /* Background */
+
+    /* * When exporting the background I created in Figma (with Material 3 shapes 
+       * and Android logo), SVG was 56KB, PNG 175KB, and JPEG 441KB. 
+       * PNG is lighter than JPEG because geometric shapes and flat colors compress
+       * better with PNG's lossless algorithm, while JPEG is optimized for photographs
+       * with continuous gradients
+   */
+    --background-image: url("https://github.com/user-attachments/assets/a44f66ec-c760-4df1-8ac4-3afa104c4ebb");
+
+    /* Position */
+    --title-margin-top: 65px;
+    --output-margin-top: 150px;
+    --output-margin-top-alert-1: 134px;
+    --output-margin-top-alert-2: 138px;
+    --input-margin-top: 261px;
+    --button-margin-top: 349px;
+
+    /* Card */
+    --card-color: #13140D;
+    --card-size: 480px; /* perfect square, use it for width and height */
+    --card-border-radius: 28px;
+
+
+    /* title and output*/
+    --title-output-font-family: "Roboto Slab", sans-serif;
+    --title-output-font-color: #FFF;
+
+    /* title */
+    --title-font-size: 28px;
+    --title-font-weight: 400;
+    --title-font-color-secondary: #C7C8B9;
+
+
+    /* output */
+    --output-font-weight: 800;
+    --output-font-size: 48px;
+    --output-font-size-alert-1: 32px;
+    --output-font-size-alert-2: 28px;
+    --output-padding-alert: 0 48px;
+
+
+    /* input and button */
+    --input-button-font-family: "Roboto", sans-serif;
+    
+    /* input */
+    --input-font-weight: 400;
+    --input-font-size: 16px;
+    --input-width: 210px;
+    --input-height: 56px;
+    --input-border-radius: 4px 4px 0 0;
+    --input-box-color: #23241B;
+    --input-border-bottom: 2px solid #444830;
+    --input-border-bottom-active: 2px solid #71774f;
+    --input-font-color: #CED2B3;
+    
+
+    /* button */
+    --button-font-size: 18px;
+    --button-font-weight: 500;
+    --button-font-weight-active: 400;
+    --button-width: 156px;
+    --button-height: 56px;
+    --button-border-radius: 28px;
+    --button-font-color: #2B3400;
+    --button-box-color: #BFCD7F;
+    --button-box-color-hover: #CFDD8B;
+    --button-border-radius-active: 16px;
+}
+
+
+body {
+    background-image: var(--background-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+#card-container {
+    background-color: var(--card-color);
+    width: var(--card-size);
+    height: var(--card-size);
+    border-radius: var(--card-border-radius);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#title-container {
+    margin-top: var(--title-margin-top);
+    position: absolute;
+}
+
+h1, #output {
+    font-family: var(--title-output-font-family);
+}
+
+#first-h1, #output {
+    color: var(--title-output-font-color);
+}
+
+h1 {
+    margin: 0;
+    font-size: var(--title-font-size);
+    font-weight: var(--title-font-weight);
+}
+
+#second-h1 {
+    color: var(--title-font-color-secondary);
+}
+
+#output-container {
+    position: absolute;
+}
+
+#output {
+    margin: 0;
+    margin-top: var(--output-margin-top);
+    font-weight: var(--output-font-weight);
+    font-size: var(--output-font-size);
+    color: var(--title-output-font-color);
+}
+
+#output.empty {
+    color: var(--title-font-color-secondary);
+}
+
+#output.alert-1, #output.alert-2 {
+    padding: var(--output-padding-alert);
+    color: var(--title-output-font-color);
+}
+
+#output.alert-1 {
+    margin-top: var(--output-margin-top-alert-1);
+    font-size: var(--output-font-size-alert-1);
+}
+
+#output.alert-2 {
+    margin-top: var(--output-margin-top-alert-2);
+    font-size: var(--output-font-size-alert-2);
+}
+
+#input-container {
+    margin-top: var(--input-margin-top);
+    position: absolute;
+}
+
+#number, #convert-btn {
+    font-family: var(--input-button-font-family);
+}
+
+#number {
+    width: var(--input-width);
+    height: var(--input-height);
+    box-sizing: border-box;
+    font-weight: var(--input-font-weight);
+    font-size: var(--input-font-size);
+    text-align: center;
+    color: var(--input-font-color);
+    border-radius: var(--input-border-radius);
+    background-color: var(--input-box-color);
+    border: none;
+    border-bottom: var(--input-border-bottom);
+    outline: none;
+    transition: border-bottom-color 0.15s ease;
+}
+
+#number::placeholder {
+    color: #ced2b36b;
+}
+
+#number:focus {
+    border-bottom: var(--input-border-bottom-active);
+}
+
+
+#convert-btn-container {
+    margin-top: var(--button-margin-top);
+    position: absolute;
+}
+
+#convert-btn {
+    width: var(--button-width);
+    height: var(--button-height);
+    border: none;
+    font-weight: var(--button-font-weight);
+    font-size: var(--button-font-size);
+    color: var(--button-font-color);
+    border-radius: var(--button-border-radius);
+    background-color: var(--button-box-color);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+#convert-btn:hover {
+    background-color: var(--button-box-color-hover);
+}
+
+#convert-btn:active {
+    border-radius: var(--button-border-radius-active);
+    font-weight: var(--button-font-weight-active);
+}
+
+@media (max-width: 768px) {
+    :root {
+
+    /* Position */
+    --title-margin-top: 51px;
+    --output-margin-top: 117px;
+    --output-margin-top-alert-1: 103px;
+    --output-margin-top-alert-2: 107px;
+    --input-margin-top: 199px;
+    --button-margin-top: 265px;
+
+    /* Card */
+    --card-size: 360px; /* perfect square, use it for width and height */
+    --card-border-radius: 21px;
+
+    /* title */
+    --title-font-size: 20px;
+
+    /* output */
+    --output-font-size: 32px;
+    --output-font-size-alert-1: 24px;
+    --output-font-size-alert-2: 20px;
+    
+    /* input */
+    --input-font-size: 14px;
+    --input-width: 157px;
+    --input-height: 42px;
+    --input-border-radius: 3px 3px 0 0;
+    
+
+    /* button */
+    --button-font-size: 16px;
+    --button-width: 117px;
+    --button-height: 42px;
+    --button-border-radius: 21px;
+    --button-border-radius-active: 9px;
+
+    }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+/* DESIGN 
+   ------
+   * After different paradigm changes, this is the most concise
+   * JavaScript solution I managed to create.
+   * It is characterized by:
+   * - declaration based on name required from freeCodeCamp
+   * - arabic to roman map for more efficiency with a single-source
+   *   declaration
+   * - a short while loop that "translates" arabic numbers to roman
+   *   numerals
+   * - the logic is simple, with .reduce JavaScript takes each
+   *   array value and accumulates all the results that come out
+   *   of the loop, we start from "" (empty string) which is the
+   *   the second argument.
+   *   Writing [arabicNumber, romanNumber] we are destructuring the
+   *   array.
+   *   Inside the while loop we say to JavaScript: as long as the 
+   *   user's input number is big enough to contain this Roman number, 
+   *   continue the iteration.
+   * - Next, we handle everything related to input, so the logic of
+   *   allowed input, allow clicking the enter button to submit.
+   *   I modify the default behavior of keyboard with an e.preventDefault(), 
+   *   which doesn't even let you write values that aren't numeric, in order 
+   *   to improve the UX,
+   *   and finally assign convert button to the user input checking function
+*/
+
+
+/*  * JavaScript must avoid "e" and "," in the input label
+
+    * I need to assign number, convert-btn and output
+    * to the equivalent id 
+    * and have the following text as alert if nothing is entered
+    * in the input field: "Please enter a valid number" 
+*/
+
+
+const numberInput = document.getElementById("number");
+const convertBtn = document.getElementById("convert-btn");
+const output = document.getElementById("output");
+output.textContent = "------"; // Without this default value we have a perceptual void 
+output.classList.add("empty"); // With this class we have a duller color, because default value it must symbolize a dull value 
+
+/*  * It is more efficient to create a unique map than two split
+    * arabicNumber and romanNumber
+    * This approach makes possible the next DRY function 
+*/
+
+const arabicToRomanMap = [[1000, "M"], [900, "CM"], [500, "D"], [400, "CD"], [100, "C"], [90, "XC"], [50, "L"], [40, "XL"], [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]];
+
+
+/*  * After a long time to create for loops and switch statements, 
+    * I realized (with my code tutor) that there is a simple
+    * way to get the same result which perfectly matches with
+    * DRY principle (Don't Repeat Yourself) 
+*/
+
+const arabicToRoman = (number) => {
+    return arabicToRomanMap.reduce((result, [arabicNumber, romanNumber]) =>{
+        while (number >= arabicNumber) {
+            result += romanNumber;
+            number -= arabicNumber;
+        }
+        return result;
+
+    }, "");
+}
+
+
+/*  * Following SRP rule (Single Responsibility Principle)
+    * I'll create a checker of input that has as only function
+    * "bounce" not appropriate input 
+    * I'll start by not allowing any character different from decimal
+    * number, then I'll write a clear checker of user input
+    * arrow function 
+*/
+
+    numberInput.addEventListener("keydown", (e) => {
+        if (["e", "E", "+", "-"].includes(e.key)) {
+        e.preventDefault();
+        }
+    });
+    
+    numberInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            checkUserInput();
+        }
+    });
+
+const checkUserInput = () => {
+    const inputInt = parseInt(numberInput.value, 10); // I wrote 10 to specify that it is a decimal number
+    output.classList.remove("alert-1", "alert-2", "empty") // Let's reset special cases and removing empty class now we have a lit value as a result
+
+    if (!numberInput.value || isNaN(inputInt)) { // Then if there is no user input value or it is not a numeral value
+        output.textContent = "Please enter a valid number";
+        output.classList.add("alert-1");
+        return;
+    } 
+    
+    if (inputInt < 1) {
+        output.textContent = "Please enter a number greater than or equal to 1";
+        output.classList.add("alert-2");
+        return;
+    }
+    
+    if (inputInt > 3999) {
+        output.textContent = "Please enter a number less than or equal to 3999";
+        output.classList.add("alert-2");
+        return;
+    } 
+    
+    const romanConverted = arabicToRoman(inputInt);
+    output.textContent = romanConverted;
+};
+
+convertBtn.addEventListener("click", checkUserInput);
+```
+
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to digital ancient Rome!" -->
+<!-- It's like opening the Colosseum gates but in web form! 🏛️ -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our digital Roman empire -->
+<!-- lang="en" = English, but we'll convert numbers to Roman! -->
+
+    <head>
+        <!-- 🧠 THE COMMAND CENTER: Where we plan the numeric conversion -->
+        <!-- It's like the Library of Alexandria but for code! -->
+        
+        <title>Roman Numeral Converter</title>
+        <!-- 📑 TAB TITLE: Simple and clear like a Roman inscription -->
+        
+        <meta charset="UTF-8" />
+        <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for all symbols, even I, V, X, L, C, D, M! -->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 📱 RESPONSIVE DESIGN: "The converter works on wax tablets and smartphones!" -->
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <!-- 🔗 PRECONNECT: Preparing the ground to load fonts quickly -->
+        <!-- It's like sending messengers ahead to prepare for the arrival -->
+        
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <!-- 🔤 GOOGLE FONTS: Two font families -->
+        <!-- Roboto Slab = classic serif that evokes ancient Rome -->
+        <!-- Roboto = modern sans-serif for inputs and buttons -->
+        <!-- wght@100..900 = all available weights! -->
+        
+        <style>
+          /* 🎨 ===== THE DESIGN SYSTEM: CSS variables like an Organized Empire! ===== */
+          
+          :root {
+              /* 🏛️ THE SENATE OF VARIABLES: All design decisions centralized! */
+              /* :root = root element, accessible everywhere */
+              /* Like the emperor who sets rules for the whole empire */
+          
+              /* 🖼️ ===== BACKGROUND ===== */
+              --background-image: url("https://github.com/user-attachments/assets/a44f66ec-c760-4df1-8ac4-3afa104c4ebb");
+              /* 🎨 BACKGROUND IMAGE: Probably a Material Design geometric pattern */
+              /* PNG chosen because lighter for geometric shapes (56KB vs 441KB JPEG!) */
+          
+              /* 📍 ===== POSITIONS: The GPS of the Layout ===== */
+              --title-margin-top: 65px;
+              /* 📏 TITLE: 65px from the top edge */
+              
+              --output-margin-top: 150px;
+              /* 📏 NORMAL OUTPUT: Where the Roman numeral appears */
+              
+              --output-margin-top-alert-1: 134px;
+              --output-margin-top-alert-2: 138px;
+              /* 🚨 OUTPUT ALERT: Slightly different positions for error messages */
+              /* Higher up because the text is longer! */
+              
+              --input-margin-top: 261px;
+              /* 📝 INPUT: Where the user types the number */
+              
+              --button-margin-top: 349px;
+              /* 🔘 BUTTON: At the bottom, ready to convert! */
+          
+              /* 📦 ===== THE CENTRAL CARD ===== */
+              --card-color: #13140D;
+              /* ⚫ DEEP BLACK: Like Roman obsidian */
+              
+              --card-size: 480px;
+              /* 📏 PERFECT SQUARE: 480x480px, absolute symmetry! */
+              /* A square like the stones of the Roman Forum */
+              
+              --card-border-radius: 28px;
+              /* 🔄 ROUNDED CORNERS: Modernity meets classicism */
+          
+              /* 🔤 ===== TYPOGRAPHY: The Empire's Fonts ===== */
+              --title-output-font-family: "Roboto Slab", sans-serif;
+              /* 📜 CLASSIC FONT: For title and output, evokes Roman inscriptions */
+              
+              --title-output-font-color: #FFF;
+              /* ⚪ PURE WHITE: Like Carrara marble */
+          
+              /* 📰 ===== TITLE ===== */
+              --title-font-size: 28px;
+              /* 📏 SIZE: Large but not exaggerated */
+              
+              --title-font-weight: 400;
+              /* 💪 NORMAL WEIGHT: Not too bold */
+              
+              --title-font-color-secondary: #C7C8B9;
+              /* 🔘 WARM GREY: For the word "Converter" */
+          
+              /* 🎯 ===== OUTPUT: Where Roman Numerals Appear ===== */
+              --output-font-weight: 800;
+              /* 💪 EXTRA BOLD: Roman numerals must dominate! */
+              
+              --output-font-size: 48px;
+              /* 📏 HUGE: The result is the star of the show */
+              
+              --output-font-size-alert-1: 32px;
+              --output-font-size-alert-2: 28px;
+              /* 🚨 ALERT SIZES: Smaller to make room for text */
+              
+              --output-padding-alert: 0 48px;
+              /* 🏠 LATERAL PADDING: For long messages */
+          
+              /* ✍️ ===== INPUT AND BUTTON ===== */
+              --input-button-font-family: "Roboto", sans-serif;
+              /* 🔤 MODERN FONT: For user interaction */
+              
+              /* 📝 ===== INPUT: Where to Type ===== */
+              --input-font-weight: 400;
+              --input-font-size: 16px;
+              /* 🔤 INPUT TEXT: Normal and readable */
+              
+              --input-width: 210px;
+              --input-height: 56px;
+              /* 📏 DIMENSIONS: Comfortable rectangle */
+              
+              --input-border-radius: 4px 4px 0 0;
+              /* 🔄 BORDERS: Rounded only on top! */
+              /* It's the Material Design style for inputs */
+              
+              --input-box-color: #23241B;
+              /* ⚫ DARK BACKGROUND: For contrast with light text */
+              
+              --input-border-bottom: 2px solid #444830;
+              /* 📏 BOTTOM BORDER: The line under the input */
+              
+              --input-border-bottom-active: 2px solid #71774f;
+              /* 🟢 ACTIVE BORDER: Brighter when focused */
+              
+              --input-font-color: #CED2B3;
+              /* 🔘 TEXT COLOR: Pale green, readable on dark bg */
+          
+              /* 🔘 ===== BUTTON: The Action! ===== */
+              --button-font-size: 18px;
+              --button-font-weight: 500;
+              /* 🔤 BUTTON TEXT: Medium-bold */
+              
+              --button-font-weight-active: 400;
+              /* 💡 ACTIVE WEIGHT: Becomes lighter when pressed! */
+              
+              --button-width: 156px;
+              --button-height: 56px;
+              /* 📏 DIMENSIONS: Same height as input for harmony */
+              
+              --button-border-radius: 28px;
+              /* 🔄 SUPER ROUNDED: Perfect pill! */
+              
+              --button-font-color: #2B3400;
+              /* 🟢 DARK GREEN: On light background */
+              
+              --button-box-color: #BFCD7F;
+              /* 🟢 LIME GREEN: Main button color */
+              
+              --button-box-color-hover: #CFDD8B;
+              /* 🟢 LIGHTER GREEN: On hover */
+              
+              --button-border-radius-active: 16px;
+              /* 🔄 LESS ROUND: When clicked it becomes squarer! */
+          }
+          
+          /* 🌍 ===== PAGE BODY ===== */
+          
+          body {
+              background-image: var(--background-image);
+              /* 🖼️ BACKGROUND IMAGE: From the variable */
+              
+              background-size: cover;
+              /* 📏 COVER: The image fills the screen */
+              
+              background-position: center;
+              /* 📍 CENTERED: The image starts from the center */
+              
+              background-repeat: no-repeat;
+              /* 🚫 NO REPEAT: A single image, not tiled */
+              
+              background-attachment: fixed;
+              /* 🔒 FIXED BACKGROUND: Doesn't scroll with the page */
+              /* Free parallax effect! */
+          }
+          
+          /* 📦 ===== THE CARD CONTAINER ===== */
+          
+          #card-container {
+              background-color: var(--card-color);
+              /* ⚫ BLACK BACKGROUND: Like the Roman night */
+              
+              width: var(--card-size);
+              height: var(--card-size);
+              /* 📏 PERFECT SQUARE: 480x480px */
+              
+              border-radius: var(--card-border-radius);
+              /* 🔄 SOFT ANGLES: 28px radius */
+              
+              position: absolute;
+              /* 🎯 ABSOLUTE POSITION: For perfect centering */
+              
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              /* 🎪 CENTERING TRICK: The classic! */
+              /* top/left 50% = corner at center */
+              /* translate -50% = move back by half width/height */
+              /* Result = perfect center! */
+              
+              display: flex;
+              flex-direction: column;
+              /* 📦 VERTICAL FLEXBOX: Elements one under the other */
+              
+              align-items: center;
+              /* ⚖️ HORIZONTAL CENTERING: Everything centered */
+              
+              text-align: center;
+              /* 📝 CENTERED TEXT: Also the content */
+          }
+          
+          /* 📰 ===== THE TITLE ===== */
+          
+          #title-container {
+              margin-top: var(--title-margin-top);
+              /* ⬇️ DISTANCE FROM TOP: 65px */
+              
+              position: absolute;
+              /* 🎯 ABSOLUTE POSITION: For precise control */
+          }
+          
+          h1, #output {
+              font-family: var(--title-output-font-family);
+              /* 🔤 ROBOTO SLAB FONT: For title and output */
+          }
+          
+          #first-h1, #output {
+              color: var(--title-output-font-color);
+              /* ⚪ WHITE: For maximum contrast */
+          }
+          
+          h1 {
+              margin: 0;
+              /* 🚫 ZERO MARGINS: Browser reset */
+              
+              font-size: var(--title-font-size);
+              font-weight: var(--title-font-weight);
+              /* 📏 STYLE: 28px, weight 400 */
+          }
+          
+          #second-h1 {
+              color: var(--title-font-color-secondary);
+              /* 🔘 GREY: "Converter" in a different color */
+          }
+          
+          /* 🎯 ===== THE OUTPUT: The Result! ===== */
+          
+          #output-container {
+              position: absolute;
+              /* 🎯 ABSOLUTE POSITION: Total control */
+          }
+          
+          #output {
+              margin: 0;
+              /* 🚫 RESET MARGINS: Start from zero */
+              
+              margin-top: var(--output-margin-top);
+              /* ⬇️ POSITION: 150px from top */
+              
+              font-weight: var(--output-font-weight);
+              font-size: var(--output-font-size);
+              /* 💪 STYLE: weight 800, huge 48px! */
+              
+              color: var(--title-output-font-color);
+              /* ⚪ WHITE: Like the title */
+          }
+          
+          #output.empty {
+              color: var(--title-font-color-secondary);
+              /* 🔘 GREY: When showing "------" */
+              /* Class for empty state */
+          }
+          
+          #output.alert-1, #output.alert-2 {
+              padding: var(--output-padding-alert);
+              /* 🏠 PADDING: 0 48px for long messages */
+              
+              color: var(--title-output-font-color);
+              /* ⚪ WHITE: For errors */
+          }
+          
+          #output.alert-1 {
+              margin-top: var(--output-margin-top-alert-1);
+              font-size: var(--output-font-size-alert-1);
+              /* 🚨 ALERT 1: Specific position and size */
+          }
+          
+          #output.alert-2 {
+              margin-top: var(--output-margin-top-alert-2);
+              font-size: var(--output-font-size-alert-2);
+              /* 🚨 ALERT 2: Even smaller for long texts */
+          }
+          
+          /* 📝 ===== THE INPUT: Where to Type ===== */
+          
+          #input-container {
+              margin-top: var(--input-margin-top);
+              /* ⬇️ POSITION: 261px from the top */
+              
+              position: absolute;
+              /* 🎯 ABSOLUTE CONTROL: Like the others */
+          }
+          
+          #number, #convert-btn {
+              font-family: var(--input-button-font-family);
+              /* 🔤 ROBOTO: Modern font for interaction */
+          }
+          
+          #number {
+              width: var(--input-width);
+              height: var(--input-height);
+              /* 📏 DIMENSIONS: 210x56px */
+              
+              box-sizing: border-box;
+              /* 📦 BOX SIZING: Includes padding and borders */
+              
+              font-weight: var(--input-font-weight);
+              font-size: var(--input-font-size);
+              /* 🔤 TEXT: weight 400, 16px */
+              
+              text-align: center;
+              /* ⚖️ CENTERED: Number in the middle */
+              
+              color: var(--input-font-color);
+              /* 🟢 PALE GREEN: Readable on dark bg */
+              
+              border-radius: var(--input-border-radius);
+              /* 🔄 BORDERS: 4px only on top! Material Design style */
+              
+              background-color: var(--input-box-color);
+              /* ⚫ DARK BACKGROUND: For the input */
+              
+              border: none;
+              /* 🚫 NO BORDERS: We handle them differently */
+              
+              border-bottom: var(--input-border-bottom);
+              /* 📏 ONLY BOTTOM BORDER: 2px grey */
+              
+              outline: none;
+              /* 🚫 NO OUTLINE: We handle focus with border-bottom */
+              
+              transition: border-bottom-color 0.15s ease;
+              /* 🎢 TRANSITION: Smooth color change */
+          }
+          
+          #number::placeholder {
+              color: #ced2b36b;
+              /* 👻 PLACEHOLDER: Super transparent green (6b = 42% opacity) */
+              /* "Enter a Number" appears like a ghost */
+          }
+          
+          #number:focus {
+              border-bottom: var(--input-border-bottom-active);
+              /* 🟢 FOCUS: The border becomes brighter! */
+              /* Visual feedback while typing */
+          }
+          
+          /* 🔘 ===== THE CONVERT BUTTON ===== */
+          
+          #convert-btn-container {
+              margin-top: var(--button-margin-top);
+              /* ⬇️ POSITION: 349px from top */
+              
+              position: absolute;
+              /* 🎯 ABSOLUTE POSITION: The last element */
+          }
+          
+          #convert-btn {
+              width: var(--button-width);
+              height: var(--button-height);
+              /* 📏 DIMENSIONS: 156x56px */
+              
+              border: none;
+              /* 🚫 NO BORDERS: Clean */
+              
+              font-weight: var(--button-font-weight);
+              font-size: var(--button-font-size);
+              /* 🔤 TEXT: weight 500, 18px */
+              
+              color: var(--button-font-color);
+              /* 🟢 DARK GREEN: On light background */
+              
+              border-radius: var(--button-border-radius);
+              /* 🔄 SUPER ROUNDED: 28px = pill! */
+              
+              background-color: var(--button-box-color);
+              /* 🟢 LIME GREEN: Invites action */
+              
+              cursor: pointer;
+              /* 👆 POINTER: "Click me!" */
+              
+              transition: background-color 0.15s ease;
+              /* 🎢 TRANSITION: Smooth color change */
+          }
+          
+          #convert-btn:hover {
+              background-color: var(--button-box-color-hover);
+              /* 🟢 LIGHTER: Hover feedback */
+          }
+          
+          #convert-btn:active {
+              border-radius: var(--button-border-radius-active);
+              /* 🔄 LESS ROUND: From 28px to 16px! */
+              /* "Pressed" effect on click */
+              
+              font-weight: var(--button-font-weight-active);
+              /* 💡 LIGHTER: From 500 to 400 */
+              /* Double visual feedback! */
+          }
+          
+          /* 📱 ===== MEDIA QUERY: Mobile Magic! ===== */
+          
+          @media (max-width: 768px) {
+              /* 📱 TABLET AND MOBILE: Under 768px everything scales down! */
+              
+              :root {
+                  /* 🔄 OVERRIDE VARIABLES: Genius! */
+                  /* By redefining variables, everything adapts automatically */
+          
+                  /* 📍 REDUCED POSITIONS */
+                  --title-margin-top: 51px;
+                  --output-margin-top: 117px;
+                  --output-margin-top-alert-1: 103px;
+                  --output-margin-top-alert-2: 107px;
+                  --input-margin-top: 199px;
+                  --button-margin-top: 265px;
+                  /* Everything more compact and closer */
+          
+                  /* 📦 SMALLER CARD */
+                  --card-size: 360px;
+                  /* From 480px to 360px = 75% of size */
+                  
+                  --card-border-radius: 21px;
+                  /* Proportionally smaller corners */
+          
+                  /* 📝 REDUCED TEXTS */
+                  --title-font-size: 20px;
+                  /* From 28px to 20px */
+                  
+                  --output-font-size: 32px;
+                  --output-font-size-alert-1: 24px;
+                  --output-font-size-alert-2: 20px;
+                  /* Output proportionally smaller */
+                  
+                  /* 📝 COMPACT INPUT */
+                  --input-font-size: 14px;
+                  --input-width: 157px;
+                  --input-height: 42px;
+                  --input-border-radius: 3px 3px 0 0;
+                  /* Everything reduced by ~25% */
+          
+                  /* 🔘 MINI BUTTON */
+                  --button-font-size: 16px;
+                  --button-width: 117px;
+                  --button-height: 42px;
+                  --button-border-radius: 21px;
+                  --button-border-radius-active: 9px;
+                  /* Keeps proportions! */
+              }
+          }
+        </style>
+    </head>
+
+    <body>
+        <!-- 🏛️ ===== THE BODY: Where the Magic Happens! ===== -->
+        
+        <main id="card-container">
+            <!-- 📦 MAIN CONTAINER: The black card that contains everything -->
+            <!-- main = semantic tag for main content -->
+            
+            <div id="title-container">
+                <!-- 📰 TITLE CONTAINER: For precise positioning -->
+                
+                <h1 id="first-h1">Roman Numeral <span id="second-h1">Converter</span></h1>
+                <!-- 📰 TITLE: "Roman Numeral" white + "Converter" grey -->
+                <!-- span to color a part differently -->
+            </div>
+            
+            <div id="output-container">
+                <!-- 🎯 OUTPUT CONTAINER: Where the result appears -->
+                
+                <p id="output"></p>
+                <!-- 📝 OUTPUT: Initially empty, filled by JavaScript -->
+            </div>
+
+            <div id="input-container">
+                <!-- 📝 INPUT CONTAINER: For number input -->
+                
+                <input value="" type="number" name="arabic-number-input" class="number" id="number" placeholder="Enter a Number" min="1" max="3999" autocomplete="off">
+                <!-- 📝 NUMERIC INPUT: With all protections! -->
+                <!-- type="number" = only numbers (but JavaScript must block "e") -->
+                <!-- min="1" max="3999" = limits of standard Roman numerals -->
+                <!-- autocomplete="off" = don't suggest previous values -->
+                <!-- placeholder = ghost text when empty -->
+            </div>
+            
+            <div id="convert-btn-container">
+                <!-- 🔘 BUTTON CONTAINER: For the convert button -->
+                
+                <button id="convert-btn">Convert</button>
+                <!-- 🔘 BUTTON: The main action! -->
+            </div>
+        </main>
+        
+        <script>
+          /* 🏛️ ===== JAVASCRIPT: The Brain of the Converter! ===== */
+          
+          /* 📋 ===== DOM ELEMENT SELECTION ===== */
+          
+          const numberInput = document.getElementById("number");
+          /* 📝 INPUT: Where the user types the number */
+          /* const = constant, its reference won't change */
+          /* document.getElementById() = "find the element with this ID" */
+          
+          const convertBtn = document.getElementById("convert-btn");
+          /* 🔘 BUTTON: The convert button */
+          
+          const output = document.getElementById("output");
+          /* 🎯 OUTPUT: Where we'll show the result */
+          
+          output.textContent = "------"; 
+          /* 📝 DEFAULT VALUE: Six dashes as placeholder */
+          /* textContent = the text inside the element */
+          /* Without this we'd see an unnerving empty space! */
+          
+          output.classList.add("empty"); 
+          /* 🎨 EMPTY CLASS: To color it grey */
+          /* classList.add() = add a CSS class */
+          /* The default value should look "turned off" */
+          
+          /* 🗺️ ===== CONVERSION MAP: The Heart of the System! ===== */
+          
+          const arabicToRomanMap = [[1000, "M"], [900, "CM"], [500, "D"], [400, "CD"], [100, "C"], [90, "XC"], [50, "L"], [40, "XL"], [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]];
+          /* 🏛️ THE CONVERSION TABLE: Array of arrays! */
+          /* Each item is [arabicNumber, romanNumber] */
+          /* Ordered from largest to smallest (important!) */
+          /* 
+             M = 1000
+             CM = 900
+             D = 500
+             CD = 400
+             C = 100
+             XC = 90
+             L = 50
+             XL = 40
+             X = 10
+             IX = 9
+             V = 5
+             IV = 4
+             I = 1
+          */
+          
+          /* 🔄 ===== CONVERSION FUNCTION: The Magic! ===== */
+          
+          const arabicToRoman = (number) => {
+              /* 🎯 ARROW FUNCTION: Converts Arabic to Roman */
+              /* (number) => { } = modern ES6 function */
+              
+              return arabicToRomanMap.reduce((result, [arabicNumber, romanNumber]) => {
+                  /* 🔄 REDUCE: Accumulates the result iterating each element */
+                  /* reduce() = transforms an array into a single value */
+                  /* result = accumulator (starts as "") */
+                  /* [arabicNumber, romanNumber] = array destructuring! */
+                  /* It's like unpacking a suitcase with two items */
+                  
+                  while (number >= arabicNumber) {
+                      /* 🔁 WHILE LOOP: As long as the number is big enough */
+                      /* Example: 2023 >= 1000? Yes! Add "M" */
+                      
+                      result += romanNumber;
+                      /* ➕ ADD: The Roman symbol to the result */
+                      /* += is shorthand for result = result + romanNumber */
+                      
+                      number -= arabicNumber;
+                      /* ➖ SUBTRACT: The value from the number */
+                      /* 2023 - 1000 = 1023, and continue... */
+                  }
+                  return result;
+                  /* 🔄 RETURN: The accumulator for the next iteration */
+          
+              }, "");
+              /* 🎯 INITIAL VALUE: Empty string "" */
+              /* From here accumulation starts */
+          }
+          
+          /* 
+          🧮 EXAMPLE RUN with 2023:
+          1. 2023 >= 1000? Yes → result = "M", number = 1023
+          2. 1023 >= 1000? Yes → result = "MM", number = 23
+          3. 23 >= 1000? No, move to next
+          4. 23 >= 900? No
+          5. 23 >= 500? No
+          6. ... continue...
+          7. 23 >= 10? Yes → result = "MMX", number = 13
+          8. 13 >= 10? Yes → result = "MMXX", number = 3
+          9. 3 >= 1? Yes → result = "MMXXI", number = 2
+          10. 2 >= 1? Yes → result = "MMXXII", number = 1
+          11. 1 >= 1? Yes → result = "MMXXIII", number = 0
+          Final result: MMXXIII
+          */
+          
+          /* 🛡️ ===== INPUT PROTECTION: Block Invalid Characters ===== */
+          
+          numberInput.addEventListener("keydown", (e) => {
+              /* 🎧 EVENT LISTENER: Listen to every key pressed */
+              /* "keydown" = when you press a key (before it appears) */
+              /* (e) = event, contains info about the pressed key */
+              
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                  /* 🚫 FORBIDDEN CHARACTERS: e (exponential), +, - */
+                  /* .includes() = "does this array contain this value?" */
+                  /* Even with type="number", these can pass! */
+                  
+                  e.preventDefault();
+                  /* 🛑 BLOCK: Prevent the character from appearing */
+                  /* preventDefault() = "don't do the default action" */
+                  /* It's like saying "no, I don't accept this key!" */
+              }
+          });
+          
+          /* ⌨️ ===== ENTER KEY FOR SUBMIT ===== */
+          
+          numberInput.addEventListener("keydown", (e) => {
+              /* 🎧 ANOTHER LISTENER: For the Enter key */
+              
+              if (e.key === "Enter") {
+                  /* ⏎ ENTER KEY: Convenient for quick conversion */
+                  
+                  checkUserInput();
+                  /* 🔄 CONVERT: Call the validation function */
+                  /* Like clicking the button with the keyboard! */
+              }
+          });
+          
+          /* 🔍 ===== VALIDATION FUNCTION: The Guardian! ===== */
+          
+          const checkUserInput = () => {
+              /* 🛡️ ARROW FUNCTION: Checks and converts the input */
+              
+              const inputInt = parseInt(numberInput.value, 10);
+              /* 🔢 CONVERSION: From string to integer */
+              /* parseInt() = "convert to integer" */
+              /* numberInput.value = what the user typed */
+              /* 10 = decimal base (not octal or hex) */
+              
+              output.classList.remove("alert-1", "alert-2", "empty");
+              /* 🧹 REMOVE CLASSES: Reset previous states */
+              /* Removes all special classes */
+              /* Like cleaning a board before writing */
+              
+              /* 🚨 ===== CHECK 1: Empty or Non-numeric Input ===== */
+              
+              if (!numberInput.value || isNaN(inputInt)) { 
+                  /* ❓ CHECK: No value OR not a number */
+                  /* ! = NOT (negation) */
+                  /* isNaN() = "is Not a Number" */
+                  
+                  output.textContent = "Please enter a valid number";
+                  /* 📝 MESSAGE: Generic error */
+                  
+                  output.classList.add("alert-1");
+                  /* 🎨 ALERT CLASS: For specific styling */
+                  
+                  return;
+                  /* 🛑 STOP: Exit the function */
+              } 
+              
+              /* 🚨 ===== CHECK 2: Number Too Small ===== */
+              
+              if (inputInt < 1) {
+                  /* ⬇️ CHECK: Less than 1 */
+                  /* Romans did not have zero! */
+                  
+                  output.textContent = "Please enter a number greater than or equal to 1";
+                  /* 📝 MESSAGE: Specific error */
+                  
+                  output.classList.add("alert-2");
+                  /* 🎨 ALERT 2 CLASS: Different size styling */
+                  
+                  return;
+                  /* 🛑 STOP: Do not continue */
+              }
+              
+              /* 🚨 ===== CHECK 3: Number Too Large ===== */
+              
+              if (inputInt > 3999) {
+                  /* ⬆️ CHECK: Greater than 3999 */
+                  /* Standard limit of Roman numerals */
+                  /* After this you'd need special overline symbols */
+                  
+                  output.textContent = "Please enter a number less than or equal to 3999";
+                  /* 📝 MESSAGE: Another specific error */
+                  
+                  output.classList.add("alert-2");
+                  /* 🎨 SAME CLASS: Same style as the previous one */
+                  
+                  return;
+                  /* 🛑 STOP: End checks */
+              } 
+              
+              /* ✅ ===== FINAL CONVERSION: All OK! ===== */
+              
+              const romanConverted = arabicToRoman(inputInt);
+              /* 🏛️ CONVERT: Call the magic function */
+              /* Pass the validated number and get the Roman numeral */
+              
+              output.textContent = romanConverted;
+              /* 📝 SHOW: The result to the user */
+              /* textContent = change the element's text */
+              /* Moment of glory: MMXXIII appears! */
+          };
+          
+          /* 🔘 ===== BUTTON EVENT LISTENER ===== */
+          
+          convertBtn.addEventListener("click", checkUserInput);
+          /* 🎧 CLICK LISTENER: When you click the button */
+          /* "click" = mouse event */
+          /* checkUserInput = function to execute (without parentheses!) */
+          /* It's like saying "when clicked, validate and convert" */
+          
+          /* 
+          🏛️ FLOW SUMMARY:
+          1. The user types a number in the input
+          2. Presses Convert (or Enter)
+          3. checkUserInput() activates
+          4. Validates input (empty? not number? <1? >3999?)
+          5. If all OK, calls arabicToRoman()
+          6. arabicToRoman() uses reduce() and while to build the Roman numeral
+          7. The result appears in the output
+          8. SPQR would be proud! 🏛️
+          */
+        </script>
+    </body>
+
+</html>
+
+<!-- 🎯 ===== ARCHITECTURE SUMMARY ===== -->
+<!-- 
+🏛️ CONVERTER STRUCTURE:
+│
+├── 🧠 HEAD (imperial system)
+│   └── 🎨 CSS with:
+│       ├── 📚 Complete Design System in variables
+│       ├── 🏛️ Two Google fonts (Roboto Slab + Roboto)
+│       ├── 📦 Centered card with position absolute
+│       ├── 🎯 Precise positioning of every element
+│       └── 📱 Media query that redefines variables!
+│
+└── 🏛️ BODY (the converter)
+    └── 📦 Card Container
+        ├── 📰 Title (two-tone)
+        ├── 🎯 Output (result or errors)
+        ├── 📝 Input (with multiple protections)
+        └── 🔘 Convert Button
+    
+    └── 🧠 JavaScript
+        ├── 🗺️ Arabic-to-Roman map
+        ├── 🔄 Brilliant reduce() function
+        ├── 🛡️ Multiple input validation
+        └── 🎧 Event listeners (click + keyboard)
+
+🎨 NOTABLE TECHNIQUES:
+├── 📚 CSS Variables for everything (DRY principle)
+├── 🎯 Position absolute + transform for centering
+├── 🔄 reduce() + while algorithm, very elegant
+├── 🛡️ Triple input protection (HTML + CSS + JS)
+└── 📱 Responsive that scales everything proportionally
+
+It's like having an ancient Roman scribe with 2024 technology! 🏛️✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Art of Comments
+
+Incredibly, I have very few things to say about this project, because I said everything in the comments. Nevertheless, those comments are for programmers who read them, these READMEs are for everyone. <br />
+After thoroughly internalizing Salvatore Sanfilippo's article ([https://antirez.com/news/124](https://antirez.com/news/124)) it's as if in this project I wrote comments for the first time. Previously I only used them in CSS to divide different components. This time I integrated design comments as well as the long introductory comment that explains the file architecture, so that anyone who reads it will have a general overview right from the start. This is useful in long projects, in my case I added this type of comment also in the HTML but I recognize that for such small files it's quite useless, nevertheless, since I want to practice right away, I decided to add it.
+
+### The "Why Comments"
+
+I found the "why comments" amazing, as well as all those comments that explain the reasons why one choice was made rather than another and if this is very trivial then explain why it was the best choice at that moment. I say amazing because they forced me to reflect and research a lot in order to affirm certain choices. This gave me an understanding that I could never have received by writing only code.
+
+### The "Trivial Comments" with Culture
+
+Then come the trivial comments, which should be all those comments dedicated to concepts that any programmer takes for granted, but which Salvatore Sanfilippo says he loves anyway. I wanted to add a pinch of culture inside. <br />
+For example in the HTML at a certain point I state: "I did some research and found out that input type="number" uses browser native validation operating with an underlying C/C++ engine, while regex is executed by the JavaScript interpreter." <br />
+Or again: "Adding min/max attributes provides defense in depth. Although this approach is typically used in more complex, cybersecurity scenarios, it provides a fallback in case JavaScript rule validation fails or is disabled." <br />
+Two concepts completely useless to include for any programmer, but still concepts worth rereading. For example, I, an absolute beginner, would be very happy to find similar comments in someone else's project.
+
+### The "Checklist Comments"
+
+Subsequently I added warning comments, Salvatore calls them "checklist comments" that is, comments that helped me remember exactly what the freeCodeCamp instructions said and I'm not exaggerating if I say that it's precisely thanks to these that I managed to pass a certification project on the first attempt for the first time.
+
+### The Design: Material Design 3
+
+Let's now talk about the design of this project. This time I chose to delve into the world of Material Design 3. <br />
+I was inspired by the Google Translate application on my smartphone, I've always liked the style, although "acidic" I find its style unique. I started studying this design current and after getting a general overview from a YouTube video, I dedicated myself to exploring the official website. Here I got all the answers, from the style and stylistic choices to a Figma file with all the main components.
+I took from this the various "shapes", that is all the shapes of Material Design 3 and scattered them on the background, adding an emoji depicting Android, also taken from the Material site.
+
+### A New Approach: Side Notes
+
+Here's an image of the notes I wrote alongside the project to help me. I had never adopted this approach. Did Salvatore even manage to change my way of using Figma?
+
+<img width="100%" alt="Figma notes" src="https://github.com/user-attachments/assets/c775a49f-42b0-423e-adbf-4bcd68a5a1b9" />
+
+
+### Personal Reinterpretation of the Style
+
+I took the liberty of reinterpreting this style. In fact, for the input box I decided to position the placeholder centered horizontally instead of left-aligned, with a slightly higher opacity than Google would have done and at the same time with a color analogous to the overall theme.
+I also inserted dashes, precisely 6, which are displayed when opening the application, before getting the output. Google would never have done this, it would have left it empty instead to emphasize that that field would be filled with the call to action by the user (pressing the "Convert" button).
+
+I made all these choices for a mere aesthetic reason, they brought me to the feeling that everything was in the right place.
+
+### Typography: Roboto Slab and Roboto
+
+Beyond the style, I also kept the typical consistency pattern that Google dedicates to interactive elements (input, buttons) which must be immediately recognizable.
+For this reason I opted for the Roboto Slab font for the title and for the output, which had the objective of invoking classic characters, akin to ancient Rome, a sort of "thematic accent".
+While for input and button the Roboto font that follows modernity, has excellent readability and follows consolidated patterns that the user knows, characteristics central to Google's philosophy.
+
+### What I Learned
+
+**Advanced CSS Architecture:**
+- Component-Based Architecture for organization into components (card, title, output, input, button)
+- Utility-First Variables with centralization in `:root`
+- Flat Component Hierarchy with ID-based selectors
+- Responsive media queries for mobile
+
+**Conversion Algorithm:**
+- Array map with Arabic-Roman pairs `[[1000, "M"], [900, "CM"]...]`
+- `.reduce()` for result accumulation
+- While loop for iteration on Roman values
+- Array destructuring for concise code
+
+**Professional Input Validation:**
+- `type="number"` for native browser validation (C/C++ engine)
+- `min/max` attributes for defense in depth
+- `e.preventDefault()` to block non-numeric characters
+- Edge case handling: empty values, NaN, invalid ranges
+
+**Event Handling:**
+- `addEventListener("keydown")` for character control
+- Enter key for alternative submit
+- `.includes()` for blocking specific characters (`["e", "E", "+", "-"]`)
+
+**Comment Best Practices:**
+- Design comments for general architecture
+- Why comments to explain technical choices
+- Trivial comments with cultural insights
+- Checklist comments for freeCodeCamp requirements
+
+**Material Design 3:**
+- Shapes and Material components
+- Color system with thematic palettes
+- Typography hierarchy (Roboto Slab + Roboto)
+- Interactive states and transitions
+
+**Programming Principles:**
+- SRP (Single Responsibility Principle)
+- DRY (Don't Repeat Yourself)
+- Defense in depth approach
+- Semantic HTML
+
+### Reflection
+
+Salvatore Sanfilippo taught me that comments are not a burden, but an art. Every technical choice has a reason, every discarded alternative has its why.
+Documenting this process is not wasting time, after all it led me to pass a certification project on the first attempt for the first time.
+
+***
+
+**Next Project**: Learn Regular Expressions by Building a Spam Filter

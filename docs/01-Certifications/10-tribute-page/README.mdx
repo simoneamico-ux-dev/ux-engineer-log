@@ -1,0 +1,866 @@
+---
+sidebar_position: 2
+sidebar_label: 'Tribute Page'
+title: 'Tribute Page'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## The Project
+Tribute page dedicated to Don Norman, pioneer of user-centered design and author of "The Design of Everyday Things". A book I literally devoured because I loved it so much!
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="freeCodeCamp Tribute Page practice project" />
+    <title>Tribute Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="container">
+        <header>
+            <div>
+                <h1 id="title">Dr. Donald Arthur Norman</h1>
+                <p class="subtitle">The father of user experience</p>
+            </div>
+        </header>
+        <main id="main">
+            <div id="img-div">
+                <img id="image" src="don-norman.jpg" alt="A photo of Dr. Donald Norman that discusses human-centered design principles during a conference">
+                <div id="img-caption">Dr. Donald Norman that discusses human-centered design principles during a conference, part of his lifelong mission to improve human-technology interaction</div>
+            </div>
+            <article id="tribute-info">
+                <h2>Here's a timeline of Dr. Norman's life:</h2>
+                <ul>
+                    <li><strong>1935</strong> - Born December 25 in Cresco, Iowa</li>
+                    <li><strong>1957</strong> - Graduates with a B.S. in Electrical Engineering from Massachusetts Institute of Technology (MIT)</li>
+                    <li><strong>1959</strong> - Receives M.S. in Electrical Engineering from University of Pennsylvania</li>
+                    <li><strong>1962</strong> - Earns Ph.D. in Psychology from University of Pennsylvania, under advisor Duncan Luce. One of the earliest graduates from the Mathematical Psychology group</li>
+                    <li><strong>1962-1966</strong> - Postdoctoral researcher at Harvard University's Center for Cognitive Studies, becomes lecturer within a year</li>
+                    <li><strong>1966</strong> - Moves to University of California, San Diego (UCSD) as Associate Professor of Psychology</li>
+                    <li><strong>1972</strong> - Publishes "Human Information Processing: An Introduction to Psychology" with Peter Lindsay, influential textbook that helped introduce information processing to psychology</li>
+                    <li><strong>1974-1978</strong> - Chair of Psychology Department at UCSD</li>
+                    <li><strong>1979</strong> - Co-organizes the first meeting of the Cognitive Science Society on UCSD campus along with Roger Schank and Allan Collins</li>
+                    <li><strong>1981</strong> - Writes "The Trouble with Unix: The User Interface is Horrid," pioneering critique of user interfaces</li>
+                    <li><strong>1986</strong> - Publishes "User Centered System Design: New Perspectives on Human-Computer Interaction" with Stephen Draper, first introducing the concept of user-centered design</li>
+                    <li><strong>1988</strong> - Publishes "The Psychology of Everyday Things" (later renamed "The Design of Everyday Things"), groundbreaking book that becomes the bible of user experience design</li>
+                    <li><strong>1988-1993</strong> - Professor and Chair of Cognitive Science Department at UCSD (founding chair of the department)</li>
+                    <li><strong>1991</strong> - Elected to American Academy of Arts and Sciences</li>
+                    <li><strong>1993</strong> - Leaves UCSD to join Apple Computer as Apple Fellow and User Experience Architect (first use of "User Experience" in a job title), later becomes Vice President of Advanced Technology Group</li>
+                    <li><strong>1995</strong> - Receives honorary degree in Psychology from University of Padua</li>
+                    <li><strong>1996</strong> - Works as executive at Hewlett-Packard</li>
+                    <li><strong>1998</strong> - Co-founds Nielsen Norman Group with Jakob Nielsen, leading user experience consulting firm</li>
+                    <li><strong>1998-2010</strong> - Professor of Computer Science at Northwestern University and co-director of Segal Design Institute</li>
+                    <li><strong>2001</strong> - Becomes Fellow of Association for Computing Machinery (ACM)</li>
+                    <li><strong>2002</strong> - Receives "Lifetime Achievement Award" from CHI (Computer-Human Interaction), professional organization he helped found</li>
+                    <li><strong>2004</strong> - Publishes "Emotional Design: Why We Love (or Hate) Everyday Things," expanding design theory beyond functionality</li>
+                    <li><strong>2006</strong> - Receives Benjamin Franklin Medal in Computer & Cognitive Science from Franklin Institute</li>
+                    <li><strong>2009</strong> - Named Honorary Fellow of Design Research Society</li>
+                    <li><strong>2010</strong> - Publishes "Living with Complexity," arguing that complexity is necessary and beneficial</li>
+                    <li><strong>2014</strong> - Returns to UCSD to become director of newly established The Design Lab</li>
+                    <li><strong>2020</strong> - Retires from UCSD (his fifth retirement)</li>
+                    <li><strong>2021</strong> - Receives Sir Misha Black Medal for Distinguished Services to Design Education in London</li>
+                    <li><strong>2023</strong> - Publishes "Design for a Better World: Meaningful, Sustainable, Humanity Centered"</li>
+                    <li><strong>Today</strong> - Active in Don Norman Design Award and Summit, nonprofit organization rewarding individuals and organizations practicing Humanity-Centered Design for societal good. Member of National Academy of Engineering</li>
+                </ul>
+            <p class="citazione">"Design is really an act of communication, which means having a deep understanding of the person with whom the designer is communicating."</p>
+            <p class="autore-citazione">-- Donald Arthur Norman</p>
+            <p class="link">If you have time, you should read more about this incredible human being on his <a id="tribute-link" href="https://en.wikipedia.org/wiki/Don_Norman" target="_blank">Wikipedia entry</a>.</p>
+            </article>
+        </main>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+@media (prefers-reduced-motion: no-preference) {
+* {
+    scroll-behavior: smooth;
+}
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 1.05em;
+    font-family: 'Crimson Text', serif;
+    background-color: #D9E2EC;
+    color: #102A43;
+}
+
+header {
+    text-align: center;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.1em;
+    color: #102A43;
+    padding: 1em 0 0.05em 0;
+    margin-top: -32px;
+}
+
+.subtitle {
+    font-family: 'Crimson Text', serif;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#img-div {
+    display: block;
+    margin: 0 auto;
+    max-width: 900px;
+    width: 100%;
+    border-style: solid;
+    border-color: #F0F4F8;
+    border-width: 30px 200px 50px 200px;
+    background-color: #F0F4F8;
+}
+
+#image {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+#img-caption {
+    font-style: italic;
+    color: #777;
+    font-size: 0.95em;
+    margin-top: 10px;
+    text-align: center;
+    background-color: #F0F4F8;
+}
+
+article {
+    margin-top: 36px;
+    font-size: 1.05em;
+    justify-content: center;
+    font-family: 'Crimson Text', serif;
+    background-color: #D9E2EC;
+    color: #102A43;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+ul, p {
+    text-align: left;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.citazione, .autore-citazione {
+    font-style: italic;
+    margin-top: 48px;
+    line-height: 1.5;
+}
+
+.autore-citazione {
+    margin-top: 8px;
+}
+
+ul {
+    line-height: 2;
+}
+
+a, .link {
+    margin-top: 48px;
+    color: #102A43;
+}
+
+.link {
+    margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+ul, p {
+    width: 80%; 
+}
+
+#img-div {
+    border-width: 20px 50px 30px 50px;
+    max-width: 95%;
+}
+}
+
+@media (max-width: 480px) {
+ul, p {
+    width: 90%;
+}
+
+#img-div {
+    border-width: 15px 20px 20px 20px;
+    max-width: 98%;
+}
+
+header {
+    font-size: 0.9em;
+}
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: Like saying "Hey browser, this is modern code!" -->
+<!-- It's like a label on a suitcase that says "Fragile" - warns what to expect -->
+<!-- Without this, the browser wouldn't know what kind of document you're creating! -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: It's like the box that contains the whole game -->
+<!-- lang="en" is like saying "this game is in English" - helps search engines and screen readers -->
+<!-- It's fundamental for accessibility: those using a screen reader know what language to expect! -->
+
+  <head>
+    <!-- 🧠 DOCUMENT BRAIN: All the secret instructions that the user doesn't see -->
+    <!-- It's like the backstage of a theater - everything needed for operation but the audience doesn't see -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL ALPHABET: UTF-8 = "I understand all characters in the world!" -->
+    <!-- It's like having a universal translator for emojis, accents, Chinese symbols, Arabic, etc. -->
+    <!-- Without this, special characters would become squares or question marks! -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 MOBILE INSTRUCTIONS: "Adapt to the device's screen!" -->
+    <!-- width=device-width = "be as wide as the screen" (not wider!) -->
+    <!-- initial-scale=1.0 = "start with zoom at 100%" (not enlarged or reduced) -->
+    <!-- It's like telling a photo "adapt to the frame, whatever its size" -->
+    <!-- WITHOUT THIS: on mobile you would see the desktop version in miniature! -->
+    
+    <meta name="description" content="freeCodeCamp Tribute Page practice project" />
+    <!-- 📄 DESCRIPTION FOR GOOGLE: It's like a movie synopsis or the back cover of a book -->
+    <!-- It appears in search results under the clickable blue title -->
+    <!-- IMPORTANT: no more than 160 characters or Google will cut it! -->
+    
+    <title>Tribute Page</title>
+    <!-- 📑 TAB TITLE: What you see in the browser tab -->
+    <!-- It's like an app name on your phone: it must be short but descriptive -->
+    <!-- It's also what appears in bookmarks and history! -->
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- 🔤 FONT IMPORT: Like downloading elegant fonts from Google -->
+    <!-- preconnect = "get ready to connect to Google Fonts to speed everything up" -->
+    <!-- It's like making a restaurant reservation before going -->
+    <!-- Crimson Text = elegant font for body text -->
+    <!-- Roboto Condensed = modern and clean font for titles -->
+    
+    <style>
+      /* 🎨 ===== INTERNAL STYLESHEET: The Design Rules ===== */
+      /* It's like having an instruction manual for furnishing the house */
+      /* EACH RULE IS LIKE SAYING: "All elements of type X must have appearance Y" */
+      
+      @media (prefers-reduced-motion: no-preference) {
+        /* 🎢 RESPECT FOR THOSE WITH MOTION PROBLEMS: True accessibility! */
+        /* It's like asking "Do animations bother you? Do they give you headaches?" */
+        /* If the answer is "no, I don't have problems", then we add smooth scrolling */
+        /* prefers-reduced-motion is a SUPERPOWER of modern CSS! */
+        /* no-preference = "I don't have specific preferences, everything is fine" */
+        /* If it were "reduce", it would mean "please, as few animations as possible" */
+        
+        * {
+          scroll-behavior: smooth;
+          /* 🎠 SMOOTH SCROLLING: Like an elevator instead of jumping from floor to floor */
+          /* When you click a link that goes to another section, it scrolls smoothly instead of "jumping" */
+          /* It's the difference between teleporting and taking a scenic drive */
+          /* * = "ALL elements on the page" (universal selector) */
+        }
+      }
+
+      .container {
+        /* 📦 MAIN CONTAINER: Like a box that keeps everything in order */
+        /* It's like having a tray that contains all the dishes of a dinner */
+        
+        max-width: 1200px;
+        /* 📏 MAXIMUM WIDTH: Never become wider than 1200px */
+        /* It's like saying "grow all you want, but not beyond this limit" */
+        /* On giant screens, the content doesn't spread out too much */
+        
+        margin: 0 auto;
+        /* ⚖️ MAGIC CENTERING: Universal formula for centering any element */
+        /* 0 = no margin above/below */
+        /* auto = "browser, center me horizontally yourself!" */
+        /* It's like placing a cake exactly in the center of the table */
+        
+        padding: 0 20px;
+        /* 🏠 INTERNAL SPACE: 20px of "breathing room" on left and right */
+        /* It's like leaving some space between the content and the edges of the box */
+      }
+
+      body {
+        /* 🏠 PAGE BODY: It's like painting the walls of a house */
+        /* The body is the container of EVERYTHING the user sees */
+        
+        margin: 0;
+        /* 🚫 ZERO MARGINS: Removes the browser's default spaces */
+        /* It's like removing the white frame from a painting to make it reach the edges */
+        /* Browsers add default margins - we reset them for total control */
+        
+        padding: 0;
+        /* 🚫 ZERO PADDING: Eliminates unwanted internal spaces */
+        /* It's like eliminating every extra cushion to have precise control */
+        
+        box-sizing: border-box;
+        /* 📦 INTELLIGENT SIZE CALCULATION: "Include padding and borders in the total width" */
+        /* It's like saying "when I say a box is 100px wide, I mean EVERYTHING included" */
+        /* Without this, if you say width: 100px + padding: 10px = result 120px (confusion!) */
+        /* With border-box: width: 100px + padding: 10px = result 100px (logical!) */
+        
+        font-size: 1.05em;
+        /* 📏 BASE TEXT SIZE: 1.05em = slightly larger than normal */
+        /* em = relative unit, automatically adapts if the user changes browser settings */
+        /* It's like saying "a bit larger than usual for better readability" */
+        
+        font-family: 'Crimson Text', serif;
+        /* ✍️ MAIN FONT: Crimson Text = elegant and readable font */
+        /* serif = font with "feet" on letters, more formal */
+        /* It's like choosing an elegant calligraphy for writing important letters */
+        
+        background-color: #D9E2EC;
+        /* 🎨 LIGHT BLUE-GRAY BACKGROUND: Relaxing and modern color */
+        /* It's like painting the walls of an office with a color that doesn't tire the eyes */
+        
+        color: #102A43;
+        /* ✏️ TEXT COLOR: Dark blue, almost black but more elegant */
+        /* It's the color that all texts will inherit if not specified otherwise */
+      }
+
+      header {
+        /* 📰 HEADER: Like a newspaper masthead or the top bar of an app */
+        /* Contains the main title and introductory information */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: All header content aligns to the center */
+        /* It's like centering a book title on the cover */
+        
+        font-family: 'Roboto Condensed', sans-serif;
+        /* ✍️ MODERN FONT: Roboto Condensed = clean and professional typeface */
+        /* sans-serif = without "feet", more modern and readable on screens */
+        /* Different from body to create visual hierarchy */
+        
+        font-size: 1.1em;
+        /* 📏 SLIGHTLY LARGER SIZE: 1.1em = 10% larger than normal */
+        
+        color: #102A43;
+        /* 🎨 SAME COLOR AS BODY: Chromatic consistency */
+        
+        padding: 1em 0 0.05em 0;
+        /* 🏠 INTERNAL SPACE: 1em top, 0.05em bottom, nothing on the sides */
+        /* It's like creating a cushion on top and a little breathing room below */
+        
+        margin-top: -32px;
+        /* ⬆️ SHIFT UPWARD: -32px pulls the header higher */
+        /* Negative values "pull" the element in the opposite direction */
+        /* It's like pulling up a curtain to let more light in */
+      }
+
+      .subtitle {
+        /* 📝 SUBTITLE: The description under the main name */
+        
+        font-family: 'Crimson Text', serif;
+        /* ✍️ SAME FONT AS BODY: For stylistic consistency */
+        
+        text-align: center;
+        /* ⚖️ CENTERED: Like the main title */
+        
+        margin-bottom: 8px;
+        /* 🌬️ SPACE BELOW: 8px of breathing room before the following content */
+      }
+
+      #img-div {
+        /* 🖼️ IMAGE CONTAINER: Like an elegant frame for a painting */
+        /* # = ID selector, indicates the specific element with id="img-div" */
+        /* REQUIRED BY FREECODECAMP for automatic testing! */
+        
+        display: block;
+        /* 📦 BLOCK BEHAVIOR: Occupies all available row space */
+        
+        margin: 0 auto;
+        /* ⚖️ CENTERING: Magic formula for centering any element */
+        /* It's like putting a painting exactly in the center of the wall */
+        
+        max-width: 900px;
+        /* 📏 MAXIMUM WIDTH: No wider than 900px even on huge screens */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Occupies all available space up to the maximum */
+        /* It's like an elastic that stretches up to its limit */
+        
+        border-style: solid;
+        border-color: #F0F4F8;
+        border-width: 30px 200px 50px 200px;
+        /* 🖼️ DECORATIVE BORDER: Like an elegant frame */
+        /* solid = continuous line */
+        /* #F0F4F8 = very light gray */
+        /* 30px top, 200px right, 50px bottom, 200px left */
+        /* It's like an asymmetric frame that gives character to the image */
+        
+        background-color: #F0F4F8;
+        /* 🎨 FRAME BACKGROUND: Same color as the border for continuity */
+      }
+
+      #image {
+        /* 📸 THE ACTUAL IMAGE: The most visually important element */
+        /* MANDATORY RULES TO PASS FREECODECAMP TESTS! */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Fills the entire img-div container */
+        /* It's like pouring water into a glass - it takes the shape of the container */
+        
+        height: auto;
+        /* 📐 AUTOMATIC HEIGHT: Automatically calculated to maintain proportions */
+        /* auto = "browser, you calculate the right height to not distort the image" */
+        /* It's like resizing a photo while maintaining the original proportions */
+        /* ⭐ REQUIRED BY FREECODECAMP TEST #18 */
+        
+        display: block;
+        /* 📦 BLOCK BEHAVIOR: The image occupies an entire row */
+        /* Eliminates small spaces below the image that can appear with display: inline */
+        /* ⭐ REQUIRED BY FREECODECAMP TEST #16 */
+        
+        max-width: 100%;
+        /* 📏 MAXIMUM WIDTH: Can never be wider than the container */
+        /* It's a safety measure to prevent "bursting" the layout */
+        /* ⭐ REQUIRED BY FREECODECAMP TEST #17 */
+        
+        margin: 0 auto;
+        /* ⚖️ CENTERING: Positions the image in the center of the container */
+        /* ⭐ REQUIRED BY FREECODECAMP TEST #19 */
+      }
+
+      #img-caption {
+        /* 📝 IMAGE CAPTION: The description below the photo */
+        /* Like an information plaque below a painting in a museum */
+        
+        font-style: italic;
+        /* ✍️ ITALIC TEXT: To distinguish it from normal text */
+        /* It's like writing a note by hand with slanted calligraphy */
+        
+        color: #777;
+        /* 🎨 MEDIUM GRAY: Less invasive than the main text */
+        /* #777 = neutral gray that reads well but doesn't compete with the title */
+        
+        font-size: 0.95em;
+        /* 📏 SLIGHTLY SMALLER: 95% of normal size */
+        /* It's like writing a footnote */
+        
+        margin-top: 10px;
+        /* 🌬️ SPACE ABOVE: 10px of separation from the image */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: Aligned like a museum caption */
+        
+        background-color: #F0F4F8;
+        /* 🎨 SAME BACKGROUND AS FRAME: For visual continuity */
+      }
+
+      article {
+        /* 📚 MAIN CONTENT CONTAINER: Like the body of an article */
+        /* article = HTML5 semantic element for self-contained, complete content */
+        
+        margin-top: 36px;
+        /* 🌬️ SPACE ABOVE: 36px of separation from the image */
+        /* Creates a clear distinction between image section and content */
+        
+        font-size: 1.05em;
+        /* 📏 TEXT SIZE: Slightly larger for easier reading */
+        
+        justify-content: center;
+        /* ⚖️ CENTERED CONTENT: (this property actually has no effect here) */
+        
+        font-family: 'Crimson Text', serif;
+        /* ✍️ ELEGANT FONT: Same as body for consistency */
+        
+        background-color: #D9E2EC;
+        /* 🎨 SAME BACKGROUND AS BODY: Chromatic continuity */
+        
+        color: #102A43;
+        /* 🎨 SAME COLOR AS BODY: Typographical consistency */
+      }
+
+      h2 {
+        /* 📰 SECTION TITLE: "Here's a timeline of Dr. Norman's life:" */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: Like a chapter title in a book */
+        
+        margin-bottom: 8px;
+        /* 🌬️ SPACE BELOW: 8px of separation from the following list */
+      }
+
+      ul, p {
+        /* 📝 LIST AND PARAGRAPHS: All main text content */
+        /* Multiple selector: applies the same rules to ul (lists) AND p (paragraphs) */
+        
+        text-align: left;
+        /* ⬅️ LEFT-ALIGNED TEXT: Standard for readability */
+        /* Left-aligned text is easier to read for long content */
+        
+        width: 50%;
+        /* 📏 HALF WIDTH: Occupies 50% of available space */
+        /* Leaves 25% per side as margins - avoids lines that are too long */
+        /* It's like newspaper columns: narrower = easier to read */
+        
+        margin: 0 auto;
+        /* ⚖️ CENTERING: Positions the text block in the center */
+        /* Even though the text is left-aligned, the block is centered */
+      }
+
+      .citazione, .autore-citazione {
+        /* 💭 QUOTE AND AUTHOR: The final tribute quote */
+        /* Multiple selector for elements with class="citazione" OR class="autore-citazione" */
+        
+        font-style: italic;
+        /* ✍️ ITALIC: To distinguish the quote from normal text */
+        /* It's like writing an important phrase in special calligraphy */
+        
+        margin-top: 48px;
+        /* 🌬️ SPACE ABOVE: 48px of separation from previous content */
+        /* Creates an important visual break before the final quote */
+        
+        line-height: 1.5;
+        /* 📏 LINE HEIGHT: 150% of normal text height */
+        /* 1.5 = generous space between lines for more relaxed reading */
+        /* It's like leaving more space between lines in a notebook */
+      }
+
+      .autore-citazione {
+        /* ✍️ QUOTE AUTHOR NAME: "-- Donald Arthur Norman" */
+        
+        margin-top: 8px;
+        /* 🌬️ REDUCED SPACE ABOVE: Only 8px from the quote (they're connected) */
+        /* Less space because they're part of the same conceptual element */
+      }
+
+      ul {
+        /* 📝 TIMELINE LIST: The chronological list of Norman's life */
+        
+        line-height: 2;
+        /* 📏 DOUBLE LINE HEIGHT: 200% for more breathing room between elements */
+        /* line-height: 2 = very generous space between timeline rows */
+        /* It's like writing a list leaving an empty line between each item */
+      }
+
+      a, .link {
+        /* 🔗 LINKS AND ELEMENTS WITH LINK CLASS: Clickable connections */
+        
+        margin-top: 48px;
+        /* 🌬️ SPACE ABOVE: Separation from previous content */
+        
+        color: #102A43;
+        /* 🎨 SAME COLOR AS TEXT: Discreet links instead of classic blue */
+        /* Maintains the chromatic harmony of the page */
+      }
+
+      .link {
+        /* 📎 PARAGRAPH CONTAINING THE LINK: The final paragraph */
+        
+        margin-bottom: 30px;
+        /* 🌬️ SPACE BELOW: 30px of final breathing room before the end of content */
+      }
+
+      /* 📱 ===== MEDIA QUERIES: Rules for Different Screens ===== */
+      /* It's like having clothes of different sizes for different people! */
+
+      @media (max-width: 768px) {
+        /* 📱 RULES FOR TABLETS: Screens smaller than 768px */
+        /* It's like saying "when the screen becomes smaller than a tablet..." */
+        
+        ul, p {
+          width: 80%; 
+          /* 📏 WIDER ON TABLETS: 80% instead of 50% */
+          /* On smaller screens more space is needed for text */
+          /* It's like widening newspaper columns on a smaller page */
+        }
+        
+        #img-div {
+          border-width: 20px 50px 30px 50px;
+          /* 🖼️ SMALLER BORDERS: Less wasted space for the frame */
+          /* 50px on sides instead of 200px - more space for the actual image */
+          
+          max-width: 95%;
+          /* 📏 ALMOST FULL WIDTH: 95% of available screen */
+        }
+      }
+
+      @media (max-width: 480px) {
+        /* 📱 RULES FOR SMARTPHONES: Screens smaller than 480px */
+        /* It's like having special rules for very tight spaces */
+        
+        ul, p {
+          width: 90%;
+          /* 📏 EVEN WIDER ON MOBILE: 90% of screen */
+          /* On mobile every pixel counts - maximum space utilization */
+        }
+        
+        #img-div {
+          border-width: 15px 20px 20px 20px;
+          /* 🖼️ MINIMAL BORDERS: Only 20px on sides to not waste space */
+          /* On mobile the frame must be very thin */
+          
+          max-width: 98%;
+          /* 📏 ALMOST THE ENTIRE SCREEN: Only 2% total margin */
+        }
+        
+        header {
+          font-size: 0.9em;
+          /* 📏 SMALLER TITLE: 90% of normal size */
+          /* On mobile even titles need to be more compact */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🏗️ ===== PAGE STRUCTURE: Digital House Construction Begins ===== -->
+    
+    <div class="container">
+        <!-- 📦 MAIN CONTAINER: The box that keeps everything in order -->
+        <!-- It's like a tray that neatly contains all the dishes of a dinner -->
+        
+        <header>
+            <!-- 📰 HEADER: The introductory part, like a book cover -->
+            
+            <div>
+                <h1 id="title">Dr. Donald Arthur Norman</h1>
+                <!-- 📰 MAIN TITLE: The name of the tribute subject -->
+                <!-- h1 = heading 1, the most important element on the page for SEO and accessibility -->
+                <!-- id="title" = identifier required by freeCodeCamp for automatic testing -->
+                <!-- It's like putting a neon sign with the name of the celebrated person -->
+                
+                <p class="subtitle">The father of user experience</p>
+                <!-- 📝 SUBTITLE: A brief and incisive description -->
+                <!-- class="subtitle" = linked to CSS for specific style -->
+            </div>
+        </header>
+        
+        <main id="main">
+            <!-- 📄 MAIN CONTENT: The beating heart of the page -->
+            <!-- main = HTML5 semantic element that indicates "this is the most important content" -->
+            <!-- id="main" = required by freeCodeCamp for test #1 -->
+            <!-- There should be ONLY ONE main per page for accessibility and SEO -->
+            
+            <div id="img-div">
+                <!-- 🖼️ IMAGE CONTAINER: Like a frame for a precious painting -->
+                <!-- div = generic division, neutral container -->
+                <!-- id="img-div" = required by freeCodeCamp for tests #5, #7, #9 -->
+                
+                <img id="image" src="don-norman.jpg" alt="A photo of Dr. Donald Norman that discusses human-centered design principles during a conference">
+                <!-- 📸 PROTAGONIST IMAGE: The main photo of the tribute -->
+                <!-- id="image" = required by freeCodeCamp for tests #6, #16, #17, #18, #19 -->
+                <!-- src="don-norman.jpg" = where to find the image (must be in the same folder) -->
+                <!-- alt="..." = ALTERNATIVE DESCRIPTION fundamental for accessibility -->
+                <!-- It's like describing the photo to someone who can't see it -->
+                
+                <div id="img-caption">Dr. Donald Norman that discusses human-centered design principles during a conference, part of his lifelong mission to improve human-technology interaction</div>
+                <!-- 📝 CAPTION: Explanation of what the image shows -->
+                <!-- id="img-caption" = required by freeCodeCamp for tests #8, #10 -->
+                <!-- It's like the information plaque below a painting in a museum -->
+            </div>
+            
+            <article id="tribute-info">
+                <!-- 📚 INFORMATIVE CONTENT: The complete biography -->
+                <!-- article = semantic element for self-contained and complete content -->
+                <!-- id="tribute-info" = required by freeCodeCamp for tests #11, #12 -->
+                <!-- It's like the main body of an encyclopedia article -->
+                
+                <h2>Here's a timeline of Dr. Norman's life:</h2>
+                <!-- 📰 SECTION TITLE: Introduces the chronology -->
+                <!-- h2 = second level of importance after h1 -->
+                
+                <ul>
+                    <!-- 📝 CHRONOLOGICAL LIST: The timeline of Norman's life -->
+                    <!-- ul = unordered list, list without numbering -->
+                    <!-- Each li = list item, an event in the timeline -->
+                    
+                    <li><strong>1935</strong> - Born December 25 in Cresco, Iowa</li>
+                    <!-- 🎂 BIRTH: The first event in the timeline -->
+                    <!-- strong = bold text to emphasize the year -->
+                    
+                    <li><strong>1957</strong> - Graduates with a B.S. in Electrical Engineering from Massachusetts Institute of Technology (MIT)</li>
+                    <!-- 🎓 FIRST DEGREE: Electrical engineering at MIT -->
+                    
+                    <li><strong>1959</strong> - Receives M.S. in Electrical Engineering from University of Pennsylvania</li>
+                    <!-- 📚 MASTER'S: Specialization in engineering -->
+                    
+                    <li><strong>1962</strong> - Earns Ph.D. in Psychology from University of Pennsylvania, under advisor Duncan Luce. One of the earliest graduates from the Mathematical Psychology group</li>
+                    <!-- 🧠 DOCTORATE: Change of field toward psychology -->
+                    
+                    <li><strong>1962-1966</strong> - Postdoctoral researcher at Harvard University's Center for Cognitive Studies, becomes lecturer within a year</li>
+                    <!-- 🏛️ HARVARD: Post-doctoral research in cognitive sciences -->
+                    
+                    <li><strong>1966</strong> - Moves to University of California, San Diego (UCSD) as Associate Professor of Psychology</li>
+                    <!-- 🌴 CALIFORNIA: Start of main academic career -->
+                    
+                    <li><strong>1972</strong> - Publishes "Human Information Processing: An Introduction to Psychology" with Peter Lindsay, influential textbook that helped introduce information processing to psychology</li>
+                    <!-- 📖 FIRST IMPORTANT BOOK: Psychology of information processing -->
+                    
+                    <li><strong>1974-1978</strong> - Chair of Psychology Department at UCSD</li>
+                    <!-- 👔 ACADEMIC LEADERSHIP: Department director -->
+                    
+                    <li><strong>1979</strong> - Co-organizes the first meeting of the Cognitive Science Society on UCSD campus along with Roger Schank and Allan Collins</li>
+                    <!-- 🧠 DISCIPLINE FOUNDATION: Cognitive science emerges as a field -->
+                    
+                    <li><strong>1981</strong> - Writes "The Trouble with Unix: The User Interface is Horrid," pioneering critique of user interfaces</li>
+                    <!-- 💻 FIRST UX CRITIQUE: Begins interest in user interface -->
+                    
+                    <li><strong>1986</strong> - Publishes "User Centered System Design: New Perspectives on Human-Computer Interaction" with Stephen Draper, first introducing the concept of user-centered design</li>
+                    <!-- 🎯 UX BIRTH: The book that created user-centered design -->
+                    
+                    <li><strong>1988</strong> - Publishes "The Psychology of Everyday Things" (later renamed "The Design of Everyday Things"), groundbreaking book that becomes the bible of user experience design</li>
+                    <!-- 📚 LEGENDARY BOOK: The UX design bible -->
+                    
+                    <li><strong>1988-1993</strong> - Professor and Chair of Cognitive Science Department at UCSD (founding chair of the department)</li>
+                    <!-- 🏛️ DEPARTMENT FOUNDER: First director of cognitive sciences -->
+                    
+                    <li><strong>1991</strong> - Elected to American Academy of Arts and Sciences</li>
+                    <!-- 🏆 PRESTIGIOUS RECOGNITION: American academy -->
+                    
+                    <li><strong>1993</strong> - Leaves UCSD to join Apple Computer as Apple Fellow and User Experience Architect (first use of "User Experience" in a job title), later becomes Vice President of Advanced Technology Group</li>
+                    <!-- 🍎 APPLE: First time "User Experience" appears in a job title! -->
+                    
+                    <li><strong>1995</strong> - Receives honorary degree in Psychology from University of Padua</li>
+                    <!-- 🎓 HONORARY DEGREE: International recognition -->
+                    
+                    <li><strong>1996</strong> - Works as executive at Hewlett-Packard</li>
+                    <!-- 🖥️ HP: Experience in the technology industry -->
+                    
+                    <li><strong>1998</strong> - Co-founds Nielsen Norman Group with Jakob Nielsen, leading user experience consulting firm</li>
+                    <!-- 🏢 OWN COMPANY: High-level UX consulting -->
+                    
+                    <li><strong>1998-2010</strong> - Professor of Computer Science at Northwestern University and co-director of Segal Design Institute</li>
+                    <!-- 🏫 RETURN TO ACADEMIA: Computer science and design -->
+                    
+                    <li><strong>2001</strong> - Becomes Fellow of Association for Computing Machinery (ACM)</li>
+                    <!-- 💻 COMPUTING RECOGNITION: Prestigious association -->
+                    
+                    <li><strong>2002</strong> - Receives "Lifetime Achievement Award" from CHI (Computer-Human Interaction), professional organization he helped found</li>
+                    <!-- 🏆 LIFETIME ACHIEVEMENT: From the organization he helped establish -->
+                    
+                    <li><strong>2004</strong> - Publishes "Emotional Design: Why We Love (or Hate) Everyday Things," expanding design theory beyond functionality</li>
+                    <!-- ❤️ EMOTIONAL DESIGN: Beyond pure functionality -->
+                    
+                    <li><strong>2006</strong> - Receives Benjamin Franklin Medal in Computer & Cognitive Science from Franklin Institute</li>
+                    <!-- 🎖️ FRANKLIN MEDAL: Prestigious scientific recognition -->
+                    
+                    <li><strong>2009</strong> - Named Honorary Fellow of Design Research Society</li>
+                    <!-- 🎨 DESIGN RESEARCH: Recognition from the design world -->
+                    
+                    <li><strong>2010</strong> - Publishes "Living with Complexity," arguing that complexity is necessary and beneficial</li>
+                    <!-- 🔄 COMPLEXITY: Defense of necessary complexity -->
+                    
+                    <li><strong>2014</strong> - Returns to UCSD to become director of newly established The Design Lab</li>
+                    <!-- 🔬 DESIGN LAB: Return to San Diego for new project -->
+                    
+                    <li><strong>2020</strong> - Retires from UCSD (his fifth retirement)</li>
+                    <!-- 😄 FIFTH RETIREMENT: Humor about his continuous "retiring" -->
+                    
+                    <li><strong>2021</strong> - Receives Sir Misha Black Medal for Distinguished Services to Design Education in London</li>
+                    <!-- 🇬🇧 BRITISH RECOGNITION: Medal for design education -->
+                    
+                    <li><strong>2023</strong> - Publishes "Design for a Better World: Meaningful, Sustainable, Humanity Centered"</li>
+                    <!-- 🌍 LATEST BOOK: Design for a better world -->
+                    
+                    <li><strong>Today</strong> - Active in Don Norman Design Award and Summit, nonprofit organization rewarding individuals and organizations practicing Humanity-Centered Design for societal good. Member of National Academy of Engineering</li>
+                    <!-- 🏆 TODAY: Continues to influence the design world -->
+                </ul>
+                
+            <p class="citazione">"Design is really an act of communication, which means having a deep understanding of the person with whom the designer is communicating."</p>
+            <!-- 💭 INSPIRATIONAL QUOTE: Norman's most famous words -->
+            <!-- class="citazione" = linked to CSS for italic style and spacing -->
+            
+            <p class="autore-citazione">-- Donald Arthur Norman</p>
+            <!-- ✍️ ATTRIBUTION: Who said the quote -->
+            <!-- class="autore-citazione" = linked to CSS for style and positioning -->
+            
+            <p class="link">If you have time, you should read more about this incredible human being on his <a id="tribute-link" href="https://en.wikipedia.org/wiki/Don_Norman" target="_blank">Wikipedia entry</a>.</p>
+            <!-- 🔗 FINAL LINK: Invitation to learn more -->
+            <!-- a = anchor, element for links -->
+            <!-- id="tribute-link" = required by freeCodeCamp for test #13 -->
+            <!-- href="..." = destination address (required for test #14) -->
+            <!-- target="_blank" = "open in a new tab" (required for test #15) -->
+            <!-- It's like saying "go to the store but leave the house door open" -->
+            </article>
+        </main>
+    </div>
+  </body>
+</html>
+
+<!-- 🎯 ===== ARCHITECTURE SUMMARY ===== -->
+<!-- 
+🏠 COMPLETE STRUCTURE:
+│
+├── 🧠 HEAD (invisible brain)
+│   ├── 📝 Meta tags (page information)
+│   ├── 🎨 Google Fonts (custom typefaces)
+│   └── 🎨 Internal CSS (all style rules)
+│
+└── 🏗️ BODY (visible structure)
+    └── 🏠 Container (main box)
+        ├── 📰 Header (title + subtitle)
+        └── 📄 Main (main content)
+            ├── 🖼️ Figure (image + caption)
+            └── 📄 Article (complete biography)
+                ├── 📰 H2 (timeline title)
+                ├── 📝 UL (events list)
+                ├── 💬 Quote (famous quote)
+                ├── ✍️ Quote author (signature)
+                └── 🔗 Wikipedia link (further reading)
+
+🎨 RESPONSIVE DESIGN:
+├── 🖥️ Desktop: Wide borders, 50% text
+├── 📱 Tablet: Medium borders, 80% text
+└── 📱 Mobile: Minimal borders, 90% text
+
+It's like having a house that automatically adapts to the number of guests! 🏠✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### Development Reflections
+
+It was easier and faster than expected! Despite working the night shift, I managed to complete 75% of the project yesterday. Today, in about an hour, I finished the refinement part, which was based on debugging the site: shrinking the window, testing with smartphone and so on.
+
+### The Refactoring UI Approach in Practice
+
+I applied the approach I'm learning from **Refactoring UI**: it's better to first do all the "rough" work that allows you to have something in hand, even if basic, then choose colors, fonts and so on. This is also because it will be much easier to detect hierarchies and problems in a grayscale site/app.
+
+### The 8px Rule
+
+Another very interesting thing: UI and UX rules learned from the Breccia course and the aforementioned book are increasingly crowding my mind. An example was adopting the **8px rule**, establishing hierarchies and maintaining multiples of 8px to make them visually hierarchical while also ensuring adequate breathing space between elements.
+
+### The Question That's Buzzing in My Head
+
+Maybe this is exactly what distinguishes a developer from a UX engineer? Maximum attention to details like these?
+
+I had a blast working on this project and can't wait to move on to the next one.
