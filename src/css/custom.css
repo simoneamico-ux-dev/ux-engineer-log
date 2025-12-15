@@ -1,39 +1,112 @@
-/* Stile Base - Definisce i colori del tuo Brand */
 :root {
-  --ifm-color-primary: #D4A373; /* Un colore accento (tipo Bronzo/Sabbia) per staccare */
+  --ifm-color-primary: #8c6a48;
+  --ifm-color-primary-dark: #7d5f40;
+  --ifm-color-primary-darker: #76593c;
+  --ifm-color-primary-darkest: #614a32;
+  --ifm-color-primary-light: #a68563;
+  --ifm-color-primary-lighter: #b09170;
+  --ifm-color-primary-lightest: #cfb89e;
+  
+  --ifm-font-family-base: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  
+  --frame-background: #9B795A;
+  --ifm-background-color: #E4D6C9;
+  --card-border-color: #786F68;
+  --ifm-color-content: #000000;
+  
+  --sidebar-separator: rgba(15, 33, 41, 0.1);
+  
+  --ifm-navbar-background-color: #E4D6C9;
+  --ifm-navbar-shadow: none;
+  
+  --ifm-global-radius: 20px;
+
+  --ifm-table-border-color: #a1907b; 
+  --ifm-table-stripe-background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #D4A373;
   --ifm-color-primary-dark: #be8e5e;
   --ifm-color-primary-darker: #b38556;
   --ifm-color-primary-darkest: #946d45;
   --ifm-color-primary-light: #decba4;
   --ifm-color-primary-lighter: #eaddc5;
   --ifm-color-primary-lightest: #f5efe2;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-}
 
-/* DARK MODE (Il tuo Default) */
-[data-theme='dark'] {
-  /* Sfondo Generale */
-  --ifm-background-color: #140A07; /* Il tuo Marrone scuro quasi nero */
-  
-  /* Colore delle Card e delle superfici */
-  --ifm-background-surface-color: #322620; /* Il tuo Marrone Cioccolato */
-  
-  /* Testo */
+  --frame-background: #140A07;
+  --ifm-background-color: #322620;
+  --card-border-color: #574C43;
   --ifm-color-content: #FFFFFF;
-  --ifm-color-content-secondary: #EAEAEA;
   
-  /* Bordi e Linee */
-  --ifm-toc-border-color: #574C43;
-  --ifm-color-emphasis-200: #574C43; /* Usato per i bordi sottili */
+  --sidebar-separator: rgba(90, 124, 155, 0.15);
   
-  /* Sidebar */
-  --ifm-menu-color: #e0e0e0;
-  --ifm-menu-color-active: #D4A373; /* L'accento quando clicchi */
+  --ifm-navbar-background-color: #322620;
 }
 
-/* Forza un po' di stile sulle card della home */
-.card {
-    background-color: var(--ifm-background-surface-color);
-    border: 1px solid var(--ifm-toc-border-color);
+html, body {
+  background-color: var(--frame-background);
+  height: 100%;
+}
+
+#__docusaurus {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--frame-background);
+}
+
+.navbar {
+  margin: 16px 16px 0 16px;
+  border-radius: var(--ifm-global-radius);
+  border: 1px solid var(--card-border-color);
+  width: auto;
+}
+
+.main-wrapper {
+  margin: 16px;
+  background-color: var(--ifm-background-color);
+  border-radius: var(--ifm-global-radius);
+  border: 1px solid var(--card-border-color);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.footer {
+  background-color: transparent;
+  border-top: none;
+}
+
+.menu__list-item {
+  border-bottom: 2px solid var(--sidebar-separator);
+  margin-bottom: 4px;
+}
+
+.menu__link {
+  border-radius: 8px;
+}
+
+.menu__link--active {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.navbar__title {
+    font-weight: 700;
 }

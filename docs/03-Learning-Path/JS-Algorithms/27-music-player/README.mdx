@@ -2446,63 +2446,50 @@ const updatePlayerUI = () => {
 ```
 **Result:** functions become cleaner and focused on their main logic, delegating UI updates to the orchestrator.
 I believe it was CSS that gave me this mindset: defining all common properties in a single rule and then specifying only the unique differences in separate rules, avoiding unnecessary repetitions.
+
 ### What I Learned
 
 **Advanced Array Methods:**
 - `.map()` to transform arrays into HTML strings
-
 - `.filter()` to remove elements (deleteSong)
-
 - `.find()` to search for specific elements
-
 - `.sort()` for sorting and shuffle
-
 - `.indexOf()` to find positions in array
-
 - `.join("")` to concatenate array elements into a single string
 
 **String Methods & Template Literals:**
 - Complex template literals for HTML generation
-
 - String interpolation for dynamic content
-
 - Conditional string rendering
+
 **Complex State Management:**
 - `userData` object for global application state
-
 - Current song tracking and time persistence
-
 - Dynamic playlist management
+
 **Audio API Integration:**
 - `new Audio()` constructor and properties
-
 - `audio.play()`, `audio.pause()`, `audio.currentTime`
-
 - Event listener for `ended` event
-
 - Audio source dynamic switching
+
 **Advanced DOM Manipulation:**
 - `document.createElement()` and `appendChild()` for dynamic elements
-
 - `setAttribute()` and `removeAttribute()` for accessibility
-
 - Dynamic event listener creation and removal
-
 - Complex CSS class management
+
 **Accessibility Implementation:**
 - `aria-label` for button descriptions
-
 - `aria-current` for current song highlighting
-
 - Screen reader friendly content
+
 **JavaScript Patterns:**
 - Function orchestration for DRY principle
-
 - Conditional rendering with ternary operators
-
 - Event delegation and dynamic content handling
-
 - State synchronization patterns
+
 ### Reflection
 
 This project marked a turning point in my understanding of JavaScript!

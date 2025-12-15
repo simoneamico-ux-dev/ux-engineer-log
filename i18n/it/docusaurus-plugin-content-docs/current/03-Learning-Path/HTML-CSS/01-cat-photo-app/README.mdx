@@ -97,212 +97,212 @@ Il Mio Primo Progetto HTML
 
 ```html
 <!DOCTYPE html>
-<!-- DOCTYPE: Tells the browser this is HTML5 (latest version). 
-     ALWAYS first line. Without this, browser might use 
-     old compatibility mode (quirks mode) -->
+<!-- DOCTYPE: Dice al browser che questo è HTML5 (ultima versione). 
+     SEMPRE prima riga. Senza questo, browser potrebbe usare 
+     modalità compatibilità vecchia (quirks mode) -->
 
 <html lang="en">
-<!-- <html></html>: Root tag that contains the entire HTML document.
-     lang="en": Helps browsers, screen readers and SEO, acronym for Search Engine Optimization,
-     is a set of techniques and strategies aimed at improving the visibility and positioning of a website in organic results (not paid) of search engines like Google.
-     In practice, SEO helps your site appear higher when people search for information relevant to your content.
-     lang="en": Tells the browser what language the site is in
-     Knowing the site's language, the browser can offer translations -->
+<!-- <html></html>: Tag root che contiene tutto il documento HTML.
+     lang="en": Aiuta browser, screen reader e SEO, acronimo di Search Engine Optimization (Ottimizzazione per i Motori di Ricerca), 
+     è un insieme di tecniche e strategie volte a migliorare la visibilità e il posizionamento di un sito web nei risultati organici (non a pagamento) dei motori di ricerca come Google. 
+     In pratica, la SEO aiuta il tuo sito a comparire più in alto quando le persone cercano informazioni pertinenti ai tuoi contenuti. 
+     lang="en": Indica al browser qual è la lingua del sito 
+     Sapendo la lingua del sito il browser può offrire traduzioni-->
 
   <head>
     <meta charset="utf-8">
-    <!-- <meta charset=: Specifies the character encoding.
-         "utf-8"> is the modern standard and also supports symbols, accented letters, emojis, etc..., practically all characters existing in the world -->
+    <!-- <meta charset=: Specifica la codifica dei caratteri. 
+         "utf-8"> è lo standard moderno e supporta anche simboli, lettere accentate, emoji ecc..., praticamente tutti i caratteri esistenti al mondo-->
          
     <title>CatPhotoApp</title>
-    <!-- title: Page title displayed in the browser tab. Also useful for SEO -->
+    <!-- title: Titolo della pagina mostrato nella tab del browser. Utile anche per SEO -->
   </head>
 
   <body>
     <main>
-    <!-- <main></main>: Main content of the page. Helps with semantics, thus improving the readability of the html code. In this case it contains all the page content except the footer (copyright and "end credits") -->
+    <!-- <main></main>: Contenuto principale della pagina. Aiuta nella semantica, migliorando quindi la leggibilità del codice html. In questo caso c'è tutto il contenuto della pagina tranne il footer(copyright e "titoli di coda")-->
 
       <h1>CatPhotoApp</h1>
-      <!-- <h1></h1>: Main heading of the page. Each page should have only one -->
+      <!-- <h1></h1>: Intestazione principale della pagina. Ogni pagina dovrebbe averne una sola -->
 
       <section>
-        <!-- <section></section>: Distinct thematic blocks. This one is about cat photos, helps SEO and at the same time helps reading the HTML code -->
+        <!-- <section></section>: Blocchi tematici distinti. Questo riguarda le foto dei gatti, aiuta la SEO e allo stesso tempo la lettura del codice HTML -->
 
         <h2>Cat Photos</h2>
-        <!-- <h2></h2>: Subheading of the content -->
+        <!-- <h2></h2>: Sottointestazione del contenuto -->
 
 <p>Everyone loves <a href="https://cdn.freecodecamp.org/curriculum/cat-photo-app/running-cats.jpg">cute cats</a> online!</p>
-<!-- <p></p>: HTML paragraph, used for text blocks.
-     <a></a>: Anchor tag, hyperlink.
-     If you don't use the target attribute, the link opens in the same browser tab (default behavior).
-     This means the new page replaces the current one.
-     If instead you use target="_blank", the link opens in a new tab, leaving the current page open. -->
+<!-- <p></p>: Paragrafo HTML, usato per blocchi di testo.
+     <a></a>: Anchor tag, link ipertestuale.
+     Se non usi l'attributo target, il link si apre nella stessa scheda del browser (default behavior).
+     Questo significa che la nuova pagina sostituisce quella corrente.
+     Se invece usi target="_blank", il link si apre in una nuova scheda, lasciando la pagina attuale aperta. -->
 
 <p>See more <a target="_blank" href="https://freecatphotoapp.com">cat photos</a> in our gallery.</p>
-<!-- <p></p>: Paragraph containing a link.
-     <a target="_blank"></a>: The link opens in a new tab.
-     target="_blank" is useful for external links or when you don't want the user to leave your site. -->
+<!-- <p></p>: Paragrafo che contiene un link.
+     <a target="_blank"></a>: Il link si apre in una nuova scheda.
+     target="_blank" è utile per link esterni o quando non vuoi che l'utente lasci il tuo sito. -->
 
 <a href="https://freecatphotoapp.com">
   <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg" alt="A cute orange cat lying on its back.">
 </a>
-<!-- <a></a>: Images can also be made clickable by placing them inside an anchor.
-     <img>: Inserts an image into the page. It's a "void element", so it doesn't have a closing tag.
-     src: URL of the image to load.
-     alt: Text description used by screen readers and displayed if the image fails to load.
-     Very important for accessibility and SEO. -->
+<!-- <a></a>: Anche le immagini possono essere rese cliccabili, inserendole dentro un anchor.
+     <img>: Inserisce un’immagine nella pagina. È un "void element", quindi non ha un tag di chiusura.
+     src: URL dell'immagine da caricare.
+     alt: Descrizione testuale usata dai lettori vocali e mostrata se l’immagine non viene caricata.
+     Importantissimo per accessibilità e SEO. -->
 
      <section>
-     <!-- <section></section>: Independent thematic section. Here it contains lists and images related to cat behavior.
-          Used to logically organize content and improve readability and SEO. -->
+     <!-- <section></section>: Sezione tematica indipendente. Qui contiene elenchi e immagini legate al comportamento dei gatti.
+          Usata per organizzare logicamente il contenuto e migliorare leggibilità e SEO. -->
 
   <h2>Cat Lists</h2>
-  <!-- <h2></h2>: Section subtitle. Correct hierarchical structure: h1 > h2 > h3... -->
+  <!-- <h2></h2>: Sottotitolo della sezione. Struttura gerarchica corretta: h1 > h2 > h3... -->
 
   <h3>Things cats love:</h3>
-  <!-- <h3></h3>: Sub-section within the main section.
-       Introduces a specific list: "things that cats love". -->
+  <!-- <h3></h3>: Sottosezione interna alla sezione principale.
+       Introduce una lista specifica: "cose che i gatti amano". -->
 
   <ul>
-    <!-- <ul></ul>: Unordered list, used when the order of elements is not important. -->
+    <!-- <ul></ul>: Lista non ordinata (unordered list), usata quando l’ordine degli elementi non è importante. -->
     <li>catnip</li>
     <li>laser pointers</li>
     <li>lasagna</li>
-    <!-- <li></li>: List item. Each element represents an item in the list. -->
+    <!-- <li></li>: List item. Ogni elemento rappresenta una voce della lista. -->
   </ul>
 
   <figure>
-  <!-- <figure></figure>: Semantic tag for associating images with a caption.
-         Improves accessibility and logical organization. -->
+  <!-- <figure></figure>: Tag semantico per associare immagini a una didascalia (caption).
+         Migliora l’accessibilità e l’organizzazione logica. -->
 
     <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/lasagna.jpg" alt="A slice of lasagna on a plate.">
-    <!-- <img>: Displays an image. Void element (has no closing tag).
-         alt: alternative text described for users with visual disabilities or in case of loading error. -->
+    <!-- <img>: Visualizza un’immagine. Void element (non ha chiusura).
+         alt: testo alternativo descritto per utenti con disabilità visiva o in caso di errore nel caricamento. -->
 
     <figcaption>Cats <em>love</em> lasagna.</figcaption>
-    <!-- <figcaption></figcaption>: Caption that describes the image.
-         <em></em>: Textual emphasis, usually displayed in italics. Used to highlight concepts. -->
+    <!-- <figcaption></figcaption>: Didascalia che descrive l’immagine.
+         <em></em>: Enfasi testuale, in genere visualizzata in corsivo. Usata per sottolineare concetti. -->
   </figure>
 
   <h3>Top 3 things cats hate:</h3>
-  <!-- New subsection, this time dedicated to what cats hate -->
+  <!-- Nuova sottosezione, questa volta dedicata a ciò che i gatti odiano -->
 
   <ol>
-    <!-- <ol></ol>: Ordered list, used when order is important or ranked -->
+    <!-- <ol></ol>: Lista ordinata (ordered list), usata quando l’ordine è importante o classificato -->
     <li>flea treatment</li>
     <li>thunder</li>
     <li>other cats</li>
-    <!-- As above, each <li></li> represents an item in the list. -->
+    <!-- Come sopra, ogni <li></li> rappresenta una voce della lista. -->
   </ol>
 
   <figure>
     <img src="https://cdn.freecodecamp.org/curriculum/cat-photo-app/cats.jpg" alt="Five cats looking around a field.">
-    <!-- Representative image of the last item in the list: "other cats" -->
+    <!-- Immagine rappresentativa dell’ultima voce della lista: "altri gatti" -->
 
     <figcaption>Cats <strong>hate</strong> other cats.</figcaption>
-    <!-- <strong></strong>: Emphasizes importance or strength. Usually displayed in bold.
-         Semantic, useful for screen readers and for structuring the importance of text. -->
+    <!-- <strong></strong>: Evidenzia importanza o forza. In genere visualizzato in grassetto.
+         Semantico, utile per lettori vocali e per strutturare l’importanza del testo. -->
   </figure>
 </section>
-<!-- Closing of the "Cat Lists" section. Excellent hierarchical structure: section > h2 > h3 > ul/ol + figure -->
+<!-- Chiusura della sezione "Cat Lists". Ottima struttura gerarchica: section > h2 > h3 > ul/ol + figure -->
 
 <section>
-<!-- <section></section>: Section dedicated to the form for submitting information.
-       Separating forms in a section helps keep the layout clean and semantic. -->
+<!-- <section></section>: Sezione dedicata al form per l’invio di informazioni.
+       Separare i form in una section aiuta a mantenere il layout pulito e semantico. -->
 
   <h2>Cat Form</h2>
-  <!-- <h2></h2>: Section title. Hierarchical structure consistent with the rest of the page -->
+  <!-- <h2></h2>: Titolo della sezione. Struttura gerarchica coerente con il resto della pagina -->
 
   <form action="https://freecatphotoapp.com/submit-cat-photo">
-  <!-- <form></form>: Collects and sends data to a server.
-         action="...": Specifies the destination URL where the data will be sent when "Submit" is pressed. -->
+  <!-- <form></form>: Raccoglie e invia dati a un server.
+         action="...": Specifica l’URL di destinazione dove i dati verranno inviati quando si preme "Submit". -->
 
     <fieldset>
-    <!-- <fieldset></fieldset>: Logically groups related inputs.
-           Improves accessibility and visually organizes forms -->
+    <!-- <fieldset></fieldset>: Raggruppa logicamente input correlati.
+           Migliora l’accessibilità e organizza visivamente i form -->
 
       <legend>Is your cat an indoor or outdoor cat?</legend>
-      <!-- <legend></legend>: Title of the input group. Provides a visual and semantic context to the block. -->
+      <!-- <legend></legend>: Titolo del gruppo di input. Fornisce un contesto visivo e semantico al blocco. -->
 
 <label>
   <input id="indoor" type="radio" name="indoor-outdoor" value="indoor" checked> Indoor
 </label>
-<!-- <input>: Creates a radio button, which is a single-choice button (circle shaped).
-     Radio buttons are used when you want the user to choose only one option among multiple alternatives (e.g.: Yes/No, Male/Female, Indoor/Outdoor).
+<!-- <input>: Crea un radio button, cioè un pulsante a scelta singola (a forma di cerchietto).
+     I radio button vengono usati quando si vuole che l'utente scelga una sola opzione tra più alternative (es: Sì/No, Maschio/Femmina, Indoor/Outdoor).
 
-     type="radio": Specifies that this input is a radio button.
-     name="indoor-outdoor": Group membership. All radios with the same name are linked together: the user can select only one per group.
-     id="indoor": Unique identifier. Used to connect it to a <label> with for="indoor", or to use it with CSS/JS.
-     value="indoor": The value that will be sent to the server when this radio is selected. This is what the backend receives.
-     checked: Sets this radio as selected by default when the page loads.
+     type="radio": Specifica che questo input è un radio button.
+     name="indoor-outdoor": Gruppo di appartenenza. Tutti i radio con lo stesso name sono collegati tra loro: l'utente può selezionarne solo uno per gruppo.
+     id="indoor": Identificatore univoco. Serve per collegarlo a una <label> con for="indoor", o per usarlo con CSS/JS.
+     value="indoor": Il valore che verrà inviato al server quando questo radio è selezionato. È ciò che il backend riceve.
+     checked: Imposta questo radio come selezionato di default quando la pagina viene caricata.
 
-     <label></label>: Makes the text ("Indoor") clickable too, not just the circle. Improves accessibility and usability.
-     In this case, the text is nested inside the label, so the for attribute is not necessary. -->
+     <label></label>: Rende cliccabile anche il testo ("Indoor"), non solo il cerchietto. Migliora accessibilità e usabilità.
+     In questo caso, il testo è annidato all’interno del label, quindi non è necessario l’attributo for. -->
 
 
       <label>
         <input id="outdoor" type="radio" name="indoor-outdoor" value="outdoor"> Outdoor
       </label>
-      <!-- Same structure as the previous radio, but with different value and id. -->
+      <!-- Stessa struttura del radio precedente, ma con value e id diversi. -->
     </fieldset>
 
     <fieldset>
       <legend>What's your cat's personality?</legend>
-      <!-- New logical group: multiple checkboxes with cat personality -->
+      <!-- Nuovo gruppo logico: checkbox multipli con personalità del gatto -->
 
       <input id="loving" type="checkbox" name="personality" value="loving" checked>
       <label for="loving">Loving</label>
-      <!-- <input>: Checkbox allows multiple selection (selection control in ux)
-           name="personality": Same for all → allows sending multiple values under the same key.
-           value="loving": Data that will be sent.
-           checked: selected by default.
-           <label for="loving">: Connects the label to the checkbox using the id -->
+      <!-- <input>: Checkbox permette selezione multipla (selecion control in ux)
+           name="personality": Uguale per tutti → permette invio di più valori sotto la stessa chiave.
+           value="loving": Dato che verrà inviato.
+           checked: selezionato di default.
+           <label for="loving">: Collega la label al checkbox usando l'id -->
 
       <input id="lazy" type="checkbox" name="personality" value="lazy">
       <label for="lazy">Lazy</label>
 
       <input id="energetic" type="checkbox" name="personality" value="energetic">
       <label for="energetic">Energetic</label>
-      <!-- All three checkboxes share the same name, but have different ids and values.
-           Useful for collecting multiple characteristics under the same key. -->
+      <!-- Tutti e tre i checkbox condividono il name, ma hanno id e value diversi.
+           Utile per raccogliere più caratteristiche nella stessa chiave. -->
     </fieldset>
 
     <input type="text" name="catphotourl" placeholder="cat photo URL" required>
-    <!-- <input>: Text field for entering an image URL.
-         name="catphotourl": Field identifier.
-         placeholder: Guide text visible until the user writes something.
-         required: Forces the user to fill in this field to submit the form. -->
+    <!-- <input>: Campo di testo per inserire un URL di immagine.
+         name="catphotourl": Identificativo del campo.
+         placeholder: Testo guida visibile finché l'utente non scrive.
+         required: Obbliga l'utente a compilare questo campo per inviare il form. -->
 
     <button type="submit">Submit</button>
-    <!-- <button></button>: Button that submits the form.
-         type="submit": It's the default type in forms, but specifying it explicitly is good practice. -->
+    <!-- <button></button>: Pulsante che invia il form.
+         type="submit": È il tipo predefinito nei form, ma indicarlo esplicitamente è una buona pratica. -->
   </form>
 </section>
-<!-- Closing of the "Cat Form" section. Great organization with fieldsets for logically grouped inputs. -->
+<!-- Chiusura della sezione "Cat Form". Ottima organizzazione con fieldset per input raggruppati logicamente. -->
 
 <footer>
-<!-- <footer></footer>: Semantic section used for "closing" contents of a page.
-       Usually includes: legal info, copyright, contacts, reference links.
-       Appears at the bottom of the page. -->
+<!-- <footer></footer>: Sezione semantica usata per contenuti "di chiusura" di una pagina.
+       Solitamente include: info legali, copyright, contatti, link di riferimento.
+       Compare in fondo alla pagina. -->
 
   <p>
     No Copyright -
     <a href="https://www.freecodecamp.org">freeCodeCamp.org</a>
   </p>
-  <!-- <p></p>: Paragraph containing text and a link.
-       <a></a>: Link to external freeCodeCamp site. In this case there is no target="_blank", so it opens in the same tab.
-       You might consider using target="_blank" if you want the link not to make the user leave your site. -->
+  <!-- <p></p>: Paragrafo che contiene testo e link.
+       <a></a>: Link al sito esterno freeCodeCamp. In questo caso non c’è target="_blank", quindi si apre nella stessa scheda.
+       Puoi considerare l’uso di target="_blank" se vuoi che il link non faccia lasciare l’utente dal tuo sito. -->
 
 </footer>
 </body>
-<!-- </body>: Closing tag for the page body.
-     All elements visible to the user (texts, images, forms, etc.) are inside <body>.
-     Must always be present and close before the </html> tag. -->
+<!-- </body>: Tag di chiusura del corpo della pagina.
+     Tutti gli elementi visibili all’utente (testi, immagini, form, ecc.) stanno all’interno di <body>.
+     Deve sempre essere presente e chiudersi prima del tag </html>. -->
 
 </html>
-<!-- </html>: Final tag of the document.
-     Closes the opening <html> tag.
-     All HTML content must be contained within <html></html>. -->
+<!-- </html>: Tag finale del documento.
+     Chiude il tag <html> di apertura.
+     Tutto il contenuto HTML deve essere contenuto all'interno di <html></html>. -->
 ```
 </TabItem>
 
