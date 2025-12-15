@@ -1,0 +1,962 @@
+---
+sidebar_position: 11
+sidebar_label: 'Decimal to Binary Converter'
+title: 'Decimal to Binary Converter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Decimal to Binary Converter
+
+<img width="100%" alt="Screenshot 2025-09-28 alle 14 29 40" src="https://github.com/user-attachments/assets/ec087720-0d49-40e5-9c20-31fdebf44c15" />
+
+![decimal-to-binary-converter-GIF](https://github.com/user-attachments/assets/9ba8c982-11e6-4a20-b880-e5b212c5d845)
+
+### Il Progetto
+Convertitore decimale-binario interattivo sviluppato con funzioni ricorsive JavaScript. Un'applicazione che dimostra il potere della ricorsione attraverso la conversione numerica, completa di animazione del call stack per visualizzare il processo ricorsivo.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decimal to Binary Converter</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>
+      Decimal to Binary <br />
+      Converter
+    </h1>
+    <section class="input-container">
+      <label for="number-input">Enter a decimal number:</label>
+      <input
+        value=""
+        type="number"
+        name="decimal number input"
+        id="number-input"
+        class="number-input"
+      />
+      <button class="convert-btn" id="convert-btn">Convert</button>
+    </section>
+    <section class="output-container">
+      <output id="result" for="number-input"></output>
+      <h2>Call stack</h2>
+      <div id="animation-container"></div>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --light-grey: #f5f6f7;
+  --dark-blue: #1b1b32;
+  --orange: #f1be32;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
+    monospace;
+  font-size: 1.125rem;
+  color: var(--light-grey);
+  background-color: var(--dark-blue);
+  padding: 0 4px;
+}
+
+h1 {
+  font-size: 2.125rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  width: clamp(320px, 50vw, 460px);
+  margin: 10px auto;
+}
+
+.input-container label {
+  white-space: nowrap;
+  word-spacing: -6px;
+}
+
+.convert-btn {
+  font-size: inherit;
+  font-family: inherit;
+  background-color: var(--orange);
+  width: 100%;
+  height: 2rem;
+  padding: 0 6px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.number-input {
+  font-size: inherit;
+  padding: 0.3rem;
+  width: 100%;
+}
+
+.output-container {
+  margin-inline: auto;
+  width: clamp(320px, 50vw, 460px);
+}
+
+#result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  text-align: center;
+  min-height: 80px;
+  margin-block-start: 20px;
+  padding: 15px;
+  border: 2px solid var(--orange);
+  border-radius: 2px;
+}
+
+#animation-container {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: end;
+  gap: 1rem;
+  margin-block-end: 1rem;
+  min-height: 40vh;
+  border: 2px dashed var(--orange);
+  padding: 1rem;
+}
+
+.animation-frame {
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+    helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+    sans-serif;
+  padding: 15px 10px;
+  border: 5px solid var(--orange);
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+@media screen and (min-width: 36em) {
+  body {
+    font-size: 1rem;
+  }
+
+  .input-container {
+    flex-direction: row;
+    width: unset;
+  }
+
+  .number-input {
+    width: unset;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const numberInput = document.getElementById("number-input");
+const convertBtn = document.getElementById("convert-btn");
+const result = document.getElementById("result");
+const animationContainer = document.getElementById("animation-container");
+const animationData = [
+  {
+    inputVal: 5,
+    addElDelay: 1000,
+    msg: 'decimalToBinary(5) returns "10" + 1 (5 % 2). Then it pops off the stack.',
+    showMsgDelay: 15000,
+    removeElDelay: 20000,
+  },
+  {
+    inputVal: 2,
+    addElDelay: 1500,
+    msg: 'decimalToBinary(2) returns "1" + 0 (2 % 2) and gives that value to the stack below. Then it pops off the stack.',
+    showMsgDelay: 10000,
+    removeElDelay: 15000,
+  },
+  {
+    inputVal: 1,
+    addElDelay: 2000,
+    msg: "decimalToBinary(1) returns '1' (base case) and gives that value to the stack below. Then it pops off the stack.",
+    showMsgDelay: 5000,
+    removeElDelay: 10000,
+  }
+];
+
+const decimalToBinary = (input) => {
+  if (input === 0 || input === 1) {
+    return String(input);
+  } else {
+    return decimalToBinary(Math.floor(input / 2)) + (input % 2);
+  }
+};
+
+const showAnimation = () => {
+  result.innerText = "Call Stack Animation";
+
+  animationData.forEach((obj) => {
+    setTimeout(() => {
+      animationContainer.innerHTML += `
+        <p id="${obj.inputVal}" class="animation-frame">
+          decimalToBinary(${obj.inputVal})
+        </p>
+      `;
+    }, obj.addElDelay);
+
+    setTimeout(() => {
+      document.getElementById(obj.inputVal).textContent = obj.msg;
+    }, obj.showMsgDelay);
+
+    setTimeout(() => {
+      document.getElementById(obj.inputVal).remove();
+    }, obj.removeElDelay);
+  });
+
+  setTimeout(() => {
+    result.textContent = decimalToBinary(5);
+  }, 20000);
+};
+
+const checkUserInput = () => {
+  const inputInt = parseInt(numberInput.value);
+
+  if (!numberInput.value || isNaN(inputInt) || inputInt < 0) {
+    alert("Please provide a decimal number greater than or equal to 0");
+    return;
+  }
+
+  if (inputInt === 5) {
+    showAnimation();
+    return;
+  }
+
+  result.textContent = decimalToBinary(inputInt);
+  numberInput.value = "";
+};
+
+convertBtn.addEventListener("click", checkUserInput);
+
+numberInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    checkUserInput();
+  }
+});
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="spiegato">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 DICHIARAZIONE HTML5: "Benvenuti nel mondo della conversione numerica!" -->
+<!-- È come aprire un laboratorio di matematica digitale! 🧮 -->
+
+<html lang="en">
+<!-- 🌍 CONTENITORE PRINCIPALE: Il nostro convertitore binario -->
+<!-- lang="en" = inglese, la lingua della programmazione! 💻 -->
+
+  <head>
+    <!-- 🧠 IL CENTRO DI CALCOLO: Dove prepariamo il nostro convertitore -->
+    <!-- È come preparare una calcolatrice speciale per i binari -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 CARATTERI UNIVERSALI: UTF-8 per numeri e simboli! 0️⃣1️⃣ -->
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 🌐 COMPATIBILITÀ BROWSER: "Funziona bene anche su Internet Explorer!" -->
+    <!-- http-equiv simula un header HTTP -->
+    <!-- IE=edge = usa l'ultima versione del motore di rendering di IE -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 DESIGN RESPONSIVE: "Si adatta a ogni schermo!" -->
+    <!-- initial-scale=1.0 = nessuno zoom iniziale -->
+    
+    <title>Decimal to Binary Converter</title>
+    <!-- 📑 TITOLO DELLA TAB: Chiaro e descrittivo -->
+    
+    <style>
+      /* 🎨 ===== IL FOGLIO DI STILE: Design da Hacker! ===== */
+      
+      *,
+      *::before,
+      *::after {
+        /* 🔄 RESET UNIVERSALE COMPLETO: Tutti gli elementi E i loro pseudo-elementi */
+        box-sizing: border-box;
+        /* 📦 BORDER-BOX: Include padding e bordi nelle dimensioni */
+        margin: 0;
+        padding: 0;
+        /* 🚫 ZERO SPAZI: Partiamo da una lavagna pulita */
+      }
+      
+      :root {
+        /* 🎨 VARIABILI CSS: I nostri colori tema "terminale" */
+        --light-grey: #f5f6f7;
+        /* 🔘 GRIGIO CHIARO: Per il testo */
+        
+        --dark-blue: #1b1b32;
+        /* 🌑 BLU SCURISSIMO: Sfondo stile terminale */
+        
+        --orange: #f1be32;
+        /* 🟠 ARANCIONE DORATO: Per accenti e bordi */
+        /* Come il colore ambra dei vecchi monitor! */
+      }
+      
+      body {
+        display: flex;
+        /* 🎯 FLEXBOX: Layout moderno */
+        
+        flex-direction: column;
+        /* 📦 COLONNA: Elementi uno sotto l'altro */
+        
+        align-items: center;
+        /* ⚖️ CENTRATURA ORIZZONTALE: Tutto al centro */
+        
+        font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
+          monospace;
+        /* 🔤 FONT MONOSPAZIO: Come un vero terminale! */
+        /* Lista di font in ordine di preferenza */
+        /* monospace = tutti i caratteri hanno la stessa larghezza */
+        
+        font-size: 1.125rem;
+        /* 📏 DIMENSIONE BASE: 18px (1.125 × 16) */
+        
+        color: var(--light-grey);
+        /* 🔘 COLORE TESTO: Grigio chiaro dalla variabile */
+        
+        background-color: var(--dark-blue);
+        /* 🌑 SFONDO: Blu scuro stile terminale */
+        
+        padding: 0 4px;
+        /* 🏠 PADDING LATERALE: Piccolo respiro ai lati */
+      }
+      
+      h1 {
+        font-size: 2.125rem;
+        /* 📏 TITOLO GRANDE: 34px (2.125 × 16) */
+        
+        text-align: center;
+        /* ⚖️ CENTRATO: Il titolo principale */
+        
+        margin: 20px 0;
+        /* 🌬️ MARGINI: 20px sopra e sotto */
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+        /* 📏 SOTTOTITOLO: 24px (1.5 × 16) */
+        
+        text-align: center;
+        /* ⚖️ CENTRATO: Come h1 */
+        
+        margin: 20px 0;
+        /* 🌬️ STESSI MARGINI: Coerenza visiva */
+      }
+      
+      .input-container {
+        display: flex;
+        /* 🎯 FLEX CONTAINER: Per l'input */
+        
+        flex-direction: column;
+        /* 📦 COLONNA: Label sopra, input e bottone sotto */
+        
+        gap: 10px;
+        /* 🌉 SPAZIO TRA ELEMENTI: 10px automatici */
+        
+        justify-content: center;
+        /* ⚖️ CENTRATURA VERTICALE: Nel suo spazio */
+        
+        align-items: center;
+        /* ⚖️ CENTRATURA ORIZZONTALE: Elementi al centro */
+        
+        width: clamp(320px, 50vw, 460px);
+        /* 📏 LARGHEZZA RESPONSIVA GENIALE! */
+        /* clamp(minimo, preferito, massimo) */
+        /* 320px = minimo su mobile */
+        /* 50vw = metà viewport idealmente */
+        /* 460px = massimo su desktop */
+        /* È come un elastico con limiti! */
+        
+        margin: 10px auto;
+        /* 🌬️ MARGINE: 10px verticale, auto orizzontale (centrato) */
+      }
+      
+      .input-container label {
+        white-space: nowrap;
+        /* 📏 NIENTE A CAPO: Il label resta su una riga */
+        
+        word-spacing: -6px;
+        /* 🔤 SPAZIO NEGATIVO: Avvicina le parole */
+        /* -6px = le parole si stringono un po' */
+      }
+      
+      .convert-btn {
+        font-size: inherit;
+        /* 🧬 EREDITA: Prende la dimensione dal genitore */
+        
+        font-family: inherit;
+        /* 🧬 EREDITA: Stesso font monospazio */
+        
+        background-color: var(--orange);
+        /* 🟠 SFONDO: Arancione dorato dalla variabile */
+        
+        width: 100%;
+        /* 📏 LARGHEZZA PIENA: Occupa tutto il container */
+        
+        height: 2rem;
+        /* 📏 ALTEZZA: 32px (2 × 16) */
+        
+        padding: 0 6px;
+        /* 🏠 PADDING: Solo laterale */
+        
+        border: none;
+        /* 🚫 NIENTE BORDO: Pulito */
+        
+        border-radius: 2px;
+        /* 🔄 ANGOLI: Leggermente arrotondati */
+        
+        cursor: pointer;
+        /* 👆 MANINA: "Sono cliccabile!" */
+      }
+      
+      .number-input {
+        font-size: inherit;
+        /* 🧬 EREDITA: Dimensione dal genitore */
+        
+        padding: 0.3rem;
+        /* 🏠 PADDING: Circa 5px di respiro */
+        
+        width: 100%;
+        /* 📏 LARGHEZZA PIENA: Come il bottone */
+      }
+      
+      .output-container {
+        margin-inline: auto;
+        /* ⚖️ CENTRATURA MODERNA: margin-inline = margini orizzontali */
+        /* auto = centrato automaticamente */
+        /* È come margin: 0 auto ma solo orizzontale! */
+        
+        width: clamp(320px, 50vw, 460px);
+        /* 📏 STESSA LARGHEZZA: Dell'input container */
+      }
+      
+      #result {
+        display: flex;
+        /* 🎯 FLEX: Per centrare il contenuto */
+        
+        align-items: center;
+        /* ⚖️ CENTRATO VERTICALMENTE: Il risultato */
+        
+        justify-content: center;
+        /* ⚖️ CENTRATO ORIZZONTALMENTE: Perfetto centro */
+        
+        font-size: 2rem;
+        /* 📏 TESTO GRANDE: 32px per il risultato */
+        
+        text-align: center;
+        /* ⚖️ TESTO CENTRATO: Backup per il testo */
+        
+        min-height: 80px;
+        /* 📏 ALTEZZA MINIMA: Non collassa mai sotto 80px */
+        
+        margin-block-start: 20px;
+        /* 🌬️ MARGINE SOPRA MODERNO: margin-block-start = margin-top logico */
+        /* Si adatta alla direzione del testo (RTL/LTR) */
+        
+        padding: 15px;
+        /* 🏠 PADDING: Spazio interno generoso */
+        
+        border: 2px solid var(--orange);
+        /* 🖼️ BORDO: Arancione 2px solido */
+        
+        border-radius: 2px;
+        /* 🔄 ANGOLI: Leggermente arrotondati */
+      }
+      
+      #animation-container {
+        display: flex;
+        /* 🎯 FLEX: Per l'animazione dello stack */
+        
+        flex-direction: column-reverse;
+        /* 📦 COLONNA INVERTITA: I nuovi elementi vanno in alto! */
+        /* È come impilare piatti dal basso verso l'alto */
+        
+        justify-content: end;
+        /* ⬇️ ALLINEAMENTO: Verso il fondo */
+        /* end = gli elementi partono dal fondo */
+        
+        gap: 1rem;
+        /* 🌉 SPAZIO: 16px tra ogni frame */
+        
+        margin-block-end: 1rem;
+        /* 🌬️ MARGINE SOTTO: margin-block-end = margin-bottom logico */
+        
+        min-height: 40vh;
+        /* 📏 ALTEZZA MINIMA: 40% dell'altezza viewport */
+        /* vh = viewport height */
+        
+        border: 2px dashed var(--orange);
+        /* 🖼️ BORDO TRATTEGGIATO: Per indicare l'area animazione */
+        /* dashed = linea tratteggiata */
+        
+        padding: 1rem;
+        /* 🏠 PADDING: 16px di respiro interno */
+      }
+      
+      .animation-frame {
+        font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui,
+          helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+          sans-serif;
+        /* 🔤 FONT DI SISTEMA: Lista completa per ogni OS */
+        /* -apple-system = font di sistema su Mac */
+        /* BlinkMacSystemFont = Chrome su Mac */
+        /* segoe ui = Windows */
+        /* È diverso dal monospace per distinguere l'animazione */
+        
+        padding: 15px 10px;
+        /* 🏠 PADDING: 15px verticale, 10px orizzontale */
+        
+        border: 5px solid var(--orange);
+        /* 🖼️ BORDO SPESSO: 5px per evidenziare */
+        
+        font-size: 1.2rem;
+        /* 📏 TESTO: Leggermente più grande (19.2px) */
+        
+        text-align: center;
+        /* ⚖️ CENTRATO: Il testo nei frame */
+      }
+      
+      @media screen and (min-width: 36em) {
+        /* 📱 MEDIA QUERY: Per schermi più grandi di 576px */
+        /* 36em × 16px = 576px */
+        /* em in media query usa sempre 16px come base */
+        
+        body {
+          font-size: 1rem;
+          /* 📏 FONT PIÙ PICCOLO: 16px su desktop */
+          /* Da 18px a 16px */
+        }
+      
+        .input-container {
+          flex-direction: row;
+          /* 📦 RIGA: Label, input e bottone affiancati */
+          /* Da colonna a riga su schermi grandi */
+          
+          width: unset;
+          /* 🔄 RESET LARGHEZZA: Torna al valore iniziale */
+          /* unset = cancella la proprietà precedente */
+        }
+      
+        .number-input {
+          width: unset;
+          /* 🔄 RESET: Non più 100% di larghezza */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🔢 ===== IL CONVERTITORE PRENDE VITA! ===== -->
+    
+    <h1>
+      Decimal to Binary <br />
+      Converter
+    </h1>
+    <!-- 📰 TITOLO: Con <br> per andare a capo -->
+    <!-- Il titolo su due righe per estetica -->
+    
+    <section class="input-container">
+      <!-- 📦 SEZIONE INPUT: Contiene tutti i controlli -->
+      
+      <label for="number-input">Enter a decimal number:</label>
+      <!-- 🏷️ ETICHETTA: Collegata all'input tramite for="" -->
+      <!-- for="number-input" si collega a id="number-input" -->
+      
+      <input
+        value=""
+        type="number"
+        name="decimal number input"
+        id="number-input"
+        class="number-input"
+      />
+      <!-- 🔢 INPUT NUMERICO: Per inserire il decimale -->
+      <!-- value="" = inizia vuoto -->
+      <!-- type="number" = solo numeri, con frecce su/giù -->
+      <!-- name = per form (anche se qui non c'è form) -->
+      <!-- id = per JavaScript e label -->
+      <!-- class = per CSS -->
+      
+      <button class="convert-btn" id="convert-btn">Convert</button>
+      <!-- 🔘 BOTTONE: Avvia la conversione -->
+      <!-- Doppio identificatore: class per CSS, id per JS -->
+    </section>
+    
+    <section class="output-container">
+      <!-- 📦 SEZIONE OUTPUT: Risultato e animazione -->
+      
+      <output id="result" for="number-input"></output>
+      <!-- 📤 OUTPUT SEMANTICO: Tag HTML5 per risultati! -->
+      <!-- output = elemento specifico per mostrare risultati di calcoli -->
+      <!-- for="number-input" = indica che è il risultato di quell'input -->
+      <!-- Inizia vuoto, JavaScript lo riempirà -->
+      
+      <h2>Call stack</h2>
+      <!-- 📚 TITOLO: Per la visualizzazione dello stack -->
+      
+      <div id="animation-container"></div>
+      <!-- 🎬 CONTENITORE ANIMAZIONE: Vuoto, riempito da JS -->
+      <!-- Qui apparirà l'animazione dello stack di chiamate -->
+    </section>
+    
+    <script>
+      /* 🧮 ===== JAVASCRIPT: Il Cervello del Convertitore! ===== */
+      
+      // ===== SELEZIONE ELEMENTI DOM =====
+      const numberInput = document.getElementById("number-input");
+      // 📥 INPUT: Recupera l'elemento input tramite il suo ID
+      // document.getElementById() = trova elemento per ID
+      // Più veloce di querySelector per ID singoli
+      
+      const convertBtn = document.getElementById("convert-btn");
+      // 🔘 BOTTONE: Recupera il bottone convert
+      
+      const result = document.getElementById("result");
+      // 📤 OUTPUT: Dove mostreremo il risultato
+      
+      const animationContainer = document.getElementById("animation-container");
+      // 🎬 CONTAINER: Dove mostreremo l'animazione dello stack
+      
+      // ===== DATI PER L'ANIMAZIONE =====
+      const animationData = [
+        // 📊 ARRAY DI OGGETTI: Ogni oggetto è un passo dell'animazione
+        {
+          inputVal: 5,
+          // 🔢 VALORE: Il numero da convertire in questo frame
+          
+          addElDelay: 1000,
+          // ⏱️ RITARDO APPARIZIONE: 1 secondo (1000ms)
+          
+          msg: 'decimalToBinary(5) returns "10" + 1 (5 % 2). Then it pops off the stack.',
+          // 💬 MESSAGGIO: Spiega cosa succede in questo passo
+          // 5 % 2 = 1 (resto della divisione per 2)
+          // "10" viene dal passo ricorsivo precedente
+          
+          showMsgDelay: 15000,
+          // ⏱️ RITARDO MESSAGGIO: Mostra il messaggio dopo 15 secondi
+          
+          removeElDelay: 20000,
+          // ⏱️ RITARDO RIMOZIONE: Rimuovi dopo 20 secondi
+        },
+        {
+          inputVal: 2,
+          // 🔢 SECONDO PASSO: Conversione di 2
+          
+          addElDelay: 1500,
+          // ⏱️ APPARE DOPO: 1.5 secondi
+          
+          msg: 'decimalToBinary(2) returns "1" + 0 (2 % 2) and gives that value to the stack below. Then it pops off the stack.',
+          // 💬 SPIEGAZIONE: 2 % 2 = 0, risultato "1" + "0" = "10"
+          
+          showMsgDelay: 10000,
+          // ⏱️ MESSAGGIO: Dopo 10 secondi
+          
+          removeElDelay: 15000,
+          // ⏱️ RIMOZIONE: Dopo 15 secondi
+        },
+        {
+          inputVal: 1,
+          // 🔢 TERZO PASSO: Caso base!
+          
+          addElDelay: 2000,
+          // ⏱️ APPARE: Dopo 2 secondi
+          
+          msg: "decimalToBinary(1) returns '1' (base case) and gives that value to the stack below. Then it pops off the stack.",
+          // 💬 CASO BASE: 1 ritorna semplicemente "1"
+          
+          showMsgDelay: 5000,
+          // ⏱️ MESSAGGIO: Dopo 5 secondi
+          
+          removeElDelay: 10000,
+          // ⏱️ RIMOZIONE: Dopo 10 secondi
+        }
+      ];
+      
+      // ===== FUNZIONE DI CONVERSIONE RICORSIVA =====
+      const decimalToBinary = (input) => {
+        // 🔄 FUNZIONE RICORSIVA: Si chiama da sola!
+        // Arrow function moderna: const nome = (parametri) => { corpo }
+        
+        if (input === 0 || input === 1) {
+          // 🎯 CASO BASE: 0 o 1 sono già binari!
+          // === confronto stretto (tipo e valore)
+          
+          return String(input);
+          // 🔤 CONVERTI IN STRINGA: String() trasforma numero in testo
+          // 0 diventa "0", 1 diventa "1"
+        } else {
+          // 🔄 CASO RICORSIVO: Numeri maggiori di 1
+          
+          return decimalToBinary(Math.floor(input / 2)) + (input % 2);
+          // 🧮 LA MAGIA DELLA RICORSIONE!
+          
+          // SCOMPOSIZIONE:
+          // 1. Math.floor(input / 2) = divisione intera per 2
+          //    5 / 2 = 2.5 → floor → 2
+          // 
+          // 2. decimalToBinary(...) = chiamata ricorsiva con il quoziente
+          //    Continua a dividere finché non arriva a 0 o 1
+          //
+          // 3. (input % 2) = resto della divisione (0 o 1)
+          //    5 % 2 = 1
+          //
+          // 4. + concatena le stringhe
+          //    "10" + 1 → "10" + "1" → "101"
+          
+          // ESEMPIO con 5:
+          // decimalToBinary(5) →
+          // decimalToBinary(2) + 1 →
+          // decimalToBinary(1) + 0 + 1 →
+          // "1" + 0 + 1 → "101"
+        }
+      };
+      
+      // ===== FUNZIONE ANIMAZIONE =====
+      const showAnimation = () => {
+        // 🎬 MOSTRA ANIMAZIONE: Solo per input = 5
+        
+        result.innerText = "Call Stack Animation";
+        // 📝 TESTO INIZIALE: Avvisa che parte l'animazione
+        // innerText = proprietà per cambiare il testo
+      
+        animationData.forEach((obj) => {
+          // 🔄 PER OGNI FRAME: Esegui le animazioni
+          // forEach = metodo array che cicla ogni elemento
+          // obj = ogni oggetto nell'array animationData
+          
+          setTimeout(() => {
+            // ⏱️ TIMER 1: Aggiungi elemento dopo il delay
+            // setTimeout(funzione, millisecondi)
+            
+            animationContainer.innerHTML += `
+              <p id="${obj.inputVal}" class="animation-frame">
+                decimalToBinary(${obj.inputVal})
+              </p>
+            `;
+            // 📝 AGGIUNGI HTML: Template literal con backtick ``
+            // ${} = interpolazione di variabili
+            // += aggiunge alla fine del contenuto esistente
+            // Crea un paragrafo con ID uguale al valore
+          }, obj.addElDelay);
+          // ⏱️ DELAY: Usa il ritardo specifico dell'oggetto
+      
+          setTimeout(() => {
+            // ⏱️ TIMER 2: Cambia il testo dopo altro delay
+            
+            document.getElementById(obj.inputVal).textContent = obj.msg;
+            // 📝 AGGIORNA TESTO: Trova elemento per ID e cambia contenuto
+            // textContent = solo testo, no HTML
+          }, obj.showMsgDelay);
+      
+          setTimeout(() => {
+            // ⏱️ TIMER 3: Rimuovi elemento dopo ultimo delay
+            
+            document.getElementById(obj.inputVal).remove();
+            // 🗑️ RIMUOVI: Elimina l'elemento dal DOM
+            // remove() = metodo per rimuovere elementi
+          }, obj.removeElDelay);
+        });
+      
+        setTimeout(() => {
+          // ⏱️ TIMER FINALE: Mostra il risultato alla fine
+          
+          result.textContent = decimalToBinary(5);
+          // 📤 RISULTATO: Mostra "101" (5 in binario)
+        }, 20000);
+        // ⏱️ DOPO 20 SECONDI: Quando l'animazione è finita
+      };
+      
+      // ===== FUNZIONE VALIDAZIONE INPUT =====
+      const checkUserInput = () => {
+        // ✅ CONTROLLA INPUT: Valida prima di convertire
+        
+        const inputInt = parseInt(numberInput.value);
+        // 🔢 CONVERTI IN INTERO: parseInt() trasforma stringa in numero
+        // numberInput.value = il valore inserito dall'utente (sempre stringa)
+      
+        if (!numberInput.value || isNaN(inputInt) || inputInt < 0) {
+          // 🚫 VALIDAZIONE: Controlla tre condizioni
+          // !numberInput.value = campo vuoto
+          // isNaN(inputInt) = Not a Number (non è un numero)
+          // inputInt < 0 = numero negativo
+          
+          alert("Please provide a decimal number greater than or equal to 0");
+          // ⚠️ ALERT: Messaggio di errore popup
+          
+          return;
+          // 🛑 STOP: Esci dalla funzione
+        }
+      
+        if (inputInt === 5) {
+          // 🎬 CASO SPECIALE: Mostra animazione per il 5
+          
+          showAnimation();
+          // 🎬 AVVIA: Chiama la funzione animazione
+          
+          return;
+          // 🛑 STOP: Non fare altro
+        }
+      
+        result.textContent = decimalToBinary(inputInt);
+        // 📤 MOSTRA RISULTATO: Converti e visualizza
+        
+        numberInput.value = "";
+        // 🧹 PULISCI: Svuota il campo input
+        // Pronto per la prossima conversione!
+      };
+      
+      // ===== EVENT LISTENERS =====
+      
+      convertBtn.addEventListener("click", checkUserInput);
+      // 🖱️ CLICK SUL BOTTONE: Quando clicchi, esegui checkUserInput
+      // addEventListener = "ascolta" gli eventi
+      // "click" = tipo di evento
+      // checkUserInput = funzione da eseguire (senza parentesi!)
+      
+      numberInput.addEventListener("keydown", (e) => {
+        // ⌨️ PRESSIONE TASTI: Ascolta la tastiera
+        // "keydown" = quando premi un tasto
+        // (e) = evento, contiene info sul tasto premuto
+        
+        if (e.key === "Enter") {
+          // ⏎ TASTO ENTER: Se premi Invio...
+          // e.key = il tasto premuto
+          
+          checkUserInput();
+          // ✅ CONVERTI: Esegui la stessa funzione del bottone
+          // Migliora l'usabilità!
+        }
+      });
+      
+      // ===== COME FUNZIONA IL CONVERTITORE =====
+      // 1. L'utente inserisce un numero decimale
+      // 2. Clicca "Convert" o preme Enter
+      // 3. Il numero viene validato
+      // 4. Se è 5, parte l'animazione dello stack
+      // 5. Altrimenti, mostra direttamente il risultato binario
+      // 6. L'input si svuota per una nuova conversione
+      
+      // ===== L'ALGORITMO DI CONVERSIONE =====
+      // Divide ripetutamente per 2 e prende i resti
+      // Li costruisce dal basso verso l'alto con la ricorsione
+      // Esempio: 5 → 5/2=2 resto 1 → 2/2=1 resto 0 → 1 (caso base)
+      // Risultato: "1" + "0" + "1" = "101"
+    </script>
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+### I Dieci Giorni di Pausa Produttiva
+
+Sono stati 10 giorni impegnativi ma allo stesso tempo l'alternare parecchie attività mi ha aiutato parecchio per rigenerarmi. <br />
+Ho completato il corso 4/7 di Google UX, spianato la strada per 3 esami universitari e completato questo progetto. <br />
+Mi sono reso conto che JavaScript ha incrementato enormemente la mia capacità di concentrazione. Tutte le attività che ho svolto mi sono sembrate più facili. Leggere 150 pagine di un esame, leggerne 100 di un altro, preparare insieme al mio team l'elaborato per la pitching session relativa a un esame, così come il corso 4 di Google riguardante la UX Research: le ho percepite tutte con un grado di complessità parecchio inferiore rispetto all'ultima volta.
+
+### Il Primo Riconoscimento Professionale
+
+Oltre a ciò ha innalzato la mia autostima anche il ricevimento di una proposta di colloquio su LinkedIn da parte di un'azienda che cerca un UX designer dicendomi che hanno trovato il mio profilo interessante. Ho declinato ringraziandola e rispondendole che sto investendo in questo periodo tutto il mio tempo in UX Google Certificate, JavaScript, università e lavoro, ma mandandole ugualmente il portfolio di freeCodeCamp e dicendole che mi piacerebbe ci risentissimo più avanti quando avrò completato questo percorso.
+
+### La Prospettiva della Fabbrica
+
+Tutte le fabbriche in cui ho lavorato come operaio hanno in comune la percezione che hanno gli operai stessi nei confronti degli impiegati. Qui chi lavora negli uffici viene visto come una figura mitologica, un essere dotato di capacità superiori e intelletto fuori dal comune, come un mondo irraggiungibile, spesso guardato con un misto tra ammirazione e invidia. <br />
+Per quanto cerchi di mantenere il mio pensiero critico, ammetto che anche le mie credenze sono state influenzate da questa percezione e sono felice che la proposta ricevuta mi abbia confermato che entrare in quel mondo è possibile.
+
+### La Scoperta della Ricorsione
+
+Comunque è stato un progetto molto bello! Le funzioni ricorsive sono state un concetto che non mi sarei nemmeno aspettato esistesse. Avevo dato per assodato dentro di me che per ogni scopo ci fosse il suo strumento specifico. Non credevo si potesse chiamare la stessa funzione dentro se stessa creando così un ciclo (è persino strano da dire). Per quegli scopi pensavo ci fossero solo while, for... Mi sto accorgendo che c'è dell'arte anche qui, in quello che dall'esterno appare come un campo puramente logico.
+
+### L'Ispirazione di Antirez
+
+In questi giorni nel tempo libero ho avuto il piacere di guardare alcuni video di un dio dell'informatica, ovvero Salvatore Sanfilippo (antirez). Stavo proprio qualche minuto fa leggendo il suo articolo relativo ai commenti ([https://antirez.com/news/124](https://antirez.com/news/124)), dove, mostrando i commenti che ha scritto in Redis, risale alle best practice per scriverli, affermando che scrivere buoni commenti è difficile tanto quanto scrivere buon codice. Ringrazio di averlo conosciuto proprio ora perché mettere in pratica i suoi insegnamenti fin da subito è molto più semplice che farlo più avanti con abitudini già consolidate.
+
+### Cosa Ho Imparato
+
+**Funzioni Ricorsive:**
+- Concetto di base case per terminare la ricorsione
+- Pattern ricorsivo: `return function(newInput) + operation`
+- `Math.floor(input / 2)` per divisione intera
+- Gestione del caso base con `input === 0 || input === 1`
+
+**Call Stack Visualization:**
+- Animazione del call stack per comprendere la ricorsione
+- `setTimeout()` per creare animazioni temporizzate
+- Visualizzazione di come le chiamate si impilano e poi si risolvono
+
+**Input Validation Avanzata:**
+- `parseInt()` per conversione stringa-numero
+- `isNaN()` per controllo validità numerica
+- Gestione di numeri negativi e input vuoti
+- Alert per feedback utente immediato
+
+**Event Handling:**
+- Event listener per click e keydown
+- Gestione del tasto Enter per submit alternativo
+- `e.key === "Enter"` per controllo tasti specifici
+
+**DOM Manipulation Dinamica:**
+- `innerHTML += template` per aggiungere elementi
+- `document.getElementById().remove()` per rimozione elementi
+- Manipolazione `textContent` per aggiornamenti dinamici
+
+**Algoritmi Numerici:**
+- Conversione decimale-binario con divisioni successive
+- Operatore modulo `%` per ottenere resto della divisione
+- Costruzione stringa risultato attraverso concatenazione
+
+### Riflessione
+
+JavaScript continua a sorprendermi. <br />
+La ricorsione ha aperto una nuova dimensione nel mio modo di pensare alla programmazione. <br />
+Non più solo cicli lineari, ma funzioni che si chiamano creando pattern potenti ed eleganti.
+
+---
+
+**Prossimo Progetto**: Costruire un Roman Numeral Converter (CERTIFICATION PROJECT!)

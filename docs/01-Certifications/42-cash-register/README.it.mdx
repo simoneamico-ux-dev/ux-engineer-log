@@ -1,0 +1,1875 @@
+---
+sidebar_position: 9
+sidebar_label: 'Cash Register'
+title: 'Cash Register'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Cash Register
+
+![Cash Register Demo](https://github.com/user-attachments/assets/3465b196-c7af-469f-ab9a-302d9a5f3bca)
+<img width="100%" alt="Mobile UI" src="https://github.com/user-attachments/assets/e932331a-a8ca-4e15-afb1-e16a40e5a6de" />
+<img width="100%" alt="Desktop UI" src="https://github.com/user-attachments/assets/a081700a-afbe-431f-8e15-bda28d27e329" />
+
+### Il Progetto
+
+Cash Register sviluppato con JavaScript vanilla e architettura OOP, implementando algoritmi greedy, calcoli precisi con interi e gestione completa dello stato della cassa. Un'applicazione che dimostra pattern di validazione, calcolo del resto ottimale e design skeuomorfico.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!-- DESIGN
+   ------
+   * This file contains the HTML structure of the Cash Register application.
+   * The architecture follows this flow:
+   * - Head with meta tags and the Google Font 'Roboto Mono', was chosen as the font to realistically simulate the
+   *   monospaced, dot-matrix style of a thermal receipt printer
+   * - Body containing a <main> element
+   * - Inside <main>, a primary <div> ".receipt-container" is used to display the SVG background (the paper receipt)
+   * - A child <div> ".receipt-content" is nested inside the container to hold all the actual UI content (text, form, etc.).
+
+   * The UI content itself is semantically structured into three main blocks:
+   * - .receipt-header: Contains the main title and terminal ID
+   * - .receipt-body: Contains the core interactive elements (form, input, button) and the output area (#change-due)
+   * - .receipt-footer: Contains the closing messages and transaction ID.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Cash Register</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- 
+            * freeCodeCamp instructions:
+            * - You should have an input element with an id of "cash"
+            * - You should have a div, span, or p element with an id of "change-due"
+            * - You should have a button element with an id of "purchase-btn"
+        -->
+ 
+        <main>
+
+            <div class="receipt-container">
+                <div class="receipt-content">
+                    <div class="receipt-header">
+                        <h1>CASH REGISTER</h1>
+                        <p>TERMINAL #09-FCC</p>
+                    </div>
+                    <div class="receipt-body">
+                        <div class="total">
+                            <p>TOTAL</p>
+                            <p>$19.50</p>
+                        </div>
+                        <p>-------------------------------</p>
+                        <form id="cash-register-form">
+                            <label for="cash">CASH PAID</label>
+                            <div class="user-input">
+                                <input type="number" id="cash" name="cash" placeholder="0.00" step="0.01" min="0" required>
+                            </div>
+                            <button type="button" id="purchase-btn" class="cta-button">PROCESS PAYMENT</button>
+                        </form>
+                        <p>-------------------------------</p>
+                        <div id="change-due"></div>
+                        <p>-------------------------------</p>
+                    </div>
+                    <div class="receipt-footer">
+                        <p class="tribute"><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer" aria-label="Visit freeCodeCamp website (opens in new tab)">Trans. ID: FCC-CERT-PROJECT-09</a></p>
+                        <p>THANKS FOR VISITING!</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <script src="script.js"></script>
+    </body>    
+
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+/* DESIGN
+   ------
+   * I chose to make the mobile version the default (Mobile-First approach),
+   * with the desktop version being an override in a single media query
+   * for the same reasons as the other project, namely:
+   * - Mobile traffic is dominant, so it should be the primary experience
+   * - Mobile devices load only the base CSS and variables, ensuring a
+   *   faster load time, which is critical for mobile connections.
+
+   * The architecture is a "Utility-First Variables" system:
+   * - All values (fonts, margins, sizes) are centralized in :root variables,
+   *   organized by UNIVERSAL and MOBILE (default)
+   * - The DESKTOP media query only overrides these variables, which keeps
+   *   the CSS ruleset minimal and highly maintainable.
+
+   * The layout is a hybrid:
+   * - A single ".receipt-container" is centered using position: absolute
+   *   to hold the SVG receipt background
+   * - Inside, ".receipt-content" uses display: flex with
+   *   flex-direction: column to manage the internal UI flow
+   * - Techniques (like radial-gradient for input dots)
+   *   are used to achieve the skeuomorphic "receipt" design.
+*/
+
+
+/* UNIVERSAL (common variables to mobile and desktop) */
+
+:root {
+    /* Background */ 
+    --background: url("https://github.com/user-attachments/assets/6b1734ff-6f1c-4c9f-8b5d-463daea23f85"); /* incredibly lightweight background, weighs only 70 KB */
+    --font-color: #000;
+    
+    /* Font */
+    --font-family: "Roboto Mono", monospace, sans-serif;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+
+    /* Color */
+    --input-dots-hover-button-color: #6b6b6a;
+    
+    /* Animation */
+    --result-animation: slideInFade 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+
+/* MOBILE (default version) */
+
+:root {
+    /* Receipt frame */
+    --receipt-image: url("https://github.com/user-attachments/assets/c16ae536-5d58-41d2-8712-d52244549792"); /* the receipt is also incredibly lightweight, only 2 KB, I created it in Figma */
+    --receipt-width: 377.702px;
+    --receipt-height: 662.999px;
+    --receipt-position-top: 50%;
+    --receipt-position-left: 50%;
+    --aspect-ratio: 377.702 / 662.999;
+
+    /* Layout & Position */
+    --receipt-padding: 0 54px 24px 44px;
+    --title-margin-top: 110px;
+    --subtitle-margin-top: 5px;
+    --total-1-margin-top: 85px;
+    --hyphens-1-margin-top: 0px;
+    --label-margin-top: 28px;
+    --input-margin-top: 4px;
+    --button-margin-top: 12px;
+    --hyphens-2-margin-top: 24px;
+    --result-margin-top: 3px;
+    --hyphens-3-margin-top: 5px;
+    --footer-block-margin-top: 16px; 
+    --tribute-margin-top: 2px;
+    --footer-margin-top: 12px;
+
+    /* Font Size */
+    --font-size-base: 18px;
+    --font-size-title: 24px;
+    --font-size-small: 16px;
+    --font-size-result: 14px;
+    --font-size-hyphens: 15px;
+    --font-size-x-small: 12px;
+
+    /* Input */
+    --input-padding: 5px 0;
+    --input-dots-width: 28%;
+    --input-dots-height: 2px;
+    --input-dots-size: 1.2px;
+    --input-dots-spacing: 8px;
+
+    /* Button */
+    --button-padding: 2px 0;
+    --button-underline-thickness: 1.5px;
+    --button-underline-offset: 8px;
+
+    /* Result */
+    --result-min-height: 2em;
+}
+
+
+/* Total CSS reset to avoid unexpected behavior across different browsers */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: var(--background);
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh; /* Fallback per browser che non supportano dvh */
+    min-height: 100dvh; /* L'unità del viewport dinamico per iOS */
+    background-attachment: fixed;
+    background-position: 65% 0%;
+    font-family: var(--font-family);
+    color: var(--font-color);
+    font-weight: var(--font-weight-light);
+    font-size: var(--font-size-base);
+    overflow: hidden;
+}
+
+.receipt-container {
+    background-image: var(--receipt-image);
+    position: absolute;
+    top: var(--receipt-position-top);
+    left: var(--receipt-position-left);
+    transform: translate(-50%, -50%);
+    width: var(--receipt-width);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    max-height: var(--receipt-height);
+    aspect-ratio: var(--aspect-ratio);
+}
+
+.receipt-content {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: var(--receipt-padding);
+}
+
+.receipt-header {
+    margin-top: var(--title-margin-top);
+    transform: rotate(0.674deg);
+}
+
+.receipt-footer {
+    width: 100%;
+    margin-top: var(--footer-block-margin-top);
+}
+
+h1 {
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-normal);
+}
+
+button {
+    font-weight: var(--font-weight-medium);
+}
+
+.receipt-header > p, .receipt-footer > p:nth-child(2) {
+    font-size: var(--font-size-small);
+}
+
+.receipt-header > p {
+    margin-top: var(--subtitle-margin-top);
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--total-1-margin-top);
+}
+
+.total > p {
+    margin-top: 0; 
+    font-weight: var(--font-weight-medium);
+}
+.total > p:nth-child(2) {
+    margin-top: 0;
+}
+
+.receipt-body > p {
+    font-size: var(--font-size-hyphens);
+}
+
+.receipt-body > p:nth-child(2) {
+    margin-top: var(--hyphens-1-margin-top);
+    transform: rotate(0.561deg);
+}
+.receipt-body > p:nth-child(4) {
+    margin-top: var(--hyphens-2-margin-top);
+    transform: rotate(0.371deg);
+}
+.receipt-body > p:nth-child(6) {
+    margin-top: var(--hyphens-3-margin-top);
+}
+
+
+#cash-register-form {
+    margin-top: var(--label-margin-top);
+    text-align: left;
+    font-weight: var(--font-weight-normal);
+}
+
+.user-input {
+    position: relative;
+}
+
+.user-input::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: var(--input-dots-width);
+    height: var(--input-dots-height);
+    background-image: radial-gradient(
+        circle,
+        var(--input-dots-hover-button-color) var(--input-dots-size),
+        transparent 1px
+    );
+    background-size: var(--input-dots-spacing) 100%;
+    background-repeat: repeat-x;
+    background-position: bottom left;
+}
+
+input {
+    margin-top: var(--input-margin-top);
+    border: none;
+    background: transparent;
+    width: 100%;
+    padding: var(--input-padding);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+input:focus {
+    outline: none;
+}
+
+/* these next two rules hide the typical input field arrows (0.00 ▲ ▼)
+ * on all WebKit-based browsers (like Safari, Chrome, Edge) */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] { /* does the same thing as the block above, but for Firefox */
+  -moz-appearance: textfield;
+}
+
+button {
+    margin-top: var(--button-margin-top);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    text-decoration: underline;
+    text-decoration-thickness: var(--button-underline-thickness);
+    text-underline-offset: var(--button-underline-offset);
+    padding: var(--button-padding);
+    color: black;
+}
+
+#change-due {
+    margin-top: var(--result-margin-top);
+    min-height: var(--result-min-height);
+    font-size: var(--font-size-result);
+    font-weight: var(--font-weight-medium);
+}
+
+.tribute {
+    margin-top: var(--tribute-margin-top);
+    font-size: var(--font-size-x-small);
+}
+.tribute a {
+    color: var(--font-color);
+    text-decoration: none;
+}
+
+.receipt-footer > p:nth-child(2) {
+    margin-top: var(--footer-margin-top);
+}
+
+
+button:hover {
+    color: var(--input-dots-hover-button-color);
+}
+
+
+/* DESKTOP (override of mobile variables and addition of receipt-frame) */
+
+@media (min-width: 600px) and (min-height: 850px) {
+
+:root {
+    /* Receipt frame */
+    --receipt-image: url("https://github.com/user-attachments/assets/272d1484-ae7b-4027-ae06-ce93290a36b5");
+    --receipt-width: 447.315px;
+    --receipt-height: 785.195px;
+    --receipt-position-top: 55%;
+    --receipt-position-left: 70%;
+    --aspect-ratio: 377.702 / 662.999;
+
+    /* Layout & Position */
+    --receipt-padding: 0 64px 24px 54px;
+    --title-margin-top: 130px;
+    --subtitle-margin-top: 10px;
+    --total-1-margin-top: 112px;
+    --label-margin-top: 32px;
+    --button-margin-top: 20px;
+    --hyphens-2-margin-top: 38px;
+    --result-margin-top: 12px;
+    --hyphens-3-margin-top: 12px;
+    --tribute-margin-top: 8px;
+    --footer-margin-top: 16px;
+
+    /* Font Size */
+    --font-size-hyphens: 17.7px;
+
+    /* Result */
+    --result-min-height: 2em;
+}
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+/* DESIGN
+   ------
+  * This file contains the validation logic for Cash Register
+  * The main architectural decisions include:
+  *
+  * - Class-based Architecture (OOP): The choice to use a `class CashRegister`
+  *   encapsulates all the operational logic. This approach promotes separation of
+  *   responsibilities, so while the `constructor` handles the initial preparation of the
+  *   drawer, the subsequent methods (`processPurchase`, `#calculateChange`) manage
+  *   the change calculation phases. This promotes a more organized and modular code.
+  *   I admit I used them in the first place because I wanted to practice, as it's a concept
+  *   that excited me from the first moment I encountered it, much like what happened with variables
+  *   in the CSS context. However, I first tried to understand if it was a good approach for this
+  *   specific case, and luckily, it turned out to be.
+  *
+  * - Calculations with integers: JavaScript doesn't count the way we do, for example, 0.1 + 0.2
+  *   for it is 0.30000000000000004 instead of 0.3). This is because while we humans count with ten
+  *   fingers (base-10), computers count using billions of ON/OFF switches (base-2); it's like trying
+  *   to weigh exactly 0.1 grams on a scale having only 1g, 2g, 4g, etc., weights available. 
+  *   You can't be perfectly precise, and this imprecision accumulates in calculations.
+  *   To get around this very problem, all monetary operations were performed using cents (integers).
+  *   The conversion from dollars to cents happens at the input, and the final re-conversion for the
+  *   output is in dollars. This approach guarantees maximum calculation precision.
+  *
+  * - Data structure (Map): I'm referring to the management of "cashInDrawer".
+  *   I used this approach because Map would give me more consistent code.
+  *   I'll add an example below to quickly show what I mean:
+  *   If I had used objects:
+  *   let pennies = drawer.PENNY;
+  *   let hundreds = drawer["ONE HUNDRED"];
+  *   Using Map:
+  *   let pennies = this.cashInDrawer.get("PENNY");
+  *   let hundreds = this.cashInDrawer.get("ONE HUNDRED");
+  *
+  * - Greedy algorithm for change: 
+  *   For the change calculation process, I used a greedy algorithm.
+  *   This means that, starting from the highest value denomination (thanks to the
+  *   pre-sorted "DENOMINATIONS"), the system tries to dispense the largest possible
+  *   number of that bill/coin, and then progressively moves to the lower value
+  *   ones, until the change due is depleted.
+  *   It's a strategy that makes the "best choice at the moment," and for standard monetary
+  *   systems, it always guarantees the optimal result. This isn't always true, in fact,
+  *   imagining an atypical monetary system with denominations of 1, 7, and 10 cents, to give
+  *   15 in change, the greedy approach would end up giving 6 coins (1x10 + 5x1), while the
+  *   optimal solution would have been 3 coins (1x7 + 1x7 + 1x1).
+  *   I had used the same approach in the Roman Numeral Converter.
+*/
+
+
+/* freeCodeCamp instructions:
+ * - You should have a global variable called price.
+ * - You should have a global variable called cid.
+ * - When #cash < price, alert "Customer does not have enough money to purchase the item".
+ * - When #cash == price, #change-due shows "No change due - customer paid with exact cash".
+ * - Test (price 19.5, cash 20, standard cid): #change-due shows "Status: OPEN QUARTER: $0.5".
+ * - Test (price 3.26, cash 100, standard cid): #change-due shows "Status: OPEN TWENTY: $60 TEN: 
+ *   $20 FIVE: $15 ONE: $1 QUARTER: $0.5 DIME: $0.2 PENNY: $0.04".
+ * - Test (price 19.5, cash 20, cid[PENNY, 0.01]): #change-due shows "Status: INSUFFICIENT_FUNDS".
+ * - Test (price 19.5, cash 20, cid[PENNY, 0.01, ONE, 1]): #change-due shows "Status: INSUFFICIENT_FUNDS".
+ * - Test (price 19.5, cash 20, cid[PENNY, 0.5]): #change-due shows "Status: CLOSED PENNY: $0.5".
+ */
+
+
+const cashInput = document.getElementById("cash");
+const purchaseBtn = document.getElementById("purchase-btn");
+const result = document.getElementById("change-due");
+
+let price = 19.5;
+let cid = [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]];
+const DENOMINATIONS = [["ONE HUNDRED", 10000], ["TWENTY", 2000], ["TEN", 1000], ["FIVE", 500], ["ONE", 100], ["QUARTER", 25], ["DIME", 10], ["NICKEL", 5], ["PENNY", 1]];
+
+class CashRegister {
+
+    constructor(cid) {
+        this.cashInDrawer = new Map();
+        this.totalInDrawer = 0; // Total cash in drawer, in cents
+
+        cid.forEach(([currencyName, amountInDollars]) => { // first we destructure
+            const amountInCents = Math.round(amountInDollars * 100); // round because it rounds to the nearest integer, e.g., 4.4 -> 4, 4.5 -> 5
+            this.cashInDrawer.set(currencyName, amountInCents); // sets the cash in drawer exactly like in cid but this time the values are in cents
+            this.totalInDrawer += amountInCents; // since we started from zero (this.totalInDrawer = 0) we now sum and assign with the values
+        });
+
+        this.sortedCashInDrawer = new Map(); // we create a new map because we want the values to be sorted like in DENOMINATIONS, so from largest to smallest (greedy algorithm)
+        DENOMINATIONS.forEach(([name, value]) => {
+          if(this.cashInDrawer.has(name)) { // we check if it actually exists in the this.cashInDrawer map
+            this.sortedCashInDrawer.set(name, this.cashInDrawer.get(name)); // we can't use += because it's only used when working with numbers, .set() is its equivalent when working with maps. So with .get() we read the value from the original map (cashInDrawer), while with set we write that value to the new map (sortedCashInDrawer)
+          }
+        })
+    }
+
+    processPurchase(priceInCents, cashGivenInCents) {
+      let changeDueInCents = cashGivenInCents - priceInCents;
+
+      const originalChangeDue = changeDueInCents;
+
+      if (this.totalInDrawer < changeDueInCents) {
+        return {status: "INSUFFICIENT_FUNDS", change: []};
+      }
+
+      else {
+        let changeToGive = []; // here we save the change to give
+        this.sortedCashInDrawer.forEach((amountInDrawer, name) => { // we iterate over the denominations in the drawer, from largest to smallest (thanks to sortedCashInDrawer)
+          let amountToReturn = 0;
+          const currencyValue = DENOMINATIONS.find(denom => denom[0] === name) [1]; // finds the value in cents of the current denomination (e.g., 2000 for "TWENTY")
+          let availableAmount = amountInDrawer; // copy of the available amount of money in the drawer
+
+          while (changeDueInCents >= currencyValue && availableAmount > 0) { // With this loop, it keeps taking this denomination as long as the change is sufficient and as long as there is some in the drawer
+            changeDueInCents -= currencyValue; // subtract from the total change due
+            availableAmount -= currencyValue; // subtract from the stock of this denomination
+            amountToReturn += currencyValue; // add to the partial total to return
+          }
+
+          if (amountToReturn > 0) {
+            changeToGive.push([name, amountToReturn / 100]) // we convert cents to dollars for the output
+          }
+        });
+        
+        if (changeDueInCents > 0) { // here we check if (after the loop) there is remaining change, which means we didn't have the right coins/bills
+          return {status: "INSUFFICIENT_FUNDS", change: []};
+        }
+
+        if (this.totalInDrawer === originalChangeDue) { // finally we check if the change due emptied the drawer, how? by comparing with the original total
+          return {status: "CLOSED", change: changeToGive};
+        }
+
+        else {
+          return {status: "OPEN", change: changeToGive};
+        }
+
+      }
+    }
+
+}
+
+
+cashInput.addEventListener("blur", () => { // I noticed that on my iPhone 12 mini, so on iOS, after clicking the input and then exiting, the receipt stays scrolled up, this way we bring it back to the original state
+  window.scrollTo(0, 0);
+});
+
+cashInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    purchaseBtn.click();
+  }
+});
+
+
+purchaseBtn.addEventListener("click", () => { 
+  const register = new CashRegister(cid); // We create a new class instance every time the user clicks the button, this is essential because the freeCodeCamp tests will modify the global "cid" variable to run the test
+  const cashGiven = parseFloat(cashInput.value); // we read the value from the input (which is a string, e.g., "20") and convert it to a number (e.g., 20.0) using parseFloat() to be able to do calculations
+
+  // we convert everything to cents for "safe" calculations
+  const priceInCents = Math.round(price * 100);
+  const cashGivenInCents = Math.round(cashGiven * 100); 
+
+  if (isNaN(cashGiven) || cashGiven <= 0 ) {
+    alert("Please enter a valid positive number");
+    cashInput.value = "";
+    return;
+  } 
+  
+  else if (cashGivenInCents < priceInCents) {
+    alert("Customer does not have enough money to purchase the item");
+    cashInput.value = "";
+    return;
+  }
+  
+  else if (cashGivenInCents === priceInCents) {
+    result.textContent = "No change due - customer paid with exact cash";
+    cashInput.value = "";
+    return;
+  }
+  
+  else { // this happens when the customer paid more, so we calculate the change
+    const transactionResult = register.processPurchase(priceInCents, cashGivenInCents); // This is the line that "activates" the main logic of our cash register. We call the 'processPurchase' method (the "brain" that does all the calculations) passing it the price and the cash received. The method will return a "report" (an object) that contains the 'status' of the transaction and, if necessary, the 'change' (the calculated change)
+    
+    if (transactionResult.status === "INSUFFICIENT_FUNDS") { // we format the output based on the status
+      result.textContent = "Status: INSUFFICIENT_FUNDS";
+    
+    } else if (transactionResult.status === "OPEN" || transactionResult.status === "CLOSED") {
+      let changeText = transactionResult.change.map(item => `${item[0]}: $${item[1]}`).join(" ");
+      result.textContent = `Status: ${transactionResult.status} ${changeText}`;
+    }
+    cashInput.value = "";
+  }
+});
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="spiegato">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 DICHIARAZIONE HTML5: "Benvenuti nel simulatore di registratore di cassa!" -->
+<!-- È come annunciare l'apertura di un negozio digitale dove avvengono transazioni monetarie! 💵 -->
+
+<html lang="en">
+<!-- 🌍 CONTENITORE PRINCIPALE: Il nostro scontrino virtuale e registratore di cassa -->
+<!-- lang="en" = Inglese, la lingua di questa interfaccia di transazione! -->
+
+    <head>
+        <!-- 🧠 IL CENTRO DI COMANDO: Dove prepariamo la nostra applicazione in stile scontrino -->
+        <!-- È come preparare il registratore di cassa prima di aprire il negozio! ⚙️ -->
+        
+        <title>Cash Register</title>
+        <!-- 📑 TITOLO SCHEDA: Semplice e diretto come l'intestazione di uno scontrino -->
+        <!-- Ciò che i clienti vedranno nella loro scheda del browser -->
+        
+        <meta charset="UTF-8" />
+        <!-- 📝 CODIFICA CARATTERI: UTF-8 supporta simboli di valuta da tutto il mondo! -->
+        <!-- Garantisce che possiamo visualizzare correttamente $ e altri simboli di valuta -->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 📱 DESIGN RESPONSIVE: "Questo registratore funziona su qualsiasi dispositivo!" -->
+        <!-- Garantisce che lo scontrino si adatti correttamente su tutti gli schermi, dai telefoni ai desktop -->
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <!-- 🚀 PRECONNESSIONI: Ottimizzazione della velocità per il caricamento dei font -->
+        <!-- Come preparare l'inchiostro prima di stampare lo scontrino - migliora le prestazioni -->
+        
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+        <!-- 🔤 CARICAMENTO FONT: Roboto Mono con diversi pesi -->
+        <!-- Questo font monospazio imita l'aspetto delle stampanti per scontrini tradizionali -->
+        <!-- I pesi 300, 400, 700 offrono opzioni chiaro, normale e grassetto -->
+        
+        <style>
+          /* 🎨 ===== STILI CSS: Il Design dello Scontrino ===== */
+          
+          /* 📱 ===== STRATEGIA RESPONSIVE ===== */
+          /* 🔄 APPROCCIO MOBILE-FIRST: Lo stile predefinito è per dispositivi mobili */
+          /* Proprio come i negozi moderni che danno priorità ai pagamenti da mobile! */
+          /* Il mobile carica solo CSS essenziale - più veloce su connessioni più lente */
+          
+          
+          /* 🌐 ===== VARIABILI UNIVERSALI: Condivise tra Tutti i Dispositivi ===== */
+          
+          :root {
+              /* 🖼️ SFONDO */ 
+              --background: url("https://github.com/user-attachments/assets/6b1734ff-6f1c-4c9f-8b5d-463daea23f85"); 
+              /* 🖼️ SFONDO LEGGERO: Immagine leggera di soli 70KB */
+              /* Crea uno sfondo con texture sottile per il nostro scontrino */
+              
+              --font-color: #000;
+              /* ⚫ TESTO NERO: Come nelle stampanti termiche per scontrini tradizionali */
+              
+              /* 🔤 TIPOGRAFIA */
+              --font-family: "Roboto Mono", monospace, sans-serif;
+              /* 🖨️ FONT MONOSPAZIO: Imita le stampanti termiche a matrice di punti */
+              /* Ogni carattere occupa la stessa larghezza, come negli scontrini reali */
+              
+              --font-weight-light: 300;
+              /* 🔤 PESO LEGGERO: Per testo secondario sottile */
+              
+              --font-weight-normal: 400;
+              /* 🔤 PESO NORMALE: Testo standard dello scontrino */
+              
+              --font-weight-medium: 500;
+              /* 🔤 PESO MEDIO: Per enfatizzare i dettagli importanti */
+          
+              /* 🎨 COLORI DI ACCENTO */
+              --input-dots-hover-button-color: #6b6b6a;
+              /* 🔘 GRIGIO SCURO: Per elementi interattivi al passaggio del mouse */
+              /* Cambio di colore sottile fornisce feedback senza essere appariscente */
+              
+              /* ✨ ANIMAZIONI */
+              --result-animation: slideInFade 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+              /* 🎞️ INGRESSO FLUIDO: Per visualizzare i risultati del calcolo del resto */
+              /* Crea una transizione piacevole quando appaiono i risultati */
+          }
+          
+          
+          /* 📱 ===== VERSIONE MOBILE: Impostazioni Predefinite ===== */
+          
+          :root {
+              /* 📃 DESIGN SCONTRINO */
+              --receipt-image: url("https://github.com/user-attachments/assets/c16ae536-5d58-41d2-8712-d52244549792"); 
+              /* 📃 SFONDO SCONTRINO: Ultraleggero, solo 2KB */
+              /* Creato su misura in Figma per sembrare carta termica */
+              
+              --receipt-width: 377.702px;
+              /* 📏 LARGHEZZA SCONTRINO: Dimensionato come uno scontrino standard */
+              
+              --receipt-height: 662.999px;
+              /* 📏 ALTEZZA SCONTRINO: Abbastanza alto per tutti i dettagli della transazione */
+              
+              --receipt-position-top: 50%;
+              --receipt-position-left: 50%;
+              /* 📍 POSIZIONAMENTO: Centrato nel viewport */
+              
+              --aspect-ratio: 377.702 / 662.999;
+              /* 📐 PROPORZIONI: Mantiene la forma durante il ridimensionamento */
+          
+              /* 📏 LAYOUT E POSIZIONAMENTO */
+              --receipt-padding: 0 54px 24px 44px;
+              /* 📏 SPAZIATURA INTERNA: Margini confortevoli all'interno dello scontrino */
+              /* L'asimmetria sinistra/destra imita le imperfezioni di stampa del mondo reale */
+              
+              --title-margin-top: 110px;
+              /* ⬆️ POSIZIONE TITOLO: Spazio nella parte superiore dello scontrino */
+              
+              --subtitle-margin-top: 5px;
+              /* ⬆️ SPAZIO SOTTOTITOLO: Piccolo divario dopo il titolo principale */
+              
+              --total-1-margin-top: 85px;
+              /* ⬆️ POSIZIONE TOTALE: Spazio significativo prima dell'importo */
+              
+              --hyphens-1-margin-top: 0px;
+              /* ⬆️ PRIMO SEPARATORE: Nessuno spazio aggiuntivo necessario */
+              
+              --label-margin-top: 28px;
+              /* ⬆️ SPAZIO ETICHETTA: Margine generoso prima delle sezioni di input */
+              
+              --input-margin-top: 4px;
+              /* ⬆️ POSIZIONE INPUT: Piccolo divario dopo la sua etichetta */
+              
+              --button-margin-top: 12px;
+              /* ⬆️ SPAZIO PULSANTE: Margine confortevole dopo il campo di input */
+              
+              --hyphens-2-margin-top: 24px;
+              /* ⬆️ SECONDO SEPARATORE: Separa input dai risultati */
+              
+              --result-margin-top: 3px;
+              /* ⬆️ POSIZIONE RISULTATO: Spazio minimo dopo il separatore */
+              
+              --hyphens-3-margin-top: 5px;
+              /* ⬆️ TERZO SEPARATORE: Dopo la visualizzazione dei risultati */
+              
+              --footer-block-margin-top: 16px; 
+              /* ⬆️ AREA FOOTER: Spazio prima della sezione finale */
+              
+              --tribute-margin-top: 2px;
+              /* ⬆️ SPAZIO ATTRIBUZIONE: Divario minimo per la riga di credito */
+              
+              --footer-margin-top: 12px;
+              /* ⬆️ MESSAGGIO FINALE: Spazio prima del ringraziamento finale */
+          
+              /* 🔤 DIMENSIONI TIPOGRAFICHE */
+              --font-size-base: 18px;
+              /* 📝 FONT BASE: Dimensione standard per la maggior parte del contenuto */
+              
+              --font-size-title: 24px;
+              /* 📝 DIMENSIONE TITOLO: Più grande per l'intestazione */
+              
+              --font-size-small: 16px;
+              /* 📝 TESTO PICCOLO: Per informazioni secondarie */
+              
+              --font-size-result: 14px;
+              /* 📝 TESTO RISULTATO: Leggermente più piccolo per informazioni dettagliate sul resto */
+              
+              --font-size-hyphens: 15px;
+              /* 📝 DIMENSIONE SEPARATORI: Per i separatori a linea tratteggiata */
+              
+              --font-size-x-small: 12px;
+              /* 📝 TESTO MINIMO: Per attribuzione e testo fine stampa */
+          
+              /* 📝 STILE INPUT */
+              --input-padding: 5px 0;
+              /* 📏 SPAZIATURA INPUT: Area confortevole per la digitazione */
+              
+              --input-dots-width: 28%;
+              /* 📏 LINEA PUNTEGGIATA: Larghezza della sottolineatura dell'input */
+              
+              --input-dots-height: 2px;
+              /* 📏 ALTEZZA PUNTO: Spessore della linea punteggiata */
+              
+              --input-dots-size: 1.2px;
+              /* 📏 DIMENSIONE PUNTO: Diametro di ciascun punto nella sottolineatura */
+              
+              --input-dots-spacing: 8px;
+              /* 📏 SPAZIATURA PUNTI: Distanza tra punti */
+          
+              /* 🔘 STILE PULSANTE */
+              --button-padding: 2px 0;
+              /* 📏 SPAZIATURA PULSANTE: Padding minimo per un aspetto pulito */
+              
+              --button-underline-thickness: 1.5px;
+              /* 📏 DIMENSIONE SOTTOLINEATURA: Spessore della sottolineatura del pulsante */
+              
+              --button-underline-offset: 8px;
+              /* 📏 POSIZIONE SOTTOLINEATURA: Spazio tra testo e sottolineatura */
+          
+              /* 📋 VISUALIZZAZIONE RISULTATO */
+              --result-min-height: 2em;
+              /* 📏 AREA RISULTATO: Altezza minima per la visualizzazione del resto */
+              /* Garantisce che lo spazio sia riservato anche prima dell'apparizione dei risultati */
+          }
+          
+          
+          
+          /* 🧹 ===== RESET CSS: Pulizia Totale ===== */
+          
+          * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              /* 📦 RESET UNIVERSALE: Garantisce un rendering coerente tra i browser */
+              /* Come azzerare il registratore di cassa all'inizio della giornata */
+          }
+          
+          body {
+              background-image: var(--background);
+              /* 🖼️ IMMAGINE DI SFONDO: Imposta lo sfondo con texture */
+              
+              background-size: cover;
+              /* 📏 COPERTURA COMPLETA: Lo sfondo si estende su tutto il viewport */
+              
+              background-repeat: no-repeat;
+              /* 🔄 NESSUNA RIPETIZIONE: L'immagine appare una sola volta */
+              
+              min-height: 100vh; /* Fallback per browser che non supportano dvh */
+              min-height: 100dvh; /* Altezza dinamica del viewport per browser mobile */
+              /* 📏 ALTEZZA COMPLETA: Assicura che lo sfondo riempia l'intero schermo */
+              /* dvh gestisce i cambiamenti della barra degli indirizzi dei browser mobile */
+              
+              background-attachment: fixed;
+              /* 📌 POSIZIONE FISSA: Lo sfondo rimane fermo durante lo scorrimento */
+              
+              background-position: 65% 0%;
+              /* 📍 POSIZIONAMENTO: Leggermente sfalsato per interesse visivo */
+              
+              font-family: var(--font-family);
+              /* 🔤 TIPOGRAFIA: Il font monospazio imita le stampanti per scontrini */
+              
+              color: var(--font-color);
+              /* ⚫ COLORE TESTO: Testo nero come la stampa termica */
+              
+              font-weight: var(--font-weight-light);
+              /* 🔤 PESO FONT: Peso leggero per la maggior parte del testo */
+              
+              font-size: var(--font-size-base);
+              /* 🔤 DIMENSIONE FONT: Dimensione base per il contenuto standard */
+              
+              overflow: hidden;
+              /* 🚫 PREVENZIONE OVERFLOW: Mantiene l'interfaccia pulita */
+          }
+          
+          .receipt-container {
+              background-image: var(--receipt-image);
+              /* 🧾 SFONDO SCONTRINO: L'immagine della carta termica */
+              
+              position: absolute;
+              /* 📍 POSIZIONAMENTO ASSOLUTO: Per un posizionamento preciso */
+              
+              top: var(--receipt-position-top);
+              left: var(--receipt-position-left);
+              /* 📍 CENTRATURA: Posizionato al centro del viewport */
+              
+              transform: translate(-50%, -50%);
+              /* 🔄 TRUCCO DI CENTRATURA: Si sposta della metà delle sue dimensioni per una centratura perfetta */
+              
+              width: var(--receipt-width);
+              /* 📏 LARGHEZZA SCONTRINO: Impostata dalla variabile */
+              
+              background-repeat: no-repeat;
+              /* 🔄 IMMAGINE SINGOLA: Lo sfondo appare una sola volta */
+              
+              background-size: 100% 100%;
+              /* 📏 ESTENSIONE COMPLETA: Lo sfondo copre l'intero contenitore */
+              
+              max-height: var(--receipt-height);
+              /* 📏 LIMITE ALTEZZA: Vincolo massimo di altezza */
+              
+              aspect-ratio: var(--aspect-ratio);
+              /* 📐 PROPORZIONI: Mantiene la forma dello scontrino durante il ridimensionamento */
+          }
+          
+          .receipt-content {
+              display: flex;
+              /* 📦 LAYOUT FLESSIBILE: Approccio moderno alla disposizione del contenuto */
+              
+              flex-direction: column;
+              /* 📦 CONTENUTO IMPILATO: Elementi disposti verticalmente */
+              
+              text-align: center;
+              /* ⚖️ TESTO CENTRATO: La maggior parte del contenuto dello scontrino è centrata */
+              
+              padding: var(--receipt-padding);
+              /* 📏 SPAZIATURA INTERNA: Margini confortevoli all'interno dello scontrino */
+          }
+          
+          .receipt-header {
+              margin-top: var(--title-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Spinge l'intestazione verso il basso dal bordo superiore */
+              
+              transform: rotate(0.674deg);
+              /* 🔄 LEGGERA ROTAZIONE: Crea un aspetto imperfetto, realistico */
+              /* Gli scontrini reali spesso si stampano leggermente storti */
+          }
+          
+          .receipt-footer {
+              width: 100%;
+              /* 📏 LARGHEZZA COMPLETA: Il footer si estende per l'intero scontrino */
+              
+              margin-top: var(--footer-block-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del footer */
+          }
+          
+          h1 {
+              font-size: var(--font-size-title);
+              /* 🔤 DIMENSIONE TITOLO: Più grande del testo standard */
+              
+              font-weight: var(--font-weight-normal);
+              /* 🔤 PESO NORMALE: Non troppo grassetto, come negli scontrini reali */
+          }
+          
+          button {
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Leggermente più grassetto per enfasi */
+          }
+          
+          .receipt-header > p, .receipt-footer > p:nth-child(2) {
+              font-size: var(--font-size-small);
+              /* 🔤 TESTO PIÙ PICCOLO: Per informazioni secondarie */
+              /* Si applica sia all'ID del terminale che al messaggio di ringraziamento */
+          }
+          
+          .receipt-header > p {
+              margin-top: var(--subtitle-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo spazio dopo il titolo */
+          }
+          
+          .total {
+            display: flex;
+            /* 📦 LAYOUT FLESSIBILE: Consente un facile allineamento */
+            
+            justify-content: space-between;
+            /* ⚖️ DISTANZIATI: "TOTALE" a sinistra, importo a destra */
+            
+            width: 100%;
+            /* 📏 LARGHEZZA COMPLETA: Si estende per l'intero scontrino */
+            
+            margin-top: var(--total-1-margin-top);
+            /* ⬆️ SPAZIATURA SUPERIORE: Divario significativo sopra il totale */
+          }
+          
+          .total > p {
+              margin-top: 0; 
+              /* ⬆️ NESSUNO SPAZIO EXTRA: Sovrascrive il margine predefinito del paragrafo */
+              
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Enfatizza l'importo totale */
+          }
+          .total > p:nth-child(2) {
+              margin-top: 0;
+              /* ⬆️ NESSUNO SPAZIO EXTRA: Mantiene l'allineamento con il testo a sinistra */
+          }
+          
+          .receipt-body > p {
+              font-size: var(--font-size-hyphens);
+              /* 🔤 DIMENSIONE SEPARATORI: Per le linee tratteggiate */
+          }
+          
+          .receipt-body > p:nth-child(2) {
+              margin-top: var(--hyphens-1-margin-top);
+              /* ⬆️ SPAZIO PRIMA: Spaziatura del primo separatore */
+              
+              transform: rotate(0.561deg);
+              /* 🔄 LEGGERA ROTAZIONE: Il primo separatore si inclina leggermente */
+              /* Crea un'imperfezione realistica come negli scontrini reali */
+          }
+          .receipt-body > p:nth-child(4) {
+              margin-top: var(--hyphens-2-margin-top);
+              /* ⬆️ SPAZIO PRIMA: Spaziatura del secondo separatore */
+              
+              transform: rotate(0.371deg);
+              /* 🔄 LEGGERA ROTAZIONE: Il secondo separatore si inclina in modo leggermente diverso */
+              /* Ogni separatore ha un'imperfezione unica */
+          }
+          .receipt-body > p:nth-child(6) {
+              margin-top: var(--hyphens-3-margin-top);
+              /* ⬆️ SPAZIO PRIMA: Spaziatura del terzo separatore */
+          }
+          
+          
+          #cash-register-form {
+              margin-top: var(--label-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del form */
+              
+              text-align: left;
+              /* ⬅️ ALLINEAMENTO A SINISTRA: I campi del form si allineano a sinistra */
+              
+              font-weight: var(--font-weight-normal);
+              /* 🔤 PESO NORMALE: Testo standard per gli elementi del form */
+          }
+          
+          .user-input {
+              position: relative;
+              /* 📍 POSIZIONAMENTO RELATIVO: Crea contesto per la sottolineatura punteggiata */
+          }
+          
+          .user-input::before {
+              content: "";
+              /* 🔍 CONTENUTO VUOTO: Crea un pseudo-elemento */
+              
+              position: absolute;
+              /* 📍 POSIZIONAMENTO ASSOLUTO: Posiziona con precisione la linea punteggiata */
+              
+              bottom: 0;
+              left: 0;
+              /* 📍 POSIZIONAMENTO: Nella parte inferiore del campo di input */
+              
+              width: var(--input-dots-width);
+              /* 📏 LARGHEZZA LINEA PUNTI: La larghezza parziale crea un effetto "compila il vuoto" */
+              
+              height: var(--input-dots-height);
+              /* 📏 ALTEZZA LINEA: Spessore della linea punteggiata */
+              
+              background-image: radial-gradient(
+                  circle,
+                  var(--input-dots-hover-button-color) var(--input-dots-size),
+                  transparent 1px
+              );
+              /* 🔵 EFFETTO LINEA PUNTEGGIATA: Crea singoli punti con gradiente radiale */
+              /* Simula intelligentemente una linea punteggiata di uno scontrino senza usare border */
+              
+              background-size: var(--input-dots-spacing) 100%;
+              /* 📏 SPAZIATURA PUNTI: Controlla la distanza tra i punti */
+              
+              background-repeat: repeat-x;
+              /* 🔄 RIPETIZIONE ORIZZONTALE: I punti si ripetono solo orizzontalmente */
+              
+              background-position: bottom left;
+              /* 📍 ALLINEAMENTO: I punti appaiono in basso a sinistra */
+          }
+          
+          input {
+              margin-top: var(--input-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo divario dopo l'etichetta */
+              
+              border: none;
+              /* 🚫 NESSUN BORDO: Aspetto pulito senza bordo predefinito */
+              
+              background: transparent;
+              /* 🔍 SFONDO TRASPARENTE: L'input si fonde con lo scontrino */
+              
+              width: 100%;
+              /* 📏 LARGHEZZA COMPLETA: L'input si estende per l'intera larghezza del form */
+              
+              padding: var(--input-padding);
+              /* 📏 SPAZIATURA INTERNA: Area confortevole per l'inserimento del testo */
+              
+              font-family: var(--font-family);
+              /* 🔤 FONT CORRISPONDENTE: Lo stesso monospazio del resto dello scontrino */
+              
+              font-size: var(--font-size-base);
+              /* 🔤 DIMENSIONE STANDARD: Coerente con altro testo */
+              
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Fa risaltare leggermente l'input */
+          }
+          
+          input:focus {
+              outline: none;
+              /* 🚫 NESSUN CONTORNO: Rimuove il contorno di focus predefinito del browser */
+              /* Mantiene l'estetica dello scontrino */
+          }
+          
+          /* 🔢 ===== NASCONDI CONTROLLI INPUT NUMERICI ===== */
+          
+          /* queste due regole nascondono le frecce tipiche dei campi numerici (0.00 ▲ ▼)
+           * su tutti i browser basati su WebKit (come Safari, Chrome, Edge)
+          */
+          input::-webkit-outer-spin-button,
+          input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            /* 🚫 NASCONDI FRECCE: Rimuove i controlli su/giù predefiniti */
+            
+            margin: 0;
+            /* 🚫 NESSUN MARGINE: Assicura che non venga riservato spazio per le frecce */
+          }
+          
+          input[type=number] { /* fa la stessa cosa del blocco sopra, ma per Firefox */
+            -moz-appearance: textfield;
+            /* 🚫 FIX FIREFOX: Rimuove gli spinner numerici in Firefox */
+            /* Fa apparire l'input come un normale campo di testo */
+          }
+          
+          button {
+              margin-top: var(--button-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del pulsante */
+              
+              background: transparent;
+              /* 🔍 SFONDO TRASPARENTE: Il pulsante si fonde con lo scontrino */
+              
+              border: none;
+              /* 🚫 NESSUN BORDO: Aspetto pulito senza bordo predefinito */
+              
+              cursor: pointer;
+              /* 👆 CURSORE A MANO: Mostra che l'elemento è cliccabile */
+              
+              font-family: var(--font-family);
+              /* 🔤 FONT CORRISPONDENTE: Lo stesso monospazio del resto dello scontrino */
+              
+              font-size: var(--font-size-base);
+              /* 🔤 DIMENSIONE STANDARD: Coerente con altro testo */
+              
+              text-decoration: underline;
+              /* ✏️ SOTTOLINEATO: Indicatore visivo che è un pulsante */
+              
+              text-decoration-thickness: var(--button-underline-thickness);
+              /* 📏 SPESSORE SOTTOLINEATURA: Controlla il peso della linea */
+              
+              text-underline-offset: var(--button-underline-offset);
+              /* 📏 SPAZIATURA SOTTOLINEATURA: Divario tra testo e sottolineatura */
+              
+              padding: var(--button-padding);
+              /* 📏 SPAZIATURA INTERNA: Padding minimo per un aspetto pulito */
+              
+              color: black;
+              /* ⚫ COLORE TESTO: Nero standard come il resto dello scontrino */
+          }
+          
+          #change-due {
+              margin-top: var(--result-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo divario prima dei risultati */
+              
+              min-height: var(--result-min-height);
+              /* 📏 ALTEZZA MINIMA: Riserva spazio anche quando vuoto */
+              
+              font-size: var(--font-size-result);
+              /* 🔤 DIMENSIONE RISULTATO: Leggermente più piccola per informazioni dettagliate */
+              
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Fa risaltare i risultati */
+          }
+          
+          .tribute {
+              margin-top: var(--tribute-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo divario prima dell'attribuzione */
+              
+              font-size: var(--font-size-x-small);
+              /* 🔤 DIMENSIONE MINIMA: Il testo di attribuzione è sottile */
+          }
+          .tribute a {
+              color: var(--font-color);
+              /* ⚫ COLORE LINK: Uguale al testo normale per sottigliezza */
+              
+              text-decoration: none;
+              /* 🚫 NESSUNA SOTTOLINEATURA: Aspetto pulito per il link di attribuzione */
+          }
+          
+          .receipt-footer > p:nth-child(2) {
+              margin-top: var(--footer-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del messaggio di ringraziamento */
+          }
+          
+          
+          button:hover {
+              color: var(--input-dots-hover-button-color);
+              /* 🔘 COLORE HOVER: Sottile cambio di colore al passaggio del mouse */
+              /* Fornisce feedback visivo senza rompere l'estetica dello scontrino */
+          }
+          
+          
+          /* 🖥️ ===== VERSIONE DESKTOP: Scontrino Migliorato ===== */
+          
+          @media (min-width: 600px) and (min-height: 850px) {
+          /* 📐 SOGLIA DIMENSIONI: Gli stili desktop si attivano su schermi più grandi */
+          
+          :root {
+              /* 📃 DESIGN SCONTRINO */
+              --receipt-image: url("https://github.com/user-attachments/assets/272d1484-ae7b-4027-ae06-ce93290a36b5");
+              /* 📃 SCONTRINO DESKTOP: Immagine diversa per schermi più grandi */
+              
+              --receipt-width: 447.315px;
+              /* 📏 LARGHEZZA AUMENTATA: Scontrino più largo per desktop */
+              
+              --receipt-height: 785.195px;
+              /* 📏 ALTEZZA AUMENTATA: Scontrino più alto per desktop */
+              
+              --receipt-position-top: 55%;
+              /* ⬆️ POSIZIONE VERTICALE: Leggermente più in basso rispetto al centro */
+              
+              --receipt-position-left: 70%;
+              /* ⬅️ POSIZIONE ORIZZONTALE: Decentrato verso destra */
+              /* Crea un layout asimmetrico per interesse visivo */
+              
+              --aspect-ratio: 377.702 / 662.999;
+              /* 📐 PROPORZIONI: Mantiene la forma durante il ridimensionamento */
+          
+              /* 📏 LAYOUT E POSIZIONE: Regolati per schermi più grandi */
+              --receipt-padding: 0 64px 24px 54px;
+              /* 📏 PADDING AUMENTATO: Più spazio attorno al contenuto */
+              
+              --title-margin-top: 130px;
+              /* ⬆️ PIÙ SPAZIO SUPERIORE: Il titolo si posiziona più in basso sul desktop */
+              
+              --subtitle-margin-top: 10px;
+              /* ⬆️ PIÙ SPAZIO SOTTOTITOLO: Divario aumentato tra gli elementi del titolo */
+              
+              --total-1-margin-top: 112px;
+              /* ⬆️ PIÙ SPAZIO TOTALE: Divario maggiore prima della riga del totale */
+              
+              --label-margin-top: 32px;
+              /* ⬆️ PIÙ SPAZIO ETICHETTA: Spaziatura aumentata prima delle etichette */
+              
+              --button-margin-top: 20px;
+              /* ⬆️ PIÙ SPAZIO PULSANTE: Divario maggiore prima dei pulsanti */
+              
+              --hyphens-2-margin-top: 38px;
+              /* ⬆️ PIÙ SPAZIO SEPARATORE: Spaziatura aumentata per i separatori */
+              
+              --result-margin-top: 12px;
+              /* ⬆️ PIÙ SPAZIO RISULTATO: Divario maggiore prima dei risultati */
+              
+              --hyphens-3-margin-top: 12px;
+              /* ⬆️ PIÙ SPAZIO SEPARATORE: Spaziatura aumentata dopo i risultati */
+              
+              --tribute-margin-top: 8px;
+              /* ⬆️ PIÙ SPAZIO TRIBUTO: Divario maggiore prima dell'attribuzione */
+              
+              --footer-margin-top: 16px;
+              /* ⬆️ PIÙ SPAZIO FOOTER: Spaziatura aumentata nel footer */
+          
+              /* 🔤 REGOLAZIONI TIPOGRAFICHE */
+              --font-size-hyphens: 17.7px;
+              /* 🔤 SEPARATORI PIÙ GRANDI: Dimensione aumentata per le linee divisorie */
+          
+              /* 📋 VISUALIZZAZIONE RISULTATO */
+              --result-min-height: 2em;
+              /* 📏 AREA RISULTATO: Stessa altezza minima per coerenza */
+          }
+          }
+        </style>
+    </head>
+
+    <body>
+        <!-- 💵 ===== L'INTERFACCIA DEL REGISTRATORE DI CASSA! ===== -->
+        
+        <main>
+            <!-- 📋 CONTENITORE PRINCIPALE: L'intera applicazione -->
+            <!-- Come l'area del bancone di un negozio dove avvengono le transazioni -->
+            
+            <div class="receipt-container">
+                <!-- 🧾 SFONDO SCONTRINO: La simulazione della carta termica -->
+                <!-- Questo crea la cornice visiva per il nostro registratore di cassa -->
+                
+                <div class="receipt-content">
+                    <!-- 📝 CONTENUTO SCONTRINO: Tutti gli elementi testuali e interattivi -->
+                    <!-- Tutto ciò che verrebbe stampato su uno scontrino reale -->
+                    
+                    <div class="receipt-header">
+                        <!-- 📑 PARTE SUPERIORE SCONTRINO: Nome negozio e info terminale -->
+                        
+                        <h1>CASH REGISTER</h1>
+                        <!-- 🏪 NOME NEGOZIO: Titolo in grassetto nella parte superiore -->
+                        
+                        <p>TERMINAL #09-FCC</p>
+                        <!-- 🔢 ID TERMINALE: Identifica il punto vendita -->
+                        <!-- Come il numero del registratore di cassa in un vero negozio -->
+                    </div>
+                    
+                    <div class="receipt-body">
+                        <!-- 📝 AREA PRINCIPALE SCONTRINO: Dettagli della transazione e input -->
+                        
+                        <div class="total">
+                            <!-- 💰 IMPORTO ACQUISTO: Il costo prima del pagamento -->
+                            
+                            <p>TOTAL</p>
+                            <!-- 📊 ETICHETTA TOTALE: Testo allineato a sinistra -->
+                            
+                            <p>$19.50</p>
+                            <!-- 💵 IMPORTO DOVUTO: Prezzo allineato a destra -->
+                            <!-- Il costo fisso che deve essere pagato -->
+                        </div>
+                        
+                        <p>-------------------------------</p>
+                        <!-- 📏 LINEA DIVISORIA: Separa visivamente le sezioni -->
+                        <!-- Fatta di trattini come nelle vecchie stampanti per scontrini -->
+                        
+                        <form id="cash-register-form">
+                            <!-- 📋 FORM DI INPUT: Raccoglie informazioni sul pagamento -->
+                            
+                            <label for="cash">CASH PAID</label>
+                            <!-- 🏷️ ETICHETTA INPUT: Descrive cosa inserire -->
+                            
+                            <div class="user-input">
+                                <!-- 📝 CONTENITORE INPUT: Contiene il campo per il contante -->
+                                
+                                <input type="number" id="cash" name="cash" placeholder="0.00" step="0.01" min="0" required>
+                                <!-- 💵 INPUT CONTANTE: Dove l'utente inserisce l'importo del pagamento -->
+                                <!-- type="number" = solo input numerico -->
+                                <!-- step="0.01" = consente centesimi (due decimali) -->
+                                <!-- min="0" = impedisce valori negativi -->
+                                <!-- required = il campo non può essere vuoto -->
+                            </div>
+                            
+                            <button type="button" id="purchase-btn" class="cta-button">PROCESS PAYMENT</button>
+                            <!-- 🔘 PULSANTE AZIONE: Attiva l'elaborazione del pagamento -->
+                            <!-- type="button" impedisce l'invio del form -->
+                            <!-- Cliccando questo si calcola il resto dovuto -->
+                        </form>
+                        
+                        <p>-------------------------------</p>
+                        <!-- 📏 LINEA DIVISORIA: Separa input dai risultati -->
+                        
+                        <div id="change-due"></div>
+                        <!-- 📋 AREA RISULTATI: Dove appare il calcolo del resto -->
+                        <!-- Inizialmente vuota, riempita da JavaScript -->
+                        
+                        <p>-------------------------------</p>
+                        <!-- 📏 LINEA DIVISORIA: Separa i risultati dal footer -->
+                    </div>
+                    
+                    <div class="receipt-footer">
+                        <!-- 📑 PARTE INFERIORE SCONTRINO: Crediti e messaggio finale -->
+                        
+                        <p class="tribute"><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer" aria-label="Visita il sito web di freeCodeCamp (si apre in una nuova scheda)">Trans. ID: FCC-CERT-PROJECT-09</a></p>
+                        <!-- 🔢 ID TRANSAZIONE: Numero di riferimento univoco -->
+                        <!-- Collega a freeCodeCamp come attribuzione -->
+                        <!-- target="_blank" si apre in una nuova scheda -->
+                        <!-- rel="noopener noreferrer" previene problemi di sicurezza -->
+                        
+                        <p>THANKS FOR VISITING!</p>
+                        <!-- 👋 MESSAGGIO DI CHIUSURA: Saluto amichevole -->
+                        <!-- Come il "Grazie per il tuo acquisto" sugli scontrini reali -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+          /* 💵 ===== JAVASCRIPT: La Logica del Registratore di Cassa! ===== */
+          
+          /* 📋 ===== ARCHITETTURA APPLICAZIONE ===== */
+          /* Utilizza la programmazione orientata agli oggetti (OOP) con un approccio basato su classi */
+          /* Proprio come un vero registratore di cassa ha un sistema chiaro per la gestione del denaro */
+          
+          /* 🔢 ===== GESTIONE DEI NUMERI ===== */
+          /* Tutti i calcoli monetari utilizzano centesimi (interi) anziché dollari (decimali) */
+          /* Questo evita i problemi di precisione in virgola mobile di JavaScript */
+          /* Come contare i centesimi invece dei dollari per una precisione perfetta! */
+          
+          /* 💰 ===== CALCOLO DEL RESTO ===== */
+          /* Utilizza un algoritmo greedy - inizia dalle denominazioni più grandi */
+          /* Proprio come un cassiere che consegna banconote da $20 prima di quelle da $1 */
+          
+          
+          /* 🔗 ===== RIFERIMENTI DOM: Collegamento all'HTML ===== */
+          
+          const cashInput = document.getElementById("cash");
+          /* 💵 INPUT CONTANTE: Riferimento al campo pagamento */
+          
+          const purchaseBtn = document.getElementById("purchase-btn");
+          /* 🔘 PULSANTE ACQUISTO: Riferimento al pulsante azione */
+          
+          const result = document.getElementById("change-due");
+          /* 📋 VISUALIZZAZIONE RISULTATO: Dove appaiono le informazioni sul resto */
+          
+          
+          /* 💰 ===== VARIABILI GLOBALI: Dati Principali della Transazione ===== */
+          
+          let price = 19.5;
+          /* 💵 PREZZO ARTICOLO: Costo dell'acquisto ($19.50) */
+          
+          let cid = [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]];
+          /* 💰 CONTANTI NEL CASSETTO: Valuta disponibile nel registratore */
+          /* Formato: [["DENOMINAZIONE", IMPORTO], ...] */
+          /* Come il conteggio iniziale del contante all'inizio di un turno */
+          
+          const DENOMINATIONS = [["ONE HUNDRED", 10000], ["TWENTY", 2000], ["TEN", 1000], ["FIVE", 500], ["ONE", 100], ["QUARTER", 25], ["DIME", 10], ["NICKEL", 5], ["PENNY", 1]];
+          /* 💵 VALORI VALUTA: Denominazioni in centesimi, ordinate dalla più grande alla più piccola */
+          /* Questo determina l'ordine di distribuzione del resto */
+          /* I valori sono in centesimi (100 × valore in dollari) per precisione */
+          
+          
+          /* 🏧 ===== CLASSE REGISTRATORE DI CASSA: La Logica Principale ===== */
+          
+          class CashRegister {
+              /* 🏧 DEFINIZIONE CLASSE: Modello per l'oggetto registratore */
+              /* Come il manuale di istruzioni per l'utilizzo del cassetto portamonete */
+          
+              constructor(cid) {
+                  /* 🔧 INIZIALIZZAZIONE: Configura il cassetto portamonete */
+                  /* Come aprire il registratore all'inizio della giornata */
+                  
+                  this.cashInDrawer = new Map();
+                  /* 🗃️ DEPOSITO DENARO: Usa Map per accesso coerente alle chiavi */
+                  /* Pensa a questo come ai compartimenti organizzati in un cassetto portamonete */
+                  
+                  this.totalInDrawer = 0; // Totale contanti nel cassetto, in centesimi
+                  /* 💰 TOTALE CORRENTE: Tiene traccia del totale denaro disponibile */
+                  /* Aggiungeremo a questo mentre contiamo ogni denominazione */
+          
+                  cid.forEach(([currencyName, amountInDollars]) => { // prima facciamo destrutturazione
+                      /* 🔄 ITERA ATTRAVERSO LE VALUTE: Elabora ogni denominazione */
+                      /* La destrutturazione estrae nome e importo per un uso più semplice */
+                      
+                      const amountInCents = Math.round(amountInDollars * 100); // round perché arrotonda all'intero più vicino, es. 4.4 -> 4, 4.5 -> 5
+                      /* 🔢 CONVERTI IN CENTESIMI: Moltiplica per 100 e arrotonda */
+                      /* Questo previene errori di virgola mobile in JavaScript */
+                      
+                      this.cashInDrawer.set(currencyName, amountInCents); // imposta i contanti nel cassetto esattamente come in cid ma questa volta i valori sono in centesimi
+                      /* 💰 MEMORIZZA NELLA MAPPA: Salva l'importo per ogni denominazione */
+                      
+                      this.totalInDrawer += amountInCents; // poiché siamo partiti da zero (this.totalInDrawer = 0) ora sommiamo e assegniamo con i valori
+                      /* 💰 AGGIUNGI AL TOTALE: Mantieni una somma corrente di tutto il contante */
+                  });
+          
+                  this.sortedCashInDrawer = new Map(); // creiamo una nuova mappa perché vogliamo che i valori siano ordinati come in DENOMINATIONS, quindi dal più grande al più piccolo (algoritmo greedy)
+                  /* 🗂️ DEPOSITO ORDINATO: Organizza il denaro dal più grande al più piccolo */
+                  /* Questo è cruciale per il corretto funzionamento dell'algoritmo greedy */
+                  
+                  DENOMINATIONS.forEach(([name, value]) => {
+                    /* 🔄 ITERA DENOMINAZIONI: Elabora in ordine discendente */
+                    
+                    if(this.cashInDrawer.has(name)) { // verifichiamo se esiste effettivamente nella mappa this.cashInDrawer
+                      /* 🔍 VERIFICA ESISTENZA: Aggiungi solo le denominazioni che abbiamo effettivamente */
+                      
+                      this.sortedCashInDrawer.set(name, this.cashInDrawer.get(name)); // non possiamo usare += perché si usa solo quando si lavora con numeri, .set() è il suo equivalente quando si lavora con mappe. Quindi con .get() leggiamo il valore dalla mappa originale (cashInDrawer), mentre con set scriviamo quel valore nella nuova mappa (sortedCashInDrawer)
+                      /* 💰 MEMORIZZA IN ORDINE: Aggiungi alla collezione ordinata */
+                      /* Questo crea la nostra copia di lavoro nell'ordine corretto */
+                    }
+                  })
+              }
+          
+              processPurchase(priceInCents, cashGivenInCents) {
+                  /* 🧮 ELABORAZIONE PAGAMENTO: Calcola il resto in base al pagamento */
+                  /* Questa è la funzione principale che gestisce la transazione */
+                  
+                let changeDueInCents = cashGivenInCents - priceInCents;
+                /* 🧮 CALCOLA RESTO: Sottrai il prezzo dal pagamento */
+                /* In centesimi per evitare problemi di virgola mobile */
+          
+                const originalChangeDue = changeDueInCents;
+                /* 📋 SALVA ORIGINALE: Conserva il valore iniziale per confronto successivo */
+                /* Ne avremo bisogno per determinare se il cassetto è stato svuotato */
+          
+                if (this.totalInDrawer < changeDueInCents) {
+                  /* 🚫 CONTROLLO FONDI INSUFFICIENTI: Non abbastanza soldi per dare il resto */
+                  
+                  return {status: "INSUFFICIENT_FUNDS", change: []};
+                  /* 🚫 RISULTATO ERRORE: Impossibile completare la transazione */
+                  /* Restituisce un oggetto con stato e array di resto vuoto */
+                }
+          
+                else {
+                  /* ✅ FONDI SUFFICIENTI: Continua con il calcolo del resto */
+                  
+                  let changeToGive = []; // qui salviamo il resto da dare
+                  /* 📋 COLLEZIONE RESTO: Conterrà le banconote/monete da restituire */
+                  
+                  this.sortedCashInDrawer.forEach((amountInDrawer, name) => { // iteriamo sulle denominazioni nel cassetto, dalla più grande alla più piccola (grazie a sortedCashInDrawer)
+                    /* 🔄 ITERA DENOMINAZIONI: Elabora dalla più grande alla più piccola */
+                    /* Questo è l'algoritmo greedy in azione */
+                    
+                    let amountToReturn = 0;
+                    /* 💰 CONTATORE CORRENTE: Tiene traccia dell'importo di questa denominazione da restituire */
+                    
+                    const currencyValue = DENOMINATIONS.find(denom => denom[0] === name) [1]; // trova il valore in centesimi della denominazione corrente (es. 2000 per "TWENTY")
+                    /* 🔢 OTTIENI VALORE DENOMINAZIONE: Trova il valore in centesimi di questa valuta */
+                    /* Per esempio: "TWENTY" vale 2000 centesimi */
+                    
+                    let availableAmount = amountInDrawer; // copia dell'importo disponibile di denaro nel cassetto
+                    /* 💰 CONTANTE DISPONIBILE: Quanto di questa denominazione abbiamo */
+          
+                    while (changeDueInCents >= currencyValue && availableAmount > 0) { // Con questo ciclo, continua a prendere questa denominazione finché il resto è sufficiente e finché ce n'è nel cassetto
+                      /* 🔄 PRENDI BANCONOTE/MONETE FINCHÉ POSSIBILE: */
+                      /* Continua finché la denominazione si adatta al resto necessario */
+                      /* E abbiamo ancora questa denominazione disponibile */
+                      
+                      changeDueInCents -= currencyValue; // sottrai dal resto totale dovuto
+                      /* 🧮 RIDUCI RESTO NECESSARIO: La denominazione è stata assegnata */
+                      
+                      availableAmount -= currencyValue; // sottrai dalla scorta di questa denominazione
+                      /* 🧮 RIDUCI DISPONIBILE: Abbiamo usato una di queste banconote/monete */
+                      
+                      amountToReturn += currencyValue; // aggiungi al totale parziale da restituire
+                      /* 🧮 AUMENTA RESTITUZIONE: Conteggia questo nel nostro resto da dare */
+                    }
+          
+                    if (amountToReturn > 0) {
+                      /* 💰 VERIFICA SE USATA: Abbiamo usato qualcuna di questa denominazione? */
+                      
+                      changeToGive.push([name, amountToReturn / 100]) // convertiamo i centesimi in dollari per l'output
+                      /* 📋 AGGIUNGI ALL'ELENCO DEL RESTO: Includi questo nel resto da restituire */
+                      /* Riconverte in dollari per un output leggibile dall'uomo */
+                    }
+                  });
+                  
+                  if (changeDueInCents > 0) { // qui verifichiamo se (dopo il ciclo) c'è resto rimanente, il che significa che non avevamo le monete/banconote giuste
+                    /* 🚫 RESTO IMPOSSIBILE: Impossibile dare il resto esatto con le denominazioni disponibili */
+                    
+                    return {status: "INSUFFICIENT_FUNDS", change: []};
+                    /* 🚫 RISULTATO ERRORE: Impossibile completare la transazione */
+                  }
+          
+                  if (this.totalInDrawer === originalChangeDue) { // infine verifichiamo se il resto dovuto ha svuotato il cassetto, come? confrontando con il totale originale
+                    /* 🔄 CASSETTO SVUOTATO: Il resto equivale a tutti i soldi nel cassetto */
+                    
+                    return {status: "CLOSED", change: changeToGive};
+                    /* 🔒 RISULTATO CHIUSO: Il cassetto è ora vuoto */
+                    /* Questo è un caso speciale nella sfida */
+                  }
+          
+                  else {
+                    /* ✅ RESTO NORMALE: Il cassetto ha ancora soldi rimasti */
+                    
+                    return {status: "OPEN", change: changeToGive};
+                    /* ✅ RISULTATO SUCCESSO: Transazione completata, cassetto ancora operativo */
+                  }
+          
+                }
+              }
+          
+          }
+          
+          
+          /* 📱 ===== CORREZIONI MOBILE: Regolazioni Specifiche per Piattaforma ===== */
+          
+          cashInput.addEventListener("blur", () => { // Ho notato che sul mio iPhone 12 mini, quindi su iOS, dopo aver cliccato l'input e poi esserne usciti, lo scontrino rimane scorrevole verso l'alto, in questo modo lo riportiamo allo stato originale
+            /* 📱 GESTISCI BLUR INPUT: Quando l'utente finisce con il campo di input */
+            /* Correzione specifica per problemi di posizione di scorrimento iOS */
+            
+            window.scrollTo(0, 0);
+            /* 📜 RESET SCORRIMENTO: Sposta il viewport di nuovo in cima */
+            /* Impedisce allo scontrino di rimanere scorrevole su mobile */
+          });
+          
+          /* ⌨️ ===== SUPPORTO TASTIERA: Esperienza Utente Migliorata ===== */
+          
+          cashInput.addEventListener("keydown", (event) => {
+            /* ⌨️ RILEVAMENTO TASTIERA: Ascolta le pressioni dei tasti nell'input */
+            
+            if (event.key === "Enter") {
+              /* ⏎ TASTO INVIO: L'utente ha premuto Invio per inviare */
+              
+              event.preventDefault();
+              /* 🛑 PREVIENI DEFAULT: Ferma il comportamento di invio del form */
+              
+              purchaseBtn.click();
+              /* 🔘 ATTIVA PULSANTE: Simula il clic sul pulsante di elaborazione */
+              /* Consente il funzionamento solo da tastiera */
+            }
+          });
+          
+          
+          /* 🔘 ===== GESTORE CLIC PULSANTE: Elabora la Transazione ===== */
+          
+          purchaseBtn.addEventListener("click", () => { 
+            /* 🖱️ CLIC PULSANTE: L'utente vuole elaborare il pagamento */
+            
+            const register = new CashRegister(cid); // Creiamo una nuova istanza di classe ogni volta che l'utente clicca il pulsante, questo è essenziale perché i test di freeCodeCamp modificheranno la variabile globale "cid" per eseguire il test
+            /* 🏧 CREA REGISTRATORE: Nuova istanza per questa transazione */
+            /* L'istanza fresca garantisce uno stato accurato per ogni caso di test */
+            
+            const cashGiven = parseFloat(cashInput.value); // leggiamo il valore dall'input (che è una stringa, es. "20") e lo convertiamo in un numero (es. 20.0) usando parseFloat() per poter fare calcoli
+            /* 💵 OTTIENI PAGAMENTO: Converti la stringa di input in numero */
+            
+            // convertiamo tutto in centesimi per calcoli "sicuri"
+            const priceInCents = Math.round(price * 100);
+            const cashGivenInCents = Math.round(cashGiven * 100); 
+            /* 🔢 CONVERTI IN CENTESIMI: Evita errori di calcolo in virgola mobile */
+            /* La moltiplicazione e l'arrotondamento garantiscono valori esatti in centesimi */
+          
+            if (isNaN(cashGiven) || cashGiven <= 0 ) {
+              /* 🚫 CONTROLLI INPUT NON VALIDO: */
+              /* Non è un numero OPPURE valore negativo/zero */
+              
+              alert("Please enter a valid positive number");
+              /* ⚠️ MESSAGGIO ERRORE: Informa l'utente del problema */
+              
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per un nuovo tentativo */
+              
+              return;
+              /* 🛑 INTERROMPI ESECUZIONE: Non continuare l'elaborazione */
+            } 
+            
+            else if (cashGivenInCents < priceInCents) {
+              /* 🚫 PAGAMENTO INSUFFICIENTE: Il cliente non ha pagato abbastanza */
+              
+              alert("Customer does not have enough money to purchase the item");
+              /* ⚠️ MESSAGGIO ERRORE: Informa l'utente del problema */
+              
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per un nuovo tentativo */
+              
+              return;
+              /* 🛑 INTERROMPI ESECUZIONE: Non continuare l'elaborazione */
+            }
+            
+            else if (cashGivenInCents === priceInCents) {
+              /* ⚖️ PAGAMENTO ESATTO: Non è necessario resto */
+              
+              result.textContent = "No change due - customer paid with exact cash";
+              /* 📝 MESSAGGIO SUCCESSO: Informa che non è necessario resto */
+              
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per un nuovo tentativo */
+              
+              return;
+              /* 🛑 INTERROMPI ESECUZIONE: Non è necessario il calcolo del resto */
+            }
+            
+            else { // questo accade quando il cliente ha pagato di più, quindi calcoliamo il resto
+              /* 💰 RESTO NECESSARIO: Calcola e visualizza il resto */
+              
+              const transactionResult = register.processPurchase(priceInCents, cashGivenInCents); // Questa è la riga che "attiva" la logica principale del nostro registratore di cassa. Chiamiamo il metodo 'processPurchase' (il "cervello" che fa tutti i calcoli) passandogli il prezzo e il contante ricevuto. Il metodo restituirà un "rapporto" (un oggetto) che contiene lo 'status' della transazione e, se necessario, il 'change' (il resto calcolato)
+              /* 🧮 ELABORA TRANSAZIONE: Chiama il metodo di calcolo principale */
+              /* Questo determina se il resto è possibile e calcola le denominazioni */
+              
+              if (transactionResult.status === "INSUFFICIENT_FUNDS") { // formattiamo l'output in base allo stato
+                /* 🚫 FONDI INSUFFICIENTI: Impossibile dare il resto esatto */
+                
+                result.textContent = "Status: INSUFFICIENT_FUNDS";
+                /* 📝 MESSAGGIO ERRORE: Informa che la transazione è fallita */
+              
+              } else if (transactionResult.status === "OPEN" || transactionResult.status === "CLOSED") {
+                /* ✅ TRANSAZIONE OK: O resto normale o cassetto svuotato */
+                
+                let changeText = transactionResult.change.map(item => `${item[0]}: $${item[1]}`).join(" ");
+                /* 📝 FORMATTA RESTO: Crea elenco leggibile delle denominazioni */
+                /* Converte [["QUARTER", 0.5]] in "QUARTER: $0.5" */
+                
+                result.textContent = `Status: ${transactionResult.status} ${changeText}`;
+                /* 📝 MESSAGGIO SUCCESSO: Mostra stato e dettaglio del resto */
+              }
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per una nuova transazione */
+            }
+          });
+        </script>
+    </body>    
+</html>
+
+<!-- 🎯 ===== RIEPILOGO DEL REGISTRATORE DI CASSA ===== -->
+<!-- 
+💵 ARCHITETTURA APP:
+│
+├── 🧠 HEAD (configurazione)
+│   └── 🎨 CSS con design scontrino termico:
+│       ├── 📱 Approccio responsive mobile-first
+│       ├── 📄 Immagini di sfondo scontrino personalizzate
+│       ├── 📏 Posizionamento preciso con variabili CSS
+│       └── ✨ Dettagli visivi come linee punteggiate e leggera rotazione
+│
+├── 📄 BODY (interfaccia)
+│   └── 🧾 Layout scontrino
+│       ├── 📑 Intestazione scontrino (nome negozio, terminale)
+│       ├── 💰 Dettagli transazione (prezzo, input pagamento)
+│       ├── 🔘 Pulsante elaborazione pagamento
+│       └── 📋 Area risultati calcolo resto
+│
+└── 🧮 JAVASCRIPT (logica)
+    ├── 🏧 Classe CashRegister con metodi:
+    │   ├── constructor (configura il cassetto)
+    │   └── processPurchase (calcola il resto)
+    ├── 💵 Gestione stato transazione:
+    │   ├── OPEN: Resto normale dato
+    │   ├── CLOSED: Cassetto svuotato esattamente
+    │   └── INSUFFICIENT_FUNDS: Impossibile dare il resto
+    └── 🧪 Validazione input e gestione eventi
+
+⚙️ TECNICHE CHIAVE:
+├── 💰 Calcoli basati su centesimi per precisione
+├── 🔄 Algoritmo greedy per resto ottimale
+├── 🗃️ Struttura dati Map per il cassetto
+├── 📱 Correzioni UX specifiche per mobile
+└── 🎨 Design skeuomorfico dello scontrino
+
+È come avere un registratore di cassa virtuale che dà sempre il resto perfetto! 💵✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### Il Traguardo: Google UX Certificate
+
+Ho conseguito il Google UX Certificate completando gli ultimi 2 corsi che mi mancavano e realizzando altri 2 progetti richiesti per ottenerlo.<br />
+Sono state due settimane molto intense e sono veramente contento di quanto fatto.
+
+### Il Cash Register Project
+
+Nei certification project, come questo, documento la maggior parte delle scelte tecniche direttamente nel codice, incluse le scoperte fatte durante lo sviluppo. Non c'è quindi molto da aggiungere qui.<br />
+Nonostante ciò, ci tengo però a evidenziare alcuni aspetti. In primo luogo sono entusiasta di aver creato immagini incredibilmente leggere senza sacrificare la grafica.<br />
+
+**Lo scontrino SVG - 2 KB:**<br />
+Il risultato è stato ottenuto grazie a Figma, dove ho creato lo scontrino con un rettangolo e lo strumento penna. Essendo SVG nativi, ho semplicemente raggruppato i vari elementi ed esportato come SVG. Risultato: **2 KB**!
+
+**Il background ottimizzato - 70 KB:**<br />
+Inizialmente avevo scelto un'immagine diversa: un tavolo con una fetta di pane e foglia d'insalata. Purtroppo non offriva un buon contrasto e pesava ben 2 MB. Ho quindi effettuato una nuova ricerca nelle librerie di stock fotografico, cogliendo l'occasione per aggiornare la mia cartella Tools sul desktop con i migliori strumenti per immagini.<br />
+Ho preso ispirazione da un'illustrazione e ho utilizzato Imagen (tool nel workspace Gemini). Dato che la qualità iniziale era scarsa, ho applicato upscaling con uno dei tool nella cartella. Dopodiché, grazie a ImageOptim, l'immagine è scesa ulteriormente di peso mantenendo l'estetica intatta.<br />
+Risultato: **qualità altissima e peso di soli 70 KB**!
+
+**La logica con classi OOP:**<br />
+Ho documentato tutto all'interno del codice. Ho voluto utilizzare le classi per esercitarmi e fortunatamente si è rivelata un'ottima scelta, sebbene sia una soluzione più complessa del necessario rispetto a quanto richiesto per superare i test freeCodeCamp.
+
+### Gli Altri Due Progetti per Google UX
+
+**Maintenance App Website:**<br />
+Il primo è stato un semplice sito web. Ho deciso di non seguire altre tracce, bensì di riprendere la Maintenance App immaginando di vendere quel servizio. Ecco il risultato:
+
+<details>
+  <summary><strong>Maintenance App Website, versione desktop e mobile</strong></summary>
+  <br />
+  <br />
+  <strong>Versione Desktop</strong>
+  <br />
+  <br />
+  <img src="https://github.com/user-attachments/assets/29dde0dd-9a3a-4608-9ac3-aab15c09e46c" alt="Maintenance App Desktop Website" />
+  <br />
+  <br />
+  <br />
+  <strong>Versione Mobile</strong>
+  <br />
+  <br />
+  <img src="https://github.com/user-attachments/assets/9edebfac-d712-433a-8058-f73367094345" alt="Maintenance App Mobile Website" />
+</details>
+
+
+### Mosaic: Il Progetto del Cuore
+
+Ma ora veniamo al progetto dove ho lasciato il cuore: **Mosaic**.<br />
+È stato facile capire le esigenze avendo due psicologhe in famiglia.
+Trovi il prototipo Figma qui sotto, così puoi esplorare l'intera esperienza:
+<table>
+<tr>
+<td width="50%">
+  <img src="https://github.com/user-attachments/assets/47cbddf2-8b41-4d52-a4f4-e4c6c2c9ee8f" alt="Mosaic Home Screen" width="300" />
+</td>
+<td width="50%">
+  <h3>Prototipo Interattivo</h3>
+  <p>Esplora tutte le schermate e i flussi dell'app nel prototipo Figma completo.</p>
+  <br />
+  <a href="https://www.figma.com/proto/HDYGy1YlsayxweWqN7sBJE/Mosaic?node-id=1-27&p=f&t=wfrcP529dntLd1bU-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A27">
+    <b>→ Apri il prototipo Figma</b>
+  </a>
+</td>
+</tr>
+</table>
+<br />
+
+Ci tengo davvero molto a sottolineare che questo non è uno strumento pensato per sostituire il processo di ascolto attivo del terapeuta. L’obiettivo, al contrario, è integrarsi nel workflow attuale. Il processo ideale prevede che il terapeuta prenda i consueti appunti, su carta o su dispositivo, e poi "vomiti" a Mosaic nel modo più spontaneo possibile quanto avvenuto in seduta: sarà l’AI a occuparsi della strutturazione e della stesura in modo chiaro. Questo garantirebbe una notevole organizzazione e permetterebbe di risparmiare tempo a casa nel ricomporre i vari pezzi, perché a farlo è Mosaic. Inoltre, aiuta a ottimizzare il tempo tra una seduta e l’altra: invece di ritrovarsi con poche parole sparse sul taccuino e dover ricostruire più tardi, o peggio ancora a casa, il filo degli eventi, è possibile fissare subito ciò che è avvenuto e poi, mentre ci si prepara per il paziente successivo, dare un’occhiata alla sua overview per rinfrescare rapidamente la memoria. Questo può diventare un vero e proprio nuovo modo di lavorare, più fluido e sostenibile.
+
+Mosaic non fornisce alcun consiglio, nemmeno nella Full Analysis. La scelta della direzione terapeutica rimarrà sempre e soltanto nelle mani del terapeuta. Non appoggio affatto gli strumenti sostitutivi, come tool che ascoltano le riunioni o simili e fungono da “secondo cervello”. Dobbiamo continuare a fidarci delle nostre capacità, altrimenti rischiamo che si atrofizzino in cambio di un iniziale guadagno immediato.
+
+**Il Liquid Glass Leggero e l'Accessibilità:**<br />
+Ho utilizzato un effetto Liquid Glass molto leggero. Per quanto io sia tra le persone a cui piace esteticamente, ritengo che faccia importanti compromessi con l'accessibilità visiva.<br />
+
+Ecco come Apple ha utilizzato la tab bar nell'app Musica, ci tengo a precisare che nella maggior parte delle applicazioni iOS l'effetto non è tono su tono come in questo esempio:<br />
+<br />
+<img width="40%" alt="Screenshot 2025-11-15 alle 15 38 08" src="https://github.com/user-attachments/assets/fe1a9693-f040-47d9-b7c7-ac4a39cf9586" />
+<br />
+<br />
+E come ho deciso di utilizzarlo in modo molto leggero in Mosaic:<br />
+<br />
+<img width="40%" alt="Screenshot 2025-11-15 alle 15 43 39" src="https://github.com/user-attachments/assets/ac8818cf-720e-4dc1-be93-e06369170800" />
+
+Apple permette comunque da iOS 26.1 di disattivarlo nelle impostazioni e quindi ritornare al solo effetto blur. Purtroppo, come appreso nel corso Google, questa non è la strada migliore: adeguarsi agli standard di accessibilità non aiuta solo alcuni, ma porta benefici a tutti. Trovo corretto renderlo opzionale, ma già questo dettaglio lascia intuire che qualcosa non funziona.
+<br />
+
+**La Filosofia: Rovesciare le Aspettative:**<br />
+Per quanto riguarda il lato open source, ho voluto giocare con aspettative e grafica attesa. Se si chiede a qualcuno di immaginarsi un'app open source del genere, si immaginerà una grafica poco "Apple", complessità e conseguente difficoltà d'uso.<br />
+Se invece chiedessimo di immaginare un'app che ha come modello di business l'abbonamento da oltre 30 euro al mese, AI integrata e tutte queste feature premium, ci si aspetterebbe esattamente la grafica di Mosaic.<br />
+Quindi ho optato per uno stile iOS, seppur reinterpretato in alcuni aspetti, con semplicità assoluta come priorità principale. Il tutto, però, completamente Open Source.
+È incredibile come un progetto come questo è realmente fattibile già al giorno d'oggi, usando modelli che girano in locale come Microsoft Phi-4 mini. <br />
+Mi spiego meglio:
+Premetto che non essendo un backend developer potrei sbagliarmi ma a seguito di svariate ricerche ho scoperto che Phi-4 mini sarebbe il candidato ideale per questo tipo di compito.
+Offre output eccellenti e velocemente, l'unico neo rimane il peso: oltre 7GB, ma per un terapeuta attento alla privacy questo non è un problema.
+Per telefoni con hardware inferiore ad iPhone 15 Pro si potrebbe optare per modelli più leggeri come Phi-3 mini o Llama 3.2 3B che tra l'altro pesano circa 2 GB.
+Per il modello di trascrizione per fortuna c'è OpenAI Whisper Base, pesa circa 140 MB, open source e garantisce trascrizioni eccellenti!
+
+### Cosa Ho Imparato
+
+**Architettura OOP Avanzata:**
+- Classi ES6 per incapsulare logica operativa complessa
+- `constructor()` per inizializzazione e preparazione dati
+- Metodi privati (`#calculateChange`) per proteggere logica interna
+- Separazione responsabilità tra preparazione e calcolo
+
+**Strutture Dati Moderne:**
+- `Map` invece di oggetti per gestione chiave-valore più consistente
+- Accesso uniforme ai dati: `.get()` e `.set()` vs notazioni miste
+- Iterazione con `.forEach()` su Map per logica più pulita
+
+**Algoritmi Greedy:**
+- Strategia "best choice at the moment" per calcolo resto ottimale
+- Pre-sorting delle denominazioni da maggiore a minore
+- Loop `while` per dispensare massimo numero di ogni denominazione
+- Comprensione limiti: funziona solo con sistemi monetari standard
+
+**Calcoli Precisi con Interi:**
+- Problema floating-point: `0.1 + 0.2 !== 0.3` in JavaScript
+- Conversione dollari → centesimi all'input per precisione
+- `Math.round()` per arrotondamento sicuro
+- Riconversione centesimi → dollari solo all'output
+
+**Validazione Input Robusta:**
+- Guard clauses per controlli precondizione
+- `isNaN()` per validare numeri
+- Gestione casi edge: cash esatto, insufficiente, maggiore
+- Alert informativi per feedback immediato
+
+**Gestione Stati Transazione:**
+- Status `INSUFFICIENT_FUNDS` quando impossibile dare resto
+- Status `CLOSED` quando resto svuota completamente il cassetto
+- Status `OPEN` per transazioni standard con resto parziale
+- Return di oggetti strutturati: `{status, change}`
+
+**Ottimizzazione Immagini:**
+- SVG nativi da Figma: 2 KB per grafica vettoriale
+- Imagen (Gemini) per generazione illustrazioni
+- Upscaling AI per migliorare qualità senza peso
+- ImageOptim per compressione finale: 2 MB → 70 KB
+
+**Design Skeuomorfico:**
+- Radial gradient per simulare input dots su receipt
+- `background-size` e `background-repeat` per pattern
+- Font Roboto Mono per simulare stampante termica
+- Transform rotate per imperfezioni realistiche
+
+**Mobile-First con Variabili CSS:**
+- Tutti i valori centralizzati in `:root` variables
+- Media query che sovrascrive solo le variabili necessarie
+- Fallback `100vh` + `100dvh` per gestire barra URL dinamica iOS
+- Conditional loading: SVG receipt diversi per mobile/desktop
+
+**Event Handling Avanzato:**
+- `blur` event per fix scroll iOS dopo input focus
+- `keydown` con `Enter` per submit alternativo
+- `preventDefault()` per controllare comportamento form
+- Istanza classe ricreata ad ogni click per test freeCodeCamp
+
+**Array Methods Funzionali:**
+- `.find()` per cercare valore denominazione in DENOMINATIONS
+- `.forEach()` per iterare su Map cashInDrawer
+- `.map()` per formattare array change in stringa
+- `.join()` per concatenare stringhe di output
+
+---
+
+**Prossimo Progetto**: Imparare Fetch e Promises costruendo una pagina degli autori di freeCodeCamp

@@ -1,0 +1,1216 @@
+---
+sidebar_position: 10
+sidebar_label: 'Todo App'
+title: 'Todo App'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Todo App
+
+<img width="100%" alt="Add Task Page - Screenshot" src="https://github.com/user-attachments/assets/3de2191b-07a5-4f0f-bc05-7b596eb66ba7" />
+<img width="100%" alt="Main Page Example - Screenshot" src="https://github.com/user-attachments/assets/06256cf2-7de5-407e-b922-fe0e9dc433a9" />
+
+### Il Progetto
+Todo App completa con localStorage per la persistenza dei dati, sviluppata con JavaScript vanilla, gestione avanzata dei form e interfaccia utente dinamica. Un'applicazione per la gestione delle task con funzionalità CRUD complete.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn localStorage by Building a Todo App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main>
+    <h1>Todo App</h1>
+    <div class="todo-app">
+      <button id="open-task-form-btn" class="btn large-btn">
+        Add New Task
+      </button>
+      <form class="task-form hidden" id="task-form">
+        <div class="task-form-header">
+          <button id="close-task-form-btn" class="close-task-form-btn" type="button" aria-label="close">
+            <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px"><path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)" /><path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)" /></svg>
+          </button>
+        </div>
+        <div class="task-form-body">
+          <label class="task-form-label" for="title-input">Title</label>
+          <input required type="text" class="form-control" id="title-input" value="" />
+          <label class="task-form-label" for="date-input">Date</label>
+          <input type="date" class="form-control" id="date-input" value="" />
+          <label class="task-form-label" for="description-input">Description</label>
+          <textarea class="form-control" id="description-input" cols="30" rows="5"></textarea>
+        </div>
+        <div class="task-form-footer">
+          <button id="add-or-update-task-btn" class="btn large-btn" type="submit">
+            Add Task
+          </button>
+        </div>
+      </form>
+      <dialog id="confirm-close-dialog">
+        <form method="dialog">
+          <p class="discard-message-text">Discard unsaved changes?</p>
+          <div class="confirm-close-dialog-btn-container">
+            <button id="cancel-btn" class="btn">
+              Cancel
+            </button>
+            <button id="discard-btn" class="btn">
+              Discard
+            </button>
+          </div>
+        </form>
+      </dialog>
+      <div id="tasks-container"></div>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+  --white: #fff;
+  --light-grey: #f5f6f7;
+  --dark-grey: #0a0a23;
+  --yellow: #f1be32;
+  --golden-yellow: #feac32;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--dark-grey);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  color: var(--light-grey);
+  margin: 20px 0 40px 0;
+}
+
+.todo-app {
+  background-color: var(--white);
+  width: 300px;
+  height: 350px;
+  border: 5px solid var(--yellow);
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  cursor: pointer;
+  width: 100px;
+  margin: 10px;
+  color: var(--dark-grey);
+  background-color: var(--golden-yellow);
+  background-image: linear-gradient(#fecc4c, #ffac33);
+  border-color: var(--golden-yellow);
+  border-width: 3px;
+}
+
+.btn:hover {
+  background-image: linear-gradient(#ffcc4c, #f89808);
+}
+
+.large-btn {
+  width: 80%;
+  font-size: 1.2rem;
+  align-self: center;
+  justify-self: center;
+}
+
+.close-task-form-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.close-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.task-form {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--white);
+  border-radius: 5px;
+  padding: 15px;
+  width: 300px;
+  height: 350px;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: auto;
+}
+
+.task-form-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.task-form-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.task-form-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.task-form-label,
+#title-input,
+#date-input,
+#description-input {
+  display: block;
+}
+
+.task-form-label {
+  margin-bottom: 5px;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+#title-input,
+#date-input,
+#description-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 2px;
+}
+
+#confirm-close-dialog {
+  padding: 10px;
+  margin: 10px auto;
+  border-radius: 15px;
+}
+
+.confirm-close-dialog-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.discard-message-text {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+#tasks-container {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.task {
+  margin: 5px 0;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .todo-app,
+  .task-form {
+    width: 400px;
+    height: 450px;
+  }
+
+  .task-form-label {
+    font-size: 1.5rem;
+  }
+
+  #title-input,
+  #date-input {
+    height: 2rem;
+  }
+
+  #title-input,
+  #date-input,
+  #description-input {
+    padding: 5px;
+    margin-bottom: 20px;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const taskForm = document.getElementById("task-form");
+const confirmCloseDialog = document.getElementById("confirm-close-dialog");
+const openTaskFormBtn = document.getElementById("open-task-form-btn");
+const closeTaskFormBtn = document.getElementById("close-task-form-btn");
+const addOrUpdateTaskBtn = document.getElementById("add-or-update-task-btn");
+const cancelBtn = document.getElementById("cancel-btn");
+const discardBtn = document.getElementById("discard-btn");
+const tasksContainer = document.getElementById("tasks-container");
+const titleInput = document.getElementById("title-input");
+const dateInput = document.getElementById("date-input");
+const descriptionInput = document.getElementById("description-input");
+
+const taskData = JSON.parse(localStorage.getItem("data")) || [];
+let currentTask = {};
+
+const removeSpecialChars = (val) => {
+  return val.trim().replace(/[^A-Za-z0-9\-\s]/g, '')
+}
+
+const addOrUpdateTask = () => {
+   if(!titleInput.value.trim()){
+    alert("Please provide a title");
+    return;
+  }
+  const dataArrIndex = taskData.findIndex((item) => item.id === currentTask.id);
+  const taskObj = {
+  id: `${removeSpecialChars(titleInput.value).toLowerCase().split(" ").join("-")}-${Date.now()}`,
+  title: removeSpecialChars(titleInput.value),
+  date: dateInput.value,
+  description: removeSpecialChars(descriptionInput.value),
+};
+
+  if (dataArrIndex === -1) {
+    taskData.unshift(taskObj);
+  } else {
+    taskData[dataArrIndex] = taskObj;
+  }
+
+  localStorage.setItem("data", JSON.stringify(taskData));
+  updateTaskContainer()
+  reset()
+};
+
+const updateTaskContainer = () => {
+  tasksContainer.innerHTML = "";
+
+  taskData.forEach(
+    ({ id, title, date, description }) => {
+        (tasksContainer.innerHTML += `
+        <div class="task" id="${id}">
+          <p><strong>Title:</strong> ${title}</p>
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Description:</strong> ${description}</p>
+          <button onclick="editTask(this)" type="button" class="btn">Edit</button>
+          <button onclick="deleteTask(this)" type="button" class="btn">Delete</button> 
+        </div>
+      `)
+    }
+  );
+};
+
+
+const deleteTask = (buttonEl) => {
+  const dataArrIndex = taskData.findIndex(
+    (item) => item.id === buttonEl.parentElement.id
+  );
+
+  buttonEl.parentElement.remove();
+  taskData.splice(dataArrIndex, 1);
+  localStorage.setItem("data", JSON.stringify(taskData));
+}
+
+const editTask = (buttonEl) => {
+    const dataArrIndex = taskData.findIndex(
+    (item) => item.id === buttonEl.parentElement.id
+  );
+
+  currentTask = taskData[dataArrIndex];
+
+  titleInput.value = currentTask.title;
+  dateInput.value = currentTask.date;
+  descriptionInput.value = currentTask.description;
+
+  addOrUpdateTaskBtn.innerText = "Update Task";
+
+  taskForm.classList.toggle("hidden");  
+}
+
+const reset = () => {
+  addOrUpdateTaskBtn.innerText = "Add Task";
+  titleInput.value = "";
+  dateInput.value = "";
+  descriptionInput.value = "";
+  taskForm.classList.toggle("hidden");
+  currentTask = {};
+}
+
+if (taskData.length) {
+  updateTaskContainer();
+}
+
+openTaskFormBtn.addEventListener("click", () =>
+  taskForm.classList.toggle("hidden")
+);
+
+closeTaskFormBtn.addEventListener("click", () => {
+  const formInputsContainValues = titleInput.value || dateInput.value || descriptionInput.value;
+  const formInputValuesUpdated = titleInput.value !== currentTask.title || dateInput.value !== currentTask.date || descriptionInput.value !== currentTask.description;
+
+  if (formInputsContainValues && formInputValuesUpdated) {
+    confirmCloseDialog.showModal();
+  } else {
+    reset();
+  }
+});
+
+cancelBtn.addEventListener("click", () => confirmCloseDialog.close());
+
+discardBtn.addEventListener("click", () => {
+  confirmCloseDialog.close();
+  reset()
+});
+
+taskForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  addOrUpdateTask();
+});
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="spiegato">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 DICHIARAZIONE HTML5: "Benvenuti nella fabbrica di promemoria digitali!" -->
+<!-- È come aprire un'agenda che non dimentica mai nulla! 📋 -->
+
+<html lang="en">
+<!-- 🌍 CONTENITORE PRINCIPALE: La nostra app per organizzare la vita -->
+<!-- lang="en" = inglese, la lingua della produttività! ✅ -->
+
+<head>
+  <!-- 🧠 IL CENTRO DI CONTROLLO: Dove impostiamo tutto per la nostra Todo App -->
+  
+  <meta charset="UTF-8" />
+  <!-- 📝 CARATTERI UNIVERSALI: UTF-8 per emoji e simboli! ✓✗📅 -->
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- 🌐 COMPATIBILITÀ IE: "Anche Internet Explorer può usare la nostra app!" -->
+  <!-- edge = usa l'ultima versione del motore di rendering -->
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 📱 DESIGN RESPONSIVE: "L'agenda si adatta a ogni schermo!" -->
+  
+  <title>Learn localStorage by Building a Todo App</title>
+  <!-- 📑 TITOLO: Impariamo localStorage costruendo qualcosa di utile! -->
+  
+  <style>
+    /* 🎨 ===== SISTEMA DI DESIGN: I Colori della Produttività ===== */
+    
+    :root {
+      --white: #fff;
+      /* ⚪ BIANCO PURO: Per sfondi puliti */
+      
+      --light-grey: #f5f6f7;
+      /* 🔘 GRIGIO CHIARO: Testo su sfondo scuro */
+      
+      --dark-grey: #0a0a23;
+      /* ⚫ GRIGIO SCURO: Lo sfondo principale */
+      
+      --yellow: #f1be32;
+      /* 🟡 GIALLO: Il bordo della nostra app */
+      
+      --golden-yellow: #feac32;
+      /* 🌟 GIALLO DORATO: Per i bottoni call-to-action */
+    }
+
+    /* 🔄 ===== RESET UNIVERSALE ===== */
+    
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      /* 📦 RESET TOTALE: Tabula rasa per controllo completo */
+      /* Include anche pseudo-elementi! */
+    }
+
+    body {
+      background-color: var(--dark-grey);
+      /* 🌑 SFONDO SCURO: Per far risaltare l'app */
+    }
+
+    /* 📐 ===== LAYOUT PRINCIPALE ===== */
+    
+    main {
+      display: flex;
+      flex-direction: column;
+      /* 🎯 FLEX VERTICALE: Elementi uno sotto l'altro */
+      
+      justify-content: center;
+      align-items: center;
+      /* ⚖️ CENTRATURA PERFETTA: Tutto al centro dello schermo */
+    }
+
+    h1 {
+      color: var(--light-grey);
+      /* 🔤 TITOLO CHIARO: Contrasto su sfondo scuro */
+      
+      margin: 20px 0 40px 0;
+      /* 📏 MARGINI: 20px sopra, 40px sotto per respiro */
+    }
+
+    /* 📋 ===== L'APP TODO ===== */
+    
+    .todo-app {
+      background-color: var(--white);
+      /* ⚪ SFONDO BIANCO: La nostra "carta" digitale */
+      
+      width: 300px;
+      height: 350px;
+      /* 📏 DIMENSIONI: Compatta ma funzionale */
+      
+      border: 5px solid var(--yellow);
+      /* 🟡 BORDO GIALLO: 5px spessi per risaltare */
+      
+      border-radius: 8px;
+      /* 🔄 ANGOLI MORBIDI: Moderni e accoglienti */
+      
+      padding: 15px;
+      /* 🏠 PADDING: Spazio interno per respirare */
+      
+      position: relative;
+      /* 📍 POSIZIONE RELATIVA: Per il form popup */
+      
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      /* 🎯 FLEX COLUMN: Elementi verticali con gap di 10px */
+    }
+
+    /* 🔘 ===== STILI DEI BOTTONI ===== */
+    
+    .btn {
+      cursor: pointer;
+      /* 👆 MANINA: "Cliccami!" */
+      
+      width: 100px;
+      margin: 10px;
+      /* 📏 DIMENSIONI: Bottoni standard */
+      
+      color: var(--dark-grey);
+      /* 🔤 TESTO SCURO: Su sfondo chiaro */
+      
+      background-color: var(--golden-yellow);
+      /* 🌟 SFONDO DORATO: Attira l'attenzione */
+      
+      background-image: linear-gradient(#fecc4c, #ffac33);
+      /* 🌅 GRADIENTE: Dal giallo chiaro al dorato */
+      /* Crea profondità e modernità */
+      
+      border-color: var(--golden-yellow);
+      border-width: 3px;
+      /* 🖼️ BORDO: 3px dello stesso colore */
+    }
+
+    .btn:hover {
+      background-image: linear-gradient(#ffcc4c, #f89808);
+      /* 🔥 HOVER: Gradiente più caldo/scuro */
+      /* Dal giallo all'arancione per feedback visivo */
+    }
+
+    .large-btn {
+      width: 80%;
+      /* 📏 BOTTONE LARGO: 80% del contenitore */
+      
+      font-size: 1.2rem;
+      /* 🔤 TESTO PIÙ GRANDE: 1.2rem per importanza */
+      
+      align-self: center;
+      justify-self: center;
+      /* ⚖️ AUTO-CENTRATURA: In flex container */
+    }
+
+    /* ❌ ===== BOTTONE CHIUDI ===== */
+    
+    .close-task-form-btn {
+      background: none;
+      border: none;
+      /* 🚫 NIENTE STILI: Solo l'icona SVG */
+      
+      cursor: pointer;
+      /* 👆 MANINA: Ancora cliccabile */
+    }
+
+    .close-icon {
+      width: 20px;
+      height: 20px;
+      /* 📏 ICONA PICCOLA: 20x20 pixel */
+    }
+
+    /* 📝 ===== FORM DEI TASK ===== */
+    
+    .task-form {
+      display: flex;
+      /* 🎯 FLEX CONTAINER: Per layout interno */
+      
+      position: absolute;
+      /* 📍 POSIZIONE ASSOLUTA: Per sovrapporsi */
+      
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      /* 🎯 CENTRATURA PERFETTA: Il trucco del -50%! */
+      /* top/left 50% = angolo al centro */
+      /* translate -50% = sposta indietro di metà dimensione */
+      /* Risultato = centro perfetto! */
+      
+      background-color: var(--white);
+      /* ⚪ SFONDO BIANCO: Come l'app principale */
+      
+      border-radius: 5px;
+      /* 🔄 ANGOLI: Leggermente arrotondati */
+      
+      padding: 15px;
+      /* 🏠 PADDING: Spazio interno */
+      
+      width: 300px;
+      height: 350px;
+      /* 📏 STESSE DIMENSIONI: Dell'app principale */
+      
+      flex-direction: column;
+      /* 📦 FLEX VERTICALE: Elementi in colonna */
+      
+      justify-content: space-between;
+      /* ⚖️ SPAZIO TRA: Header, body e footer separati */
+      
+      overflow: auto;
+      /* 📜 SCROLL: Se il contenuto è troppo */
+    }
+
+    /* 📰 ===== PARTI DEL FORM ===== */
+    
+    .task-form-header {
+      display: flex;
+      justify-content: flex-end;
+      /* ➡️ ALLINEA A DESTRA: Per il bottone X */
+    }
+
+    .task-form-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      /* 📦 FLEX COLUMN: Campi uno sotto l'altro */
+      /* space-around = spazio uniforme tra elementi */
+    }
+
+    .task-form-footer {
+      display: flex;
+      justify-content: center;
+      /* ⚖️ CENTRA: Il bottone submit */
+    }
+
+    /* 📋 ===== CAMPI DEL FORM ===== */
+    
+    .task-form-label,
+    #title-input,
+    #date-input,
+    #description-input {
+      display: block;
+      /* 📦 DISPLAY BLOCK: Uno per riga */
+    }
+
+    .task-form-label {
+      margin-bottom: 5px;
+      /* ⬇️ SPAZIO: Tra label e input */
+      
+      font-size: 1.3rem;
+      font-weight: bold;
+      /* 🔤 LABEL EVIDENTI: Grandi e in grassetto */
+    }
+
+    #title-input,
+    #date-input,
+    #description-input {
+      width: 100%;
+      /* 📏 LARGHEZZA PIENA: Occupano tutto */
+      
+      margin-bottom: 10px;
+      /* ⬇️ SPAZIO TRA CAMPI: 10px */
+      
+      padding: 2px;
+      /* 🏠 PICCOLO PADDING: Per il testo */
+    }
+
+    /* 💬 ===== DIALOG DI CONFERMA ===== */
+    
+    #confirm-close-dialog {
+      padding: 10px;
+      margin: 10px auto;
+      /* 🏠 SPAZI: Padding interno, margin auto per centrare */
+      
+      border-radius: 15px;
+      /* 🔄 MOLTO ARROTONDATO: 15px per morbidezza */
+    }
+
+    .confirm-close-dialog-btn-container {
+      display: flex;
+      justify-content: center;
+      /* 🎯 FLEX CENTER: Bottoni affiancati al centro */
+      
+      margin-top: 10px;
+      /* ⬆️ SPAZIO: Sopra i bottoni */
+    }
+
+    .discard-message-text {
+      font-weight: bold;
+      font-size: 1.5rem;
+      /* 🔤 MESSAGGIO IMPORTANTE: Grande e grassetto */
+    }
+
+    /* 📦 ===== CONTAINER DEI TASK ===== */
+    
+    #tasks-container {
+      height: 100%;
+      /* 📏 ALTEZZA PIENA: Occupa tutto lo spazio disponibile */
+      
+      overflow-y: auto;
+      /* 📜 SCROLL VERTICALE: Se ci sono troppi task */
+    }
+
+    .task {
+      margin: 5px 0;
+      /* 📏 MARGINI: 5px sopra e sotto ogni task */
+    }
+
+    /* 👻 ===== CLASSE UTILITY ===== */
+    
+    .hidden {
+      display: none;
+      /* 🚫 NASCOSTO: Per mostrare/nascondere elementi */
+    }
+
+    /* 📱 ===== RESPONSIVE DESIGN ===== */
+    
+    @media (min-width: 576px) {
+      /* 💻 SCHERMI MEDI: Sopra i 576px */
+      
+      .todo-app,
+      .task-form {
+        width: 400px;
+        height: 450px;
+        /* 📏 PIÙ GRANDI: Da 300x350 a 400x450 */
+      }
+
+      .task-form-label {
+        font-size: 1.5rem;
+        /* 🔤 LABEL PIÙ GRANDI: Da 1.3 a 1.5rem */
+      }
+
+      #title-input,
+      #date-input {
+        height: 2rem;
+        /* 📏 INPUT PIÙ ALTI: 2rem per migliore usabilità */
+      }
+
+      #title-input,
+      #date-input,
+      #description-input {
+        padding: 5px;
+        margin-bottom: 20px;
+        /* 🏠 PIÙ SPAZIO: Padding e margin maggiori */
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🏗️ ===== LA STRUTTURA HTML ===== -->
+  
+  <main>
+    <!-- 📄 CONTENITORE PRINCIPALE: Il palcoscenico della nostra app -->
+    
+    <h1>Todo App</h1>
+    <!-- 📝 TITOLO: Semplice e diretto -->
+    
+    <div class="todo-app">
+      <!-- 📋 APP CONTAINER: La scatola magica dei task -->
+      
+      <button id="open-task-form-btn" class="btn large-btn">
+        Add New Task
+      </button>
+      <!-- ➕ BOTTONE AGGIUNGI: Il punto di partenza per nuovi task -->
+      
+      <form class="task-form hidden" id="task-form">
+        <!-- 📝 FORM NASCOSTO: Appare solo quando serve -->
+        <!-- hidden = classe che lo nasconde inizialmente -->
+        
+        <div class="task-form-header">
+          <!-- 📰 HEADER FORM: Contiene il bottone chiudi -->
+          
+          <button id="close-task-form-btn" class="close-task-form-btn" type="button" aria-label="close">
+            <!-- ❌ BOTTONE CHIUDI: type="button" per non submit del form -->
+            <!-- aria-label="close" = accessibilità per screen reader -->
+            
+            <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px">
+              <!-- 🎨 ICONA SVG: Una X rossa -->
+              <path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)" />
+              <!-- 📏 PRIMA LINEA: Ruotata di 45° -->
+              <path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)" />
+              <!-- 📏 SECONDA LINEA: Ruotata di 135° per formare la X -->
+            </svg>
+          </button>
+        </div>
+        
+        <div class="task-form-body">
+          <!-- 📋 CORPO FORM: I campi di input -->
+          
+          <label class="task-form-label" for="title-input">Title</label>
+          <input required type="text" class="form-control" id="title-input" value="" />
+          <!-- 📝 TITOLO: Campo obbligatorio (required) -->
+          
+          <label class="task-form-label" for="date-input">Date</label>
+          <input type="date" class="form-control" id="date-input" value="" />
+          <!-- 📅 DATA: Input type="date" per calendario -->
+          
+          <label class="task-form-label" for="description-input">Description</label>
+          <textarea class="form-control" id="description-input" cols="30" rows="5"></textarea>
+          <!-- 📄 DESCRIZIONE: Textarea per testo lungo -->
+          <!-- cols="30" rows="5" = dimensioni iniziali -->
+        </div>
+        
+        <div class="task-form-footer">
+          <!-- 🦶 FOOTER FORM: Il bottone di azione -->
+          
+          <button id="add-or-update-task-btn" class="btn large-btn" type="submit">
+            Add Task
+          </button>
+          <!-- ✅ BOTTONE SUBMIT: Diventa "Update Task" in modalità edit -->
+        </div>
+      </form>
+      
+      <dialog id="confirm-close-dialog">
+        <!-- 💬 DIALOG NATIVO: HTML5 dialog element! -->
+        <!-- È come un alert() ma più elegante -->
+        
+        <form method="dialog">
+          <!-- 📝 FORM DIALOG: method="dialog" chiude automaticamente il dialog -->
+          
+          <p class="discard-message-text">Discard unsaved changes?</p>
+          <!-- ⚠️ MESSAGGIO: Avviso di modifiche non salvate -->
+          
+          <div class="confirm-close-dialog-btn-container">
+            <button id="cancel-btn" class="btn">
+              Cancel
+            </button>
+            <!-- ❌ ANNULLA: Torna al form -->
+            
+            <button id="discard-btn" class="btn">
+              Discard
+            </button>
+            <!-- 🗑️ SCARTA: Chiude senza salvare -->
+          </div>
+        </form>
+      </dialog>
+      
+      <div id="tasks-container"></div>
+      <!-- 📦 CONTAINER TASK: Qui appariranno tutti i task -->
+      <!-- Inizialmente vuoto, popolato via JavaScript -->
+    </div>
+  </main>
+  
+  <script>
+    /* 🎮 ===== JAVASCRIPT: Il Cervello della Todo App! ===== */
+    
+    /* 🔍 ===== SELEZIONE ELEMENTI DOM ===== */
+    
+    const taskForm = document.getElementById("task-form");
+    // 📝 FORM: Il modulo per creare/modificare task
+    
+    const confirmCloseDialog = document.getElementById("confirm-close-dialog");
+    // 💬 DIALOG: Il popup di conferma chiusura
+    
+    const openTaskFormBtn = document.getElementById("open-task-form-btn");
+    // ➕ BOTTONE APRI: Per mostrare il form
+    
+    const closeTaskFormBtn = document.getElementById("close-task-form-btn");
+    // ❌ BOTTONE CHIUDI: La X per chiudere il form
+    
+    const addOrUpdateTaskBtn = document.getElementById("add-or-update-task-btn");
+    // ✅ BOTTONE SUBMIT: Add o Update a seconda del contesto
+    
+    const cancelBtn = document.getElementById("cancel-btn");
+    // ❌ BOTTONE CANCEL: Nel dialog di conferma
+    
+    const discardBtn = document.getElementById("discard-btn");
+    // 🗑️ BOTTONE DISCARD: Per scartare le modifiche
+    
+    const tasksContainer = document.getElementById("tasks-container");
+    // 📦 CONTAINER: Dove mostreremo i task
+    
+    const titleInput = document.getElementById("title-input");
+    // 📝 INPUT TITOLO: Campo del titolo
+    
+    const dateInput = document.getElementById("date-input");
+    // 📅 INPUT DATA: Campo della data
+    
+    const descriptionInput = document.getElementById("description-input");
+    // 📄 TEXTAREA: Campo descrizione
+
+    /* 📊 ===== GESTIONE DATI ===== */
+    
+    const taskData = JSON.parse(localStorage.getItem("data")) || [];
+    // 💾 DATI SALVATI: Recupera da localStorage o array vuoto
+    // localStorage.getItem("data") = recupera la stringa salvata
+    // JSON.parse() = converte la stringa in array di oggetti
+    // || [] = se non c'è nulla, usa array vuoto
+    // È come aprire un cassetto e vedere cosa c'è dentro!
+    
+    let currentTask = {};
+    // 📝 TASK CORRENTE: Oggetto vuoto per tracciare modifiche
+    // Quando editiamo, qui salviamo il task originale
+
+    /* 🧹 ===== FUNZIONE PULIZIA CARATTERI ===== */
+    
+    const removeSpecialChars = (val) => {
+      return val.trim().replace(/[^A-Za-z0-9\-\s]/g, '')
+      // 🧹 PULIZIA INPUT: Rimuove caratteri speciali
+      // trim() = toglie spazi all'inizio e fine
+      // replace() con regex = sostituisce caratteri non voluti
+      // [^A-Za-z0-9\-\s] = tutto tranne lettere, numeri, trattini e spazi
+      // g = global, su tutta la stringa
+      // È come un filtro che fa passare solo caratteri "sicuri"
+    }
+
+    /* ➕ ===== FUNZIONE AGGIUNGI/AGGIORNA TASK ===== */
+    
+    const addOrUpdateTask = () => {
+      // 🔍 VALIDAZIONE: Controlla che ci sia un titolo
+      if(!titleInput.value.trim()){
+        alert("Please provide a title");
+        return;
+        // 🚫 STOP: Se non c'è titolo, esci dalla funzione
+      }
+      
+      // 🔍 CERCA INDICE: Vedi se stiamo modificando un task esistente
+      const dataArrIndex = taskData.findIndex((item) => item.id === currentTask.id);
+      // findIndex() = trova la posizione nell'array
+      // -1 = non trovato (task nuovo)
+      // >= 0 = trovato (task esistente)
+      
+      // 📦 CREA OGGETTO TASK: Con tutti i dati puliti
+      const taskObj = {
+        id: `${removeSpecialChars(titleInput.value).toLowerCase().split(" ").join("-")}-${Date.now()}`,
+        // 🆔 ID UNICO: Titolo-pulito-in-kebab-case-timestamp
+        // toLowerCase() = tutto minuscolo
+        // split(" ") = dividi per spazi
+        // join("-") = unisci con trattini
+        // Date.now() = timestamp per unicità
+        // Esempio: "Buy Milk!" diventa "buy-milk-1634567890123"
+        
+        title: removeSpecialChars(titleInput.value),
+        // 📝 TITOLO: Pulito da caratteri speciali
+        
+        date: dateInput.value,
+        // 📅 DATA: Così com'è dal campo date
+        
+        description: removeSpecialChars(descriptionInput.value),
+        // 📄 DESCRIZIONE: Anche questa pulita
+      };
+
+      // 🔀 AGGIUNGI O AGGIORNA: A seconda se esiste già
+      if (dataArrIndex === -1) {
+        taskData.unshift(taskObj);
+        // ➕ NUOVO TASK: unshift() aggiunge all'INIZIO dell'array
+        // I task nuovi appaiono in cima!
+      } else {
+        taskData[dataArrIndex] = taskObj;
+        // 📝 AGGIORNA: Sostituisci il task alla posizione trovata
+      }
+
+      // 💾 SALVA IN LOCALSTORAGE: Persisti i dati
+      localStorage.setItem("data", JSON.stringify(taskData));
+      // JSON.stringify() = converte array in stringa
+      // localStorage può salvare solo stringhe!
+      // È come scrivere la lista su un foglio e metterla nel cassetto
+      
+      updateTaskContainer()
+      // 🔄 AGGIORNA UI: Ridisegna la lista dei task
+      
+      reset()
+      // 🧹 PULISCI: Resetta il form
+    };
+
+    /* 🔄 ===== FUNZIONE AGGIORNA CONTAINER ===== */
+    
+    const updateTaskContainer = () => {
+      tasksContainer.innerHTML = "";
+      // 🧹 PULISCI: Svuota il container
+      // innerHTML = "" è come cancellare la lavagna
+
+      // 📋 RICOSTRUISCI: Per ogni task nell'array...
+      taskData.forEach(
+        ({ id, title, date, description }) => {
+          // 📦 DESTRUTTURAZIONE: Estrai le proprietà dall'oggetto
+          // È come aprire una scatola e tirare fuori tutto
+          
+          tasksContainer.innerHTML += `
+            <div class="task" id="${id}">
+              <p><strong>Title:</strong> ${title}</p>
+              <p><strong>Date:</strong> ${date}</p>
+              <p><strong>Description:</strong> ${description}</p>
+              <button onclick="editTask(this)" type="button" class="btn">Edit</button>
+              <button onclick="deleteTask(this)" type="button" class="btn">Delete</button> 
+            </div>
+          `
+          // 📝 TEMPLATE LITERAL: Crea HTML per ogni task
+          // ${} = inserisci variabili nel template
+          // onclick="editTask(this)" = quando clicchi, chiama editTask
+          // this = passa il bottone stesso come parametro
+          // È come stampare una scheda per ogni task
+        }
+      );
+    };
+
+    /* 🗑️ ===== FUNZIONE ELIMINA TASK ===== */
+    
+    const deleteTask = (buttonEl) => {
+      // 🔍 TROVA INDICE: Dal bottone risali al task
+      const dataArrIndex = taskData.findIndex(
+        (item) => item.id === buttonEl.parentElement.id
+      );
+      // buttonEl = il bottone cliccato
+      // parentElement = il div.task che contiene il bottone
+      // .id = l'ID univoco del task
+      // È come trovare il numero di una scheda dal suo contenitore
+
+      buttonEl.parentElement.remove();
+      // 🗑️ RIMUOVI DA DOM: Elimina visivamente il task
+      // remove() = rimuove l'elemento dalla pagina
+
+      taskData.splice(dataArrIndex, 1);
+      // ✂️ RIMUOVI DA ARRAY: Taglia via dall'array
+      // splice(indice, quantità) = rimuovi 1 elemento a quell'indice
+      // È come strappare una pagina dal quaderno
+
+      localStorage.setItem("data", JSON.stringify(taskData));
+      // 💾 SALVA: Aggiorna localStorage senza il task eliminato
+    }
+
+    /* ✏️ ===== FUNZIONE MODIFICA TASK ===== */
+    
+    const editTask = (buttonEl) => {
+      // 🔍 TROVA TASK: Stesso metodo di delete
+      const dataArrIndex = taskData.findIndex(
+        (item) => item.id === buttonEl.parentElement.id
+      );
+
+      currentTask = taskData[dataArrIndex];
+      // 📋 SALVA ORIGINALE: Per confronti futuri
+      // currentTask ora contiene il task che stiamo modificando
+
+      // 📝 RIEMPI FORM: Con i dati attuali
+      titleInput.value = currentTask.title;
+      dateInput.value = currentTask.date;
+      descriptionInput.value = currentTask.description;
+      // È come copiare i dati dalla scheda al modulo
+
+      addOrUpdateTaskBtn.innerText = "Update Task";
+      // 🔄 CAMBIA TESTO: Da "Add" a "Update"
+      // innerText = il testo visibile del bottone
+
+      taskForm.classList.toggle("hidden");
+      // 👁️ MOSTRA FORM: toggle rimuove la classe hidden
+      // Il form appare con i dati precompilati!
+    }
+
+    /* 🧹 ===== FUNZIONE RESET ===== */
+    
+    const reset = () => {
+      addOrUpdateTaskBtn.innerText = "Add Task";
+      // 🔄 RIPRISTINA TESTO: Torna a "Add Task"
+      
+      titleInput.value = "";
+      dateInput.value = "";
+      descriptionInput.value = "";
+      // 🧹 PULISCI CAMPI: Tutti vuoti
+      // È come cancellare il modulo
+      
+      taskForm.classList.toggle("hidden");
+      // 👻 NASCONDI FORM: Riaggiunge la classe hidden
+      
+      currentTask = {};
+      // 🗑️ SVUOTA CURRENT: Nessun task in modifica
+    }
+
+    /* 🚀 ===== INIZIALIZZAZIONE ===== */
+    
+    if (taskData.length) {
+      updateTaskContainer();
+      // 📋 CARICA TASK: Se ci sono task salvati, mostrali
+      // Solo se l'array non è vuoto
+      // È come aprire l'agenda e vedere cosa c'era scritto
+    }
+
+    /* 🎮 ===== EVENT LISTENERS ===== */
+    
+    // ➕ APRI FORM: Click su "Add New Task"
+    openTaskFormBtn.addEventListener("click", () =>
+      taskForm.classList.toggle("hidden")
+      // 👁️ TOGGLE: Mostra/nascondi il form
+      // Arrow function inline per semplicità
+    );
+
+    // ❌ CHIUDI FORM: Click sulla X
+    closeTaskFormBtn.addEventListener("click", () => {
+      // 🔍 CONTROLLA CAMBIAMENTI: Ci sono dati non salvati?
+      const formInputsContainValues = titleInput.value || dateInput.value || descriptionInput.value;
+      // || = OR logico, basta che uno sia vero
+      // true se almeno un campo ha valore
+      
+      // 🔍 CONTROLLA MODIFICHE: I valori sono diversi dall'originale?
+      const formInputValuesUpdated = titleInput.value !== currentTask.title || 
+                                    dateInput.value !== currentTask.date || 
+                                    descriptionInput.value !== currentTask.description;
+      // !== = diverso da
+      // true se almeno un valore è cambiato
+
+      if (formInputsContainValues && formInputValuesUpdated) {
+        confirmCloseDialog.showModal();
+        // 💬 MOSTRA DIALOG: Se ci sono modifiche non salvate
+        // showModal() = metodo nativo dei dialog HTML5
+        // È come chiedere "Sei sicuro di voler uscire?"
+      } else {
+        reset();
+        // 🧹 CHIUDI DIRETTO: Se non ci sono modifiche
+      }
+    });
+
+    // ❌ ANNULLA DIALOG: Click su "Cancel"
+    cancelBtn.addEventListener("click", () => confirmCloseDialog.close());
+    // 🚪 CHIUDI DIALOG: close() è il metodo nativo
+    // Torna al form senza perdere i dati
+
+    // 🗑️ SCARTA MODIFICHE: Click su "Discard"
+    discardBtn.addEventListener("click", () => {
+      confirmCloseDialog.close();
+      // 🚪 CHIUDI DIALOG: Prima chiudi il popup
+      
+      reset()
+      // 🧹 POI RESETTA: Pulisci tutto
+      // L'ordine è importante!
+    });
+
+    // 📝 SUBMIT FORM: Quando invii il form
+    taskForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      // 🚫 BLOCCA DEFAULT: Non ricaricare la pagina!
+      // preventDefault() = impedisce il comportamento standard del form
+      // Altrimenti la pagina si ricaricherebbe
+
+      addOrUpdateTask();
+      // ➕ AGGIUNGI/AGGIORNA: Chiama la funzione principale
+      // Che gestirà tutto: validazione, salvataggio, aggiornamento UI
+    });
+  </script>
+</body>
+
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+### È Arrivato il Momento di Fermarsi
+
+In alcuni step ho fatto parecchia fatica, è stato come se il mio cervello fosse alla capacità massima. <br />
+Sicuramente ho sbagliato ieri quando, dopo aver finito la quantità di step prefissata (30), mi sono messo ad approfondire CSS, oltre che continuato in parallelo anche il corso di inglese, sempre di freeCodeCamp. <br />
+So che lo sforzo richiesto per l'apprendimento non è da sottovalutare e proprio per questo in passato alternavo tra code e design.
+
+Ebbene è arrivato il momento di riprendere il design. Devo operarmi per due ernie inguinali e mancano pochi giorni, l'idea era quella di andare avanti il più possibile con il coding, esattamente come ho fatto in queste ultime settimane, e "staccare mentalmente" nel periodo post-operatorio col design. A quanto pare non è fattibile. 
+
+Ho bisogno di alternare le due attività perché rischio di abbassare il livello di apprendimento a una soglia troppo bassa, al punto che non varrebbe nemmeno la pena aprire freeCodeCamp.
+
+### La Responsabilità dell'Apprendimento
+
+Tutto questo perchè prendo sul serio questo percorso. Quando mi imbatto in un concetto che non riesco a comprendere, anche dopo averlo approfondito, mi ricordo sempre che non posso permettermi di non assimilarlo, perché questo non è un hobby, si tratta del mio futuro lavoro. Se non capisco un concetto ora significherà che sprecherò molto più tempo domani per impararlo, oltre al fatto che non saperlo equivale a perdere pezzi del puzzle mentale che mi serve per pensare da developer.
+
+### Cosa Ho Imparato
+
+**localStorage Mastery:**
+- `localStorage.getItem()` per recuperare dati persistenti
+- `localStorage.setItem()` per salvare dati nel browser
+- `JSON.parse()` e `JSON.stringify()` per conversione oggetti
+- Gestione dei dati quando localStorage è vuoto con `|| []`
+
+**Array Methods Avanzati:**
+- `.findIndex()` per trovare l'indice di elementi specifici
+- `.unshift()` per aggiungere elementi all'inizio dell'array
+- `.splice()` per rimuovere elementi da posizioni specifiche
+- `.forEach()` con destructuring per iterazione elegante
+
+**Form Handling Completo:**
+- `e.preventDefault()` per controllare il comportamento dei form
+- Validazione input con controllo di valori vuoti
+- Gestione stati del form (Add vs Update mode)
+- Reset dinamico dei form dopo operazioni
+
+**DOM Manipulation Avanzata:**
+- Template literals per generazione HTML dinamica
+- `innerHTML` per aggiornamento completo del contenuto
+- `parentElement` per navigazione DOM relativa
+- Event handling con parametri delle funzioni
+
+**Modal Dialog System:**
+- `showModal()` e `close()` per controllo dialog nativi
+- Gestione conferma di chiusura con controllo modifiche
+- Confronto valori per rilevare cambiamenti non salvati
+
+**Utility Functions:**
+- `removeSpecialChars()` per sanitizzazione input
+- Generazione ID univoci con timestamp
+- String manipulation con `trim()`, `replace()`, `split()`, `join()`
+
+**State Management:**
+- Gestione stato globale con `currentTask` object
+- Sincronizzazione tra UI e localStorage
+- Pattern Add/Edit con stesso form
+
+### Riflessione
+
+Google UX sto arrivando!
+
+***
+
+**Prossimo Progetto**: Imparare la Ricorsione costruendo un Decimal to Binary Converter

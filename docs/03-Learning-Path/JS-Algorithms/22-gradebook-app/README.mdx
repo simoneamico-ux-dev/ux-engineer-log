@@ -1,0 +1,266 @@
+---
+sidebar_position: 2
+sidebar_label: 'Gradebook App'
+title: 'Gradebook App'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Gradebook App
+
+<img width="100%" alt="Screenshot 2025-08-28 alle 15 36 41" src="https://github.com/user-attachments/assets/bad5f236-651d-42ab-8ea1-d468f98ac8a6" />
+
+### The Project
+Grade management application developed with JavaScript, which calculates class averages, assigns letter grades, and automatically determines student promotion or failure.
+
+### Source Code
+
+<Tabs>
+
+<TabItem value="js" label="script.js">
+
+```js
+function getAverage(scores) {
+  let sum = 0;
+
+  for (const score of scores) {
+    sum += score;
+  }
+
+  return sum / scores.length;
+}
+
+function getGrade(score) {
+  if (score === 100) {
+    return "A++";
+  } else if (score >= 90) {
+    return "A";
+  } else if (score >= 80) {
+    return "B";
+  } else if (score >= 70) {
+    return "C";
+  } else if (score >= 60) {
+    return "D";
+  } else {
+    return "F";
+  }
+}
+
+function hasPassingGrade(score) {
+  return getGrade(score) !== "F";
+}
+
+function studentMsg(totalScores, studentScore) {
+
+  let classAverage = getAverage(totalScores);
+  let studentVote = getGrade(studentScore);
+  let passed = hasPassingGrade(studentScore);
+  
+  if (passed) {
+    return "Class average: " + classAverage + ". Your grade: " + studentVote + ". You passed the course.";
+
+  }
+  else {
+    return "Class average: " + classAverage + ". Your grade: " + studentVote + ". You failed the course.";
+
+  }
+
+}
+console.log(studentMsg([92, 88, 12, 77, 57, 100, 67, 38, 97, 89], 37));
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```js
+// ===== GRADEBOOK APP: The Digital Grade Book! =====
+// It's like being a professor with a magic calculator!
+
+function getAverage(scores) {
+  // CALCULATE THE AVERAGE: The most classic mathematical function
+  
+  let sum = 0;
+  // ACCUMULATOR: Starts at zero, like an empty piggy bank
+  // let because it will change with each iteration
+  
+  for (const score of scores) {
+    sum += score;
+    // PROGRESSIVE SUM: Add each grade to the total
+    // += is shorthand for sum = sum + score
+    // It's like putting coins in the piggy bank, one at a time
+    
+    // EXAMPLE with [92, 88, 12]:
+    // Iteration 1: sum = 0 + 92 = 92
+    // Iteration 2: sum = 92 + 88 = 180
+    // Iteration 3: sum = 180 + 12 = 192
+  }
+  
+  return sum / scores.length;
+  // AVERAGE FORMULA: Total divided by number of grades
+  // scores.length = how many grades are in the array
+  // 192 / 3 = 64 (in the example above)
+  // It's the formula we all learned in school!
+}
+
+function getGrade(score) {
+  // GRADE-LETTER CONVERTER: From number to evaluation
+  // Like the American conversion table
+  
+  if (score === 100) {
+    return "A++";
+    // ABSOLUTE PERFECTION: 100/100 deserves a special award!
+    // === compares value AND type (safer than ==)
+    
+  } else if (score >= 90) {
+    return "A";
+    // EXCELLENT: 90-99 = standard maximum grade
+    
+  } else if (score >= 80) {
+    return "B";
+    // GOOD: 80-89 = above average
+    
+  } else if (score >= 70) {
+    return "C";
+    // SATISFACTORY: 70-79 = average
+    
+  } else if (score >= 60) {
+    return "D";
+    // INSUFFICIENT: 60-69 = below average but not failed
+    
+  } else {
+    return "F";
+    // FAILED: Below 60 = fail
+    // final else catches everything else
+  }
+  
+  // NOTE: The order is important! From highest to lowest
+  // If we checked >= 60 first, a 95 would get a "D"!
+}
+
+function hasPassingGrade(score) {
+  // PASSING CHECK: Are you passing or failing?
+  
+  return getGrade(score) !== "F";
+  // BOOLEAN LOGIC: true if NOT F, false if F
+  // !== means "not equal to" (NOT equal)
+  // It's like asking "Is the grade anything EXCEPT F?"
+  
+  // EXAMPLES:
+  // hasPassingGrade(75) -> getGrade(75) = "C" -> "C" !== "F" -> true
+  // hasPassingGrade(45) -> getGrade(45) = "F" -> "F" !== "F" -> false
+  
+  // Elegant function that reuses getGrade() instead of repeating the logic!
+}
+
+function studentMsg(totalScores, studentScore) {
+  // MESSAGE GENERATOR: Creates the final report for the student
+  // totalScores = array with all class grades
+  // studentScore = the specific student's grade
+
+  let classAverage = getAverage(totalScores);
+  // CLASS AVERAGE: Calculates how much the class scored on average
+  // Reuses the getAverage() function we defined earlier
+  
+  let studentVote = getGrade(studentScore);
+  // STUDENT GRADE: Converts the score to a letter
+  // Reuses getGrade() for conversion
+  
+  let passed = hasPassingGrade(studentScore);
+  // OUTCOME: true if passed, false if failed
+  // Reuses hasPassingGrade() for checking
+  
+  // DRY PRINCIPLE: Don't Repeat Yourself!
+  // Instead of rewriting the logic, we reuse existing functions
+  
+  if (passed) {
+    return "Class average: " + classAverage + ". Your grade: " + studentVote + ". You passed the course.";
+    // PASSING MESSAGE: Old-school string concatenation
+    // We could use template literals:
+    // return `Class average: ${classAverage}. Your grade: ${studentVote}. You passed the course.`;
+    
+  }
+  else {
+    return "Class average: " + classAverage + ". Your grade: " + studentVote + ". You failed the course.";
+    // FAILING MESSAGE: Same structure but different ending
+    
+    // NOTE: There's duplication here! We could optimize:
+    // let status = passed ? "passed" : "failed";
+    // return `Class average: ${classAverage}. Your grade: ${studentVote}. You ${status} the course.`;
+  }
+}
+
+console.log(studentMsg([92, 88, 12, 77, 57, 100, 67, 38, 97, 89], 37));
+// FINAL EXECUTION: Let's test our system!
+
+// DATA ANALYSIS:
+// Class grades: [92, 88, 12, 77, 57, 100, 67, 38, 97, 89]
+// Class average: (92+88+12+77+57+100+67+38+97+89) / 10 = 717 / 10 = 71.7
+// Student grade: 37
+// Student letter: F (below 60)
+// Outcome: Failed
+
+// OUTPUT: "Class average: 71.7. Your grade: F. You failed the course."
+
+// ===== PROGRAM ARCHITECTURE =====
+// 1. getAverage(): Pure mathematical function
+// 2. getGrade(): Converter with conditional logic
+// 3. hasPassingGrade(): Wrapper that adds semantics
+// 4. studentMsg(): Orchestrator that uses all the others
+
+// ===== KEY CONCEPTS =====
+// 1. PURE FUNCTIONS: getAverage and getGrade have no side effects
+// 2. COMPOSITION: Functions that use other functions
+// 3. SEPARATION OF RESPONSIBILITIES: Each function does one thing
+// 4. REUSABILITY: hasPassingGrade() reuses getGrade()
+// 5. CONCATENATION vs TEMPLATE LITERALS: Two ways to join strings
+
+// ===== POSSIBLE IMPROVEMENTS =====
+// 1. Input validation (what happens with an empty array?)
+// 2. Rounding the average (71.7 -> 72?)
+// 3. Template literals for more readable messages
+// 4. Eliminate duplication in studentMsg()
+// 5. Add more grades (A+, A-, B+, B-, etc.)
+
+// It's like having a digital assistant that calculates everything automatically!
+// No more manual calculations or conversion tables to consult!
+```
+</TabItem>
+
+</Tabs>
+
+### The Practical Utility Revelation
+
+In this short project I understood how **useful JavaScript** can be and how it can simplify life, in this case for a teacher who needs to understand the average and have immediate feedback on promotion or failure.
+
+### The UI Necessity Insight
+
+I recognize how necessary a **UI to accompany a tool like this** actually is. A teacher can't start typing various grades into console.log - they need a dedicated, pleasant and immediately understandable UI.
+
+As **Steve Krug states in "Don't Make Me Think"**: the interface must be **self-explanatory**, without any necessary explanation of how it works. The interface must speak for itself.
+
+### What I Learned
+
+**Modular Functions:**
+- **getAverage()** - average calculation with for...of loop
+- **getGrade()** - numerical score to letter grade conversion
+- **hasPassingGrade()** - boolean check for promotion
+- **studentMsg()** - compositive function that combines everything
+
+**Programming Patterns:**
+- **Separation of concerns** - each function has a specific task
+- **Code reusability** - functions calling each other
+- **String concatenation** for formatted output
+- **Multiple conditions** with else if for classification
+
+### Reflection
+
+This project solidified my understanding that **JavaScript is powerful but needs an interface**. The logic works perfectly, but without an intuitive UI it remains inaccessible to end users.
+
+It was the first time I clearly saw the **gap between functionality and usability**, a gap that as a future UX Engineer I'll always have to keep in mind.
+
+---
+
+**Next Project**: Learn Basic JavaScript by Building a Role Playing Game  
+*Finally we start integrating with HTML and CSS!*

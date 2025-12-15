@@ -1,0 +1,1109 @@
+---
+sidebar_position: 8
+sidebar_label: 'Accessibility Quiz'
+title: 'Accessibility Quiz'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Accessibility Quiz
+
+## The Project
+Interactive HTML/CSS quiz focused on web accessibility, developed as part of the freeCodeCamp curriculum.
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="freeCodeCamp Accessibility Quiz practice project" />
+    <title>Accessibility Quiz</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <img id="logo" alt="freeCodeCamp" src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg">
+      <h1>HTML/CSS Quiz</h1>
+      <nav>
+        <ul>
+          <li><a href="#student-info">INFO</a></li>
+          <li><a href="#html-questions">HTML</a></li>
+          <li><a href="#css-questions">CSS</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <form method="post" action="https://freecodecamp.org/practice-project/accessibility-quiz">
+        <section role="region" aria-labelledby="student-info">
+          <h2 id="student-info">Student Info</h2>
+          <div class="info">
+            <label for="student-name">Name:</label>
+            <input type="text" name="student-name" id="student-name" />
+          </div>
+          <div class="info">
+            <label for="student-email">Email:</label>
+            <input type="email" name="student-email" id="student-email" />
+          </div>
+          <div class="info">
+            <label for="birth-date">Date of Birth:</label>
+            <input type="date" name="birth-date" id="birth-date" />
+          </div>
+        </section>
+        <section role="region" aria-labelledby="html-questions">
+          <h2 id="html-questions">HTML</h2>
+          <div class="question-block">
+            <h3><span class="sr-only">Question</span>1</h3>
+            <fieldset class="question" name="html-question-one">
+              <legend>
+                The legend element represents a caption for the content of its
+                parent fieldset element
+              </legend>
+              <ul class="answers-list">
+                <li>
+                  <label for="q1-a1">
+                    <input type="radio" id="q1-a1" name="q1" value="true" />
+                    True
+                  </label>
+                </li>
+                <li>
+                  <label for="q1-a2">
+                    <input type="radio" id="q1-a2" name="q1" value="false" />
+                    False
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
+          </div>
+          <div class="question-block">
+            <h3><span class="sr-only">Question</span>2</h3>
+            <fieldset class="question" name="html-question-two">
+              <legend>
+                A label element nesting an input element is required to have a
+                for attribute with the same value as the input's id
+              </legend>
+              <ul class="answers-list">
+                <li>
+                  <label for="q2-a1">
+                    <input type="radio" id="q2-a1" name="q2" value="true" />
+                    True
+                  </label>
+                </li>
+                <li>
+                  <label for="q2-a2">
+                    <input type="radio" id="q2-a2" name="q2" value="false" />
+                    False
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
+          </div>
+        </section>
+        <section role="region" aria-labelledby="css-questions">
+          <h2 id="css-questions">CSS</h2>
+          <div class="formrow">
+            <div class="question-block">
+              <label for="selector">Can the CSS margin property accept negative values?</label>
+            </div>
+            <div class="answer">
+              <select name="selector" id="selector" required>
+                <option value="">Select an option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div class="question-block">
+              <label for="css-textarea">Do you have any questions:</label>
+            </div>
+            <div class="answer">
+              <textarea id="css-textarea" name="css-questions" rows="5" cols="24"></textarea>
+            </div>
+          </div>
+        </section>
+        <button type="submit">Send</button>
+      </form>
+    </main>
+    <footer>
+      <address>
+        <a href="https://freecodecamp.org">freeCodeCamp</a><br />
+        San Francisco<br />
+        California<br />
+        USA
+      </address>
+    </footer>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: #f5f6f7;
+  color: #1b1b32;
+  font-family: Helvetica;
+  margin: 0;
+}
+
+header {
+  width: 100%;
+  height: 50px;
+  background-color: #1b1b32;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  top: 0;
+}
+
+#logo {
+  width: max(10rem, 18vw);
+  background-color: #0a0a23;
+  aspect-ratio: 35 / 4;
+  padding: 0.4rem;
+}
+
+h1 {
+  color: #f1be32;
+  font-size: min(5vw, 1.2em);
+  text-align: center;
+}
+
+nav {
+  width: 50%;
+  max-width: 300px;
+  height: 50px;
+}
+
+nav > ul {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-inline-start: 0;
+  margin-block: 0;
+  height: 100%;
+}
+
+nav > ul > li {
+  color: #dfdfe2;
+  margin: 0 0.2rem;
+  padding: 0.2rem;
+  display: block;
+}
+
+nav > ul > li:hover {
+  background-color: #dfdfe2;
+  color: #1b1b32;
+  cursor: pointer;
+}
+
+li > a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  padding-top: 50px;
+}
+
+section {
+  width: 80%;
+  margin: 0 auto 10px auto;
+  max-width: 600px;
+}
+
+h1,
+h2 {
+  font-family: Verdana, Tahoma;
+}
+
+h2 {
+  border-bottom: 4px solid #dfdfe2;
+  margin-top: 0px;
+  padding-top: 60px;
+}
+
+.info {
+  padding: 10px 0 0 5px;
+}
+
+.formrow {
+  margin-top: 30px;
+  padding: 0px 15px;
+}
+
+input {
+  font-size: 1rem;
+}
+
+.info label, .info input {
+  display: inline-block;
+}
+
+.info input {
+  width: 50%;
+  text-align: left;
+}
+
+.info label {
+  width: 10%;
+  min-width: 55px;
+  text-align: right;
+}
+
+.question-block {
+  text-align: left;
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 5px;
+}
+
+h3 {
+  margin-top: 5px;
+  padding-left: 15px;
+  font-size: 1.375rem;
+}
+
+h3::before {
+  content: "Question #";
+}
+
+.question {
+  border: none;
+  padding-bottom: 0;
+}
+
+.answers-list {
+  list-style: none;
+  padding: 0;
+}
+
+button {
+  display: block;
+  margin: 40px auto;
+  width: 40%;
+  padding: 15px;
+  font-size: 1.438rem;
+  background: #d0d0d5;
+  border: 3px solid #3b3b4f;
+}
+
+footer {
+  background-color: #2a2a40;
+  display: flex;
+  justify-content: center;
+}
+
+footer,
+footer a {
+  color: #dfdfe2;
+}
+
+address {
+  text-align: center;
+  padding: 0.3em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: Like saying "Hey browser, this is modern code!" -->
+<!-- It's like the label on a suitcase that says "Fragile" - warns what to expect -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: It's like the box that contains the whole game -->
+<!-- lang="en" is like saying "this game is in English" - helps search engines and screen readers -->
+
+  <head>
+    <!-- 🧠 DOCUMENT BRAIN: All the secret instructions that the user doesn't see -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL ALPHABET: UTF-8 = "I understand all the characters in the world!" -->
+    <!-- It's like having a universal translator for emoji, accents, symbols -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 MOBILE INSTRUCTIONS: "Adapt to the device's screen!" -->
+    <!-- width=device-width = "be as wide as the screen" -->
+    <!-- initial-scale=1.0 = "start with zoom at 100%" -->
+    <!-- It's like telling a photo "adapt to the frame, no matter if it's big or small" -->
+    
+    <meta name="description" content="freeCodeCamp Accessibility Quiz practice project" />
+    <!-- 📄 DESCRIPTION FOR GOOGLE: It's like a movie synopsis -->
+    <!-- Appears in search results under the title -->
+    
+    <title>Accessibility Quiz</title>
+    <!-- 📑 TAB TITLE: What you see in the browser tab -->
+    <!-- It's like an app name on your phone -->
+    
+    <style>
+      /* 🎨 ===== INTERNAL STYLESHEET: The Design Rules ===== */
+      /* It's like having an instruction manual for furnishing the house */
+      
+      @media (prefers-reduced-motion: no-preference) {
+        /* 🎢 RESPECT FOR THOSE WITH MOTION PROBLEMS: True accessibility! */
+        /* It's like asking "Do animations bother you?" */
+        /* If the answer is "no", then we add smooth scrolling */
+        /* no-preference = "I don't have preferences, everything is fine" */
+        
+        * {
+          scroll-behavior: smooth;
+          /* 🎠 SMOOTH SCROLLING: Like an elevator instead of a jump */
+          /* When you click a link that goes to another section, it scrolls smoothly */
+          /* It's the difference between teleporting and a car journey */
+        }
+      }
+
+      body {
+        /* 🏠 PAGE BODY: It's like painting the walls of a house */
+        
+        background: #f5f6f7;
+        /* 🎨 LIGHT GRAY BACKGROUND: Like the walls of a modern office */
+        /* #f5f6f7 = very soft gray, relaxing for the eyes */
+        
+        color: #1b1b32;
+        /* ✏️ TEXT COLOR: Dark blue, almost black */
+        /* #1b1b32 = more elegant than pure black, less tiring */
+        
+        font-family: Helvetica;
+        /* ✍️ MAIN FONT: Helvetica = clean, professional font */
+        /* It's like choosing a readable handwriting for writing letters */
+        
+        margin: 0;
+        /* 🚫 ZERO MARGINS: Removes the browser's default spaces */
+        /* It's like removing the white frame from a painting */
+      }
+
+      header {
+        /* 📰 HEADER: Like the masthead of a newspaper */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Extends across the entire screen width */
+        /* 100% = "occupy all available space" */
+        
+        height: 50px;
+        /* 📐 FIXED HEIGHT: 50px tall, like a toolbar */
+        
+        background-color: #1b1b32;
+        /* 🎨 DARK BLUE BACKGROUND: Same shade as the text but as background */
+        /* Creates contrast with the light gray of the body */
+        
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* ⚖️ FLEXIBLE LAYOUT: It's like arranging objects on a table */
+        /* flex = "behave like a flexible box" */
+        /* space-between = "logo on the left, menu on the right, space in the middle" */
+        /* align-items: center = "everything aligned to the center vertically" */
+        /* It's like putting objects on a shelf: one at each end, centered in height */
+        
+        top: 0;
+        /* 📌 TOP POSITION: Preparation for potential positioning */
+      }
+
+      #logo {
+        /* 🏷️ THE LOGO: Like the brand on a t-shirt */
+        
+        width: max(10rem, 18vw);
+        /* 📏 INTELLIGENT WIDTH: "Take the larger value between these two" */
+        /* 10rem = 160px (guaranteed minimum size) */
+        /* 18vw = 18% of the screen width (adapts to the device) */
+        /* It's like saying "be at least this big, but grow with the screen" */
+        
+        background-color: #0a0a23;
+        /* 🎨 DARKER BACKGROUND: Even darker blue to make the logo stand out */
+        
+        aspect-ratio: 35 / 4;
+        /* 📐 FIXED PROPORTIONS: "Always maintain this width/height ratio" */
+        /* 35:4 = very wide and short rectangle, typical of horizontal logos */
+        /* It's like an A4 sheet that always maintains the same proportions */
+        
+        padding: 0.4rem;
+        /* 🏠 INTERNAL SPACE: Small cushion around the logo */
+        /* 0.4rem = 6.4px of "breathing room" around the image */
+      }
+
+      h1 {
+        /* 📰 MAIN TITLE: The name of the quiz, large and visible */
+        
+        color: #f1be32;
+        /* 🌟 GOLD COLOR: Golden yellow that stands out on dark blue */
+        /* #f1be32 = warm shade that attracts attention */
+        
+        font-size: min(5vw, 1.2em);
+        /* 📏 SMART SIZE: "Take the smaller value" */
+        /* 5vw = 5% of the screen width (responsive) */
+        /* 1.2em = 19.2px (maximum size) */
+        /* It's like saying "grow with the screen but don't get too big" */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: Like the title of a book */
+      }
+
+      nav {
+        /* 🧭 NAVIGATION: The main menu, like the directories of a building */
+        
+        width: 50%;
+        /* 📏 HALF WIDTH: Occupies half of the header space */
+        
+        max-width: 300px;
+        /* 📐 MAXIMUM WIDTH: Never become wider than 300px */
+        /* It's like saying "you can grow, but not beyond this limit" */
+        
+        height: 50px;
+        /* 📐 SAME HEIGHT AS HEADER: To align perfectly */
+      }
+
+      nav > ul {
+        /* 📝 NAVIGATION LIST: The menu buttons */
+        /* The > selector means "only ul that are DIRECT children of nav" */
+        
+        display: flex;
+        justify-content: space-evenly;
+        /* ⚖️ EVEN DISTRIBUTION: "Distribute the links evenly" */
+        /* space-evenly = equal space between all elements AND at the sides */
+        /* It's like arranging chairs around a round table */
+        
+        flex-wrap: wrap;
+        /* 🔄 WRAPPING: "If there's no space, wrap to the next line" */
+        /* Like when you write and reach the end of a line */
+        
+        align-items: center;
+        /* ⚖️ VERTICAL ALIGNMENT: Everything centered in height */
+        
+        padding-inline-start: 0;
+        /* 🚫 NO INDENTATION: Removes the default bullets of lists */
+        /* padding-inline-start = modern version of padding-left */
+        
+        margin-block: 0;
+        /* 🚫 NO VERTICAL MARGIN: margin-block = top and bottom together */
+        
+        height: 100%;
+        /* 📐 FULL HEIGHT: Occupies the entire height of the nav container */
+      }
+
+      nav > ul > li {
+        /* 🔗 INDIVIDUAL MENU ITEMS: Like the buttons on a remote control */
+        
+        color: #dfdfe2;
+        /* 🎨 LIGHT GRAY: Neutral color that is visible on dark blue */
+        
+        margin: 0 0.2rem;
+        /* 🌬️ SPACE BETWEEN ELEMENTS: Small separation between buttons */
+        /* 0.2rem = 3.2px of horizontal space */
+        
+        padding: 0.2rem;
+        /* 🏠 CLICKABLE AREA: Makes buttons easier to click */
+        /* It's like widening the target of a dart */
+        
+        display: block;
+        /* 📦 BLOCK BEHAVIOR: Each element occupies its own space */
+      }
+
+      nav > ul > li:hover {
+        /* ✨ HOVER EFFECT: The magic of interactivity! */
+        /* :hover = "when the mouse passes over" */
+        
+        background-color: #dfdfe2;
+        color: #1b1b32;
+        /* 🔄 COLOR INVERSION: Light background, dark text */
+        /* It's like turning on a light when you enter a room */
+        
+        cursor: pointer;
+        /* 👆 HAND CURSOR: "Hey, you can click me!" */
+        /* Changes the cursor from arrow to hand to indicate interactivity */
+      }
+
+      li > a {
+        /* 🔗 LINKS INSIDE BUTTONS: The actual connections */
+        
+        color: inherit;
+        /* 🎨 INHERITED COLOR: "Use the same color as the parent" */
+        /* inherit = "take the color from the li that contains me" */
+        
+        text-decoration: none;
+        /* 🚫 NO UNDERLINE: Removes the typical blue line of links */
+        /* Links look like clean buttons instead of traditional links */
+      }
+
+      main {
+        /* 📄 MAIN CONTENT: The body of the document */
+        
+        padding-top: 50px;
+        /* 🏠 TOP SPACE: Leaves space for the fixed header */
+        /* 50px = same height as the header, avoids overlaps */
+        /* It's like leaving space to not cover a road sign */
+      }
+
+      section {
+        /* 📦 QUIZ SECTIONS: Like chapters of a book */
+        
+        width: 80%;
+        /* 📏 WIDTH: Occupies 80% of available space */
+        /* Leaves 20% as side margins to not fill the entire screen */
+        
+        margin: 0 auto 10px auto;
+        /* ⚖️ CENTERING + SPACE: "Centered horizontally, 10px below" */
+        /* 0 = no margin above */
+        /* auto = centered horizontally */
+        /* 10px = space below each section */
+        /* auto = centered horizontally */
+        
+        max-width: 600px;
+        /* 📐 MAXIMUM WIDTH: Never wider than 600px */
+        /* Maintains readability on large screens */
+        /* It's like limiting the length of lines in a book */
+      }
+
+      h1,
+      h2 {
+        /* 📰 MAIN HEADINGS: More elegant font for titles */
+        
+        font-family: Verdana, Tahoma;
+        /* ✍️ MORE FORMAL FONT: Verdana = clear font for titles */
+        /* Tahoma = plan B if Verdana is not available */
+        /* It's like using a more elegant character for newspaper headlines */
+      }
+
+      h2 {
+        /* 📰 SECTION TITLES: Like chapter titles */
+        
+        border-bottom: 4px solid #dfdfe2;
+        /* 📏 BOTTOM LINE: Thick gray line under each title */
+        /* 4px = nice and thick, solid = continuous, #dfdfe2 = light gray */
+        /* It's like underlining with a thick highlighter */
+        
+        margin-top: 0px;
+        /* 🚫 NO SPACE ABOVE: Attached to the upper edge of the section */
+        
+        padding-top: 60px;
+        /* 🏠 INTERNAL TOP SPACE: 60px "cushion" above the title */
+        /* Creates space for navigation links that jump to sections */
+      }
+
+      .info {
+        /* ℹ️ STUDENT INFORMATION SECTION: Like a form to fill out */
+        
+        padding: 10px 0 0 5px;
+        /* 🏠 INTERNAL SPACE: 10px above, 5px on the left */
+        /* Creates a small indentation for form fields */
+      }
+
+      .formrow {
+        /* 📝 FORM ROW: Container for complex questions */
+        
+        margin-top: 30px;
+        /* 🌬️ SPACE ABOVE: 30px of breathing room before each row */
+        
+        padding: 0px 15px;
+        /* 🏠 INTERNAL SPACE: 15px on the sides to indent content */
+      }
+
+      input {
+        /* ⌨️ INPUT FIELDS: Where students write the answers */
+        
+        font-size: 1rem;
+        /* 📏 TEXT SIZE: 1rem = 16px, standard readable size */
+        /* Same font as the rest of the document for consistency */
+      }
+
+      .info label, .info input {
+        /* 🏷️ LABELS AND FIELDS IN THE INFO SECTION: Two-column layout */
+        
+        display: inline-block;
+        /* 📦 INLINE BLOCKS: Like boxes that are on the same line */
+        /* Allows having width and height but staying inline */
+      }
+
+      .info input {
+        /* ⌨️ INPUT FIELDS IN THE INFO SECTION: The area where you write */
+        
+        width: 50%;
+        /* 📏 HALF WIDTH: Occupies half of the available space */
+        
+        text-align: left;
+        /* ⬅️ LEFT-ALIGNED TEXT: Text starts from the left (normal) */
+      }
+
+      .info label {
+        /* 🏷️ LABELS IN THE INFO SECTION: The field names */
+        
+        width: 10%;
+        /* 📏 SMALL WIDTH: Only 10% of the space */
+        
+        min-width: 55px;
+        /* 📐 MINIMUM WIDTH: At least 55px even on small screens */
+        /* Ensures that "Name:", "Email:" etc. are always readable */
+        
+        text-align: right;
+        /* ➡️ RIGHT-ALIGNED TEXT: Aligns labels toward fields */
+        /* It's like aligning prices on a receipt */
+      }
+
+      .question-block {
+        /* ❓ QUESTION BLOCK: Container for each individual question */
+        
+        text-align: left;
+        /* ⬅️ LEFT-ALIGNED TEXT: Normal alignment for readability */
+        
+        display: block;
+        /* 📦 BLOCK BEHAVIOR: Each question on a separate line */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Occupies all available space */
+        
+        margin-top: 20px;
+        /* 🌬️ SPACE ABOVE: 20px of separation between questions */
+        
+        padding-top: 5px;
+        /* 🏠 SMALL TOP CUSHION: 5px of internal space */
+      }
+
+      h3 {
+        /* 📰 QUESTION TITLES: The question numbers */
+        
+        margin-top: 5px;
+        /* 🌬️ SMALL SPACE ABOVE: 5px of separation */
+        
+        padding-left: 15px;
+        /* 🏠 LEFT INDENT: 15px of indentation */
+        
+        font-size: 1.375rem;
+        /* 📏 SIZE: 1.375rem = 22px, larger than normal text */
+        /* Large enough to be noticed but not invasive */
+      }
+
+      h3::before {
+        /* ✨ MAGICAL CONTENT: Adds text automatically! */
+        
+        content: "Question #";
+        /* 📝 AUTOMATIC TEXT: Writes "Question #" before the number */
+        /* It's like having a stamp that automatically adds text */
+        /* If the HTML says <h3>1</h3>, the browser shows "Question #1" */
+        /* CSS trick to avoid repeating "Question #" in every title! */
+      }
+
+      .question {
+        /* ❓ QUESTION FIELDSET: Semantic container for options */
+        
+        border: none;
+        /* 🚫 NO BORDER: Removes the default border of the fieldset */
+        /* Fieldsets normally have a border, we remove it for clean design */
+        
+        padding-bottom: 0;
+        /* 🚫 NO BOTTOM SPACE: Eliminates default padding */
+      }
+
+      .answers-list {
+        /* 📝 ANSWERS LIST: Container for True/False, A/B/C etc. */
+        
+        list-style: none;
+        /* 🚫 NO BULLETS: Removes the list bullets */
+        /* Options look like clean radio buttons instead of a list */
+        
+        padding: 0;
+        /* 🚫 NO INDENTATION: Removes the default indentation of lists */
+      }
+
+      button {
+        /* 🔘 SUBMIT BUTTON: The big final button */
+        
+        display: block;
+        /* 📦 BLOCK BEHAVIOR: Occupies an entire row */
+        
+        margin: 40px auto;
+        /* ⚖️ CENTERING WITH SPACE: 40px above/below, centered horizontally */
+        /* auto = "browser, center it yourself!" */
+        
+        width: 40%;
+        /* 📏 WIDTH: 40% of the space, large enough but not invasive */
+        
+        padding: 15px;
+        /* 🏠 INTERNAL SPACE: 15px of "cushion" to make it easy to click */
+        
+        font-size: 1.438rem;
+        /* 📏 LARGE TEXT: 1.438rem = ~23px, very visible */
+        
+        background: #d0d0d5;
+        /* 🎨 GRAY BACKGROUND: Neutral color for the button */
+        
+        border: 3px solid #3b3b4f;
+        /* 🖼️ THICK BORDER: 3px of dark blue border */
+        /* solid = continuous line, #3b3b4f = dark blue that contrasts */
+      }
+
+      footer {
+        /* 👣 FOOTER: Like the credits at the end of a movie */
+        
+        background-color: #2a2a40;
+        /* 🎨 DARK BLUE BACKGROUND: Color similar to the header but different */
+        
+        display: flex;
+        justify-content: center;
+        /* ⚖️ CENTERED CONTENT: Like centering a logo at the bottom of the page */
+      }
+
+      footer,
+      footer a {
+        /* 🎨 FOOTER COLORS: Text and links of the same light color */
+        
+        color: #dfdfe2;
+        /* 🎨 LIGHT GRAY: Same color as the menu text */
+        /* Chromatic consistency throughout the design */
+      }
+
+      address {
+        /* 📍 ADDRESS INFORMATION: HTML semantic element for contacts */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: Like an address on an envelope */
+        
+        padding: 0.3em;
+        /* 🏠 SMALL SPACE: 0.3em = small cushion around the address */
+      }
+
+      .sr-only {
+        /* ♿ ACCESSIBILITY: Text for screen readers! */
+        /* "sr" = Screen Reader - for people using software that reads the screen */
+        
+        position: absolute;
+        /* 📌 ABSOLUTE POSITIONING: Exits the normal flow */
+        
+        width: 1px;
+        height: 1px;
+        /* 📐 TINY DIMENSIONS: 1px x 1px = practically invisible */
+        
+        overflow: hidden;
+        /* 🙈 HIDES CONTENT: Prevents overflow */
+        
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        /* ✂️ CLIPPING: Two methods to "clip" the element */
+        /* It hides it visually but remains accessible to screen readers */
+        
+        white-space: nowrap;
+        /* 🚫 NO WRAPPING: Everything on one line */
+        
+        /* THIS IS A BRILLIANT TRICK! 🎩✨ */
+        /* The element is invisible but screen readers still read it */
+        /* It's like whispering something that only certain people can hear */
+        /* Allows adding extra context for those who need it */
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🏗️ ===== PAGE STRUCTURE: Construction Begins ===== -->
+    
+    <header>
+      <!-- 📰 HEADER: The upper part, always visible -->
+      
+      <img id="logo" alt="freeCodeCamp" src="https://cdn.freecodecamp.org/platform/universal/fcc_primary.svg">
+      <!-- 🖼️ LOGO: The identifying image -->
+      <!-- alt="freeCodeCamp" = description for those who can't see the image -->
+      <!-- It's like describing a photo to someone on the phone -->
+      
+      <h1>HTML/CSS Quiz</h1>
+      <!-- 📰 MAIN TITLE: Name of the game/test -->
+      
+      <nav>
+        <!-- 🧭 NAVIGATION: The menu to jump to sections -->
+        
+        <ul>
+          <!-- 📝 MENU LIST: The navigation buttons -->
+          
+          <li><a href="#student-info">INFO</a></li>
+          <!-- 🔗 LINK TO INFO SECTION: href="#student-info" jumps to section with id="student-info" -->
+          <!-- It's like a book index that takes you directly to the chapter -->
+          
+          <li><a href="#html-questions">HTML</a></li>
+          <!-- 🔗 LINK TO HTML QUESTIONS: Jumps to HTML section -->
+          
+          <li><a href="#css-questions">CSS</a></li>
+          <!-- 🔗 LINK TO CSS QUESTIONS: Jumps to CSS section -->
+        </ul>
+      </nav>
+    </header>
+    
+    <main>
+      <!-- 📄 MAIN CONTENT: The heart of the quiz -->
+      
+      <form method="post" action="https://freecodecamp.org/practice-project/accessibility-quiz">
+        <!-- 📝 MAIN FORM: Like an exam sheet to fill out -->
+        <!-- method="post" = "send the data securely" -->
+        <!-- action="..." = "send the data to this address when clicking Send" -->
+        
+        <section role="region" aria-labelledby="student-info">
+          <!-- 📦 STUDENT INFO SECTION: First part of the quiz -->
+          <!-- role="region" = "this is an important region of the page" -->
+          <!-- aria-labelledby="student-info" = "the title of this section is the element with id='student-info'" -->
+          <!-- These attributes help screen readers understand the structure -->
+          
+          <h2 id="student-info">Student Info</h2>
+          <!-- 📰 SECTION TITLE: With id that connects to aria-labelledby above -->
+          
+          <div class="info">
+            <!-- ℹ️ INFO CONTAINER: Groups label + field -->
+            
+            <label for="student-name">Name:</label>
+            <!-- 🏷️ LABEL: Describes the following field -->
+            <!-- for="student-name" = "this label is for the field with id='student-name'" -->
+            <!-- It's like putting a label on a jar -->
+            
+            <input type="text" name="student-name" id="student-name" />
+            <!-- ⌨️ TEXT FIELD: Where to write the name -->
+            <!-- type="text" = "accepts any text" -->
+            <!-- name="student-name" = "when you submit the form, this value will be called 'student-name'" -->
+            <!-- id="student-name" = "connected to the label above" -->
+          </div>
+          
+          <div class="info">
+            <label for="student-email">Email:</label>
+            <input type="email" name="student-email" id="student-email" />
+            <!-- ⌨️ EMAIL FIELD: type="email" checks that it's a valid email -->
+            <!-- It's like having a checker that says "this doesn't look like an email!" -->
+          </div>
+          
+          <div class="info">
+            <label for="birth-date">Date of Birth:</label>
+            <input type="date" name="birth-date" id="birth-date" />
+            <!-- 📅 DATE FIELD: type="date" makes a calendar appear -->
+            <!-- It's like having a calendar integrated in the form -->
+          </div>
+        </section>
+        
+        <section role="region" aria-labelledby="html-questions">
+          <!-- 📦 HTML QUESTIONS SECTION: Second part of the quiz -->
+          
+          <h2 id="html-questions">HTML</h2>
+          <!-- 📰 HTML SECTION TITLE -->
+          
+          <div class="question-block">
+            <!-- ❓ FIRST QUESTION BLOCK -->
+            
+            <h3><span class="sr-only">Question</span>1</h3>
+            <!-- 📰 QUESTION NUMBER: CSS automatically adds "Question #" -->
+            <!-- span class="sr-only" = text only for screen readers -->
+            <!-- Screen reader will hear "Question Question #1" but it's for clarity -->
+            
+            <fieldset class="question" name="html-question-one">
+              <!-- 📦 QUESTION GROUP: fieldset groups question + answers -->
+              <!-- It's like putting a frame around an exam question -->
+              
+              <legend>
+                The legend element represents a caption for the content of its
+                parent fieldset element
+              </legend>
+              <!-- 📝 QUESTION TEXT: legend describes the fieldset content -->
+              <!-- It's like the title of a section in a form -->
+              
+              <ul class="answers-list">
+                <!-- 📝 ANSWERS LIST: Container for the options -->
+                
+                <li>
+                  <label for="q1-a1">
+                    <!-- 🏷️ ANSWER LABEL: Clicking here selects the radio button -->
+                    
+                    <input type="radio" id="q1-a1" name="q1" value="true" />
+                    <!-- ⚪ RADIO BUTTON: Only one selectable per group -->
+                    <!-- name="q1" = all radios with the same name are a group -->
+                    <!-- value="true" = if selected, sends "true" -->
+                    
+                    True
+                  </label>
+                </li>
+                <li>
+                  <label for="q1-a2">
+                    <input type="radio" id="q1-a2" name="q1" value="false" />
+                    False
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
+          </div>
+          
+          <div class="question-block">
+            <!-- ❓ SECOND QUESTION BLOCK: Same structure as the first -->
+            
+            <h3><span class="sr-only">Question</span>2</h3>
+            <fieldset class="question" name="html-question-two">
+              <legend>
+                A label element nesting an input element is required to have a
+                for attribute with the same value as the input's id
+              </legend>
+              <ul class="answers-list">
+                <li>
+                  <label for="q2-a1">
+                    <input type="radio" id="q2-a1" name="q2" value="true" />
+                    <!-- ⚪ NEW GROUP: name="q2" creates a group separate from q1 -->
+                    True
+                  </label>
+                </li>
+                <li>
+                  <label for="q2-a2">
+                    <input type="radio" id="q2-a2" name="q2" value="false" />
+                    False
+                  </label>
+                </li>
+              </ul>
+            </fieldset>
+          </div>
+        </section>
+        
+        <section role="region" aria-labelledby="css-questions">
+          <!-- 📦 CSS SECTION: Third and last part -->
+          
+          <h2 id="css-questions">CSS</h2>
+          
+          <div class="formrow">
+            <!-- 📝 FORM ROW: Container for more complex questions -->
+            
+            <div class="question-block">
+              <label for="selector">Can the CSS margin property accept negative values?</label>
+              <!-- 🏷️ QUESTION LABEL: Connected to the select below -->
+            </div>
+            
+            <div class="answer">
+              <!-- 📝 ANSWER CONTAINER -->
+              
+              <select name="selector" id="selector" required>
+                <!-- 📋 DROPDOWN MENU: Choice between preset options -->
+                <!-- required = "this question is mandatory" -->
+                
+                <option value="">Select an option</option>
+                <!-- ❓ EMPTY OPTION: Placeholder that forces a choice -->
+                
+                <option value="yes">Yes</option>
+                <!-- ✅ YES OPTION: value="yes" is sent if selected -->
+                
+                <option value="no">No</option>
+                <!-- ❌ NO OPTION -->
+              </select>
+            </div>
+            
+            <div class="question-block">
+              <label for="css-textarea">Do you have any questions:</label>
+              <!-- 🏷️ LABEL FOR TEXT AREA -->
+            </div>
+            
+            <div class="answer">
+              <textarea id="css-textarea" name="css-questions" rows="5" cols="24"></textarea>
+              <!-- 📝 FREE TEXT AREA: For comments or questions -->
+              <!-- rows="5" = 5 rows in height -->
+              <!-- cols="24" = 24 characters in width (approximately) -->
+              <!-- It's like a notepad integrated into the quiz -->
+            </div>
+          </div>
+        </section>
+        
+        <button type="submit">Send</button>
+        <!-- 🔘 SUBMIT BUTTON: Sends the entire form -->
+        <!-- type="submit" = "when clicked, submit the form" -->
+        <!-- It's like the "Submit" button on an exam -->
+      </form>
+    </main>
+    
+    <footer>
+      <!-- 👣 FOOTER: Final information -->
+      
+      <address>
+        <!-- 📍 CONTACT INFORMATION: Semantic element for addresses -->
+        
+        <a href="https://freecodecamp.org">freeCodeCamp</a><br />
+        <!-- 🔗 LINK TO MAIN SITE: <br /> = line break -->
+        
+        San Francisco<br />
+        California<br />
+        USA
+        <!-- 📍 PHYSICAL ADDRESS: City, state, country -->
+      </address>
+    </footer>
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+## Development Reflections
+
+### The Commenting Approach
+I used Claude to create a didactic commenting system following the approach from my personal handbook. I use it as a tutor, especially after implementing changes requested by freeCodeCamp without initially understanding the motivations behind each choice.
+
+I think freeCodeCamp is wonderful, but I'm realizing that "unfortunately" it's too practical. Don't get me wrong, that's its strength, but my personality constantly suggests I dig deeper into what interests me, including in coding.
+
+### The Parallel Study Journey
+
+**HTML & CSS by Duckett**: Even though it's basic level, I'm realizing how much technology has advanced since 2014. The book talks about Flash, Cufon... everything replaced "fortunately" by Google Fonts, which democratized access to fonts.
+
+**["Become a Designer" Course by Riccardo Breccia](https://academy.talentgarden.com/come-diventare-designer-con-breccia/)**: I took more time between this project and the previous one precisely because of this course. I'm aware that every freeCodeCamp lesson won't be the same anymore. I have more refined eyes, attentive to details. Despite studying Industrial Design at university, I found this course more useful than many exams I've taken: extremely practical and allowed me to challenge myself.
+
+**Google UX Course (2/8)**: The exact opposite of Breccia's. Extremely theoretical and not very practical so far, though I expect the practical part will come.
+
+**Refactoring UI**: After 35 pages I'm already happy with the investment. It's incredibly direct and useful. I regret not getting it earlier because it's teaching me an approach to projects that seems senior-level.
+
+I expected a manual about UI micro-details, but instead it's giving me essential foundations in coding scalability. I've noticed that this specificity (more detailed CSS, HTML, Figma with components and variables) is what distinguishes:
+- Junior Developer → Senior Developer
+- Junior UX Designer → Senior UX Designer  
+- Junior UX Engineer → Senior UX Engineer
+
+**Don't Make Me Think**: A pillar of the UX world. After loving "The Design of Everyday Things" by Norman, I wanted to continue on that axis.
+
+### The Realization
+All this to say that maybe I was getting lost in code, abandoning the design part and forgetting my true goal: **combining design with code**.
+
+I admit that when I add new knowledge to my repertoire and apply it in freeCodeCamp lessons, my eyes light up and I smile like a child. It happens when I read interesting concepts in design books too, but very rarely when using Figma. Despite being fast with it, it doesn't give me the same satisfaction as coding. Maybe because I consider it "easier"?
+
+## Technical Highlights
+
+I had already explored the final version of this project a few exercises ago, and it was one of the things that made me want to accelerate. The effects that excited me most:
+
+- **Smooth scroll behavior**
+- **Navigation links with gentle scrolling**
+- **Interactive hover effects**
+
+It's everything that connects what I learned with Figma to code, giving me the feeling of being in the right place at the right moment.
+
+### The Most Difficult Concept
+```css
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+```
+
+Initially it derailed from the usual patterns, but now it's crystal clear: if the user hasn't limited animations in their browser/device settings, the site interprets it as "okay, green light for animations". In this case `scroll-behavior: smooth`.
+
+## Final Notes
+I stopped tracking total time to complete exercises because I realized that **quality is significantly better than quantity**.
+
+---
+
+**Next Project**: Tribute Page

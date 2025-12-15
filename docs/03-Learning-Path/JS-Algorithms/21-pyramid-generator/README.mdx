@@ -1,0 +1,285 @@
+---
+sidebar_position: 1
+sidebar_label: 'Pyramid Generator'
+title: 'Pyramid Generator'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Pyramid Generator
+
+<img width="100%" alt="pyramid-generator" src="https://github.com/user-attachments/assets/483436a8-853f-44c2-b52e-71a947c70797" />
+
+### The Project
+Pyramid Generator developed with introductory JavaScript concepts, focusing on functions, loops, conditionals and array manipulation to create ASCII art patterns.
+
+I started JavaScript enthusiastically, but the enthusiasm quickly faded in the first steps. The syntax, variables, basic concepts didn't give me that sense of "control" I had developed with CSS.
+
+### Source Code
+
+<Tabs>
+
+<TabItem value="js" label="script.js">
+
+```js
+const character = "!";
+const count = 10;
+const rows = [];
+let inverted = false;
+
+function padRow(rowNumber, rowCount) {
+  return " ".repeat(rowCount - rowNumber) + character.repeat(2 * rowNumber - 1) + " ".repeat(rowCount - rowNumber);
+}
+
+for (let i = 1; i <= count; i++) {
+  if (inverted) {
+    rows.unshift(padRow(i, count));
+  } else {
+    rows.push(padRow(i, count));
+  }
+}
+
+let result = ""
+
+for (const row of rows) {
+  result = result + row + "\n";
+}
+
+console.log(result);
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```js
+// ===== PYRAMID BUILDER: Let's Build Pyramids with JavaScript! =====
+
+const character = "!";
+// BASIC BRICK: The character we'll use to build
+// const = constant, cannot be changed afterwards
+// "!" = our "brick" for the pyramid
+
+const count = 10;
+// NUMBER OF LEVELS: How tall the pyramid will be
+// 10 = a pyramid with 10 levels
+
+const rows = [];
+// ROWS CONTAINER: Empty array that will contain each level
+// [] = empty array, like a box ready to be filled
+// Each element will be a row of the pyramid
+
+let inverted = false;
+// INVERSION SWITCH: Normal or inverted pyramid?
+// let = variable that can change (different from const)
+// false = normal pyramid (points upward)
+// true = inverted pyramid (points downward)
+
+// ===== ROW BUILDER FUNCTION =====
+function padRow(rowNumber, rowCount) {
+  // MAGIC FORMULA: Creates a perfectly centered row
+  
+  return " ".repeat(rowCount - rowNumber) + character.repeat(2 * rowNumber - 1) + " ".repeat(rowCount - rowNumber);
+  // FORMULA BREAKDOWN:
+  
+  // 1. INITIAL SPACES: " ".repeat(rowCount - rowNumber)
+  // If we're at row 1 of 10: 10 - 1 = 9 spaces
+  // If we're at row 5 of 10: 10 - 5 = 5 spaces
+  // Higher up = more spaces (for centering)
+  
+  // 2. CENTRAL CHARACTERS: character.repeat(2 * rowNumber - 1)
+  // Row 1: 2 * 1 - 1 = 1 character
+  // Row 2: 2 * 2 - 1 = 3 characters
+  // Row 3: 2 * 3 - 1 = 5 characters
+  // Formula for odd numbers! (1, 3, 5, 7...)
+  
+  // 3. FINAL SPACES: " ".repeat(rowCount - rowNumber)
+  // Same spaces as the beginning for symmetry
+  
+  // EXAMPLE row 3 of 10:
+  // 7 spaces + "!!!!!" (5 characters) + 7 spaces = centered row!
+}
+
+// ===== CONSTRUCTION LOOP =====
+for (let i = 1; i <= count; i++) {
+  // BUILD LEVEL BY LEVEL
+  // i = 1: first level
+  // i <= count: continue until the last level (10)
+  // i++: go up one level each time
+  
+  if (inverted) {
+    rows.unshift(padRow(i, count));
+    // INVERTED PYRAMID: Add to the BEGINNING of the array
+    // unshift() = inserts at the beginning, pushing other elements
+    // It's like placing levels from bottom to top
+    
+  } else {
+    rows.push(padRow(i, count));
+    // NORMAL PYRAMID: Add to the END of the array
+    // push() = inserts at the end of the array
+    // It's like building from the ground floor upward
+  }
+}
+
+// ===== FINAL ASSEMBLY =====
+let result = ""
+// RESULT STRING: Starts empty
+// Here we'll assemble the complete pyramid
+
+for (const row of rows) {
+  result = result + row + "\n";
+  // JOIN THE ROWS: One below the other
+  // row = each row of the pyramid
+  // "\n" = "new line", carriage return
+  // It's like gluing each level of the pyramid with an empty row below
+  
+  // MODERN ALTERNATIVE:
+  // result += row + "\n";
+  // += is shorthand for result = result + ...
+}
+
+console.log(result);
+// SHOW THE PYRAMID: Print in the terminal
+// console.log() = the command to display output
+// The moment of truth: let's see our creation!
+
+// ===== OUTPUT WITH inverted = false =====
+//          !           (9 spaces + 1 character + 9 spaces)
+//         !!!          (8 spaces + 3 characters + 8 spaces)
+//        !!!!!         (7 spaces + 5 characters + 7 spaces)
+//       !!!!!!!        (6 spaces + 7 characters + 6 spaces)
+//      !!!!!!!!!       (5 spaces + 9 characters + 5 spaces)
+//     !!!!!!!!!!!      (4 spaces + 11 characters + 4 spaces)
+//    !!!!!!!!!!!!!     (3 spaces + 13 characters + 3 spaces)
+//   !!!!!!!!!!!!!!!    (2 spaces + 15 characters + 2 spaces)
+//  !!!!!!!!!!!!!!!!!   (1 space + 17 characters + 1 space)
+// !!!!!!!!!!!!!!!!!!! (0 spaces + 19 characters + 0 spaces)
+
+// ===== OUTPUT WITH inverted = true =====
+// !!!!!!!!!!!!!!!!!!!  (wide base at the top)
+//  !!!!!!!!!!!!!!!!!   
+//   !!!!!!!!!!!!!!!    
+//    !!!!!!!!!!!!!     
+//     !!!!!!!!!!!      
+//      !!!!!!!!!       
+//       !!!!!!!        
+//        !!!!!         
+//         !!!          
+//          !           (point at the bottom)
+
+// ===== JAVASCRIPT KEY CONCEPTS =====
+// 1. VARIABLES: const (immutable) vs let (mutable)
+// 2. ARRAYS: Ordered containers of elements
+// 3. FUNCTIONS: Reusable blocks of code
+// 4. FOR LOOPS: Controlled repetition
+// 5. ARRAY METHODS: push() adds to the end, unshift() to the beginning
+// 6. TEMPLATE LITERALS: Although here we use classic concatenation
+// 7. OPERATORS: +, -, *, repeat() for strings
+
+// ===== ALGORITHM IN BRIEF =====
+// 1. Define the parameters (character, height, inversion)
+// 2. Create a function that builds each row with padding
+// 3. Use a loop to generate all rows
+// 4. Decide whether to add them normally or in reverse
+// 5. Join everything into a string with line breaks
+// 6. Show the result!
+
+// It's like being a digital architect building ASCII pyramids!
+```
+</TabItem>
+
+</Tabs>
+
+### The Turning Point
+
+The breakthrough came with the introduction of **flow control concepts** - if and else. Suddenly I saw the logical structure behind every code decision. It was no longer syntax to memorize, but **applied logic**: "if this condition is true, do this, otherwise do that."
+
+I felt these constructs as natural, despite never having programmed before. It was as if my brain finally recognized a language that spoke its own language: that of logical decisions.
+
+### The Methodical Approach
+
+Despite deepening most steps with Code Tutor to guarantee deep understanding and avoid gaps, I maintained an iron rule: **deepen only after completing the step**.
+
+**Result:** In only three occasions across 118 steps I had to ask Code Tutor for help. This shows that the approach of completing first and deepening after works.
+
+### The Missing Visual Side
+
+I miss the visual side, I admit it. I'm not satisfied with `console.log`, I'm not satisfied with talking to myself with the computer. **I want the computer to talk with users.**
+
+### The Return of Enthusiasm
+
+It wasn't just the if and else concepts that brought back my energy, but also the prospect of JavaScript integration with HTML and CSS. "Browsing" the upcoming projects I saw that starting from the third project we'll **mix JavaScript with HTML and CSS**.
+
+Finally I'll be able to see the results of my logic in action in the user interface, no longer limited to console.log.
+
+I can't wait to update the real-world-vademecum with the latest JavaScript concepts learned!
+
+### What I Learned
+
+**1. Variable Fundamentals:**
+- **let** vs **const** - when to use reassignable variables vs constants
+- **undefined** - state of uninitialized variables
+- **Scope** global vs local variables
+
+**2. Data Types:**
+- **Strings** - single vs double quotes, concatenation, .repeat()
+- **Numbers** - arithmetic operations, use in calculations
+- **Booleans** - true/false, falsy values ("", 0, false)
+
+**3. Arrays - The Collections:**
+- Creation and access through index [0], [1]
+- **.push()** - add to end
+- **.unshift()** - add to beginning
+- **.length** - property for length
+
+**4. Functions - The Reusable Blocks:**
+- Declaration and calling
+- **Multiple parameters** (e.g.: padRow(rowNumber, rowCount))
+- **Return statement** to return values
+- **Local scope** - variables inside functions
+
+**5. Flow Control:**
+- **if/else** - basic and multiple conditions
+- **Comparison operators** `(<, >, <=, ==, ===, !==)`
+- Difference between loose (==) and strict (===) equality
+
+**6. Loops - The Repetitions:**
+- **Classic for** - initialization, condition, increment
+- **while** - with complex conditions
+- **for...of** - to iterate over arrays
+- **Increment operators** (i++, i+=, i--)
+
+**7. Operators:**
+- **Arithmetic** (+, -, *, operator precedence)
+- **Assignment** (=, +=, -=)
+- **String concatenation** with +
+
+**8. Console and Output:**
+- **console.log()** for output and debug
+- Testing values and functions
+
+**9. Comments:**
+- Single line (//) and multi-line (/* */)
+- Best practices for documentation
+
+**10. Patterns and Practical Constructs:**
+- **Boolean flags** for flow control (inverted)
+- **Result accumulation** (result = result + row + "\n")
+- **Mathematical formula** for patterns (2 * rowNumber - 1)
+- **Conditional decisions in loops** (if inside for)
+
+**11. Best Practices Observed:**
+- **Naming convention** camelCase
+- **Progressive refactoring** from repetitive to DRY
+- **Incremental testing** with console.log
+
+### Reflection
+
+JavaScript initially seemed abstract compared to the visual concreteness of HTML/CSS. At the moment I'm still working with console.log and haven't yet seen JavaScript in action with DOM manipulation, but the prospect of making interfaces **react** to user actions intrigues me greatly.
+
+The `console.log` is just the beginning - when I finally see this logic bring interactive user experiences to life, I'll truly understand the power of this language.
+
+---
+
+**Next Project**: Review JavaScript Fundamentals by Building a Gradebook App

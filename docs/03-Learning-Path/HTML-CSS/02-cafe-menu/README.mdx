@@ -1,0 +1,428 @@
+---
+sidebar_position: 2
+sidebar_label: 'Cafe Menu'
+title: 'Cafe Menu'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+My First CSS Project
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Menu</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <div class="menu">
+      <main>
+        <h1>CAMPER CAFE</h1>
+        <p class="established">Est. 2020</p>
+        <hr>
+
+        <section>
+          <h2>Coffee</h2>
+          <img src="https://cdn.freecodecamp.org/curriculum/css-cafe/coffee.jpg" alt="coffee icon">
+          <article class="item"><p class="flavor">French Vanilla</p><p class="price">3.00</p></article>
+          <article class="item"><p class="flavor">Caramel Macchiato</p><p class="price">3.75</p></article>
+          <article class="item"><p class="flavor">Pumpkin Spice</p><p class="price">3.50</p></article>
+          <article class="item"><p class="flavor">Hazelnut</p><p class="price">4.00</p></article>
+          <article class="item"><p class="flavor">Mocha</p><p class="price">4.50</p></article>
+        </section>
+
+        <section>
+          <h2>Desserts</h2>
+          <img src="https://cdn.freecodecamp.org/curriculum/css-cafe/pie.jpg" alt="pie icon">
+          <article class="item"><p class="dessert">Donut</p><p class="price">1.50</p></article>
+          <article class="item"><p class="dessert">Cherry Pie</p><p class="price">2.75</p></article>
+          <article class="item"><p class="dessert">Cheesecake</p><p class="price">3.00</p></article>
+          <article class="item"><p class="dessert">Cinnamon Roll</p><p class="price">2.50</p></article>
+        </section>
+      </main>
+
+      <hr class="bottom-line">
+
+      <footer>
+        <p><a href="https://www.freecodecamp.org" target="_blank">Visit our website</a></p>
+        <p class="address">123 Free Code Camp Drive</p>
+      </footer>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+body {
+  background-image: url(https://cdn.freecodecamp.org/curriculum/css-cafe/beans.jpg);
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 40px;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+h2 {
+  font-size: 30px;
+}
+
+.established {
+  font-style: italic;
+}
+
+h1, h2, p {
+  text-align: center;
+}
+
+.menu {
+  width: 80%;
+  max-width: 500px;
+  background-color: burlywood;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+img {
+  display: block;
+  margin: -25px auto 0;
+}
+
+hr {
+  height: 2px;
+  background-color: brown;
+  border-color: brown;
+}
+
+.bottom-line {
+  margin-top: 25px;
+}
+
+h1, h2 {
+  font-family: Impact, serif;
+}
+
+.item p {
+  display: inline-block;
+  margin: 5px 0;
+  font-size: 18px;
+}
+
+.flavor,
+.dessert {
+  text-align: left;
+  width: 75%;
+}
+
+.price {
+  text-align: right;
+  width: 25%;
+}
+
+footer {
+  font-size: 14px;
+}
+
+.address {
+  margin-bottom: 5px;
+}
+
+a {
+  color: black;
+}
+
+a:visited {
+  color: grey;
+}
+
+a:hover,
+a:active {
+  color: brown;
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- <!DOCTYPE html>: Declares HTML5 (mandatory in the first line).
+     Prevents the browser from entering "quirks mode" (old compatibility mode). -->
+
+<html lang="en">
+<!-- <html></html>: Root of the entire document.
+     lang="en": indicates that the content is in English → better SEO, accessibility, translations. -->
+
+  <head>
+    <!-- <head></head>: Metadata and external resources. Does not contain visible elements. -->
+
+    <meta charset="utf-8">
+    <!-- UTF-8 encoding → supports international characters, emojis, symbols. -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Makes the page responsive: the viewport width corresponds to the device width. -->
+
+    <title>Cafe Menu</title>
+    <!-- Title displayed in the browser tab and in search engine results. -->
+
+    <!-- ===============================
+         EMBEDDED CSS
+         =============================== -->
+    <style>
+    /* ===============================
+       BASE / GLOBAL STYLES
+       =============================== */
+
+    body {
+      background-image: url(https://cdn.freecodecamp.org/curriculum/css-cafe/beans.jpg); /* Coffee beans image as background texture */
+      font-family: sans-serif;       /* Generic system font: readable everywhere */
+      padding: 20px;                 /* Internal spacing around all body content */
+    }
+
+    h1 {                             
+      font-size: 40px;               /* Font size of the main title */
+      margin-top: 0;                 /* Removes space above: brings the title closer to the upper edge of .menu */
+      margin-bottom: 15px;           /* Space below: breathing room before "Est. 2020" */
+    }
+
+    h2 {
+      font-size: 30px;               /* Font size for section subtitles */
+    }
+
+    .established {
+      font-style: italic;            /* Italic for "Est. 2020" */
+    }
+
+    /* Centers ALL headings (h1, h2) and <p> that don't have overrides */
+    h1, h2, p {
+      text-align: center;            /* Horizontal center */
+    }
+
+    /* ===============================
+       MAIN CONTAINER (.menu)
+       =============================== */
+
+    .menu {
+      width: 80%;                    /* Occupies 80% of the available width */
+      max-width: 500px;              /* ...but doesn't exceed 500px on very wide monitors */
+      background-color: burlywood;   /* Background color "burlywood" that resembles wood */
+      margin-left: auto;             /* auto + auto = the block is horizontally centered */
+      margin-right: auto;
+      padding: 20px;                 /* Internal space: separates content from box edges */
+    }
+
+    /* ===============================
+       IMAGES (section icons)
+       =============================== */
+
+    img {
+      display: block;                /* Removes the space below the image (inline default) */
+      margin-left: auto;             /* Centers the image horizontally */
+      margin-right: auto;
+      margin-top: -25px;             /* Pulls up the icon, slightly overlapping it with the title */
+    }
+
+    /* ===============================
+       SEPARATORS <hr>
+       =============================== */
+
+    hr {
+      height: 2px;                   /* Line thickness */
+      background-color: brown;       /* Fill color */
+      border-color: brown;           /* Border color (for cross-browser uniformity) */
+    }
+
+    .bottom-line {
+      margin-top: 25px;              /* Extra space above the final line before the footer */
+    }
+
+    /* ===============================
+       CUSTOM FONT FOR TITLES
+       =============================== */
+
+    h1, h2 {
+      font-family: Impact, serif;    /* Impact (if present); if the browser doesn't have it: generic "serif" */
+    }
+
+    /* ===============================
+       MENU ITEM LIST (Coffee & Dessert)
+       =============================== */
+
+    .item p {
+      display: inline-block;         /* Allows positioning flavor and price on the same line */
+      margin-top:   5px;             /* Space above each menu row */
+      margin-bottom: 5px;            /* Space below */
+      font-size: 18px;               /* Text size of the items */
+    }
+
+    /* Product flavor (left column) */
+    .flavor,
+    .dessert {                        /* .dessert inherits the same styles as .flavor */
+      text-align: left;              /* Aligns text to the left within the column */
+      width: 75%;                    /* Occupies 75% of the row width (.item) */
+    }
+
+    /* Price (right column) */
+    .price {
+      text-align: right;             /* Aligns text to the right */
+      width: 25%;                    /* Occupies the remaining 25% */
+    }
+
+    /* ===============================
+       FOOTER
+       =============================== */
+
+    footer {
+      font-size: 14px;               /* Font slightly smaller than the body text */
+    }
+
+    .address {
+      margin-bottom: 5px;            /* Space below the address to separate it from the link (or vice versa) */
+    }
+
+    /* ---------- Footer link: states ---------- */
+
+    a {
+      color: black;                  /* Default/unvisited link color */
+    }
+
+    a:visited {
+      color: grey;                   /* Color after the user has visited the link */
+    }
+
+    a:hover,
+    a:active {
+      color: brown;                  /* Color on hover (mouse over) and active (click) */
+    }
+
+    /* ========= END OF CSS ========= */
+    </style>
+  </head>
+  <!-- </head> -->
+
+  <body>
+    <!-- <body></body>: Everything the user sees or interacts with. -->
+
+    <div class="menu">
+    <!-- Main container of the app. class="menu" used for layout and style. -->
+
+      <main>
+      <!-- <main></main>: Main content area (semantic HTML5). -->
+
+        <h1>CAMPER CAFE</h1>
+        <!-- <h1></h1>: Level 1 heading. Unique per page. -->
+
+        <p class="established">Est. 2020</p>
+        <!-- Paragraph with established class → will be displayed in italic via CSS. -->
+
+        <hr>
+        <!-- <hr>: Thematic separator (horizontal line). -->
+
+        <!-- ░░░ COFFEE SECTION ░░░ -->
+        <section>
+        <!-- <section></section>: Semantic block dedicated to coffees. -->
+
+          <h2>Coffee</h2>
+          <!-- Section subtitle (h1 > h2). -->
+
+          <img src="https://cdn.freecodecamp.org/curriculum/css-cafe/coffee.jpg"
+               alt="coffee icon">
+          <!-- <img>: Decorative icon. 
+               src: image path. 
+               alt: alternative text for screen readers and SEO. -->
+
+          <!-- === List of coffee articles === -->
+          <article class="item">
+            <!-- <article></article>: Independent content (a menu "row"). -->
+
+            <p class="flavor">French Vanilla</p><p class="price">3.00</p>
+            <!-- <p class="flavor">: flavor description (75% width).
+                 <p class="price">: price (25% width).
+                 No line break between tags to avoid inline-block spaces. -->
+          </article>
+
+          <article class="item"><p class="flavor">Caramel Macchiato</p><p class="price">3.75</p></article>
+          <article class="item"><p class="flavor">Pumpkin Spice</p><p class="price">3.50</p></article>
+          <article class="item"><p class="flavor">Hazelnut</p><p class="price">4.00</p></article>
+          <article class="item"><p class="flavor">Mocha</p><p class="price">4.50</p></article>
+          <!-- Each article repeats the same flavor + price structure. -->
+        </section>
+        <!-- </section> Coffee -->
+
+        <!-- ░░░ DESSERTS SECTION ░░░ -->
+        <section>
+          <h2>Desserts</h2>
+
+          <img src="https://cdn.freecodecamp.org/curriculum/css-cafe/pie.jpg"
+               alt="pie icon">
+          <!-- Dessert icon. -->
+
+          <article class="item"><p class="dessert">Donut</p><p class="price">1.50</p></article>
+          <article class="item"><p class="dessert">Cherry Pie</p><p class="price">2.75</p></article>
+          <article class="item"><p class="dessert">Cheesecake</p><p class="price">3.00</p></article>
+          <article class="item"><p class="dessert">Cinnamon Roll</p><p class="price">2.50</p></article>
+          <!-- <p class="dessert"> shares the same styles as .flavor. -->
+        </section>
+        <!-- closing Desserts section -->
+      </main>
+      <!-- </main> -->
+
+      <hr class="bottom-line">
+      <!-- separator line before the footer (extra space in CSS). -->
+
+      <footer>
+      <!-- <footer></footer>: Closing information (contacts, copyright, links). -->
+
+        <p>
+          <a href="https://www.freecodecamp.org" target="_blank">Visit our website</a>
+          <!-- <a>: External link. target="_blank" → opens in a new tab. -->
+        </p>
+
+        <p class="address">123 Free Code Camp Drive</p>
+        <!-- Address, custom styled through .address -->
+      </footer>
+      <!-- </footer> -->
+    </div>
+    <!-- </div> .menu -->
+
+  </body>
+  <!-- </body>: ends the visible content. -->
+
+</html>
+<!-- </html>: final closure of the document. -->
+```
+</TabItem>
+
+</Tabs>
+
+What I Learned:
+
+- CSS syntax and selectors
+- Styling text and layout basics
+- Class vs. ID selectors
+- Using the box model (padding, margin, border)
+- Applying colors and fonts
+- Accessibility considerations for styled elements
+- The :hover pseudo-class for interactive effects
+
+💡 Discovering the hover effect was especially exciting!  
+Even though it’s a simple feature, it immediately made me feel at home in the world of UX/UI seeing elements respond to user interaction was truly satisfying.
+
+Time: 5 hours learning + 1 hour 12 min commenting
+
+Next: Learn CSS Colors by building a Set of Colored Markers

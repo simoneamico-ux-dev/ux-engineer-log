@@ -1,0 +1,832 @@
+---
+sidebar_position: 10
+sidebar_label: 'Cat Painting'
+title: 'Cat Painting'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Cat Painting
+
+### The Project
+Cat painting created entirely with CSS, using advanced techniques like absolute positioning, transform, border-radius, and linear gradients.
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>fCC Cat Painting</title>
+      <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+      <main>
+        <div class="cat-head">
+          <div class="cat-ears">
+            <div class="cat-left-ear">
+              <div class="cat-left-inner-ear"></div>
+            </div>
+            <div class="cat-right-ear">
+              <div class="cat-right-inner-ear"></div>
+            </div>
+          </div>
+
+          <div class="cat-eyes">
+            <div class="cat-left-eye">
+              <div class="cat-left-inner-eye"></div>
+            </div>
+            <div class="cat-right-eye">
+              <div class="cat-right-inner-eye"></div>
+            </div>
+          </div>
+          
+          <div class="cat-nose"></div>
+
+          <div class="cat-mouth">
+            <div class="cat-mouth-line-left"></div>
+            <div class="cat-mouth-line-right"></div>
+          </div>
+
+          <div class="cat-whiskers">
+            <div class="cat-whiskers-left">
+              <div class="cat-whisker-left-top"></div>
+              <div class="cat-whisker-left-middle"></div>
+              <div class="cat-whisker-left-bottom"></div>
+            </div>
+            <div class="cat-whiskers-right">
+              <div class="cat-whisker-right-top"></div>
+              <div class="cat-whisker-right-middle"></div>
+              <div class="cat-whisker-right-bottom"></div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #c9d2fc;
+}
+
+.cat-head {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: linear-gradient(#5e5e5e 85%, #45454f 100%);
+  width: 205px;
+  height: 180px;
+  border: 1px solid #000;
+  border-radius: 46%;
+}
+
+.cat-left-ear {
+  position: absolute;
+  top: -26px;
+  left: -31px;
+  z-index: 1;
+  border-top-left-radius: 90px;
+  border-top-right-radius: 10px;
+  transform: rotate(-45deg);
+  border-left: 35px solid transparent;
+  border-right: 35px solid transparent;
+  border-bottom: 70px solid #5e5e5e;
+}
+
+.cat-right-ear {
+  position: absolute;
+  top: -26px;
+  left: 163px;
+  z-index: 1;
+  transform: rotate(45deg);
+  border-top-left-radius: 90px;
+  border-top-right-radius: 10px;
+  border-left: 35px solid transparent;
+  border-right: 35px solid transparent;
+  border-bottom: 70px solid #5e5e5e;
+}
+
+.cat-left-inner-ear {
+  position: absolute;
+  top: 22px;
+  left: -20px;
+  border-top-left-radius: 90px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 40%;
+  border-bottom-left-radius: 40%;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 40px solid #3b3b4f;
+}
+
+.cat-right-inner-ear {
+  position: absolute;
+  top: 22px;
+  left: -20px;
+  border-top-left-radius: 90px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 40%;
+  border-bottom-left-radius: 40%;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 40px solid #3b3b4f;
+}
+
+.cat-left-eye {
+  position: absolute;
+  top: 54px;
+  left: 39px;
+  border-radius: 60%;
+  transform: rotate(25deg);
+  width: 30px;
+  height: 40px;
+  background-color: #000;
+}
+
+.cat-right-eye {
+  position: absolute;
+  top: 54px;
+  left: 134px;
+  border-radius: 60%;
+  transform: rotate(-25deg);
+  width: 30px;
+  height: 40px;
+  background-color: #000;
+}
+
+.cat-left-inner-eye {
+  position: absolute;
+  top: 8px;
+  left: 2px;
+  width: 10px;
+  height: 20px;
+  transform: rotate(10deg);
+  background-color: #fff;
+  border-radius: 60%;
+}
+
+.cat-right-inner-eye {
+  position: absolute;
+  top: 8px;
+  left: 18px;
+  transform: rotate(-5deg);
+  width: 10px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 60%;
+}
+
+.cat-nose {
+  position: absolute;
+  top: 108px;
+  left: 85px;
+  border-top-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  transform: rotate(180deg);
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid #442c2c;
+}
+
+.cat-mouth div {
+  width: 30px;
+  height: 50px;
+  border: 2px solid #000;
+  border-radius: 190%/190px 150px 0 0;
+  border-color: black transparent transparent transparent;
+}
+
+.cat-mouth-line-left {
+  position: absolute;
+  top: 88px;
+  left: 74px;
+  transform: rotate(170deg);
+}
+
+.cat-mouth-line-right {
+  position: absolute;
+  top: 88px;
+  left: 91px;
+  transform: rotate(165deg);
+}
+
+.cat-whiskers-left div {
+  width: 40px;
+  height: 1px;
+  background-color: #000;
+}
+
+.cat-whiskers-right div {
+  width: 40px;
+  height: 1px;
+  background-color: #000;
+}
+
+.cat-whisker-left-top {
+  position: absolute;
+  top: 120px;
+  left: 52px;
+  transform: rotate(10deg);
+}
+
+.cat-whisker-left-middle {
+  position: absolute;
+  top: 127px;
+  left: 52px;
+  transform: rotate(3deg);
+}
+
+.cat-whisker-left-bottom {
+  position: absolute;
+  top: 134px;
+  left: 52px;
+  transform: rotate(-3deg);
+}
+
+.cat-whisker-right-top {
+  position: absolute;
+  top: 120px;
+  left: 109px;
+  transform: rotate(-10deg);
+}
+
+.cat-whisker-right-middle {
+  position: absolute;
+  top: 127px;
+  left: 109px;
+  transform: rotate(-3deg);
+}
+
+.cat-whisker-right-bottom {
+  position: absolute;
+  top: 134px;
+  left: 109px;
+  transform: rotate(3deg);
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Hello browser, I'm about to draw a cat with pure CSS!" -->
+<!-- It's like announcing "I'll make a portrait using only geometric shapes!" -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: The canvas on which we'll paint our kitty -->
+<!-- lang="en" = English language, even though the cat speaks all languages! 🐱 -->
+
+<head>
+    <!-- 🧠 THE ARTISTIC BRAIN: Where we prepare brushes and colors (CSS) -->
+    <!-- It's like preparing the palette before starting to paint -->
+    
+    <meta charset="UTF-8">
+    <!-- 📝 UNIVERSAL CHARACTER SUPPORT: UTF-8 understands emojis too! 😺 -->
+    
+    <title>fCC Cat Painting</title>
+    <!-- 📑 TAB TITLE: "fCC" = freeCodeCamp, the coding school -->
+    <!-- It's like signing the painting before even starting! -->
+    
+    <style>
+        /* 🎨 ===== THE CSS PALETTE: Where the Drawing Magic Happens ===== */
+        
+        * {
+          box-sizing: border-box;
+          /* 📦 UNIVERSAL RULE: "Include borders and padding in dimensions" */
+          /* * = ALL elements on the page */
+          /* It's like saying "when I say a box is 100px, I mean EVERYTHING included" */
+          /* Without this, we would need to do complicated calculations for each element! */
+        }
+
+        body {
+          background-color: #c9d2fc;
+          /* 🌅 LAVENDER BACKGROUND: A nice pastel sky for our cat */
+          /* #c9d2fc = a very light and relaxing purple */
+          /* It's like painting the sky before adding the subject */
+        }
+
+        /* 🐱 ===== THE CAT'S HEAD ===== */
+        
+        .cat-head {
+          position: absolute;
+          /* 🎯 ABSOLUTE POSITIONING: Positions itself relative to the window */
+          /* It's like being able to place a sticker anywhere on a sheet */
+          
+          right: 0;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          /* 🎪 CENTERING TRICK: All sides at 0... */
+          /* It's like pulling elastics from all sides */
+          
+          margin: auto;
+          /* ⚖️ ...PLUS MARGIN AUTO = PERFECT CENTERING! */
+          /* The browser automatically calculates the exact center */
+          /* It's the most elegant trick for centering elements with position: absolute */
+          
+          background: linear-gradient(#5e5e5e 85%, #45454f 100%);
+          /* 🎨 GRAY GRADIENT: From light gray to dark gray */
+          /* 85% light gray, then fades to dark gray in the last 15% */
+          /* It's like cat fur that gets darker towards the bottom */
+          
+          width: 205px;
+          height: 180px;
+          /* 📏 FACE DIMENSIONS: A nice chubby face! */
+          
+          border: 1px solid #000;
+          /* 🖼️ BLACK OUTLINE: To clearly define the shape */
+          
+          border-radius: 46%;
+          /* 🟦→🟢 ROUNDING: 46% makes the head oval */
+          /* It's like transforming a rectangle into a soft ellipse */
+        }
+
+        /* 👂 ===== LEFT EAR ===== */
+        
+        .cat-left-ear {
+          position: absolute;
+          /* 🎯 POSITIONING: Relative to the cat's head */
+          
+          top: -26px;
+          left: -31px;
+          /* 📍 POSITION: Above and to the left of the head */
+          /* Negative values = goes outside the head boundaries */
+          
+          z-index: 1;
+          /* 🏔️ LEVEL: z-index 1 = sits on top of the head (level 0) */
+          /* It's like placing the ear on a higher plane */
+          
+          border-top-left-radius: 90px;
+          border-top-right-radius: 10px;
+          /* 🌙 CURVED SHAPE: Very curved on the left (90px), less on the right (10px) */
+          /* Creates the typical cat ear shape */
+          
+          transform: rotate(-45deg);
+          /* 🔄 ROTATION: -45° counterclockwise */
+          /* It's like tilting the ear outward */
+          
+          /* 🎩 CSS TRIANGLE TRICK! */
+          border-left: 35px solid transparent;
+          border-right: 35px solid transparent;
+          border-bottom: 70px solid #5e5e5e;
+          /* 🔺 MAGIC: Transparent borders on sides + colored border at bottom = TRIANGLE! */
+          /* It's one of the most ingenious CSS tricks: creating shapes with borders */
+          /* Imagine cutting the corners of a square until you get a triangle */
+        }
+
+        .cat-right-ear {
+          /* 👂 RIGHT EAR: Mirror twin of the left one */
+          position: absolute;
+          top: -26px;
+          left: 163px;
+          /* 📍 POSITION: Same level but on the right side */
+          
+          z-index: 1;
+          transform: rotate(45deg);
+          /* 🔄 OPPOSITE ROTATION: 45° clockwise */
+          
+          border-top-left-radius: 90px;
+          border-top-right-radius: 10px;
+          border-left: 35px solid transparent;
+          border-right: 35px solid transparent;
+          border-bottom: 70px solid #5e5e5e;
+          /* 🔺 SAME TRICK: Another triangle for the other ear */
+        }
+
+        /* 🌸 ===== INNER EARS ===== */
+        
+        .cat-left-inner-ear {
+          position: absolute;
+          top: 22px;
+          left: -20px;
+          /* 📍 INSIDE THE EAR: Positioned inside the outer ear */
+          
+          border-top-left-radius: 90px;
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 40%;
+          border-bottom-left-radius: 40%;
+          /* 🌸 PETAL SHAPE: Curved at top, rounded at bottom */
+          /* 40% creates a soft curve at the bottom part */
+          
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+          border-bottom: 40px solid #3b3b4f;
+          /* 🔺 SMALLER TRIANGLE: Dark pink for the inner part */
+          /* It's like the pink inside of real cats' ears! */
+        }
+
+        .cat-right-inner-ear {
+          /* 🌸 SAME STYLE: Exact copy for the right ear */
+          position: absolute;
+          top: 22px;
+          left: -20px;
+          border-top-left-radius: 90px;
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 40%;
+          border-bottom-left-radius: 40%;
+          border-left: 20px solid transparent;
+          border-right: 20px solid transparent;
+          border-bottom: 40px solid #3b3b4f;
+        }
+
+        /* 👁️ ===== CAT'S EYES ===== */
+        
+        .cat-left-eye {
+          position: absolute;
+          top: 54px;
+          left: 39px;
+          /* 📍 LEFT EYE POSITION: In the upper half of the face */
+          
+          border-radius: 60%;
+          /* 🥚 OVAL SHAPE: 60% creates an oval instead of a circle */
+          
+          transform: rotate(25deg);
+          /* 🔄 INCLINATION: The eye is slightly tilted */
+          /* Cats have inclined almond-shaped eyes! */
+          
+          width: 30px;
+          height: 40px;
+          /* 📏 PROPORTIONS: Taller than wide for the almond effect */
+          
+          background-color: #000;
+          /* ⚫ DEEP BLACK: Like a cat's dilated pupils */
+        }
+
+        .cat-right-eye {
+          position: absolute;
+          top: 54px;
+          left: 134px;
+          /* 📍 RIGHT EYE: Symmetrical but not identical */
+          
+          border-radius: 60%;
+          transform: rotate(-25deg);
+          /* 🔄 OPPOSITE ROTATION: -25° for natural symmetry */
+          /* The eyes aren't perfectly identical, just like in nature! */
+          
+          width: 30px;
+          height: 40px;
+          background-color: #000;
+        }
+
+        /* ✨ ===== EYE REFLECTIONS ===== */
+        
+        .cat-left-inner-eye {
+          position: absolute;
+          top: 8px;
+          left: 2px;
+          /* 📍 REFLECTION IN TOP LEFT: Like light hitting the eye */
+          
+          width: 10px;
+          height: 20px;
+          /* 📏 SMALL AND ELONGATED: A realistic reflection */
+          
+          transform: rotate(10deg);
+          /* 🔄 SLIGHT ROTATION: Follows the curve of the eye */
+          
+          background-color: #fff;
+          /* ⚪ PURE WHITE: The light reflection */
+          
+          border-radius: 60%;
+          /* 🥚 OVAL: Same style as the outer eye */
+          /* It's like the light dot you see in cats' eyes! */
+        }
+
+        .cat-right-inner-eye {
+          position: absolute;
+          top: 8px;
+          left: 18px;
+          /* 📍 DIFFERENT REFLECTION: Not perfectly symmetrical */
+          /* Light hits the eyes slightly differently */
+          
+          transform: rotate(-5deg);
+          /* 🔄 DIFFERENT ROTATION: More realism */
+          
+          width: 10px;
+          height: 20px;
+          background-color: #fff;
+          border-radius: 60%;
+        }
+
+        /* 👃 ===== CAT'S NOSE ===== */
+        
+        .cat-nose {
+          position: absolute;
+          top: 108px;
+          left: 85px;
+          /* 📍 CENTER OF THE FACE: Where all lines meet */
+          
+          border-top-left-radius: 50%;
+          border-bottom-right-radius: 50%;
+          border-bottom-left-radius: 50%;
+          /* 🔻 UPSIDE-DOWN HEART SHAPE: Typical of feline noses */
+          
+          transform: rotate(180deg);
+          /* 🔄 FLIPPING: The triangle points downward */
+          
+          border-left: 15px solid transparent;
+          border-right: 15px solid transparent;
+          border-bottom: 20px solid #442c2c;
+          /* 🔺 BROWN TRIANGLE: Chocolate color for the little nose */
+          /* Another creative use of the border trick! */
+        }
+
+        /* 👄 ===== CAT'S MOUTH ===== */
+        
+        .cat-mouth div {
+          width: 30px;
+          height: 50px;
+          /* 📏 BASE DIMENSIONS: For the mouth curves */
+          
+          border: 2px solid #000;
+          /* 🖊️ BLACK OUTLINE: Only the border, no filling */
+          
+          border-radius: 190%/190px 150px 0 0;
+          /* 🌙 ELLIPTICAL CURVE MAGIC! */
+          /* 190% = extreme horizontal curvature */
+          /* 190px 150px 0 0 = curved at top, straight at bottom */
+          /* It's like bending a wire into a very tight U shape */
+          
+          border-color: black transparent transparent transparent;
+          /* 🎭 TRICK: Only the top border is visible! */
+          /* transparent = invisible for the other sides */
+          /* Result: a perfect curve for the smile */
+        }
+
+        .cat-mouth-line-left {
+          position: absolute;
+          top: 88px;
+          left: 74px;
+          transform: rotate(170deg);
+          /* 🔄 EXTREME ROTATION: Creates the left curve of the smile */
+          /* 170° = almost flipped! */
+        }
+
+        .cat-mouth-line-right {
+          position: absolute;
+          top: 88px;
+          left: 91px;
+          transform: rotate(165deg);
+          /* 🔄 SLIGHTLY DIFFERENT: 165° for natural asymmetry */
+          /* The smile is never perfectly symmetrical! */
+        }
+
+        /* 🔤 ===== CAT'S WHISKERS ===== */
+        
+        .cat-whiskers-left div,
+        .cat-whiskers-right div {
+          width: 40px;
+          height: 1px;
+          background-color: #000;
+          /* 📏 THIN LINES: 1px height = delicate whiskers */
+          /* width: 40px = good length whiskers */
+        }
+
+        .cat-whisker-left-top {
+          position: absolute;
+          top: 120px;
+          left: 52px;
+          transform: rotate(10deg);
+          /* 🔄 UPPER WHISKER: Points slightly upward */
+        }
+
+        .cat-whisker-left-middle {
+          position: absolute;
+          top: 127px;
+          left: 52px;
+          transform: rotate(3deg);
+          /* 🔄 MIDDLE WHISKER: Almost horizontal */
+        }
+
+        .cat-whisker-left-bottom {
+          position: absolute;
+          top: 134px;
+          left: 52px;
+          transform: rotate(-3deg);
+          /* 🔄 LOWER WHISKER: Points slightly downward */
+          /* The three whiskers create a natural fan! */
+        }
+
+        .cat-whisker-right-top {
+          position: absolute;
+          top: 120px;
+          left: 109px;
+          transform: rotate(-10deg);
+          /* 🔄 MIRROR IMAGE: Opposite angle for symmetry */
+        }
+
+        .cat-whisker-right-middle {
+          position: absolute;
+          top: 127px;
+          left: 109px;
+          transform: rotate(-3deg);
+          /* 🔄 ALMOST STRAIGHT: With slight inclination */
+        }
+
+        .cat-whisker-right-bottom {
+          position: absolute;
+          top: 134px;
+          left: 109px;
+          transform: rotate(3deg);
+          /* 🔄 UPWARD: Completes the whisker fan */
+        }
+    </style>
+</head>
+<body>
+    <!-- 🎨 ===== THE BODY: The Canvas for Our Feline Masterpiece ===== -->
+    
+    <main>
+        <!-- 📄 MAIN CONTENT: The stage for our cat -->
+        
+      <div class="cat-head">
+        <!-- 🐱 HEAD: The main container for the entire face -->
+        
+        <div class="cat-ears">
+          <!-- 👂 EAR CONTAINER: Groups the ears for organization -->
+          
+          <div class="cat-left-ear">
+            <!-- 👂 LEFT EAR: The triangle tilted to the left -->
+            
+            <div class="cat-left-inner-ear"></div>
+            <!-- 🌸 PINK INTERIOR: The detail that makes the ear realistic -->
+          </div>
+          
+          <div class="cat-right-ear">
+            <!-- 👂 RIGHT EAR: The mirror twin -->
+            
+            <div class="cat-right-inner-ear"></div>
+            <!-- 🌸 PINK INTERIOR: This ear has its inner part too -->
+          </div>
+        </div>
+
+        <div class="cat-eyes">
+          <!-- 👀 EYE CONTAINER: Groups the eyes -->
+          
+          <div class="cat-left-eye">
+            <!-- 👁️ LEFT EYE: The tilted black oval -->
+            
+            <div class="cat-left-inner-eye"></div>
+            <!-- ✨ REFLECTION: The white dot that brings life to the gaze -->
+          </div>
+          
+          <div class="cat-right-eye">
+            <!-- 👁️ RIGHT EYE: The other oval with opposite tilt -->
+            
+            <div class="cat-right-inner-eye"></div>
+            <!-- ✨ REFLECTION: This eye sparkles too! -->
+          </div>
+        </div>
+        
+        <div class="cat-nose"></div>
+        <!-- 👃 NOSE: The brown little triangle in the center -->
+
+        <div class="cat-mouth">
+          <!-- 👄 MOUTH CONTAINER: For the feline smile -->
+          
+          <div class="cat-mouth-line-left"></div>
+          <!-- 😊 LEFT CURVE: Half of the smile -->
+          
+          <div class="cat-mouth-line-right"></div>
+          <!-- 😊 RIGHT CURVE: The other half of the smile -->
+        </div>
+
+        <div class="cat-whiskers">
+          <!-- 🔤 WHISKER CONTAINER: Organizes all whiskers -->
+          
+          <div class="cat-whiskers-left">
+            <!-- 🔤 LEFT WHISKERS: The left group -->
+            
+            <div class="cat-whisker-left-top"></div>
+            <!-- 📏 TOP WHISKER: Points upward -->
+            
+            <div class="cat-whisker-left-middle"></div>
+            <!-- 📏 MIDDLE WHISKER: Almost horizontal -->
+            
+            <div class="cat-whisker-left-bottom"></div>
+            <!-- 📏 BOTTOM WHISKER: Points downward -->
+          </div>
+          
+          <div class="cat-whiskers-right">
+            <!-- 🔤 RIGHT WHISKERS: The right group -->
+            
+            <div class="cat-whisker-right-top"></div>
+            <!-- 📏 TOP WHISKER: Mirror of the left one -->
+            
+            <div class="cat-whisker-right-middle"></div>
+            <!-- 📏 MIDDLE WHISKER: Central position -->
+            
+            <div class="cat-whisker-right-bottom"></div>
+            <!-- 📏 BOTTOM WHISKER: Completes the set -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+</body>
+</html>
+
+<!-- 🎯 ===== CSS ART SUMMARY ===== -->
+<!-- 
+🐱 CSS CAT ANATOMY:
+│
+├── 🧠 HEAD (styles and preparation)
+│   └── 🎨 CSS with incredible tricks:
+│       ├── 🔺 Triangles with transparent borders
+│       ├── 🌙 Complex elliptical curves
+│       ├── 🔄 Transform rotate for every element
+│       └── 📍 Position absolute for pixel precision
+│
+└── 😺 BODY (the assembled cat)
+    └── 🐱 Cat-head (main container)
+        ├── 👂 Ears (rotated triangles)
+        │   └── 🌸 Pink interiors (smaller triangles)
+        ├── 👀 Eyes (tilted ovals)
+        │   └── ✨ Reflections (life in the gaze)
+        ├── 👃 Nose (upside-down triangle)
+        ├── 😊 Mouth (curves with partial borders)
+        └── 🔤 Whiskers (thin rotated lines)
+
+🎨 MASTERFUL CSS TECHNIQUES:
+├── 🔺 Triangle trick: transparent borders + 1 colored
+├── ⚖️ Absolute centering: position absolute + margin auto
+├── 🌙 Advanced border-radius: percentages for custom curves
+├── 🔄 Transform rotate: each element has its own angle
+└── 🎭 Selective borders: transparent to hide sides
+
+It's like creating digital origami - just CSS folds! 🗾✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Development Experience
+
+I really enjoyed it! It took me less than a weekend to finish it. I didn't just execute the code as requested, but as I often do, I go and modify the various values and sometimes try to reach the solution in different ways from those in the assignment. I experimented creating different shapes specifically to test the techniques I learned.
+
+### The Experimental Approach
+
+Most of the time I don't manage to find working alternative solutions, not yet being master of the subject, but sometimes I do. I'll mention an interesting one that made me understand an important concept.
+
+### An Interesting Question
+
+I asked the Code Tutor a question about a part of the code:
+
+**"If the result is always 4rem, why not simply write:**
+```css
+min-width: 4rem;
+max-width: 4rem;
+```
+
+**Instead of:**
+```css
+width: 100vw;
+min-width: 4rem;
+max-width: 4rem;
+```
+
+**The answer:** From a practical standpoint, **it works the same!**
+
+It's like saying:
+- **Long method:** "I want the whole buffet, but maximum one slice of pizza and minimum one slice"
+- **Short method:** "I want one slice of pizza"
+
+**Result:** In both cases you eat one slice of pizza.
+
+The difference is in **clarity of intention** and compatibility with very old browsers, but for the specific case my more direct approach worked perfectly.
+
+### Important Reflection
+
+I know these tools tend to reinforce bias, like confirmation bias in this case, but this time the question led to a genuine understanding of a fundamental CSS concept. I discovered that often in CSS there are multiple ways to achieve the same result.
+
+### What I Learned
+
+- **Absolute positioning** to create complex shapes
+- **Transform and rotate** to orient elements
+- **Border tricks** to create geometric shapes
+- **Z-index** to manage overlapping
+- **Linear gradients** for color effects
+- **The importance of experimenting** beyond instructions
+
+---
+
+**Next Project**: Learn Responsive Web Design by Building a Piano

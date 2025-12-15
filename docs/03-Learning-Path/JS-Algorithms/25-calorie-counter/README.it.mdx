@@ -1,0 +1,862 @@
+---
+sidebar_position: 5
+sidebar_label: 'Calorie Counter'
+title: 'Calorie Counter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Calorie Counter
+
+<img width="100%" alt="1" src="https://github.com/user-attachments/assets/8f359e6b-5431-478d-ab5a-fea96ae8ae0e" />
+<img width="100%" alt="2" src="https://github.com/user-attachments/assets/932a5c3e-d577-44a2-ae8b-52b22823258b" />
+
+### Il Progetto
+Calorie counter con **form validation avanzata**, costruito interamente in **vanilla JavaScript**. Un’applicazione che permette di aggiungere voci dinamiche per diverse categorie di pasti.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calorie Counter</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <h1>Calorie Counter</h1>
+      <div class="container">
+        <form id="calorie-counter">
+          <label for="budget">Budget</label>
+          <input
+            type="number"
+            min="0"
+            id="budget"
+            placeholder="Daily calorie budget"
+            required
+          />
+          <fieldset id="breakfast">
+            <legend>Breakfast</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="lunch">
+            <legend>Lunch</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="dinner">
+            <legend>Dinner</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="snacks">
+            <legend>Snacks</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="exercise">
+            <legend>Exercise</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <div class="controls">
+            <span>
+              <label for="entry-dropdown">Add food or exercise:</label>
+              <select id="entry-dropdown" name="options">
+                <option value="breakfast" selected>Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snacks">Snacks</option>
+                <option value="exercise">Exercise</option>
+              </select>
+              <button type="button" id="add-entry">Add Entry</button>
+            </span>
+          </div>
+          <div>
+            <button type="submit">
+              Calculate Remaining Calories
+            </button>
+            <button type="button" id="clear">Clear</button>
+          </div>
+        </form>
+        <div id="output" class="output hide"></div>
+      </div>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+  --light-grey: #f5f6f7;
+  --dark-blue: #0a0a23;
+  --fcc-blue: #1b1b32;
+  --light-yellow: #fecc4c;
+  --dark-yellow: #feac32;
+  --light-pink: #ffadad;
+  --dark-red: #850000;
+  --light-green: #acd157;
+}
+
+body {
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  background-color: var(--fcc-blue);
+  color: var(--light-grey);
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 680px;
+}
+
+h1,
+.container,
+.output {
+  margin: 20px auto;
+}
+
+label,
+legend {
+  font-weight: bold;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  text-decoration: none;
+  background-color: var(--light-yellow);
+  border: 2px solid var(--dark-yellow);
+}
+
+button,
+input,
+select {
+  min-height: 24px;
+  color: var(--dark-blue);
+}
+
+fieldset,
+label,
+button,
+input,
+select {
+  margin-bottom: 10px;
+}
+
+.output {
+  border: 2px solid var(--light-grey);
+  padding: 10px;
+  text-align: center;
+}
+
+.hide {
+  display: none;
+}
+
+.output span {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.surplus {
+  color: var(--light-pink);
+}
+
+.deficit {
+  color: var(--light-green);
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const calorieCounter = document.getElementById('calorie-counter');
+const budgetNumberInput = document.getElementById('budget');
+const entryDropdown = document.getElementById('entry-dropdown');
+const addEntryButton = document.getElementById('add-entry');
+const clearButton = document.getElementById('clear');
+const output = document.getElementById('output');
+let isError = false;
+
+function cleanInputString(str) {
+  const regex = /[+-\s]/g;
+  return str.replace(regex, '');
+}
+
+function isInvalidInput(str) {
+  const regex = /\d+e\d+/i;
+  return str.match(regex);
+}
+
+function addEntry() {
+  const targetInputContainer = document.querySelector(`#${entryDropdown.value} .input-container`);
+  const entryNumber = targetInputContainer.querySelectorAll('input[type="text"]').length + 1;
+  const HTMLString = `
+  <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+  <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+  <label for="${entryDropdown.value}-${entryNumber}-calories">Entry ${entryNumber} Calories</label>
+  <input
+    type="number"
+    min="0"
+    id="${entryDropdown.value}-${entryNumber}-calories"
+    placeholder="Calories"
+  />`;
+  targetInputContainer.insertAdjacentHTML('beforeend', HTMLString);
+}
+
+function calculateCalories(e) {
+  e.preventDefault();
+  isError = false;
+
+  const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type='number']");
+  const lunchNumberInputs = document.querySelectorAll("#lunch input[type='number']");
+  const dinnerNumberInputs = document.querySelectorAll("#dinner input[type='number']");
+  const snacksNumberInputs = document.querySelectorAll("#snacks input[type='number']");
+  const exerciseNumberInputs = document.querySelectorAll("#exercise input[type='number']");
+
+  const breakfastCalories = getCaloriesFromInputs(breakfastNumberInputs);
+  const lunchCalories = getCaloriesFromInputs(lunchNumberInputs);
+  const dinnerCalories = getCaloriesFromInputs(dinnerNumberInputs);
+  const snacksCalories = getCaloriesFromInputs(snacksNumberInputs);
+  const exerciseCalories = getCaloriesFromInputs(exerciseNumberInputs);
+  const budgetCalories = getCaloriesFromInputs([budgetNumberInput]);
+
+  if (isError) {
+    return;
+  }
+
+  const consumedCalories = breakfastCalories + lunchCalories + dinnerCalories + snacksCalories;
+  const remainingCalories = budgetCalories - consumedCalories + exerciseCalories;
+  const surplusOrDeficit = remainingCalories < 0 ? 'Surplus' : 'Deficit';
+  output.innerHTML = `
+  <span class="${surplusOrDeficit.toLowerCase()}">${Math.abs(remainingCalories)} Calorie ${surplusOrDeficit}</span>
+  <hr>
+  <p>${budgetCalories} Calories Budgeted</p>
+  <p>${consumedCalories} Calories Consumed</p>
+  <p>${exerciseCalories} Calories Burned</p>
+  `;
+
+  output.classList.remove('hide');
+}
+
+function getCaloriesFromInputs(list) {
+  let calories = 0;
+
+  for (const item of list) {
+    const currVal = cleanInputString(item.value);
+    const invalidInputMatch = isInvalidInput(currVal);
+
+    if (invalidInputMatch) {
+      alert(`Invalid Input: ${invalidInputMatch[0]}`);
+      isError = true;
+      return null;
+    }
+    calories += Number(currVal);
+  }
+  return calories;
+}
+
+function clearForm() {
+  const inputContainers = Array.from(document.querySelectorAll('.input-container'));
+
+  for (const container of inputContainers) {
+    container.innerHTML = '';
+  }
+
+  budgetNumberInput.value = '';
+  output.innerText = '';
+  output.classList.add('hide');
+}
+
+addEntryButton.addEventListener("click", addEntry);
+calorieCounter.addEventListener("submit", calculateCalories);
+clearButton.addEventListener("click", clearForm);
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="spiegato">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 DICHIARAZIONE HTML5: "Benvenuti nel ristorante digitale delle calorie!" -->
+<!-- È come aprire un diario alimentare interattivo! 📔 -->
+
+<html lang="en">
+<!-- 🌍 CONTENITORE PRINCIPALE: La nostra app per il fitness -->
+<!-- lang="en" = inglese, la lingua universale della nutrizione! 🥗 -->
+
+  <head>
+    <!-- 🧠 IL NUTRIZIONISTA DIGITALE: Dove pianifichiamo il tracking -->
+    <!-- È come avere un dietologo nel browser! -->
+    
+    <meta charset="utf-8" />
+    <!-- 📝 CARATTERI UNIVERSALI: UTF-8 per emoji del cibo! 🍕🥦🍰 -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE: "Conta calorie su ogni dispositivo!" -->
+    
+    <title>Calorie Counter</title>
+    <!-- 📑 TITOLO: Semplice e diretto come una bilancia -->
+    
+    <style>
+      /* 🎨 ===== PALETTE COLORI: I Sapori del Design ===== */
+      
+      :root {
+        /* 🎨 VARIABILI CSS: La tavolozza del nutrizionista */
+        --light-grey: #f5f6f7;
+        /* 🌫️ GRIGIO CHIARO: Come il vapore di una tisana */
+        
+        --dark-blue: #0a0a23;
+        /* 🌑 BLU SCURO: Professionale come un camice */
+        
+        --fcc-blue: #1b1b32;
+        /* 💙 BLU FREECODECAMP: Il brand! */
+        
+        --light-yellow: #fecc4c;
+        /* 🌟 GIALLO CHIARO: Come il sole vitamina D */
+        
+        --dark-yellow: #feac32;
+        /* 🌞 GIALLO SCURO: Per i bordi dei bottoni */
+        
+        --light-pink: #ffadad;
+        /* 🌸 ROSA CHIARO: Per il surplus (troppo cibo!) */
+        
+        --dark-red: #850000;
+        /* 🔴 ROSSO SCURO: Allerta! (non usato qui) */
+        
+        --light-green: #acd157;
+        /* 🌿 VERDE CHIARO: Per il deficit (obiettivo raggiunto!) */
+      }
+      
+      body {
+        font-family: "Lato", Helvetica, Arial, sans-serif;
+        /* 🔤 FONT LATO: Pulito e leggibile come un'etichetta nutrizionale */
+        
+        font-size: 18px;
+        /* 📏 DIMENSIONE BASE: Grande abbastanza per non affaticare */
+        
+        background-color: var(--fcc-blue);
+        /* 🎨 SFONDO: Blu scuro professionale */
+        
+        color: var(--light-grey);
+        /* 🔤 TESTO: Grigio chiaro per contrasto morbido */
+      }
+      
+      h1 {
+        text-align: center;
+        /* ⚖️ CENTRATO: Il titolo domina la scena */
+      }
+      
+      .container {
+        width: 90%;
+        /* 📏 LARGHEZZA: 90% dello schermo */
+        
+        max-width: 680px;
+        /* 🚫 LIMITE: Non più largo di 680px */
+        /* È come un piatto che non può essere troppo grande */
+      }
+      
+      h1,
+      .container,
+      .output {
+        margin: 20px auto;
+        /* ⚖️ CENTRATURA + SPAZIO: 20px sopra/sotto, auto ai lati */
+        /* Il trucco universale per centrare! */
+      }
+      
+      label,
+      legend {
+        font-weight: bold;
+        /* 💪 GRASSETTO: Le etichette devono risaltare */
+        /* Come i titoli sul menu di un ristorante */
+      }
+      
+      .input-container {
+        display: flex;
+        flex-direction: column;
+        /* 📦 FLEX VERTICALE: Input uno sotto l'altro */
+        /* È come impilare i piatti */
+      }
+      
+      button {
+        cursor: pointer;
+        /* 👆 MANINA: "Sono cliccabile!" */
+        
+        text-decoration: none;
+        /* 🚫 NO SOTTOLINEATURA: Pulito */
+        
+        background-color: var(--light-yellow);
+        /* 🌟 SFONDO GIALLO: Attira l'attenzione */
+        
+        border: 2px solid var(--dark-yellow);
+        /* 🖼️ BORDO: Giallo scuro per definizione */
+      }
+      
+      button,
+      input,
+      select {
+        min-height: 24px;
+        /* 📏 ALTEZZA MINIMA: Per essere touch-friendly */
+        
+        color: var(--dark-blue);
+        /* 🔤 TESTO SCURO: Per leggibilità */
+      }
+      
+      fieldset,
+      label,
+      button,
+      input,
+      select {
+        margin-bottom: 10px;
+        /* ⬇️ SPAZIO SOTTO: Respiro tra elementi */
+      }
+      
+      .output {
+        border: 2px solid var(--light-grey);
+        /* 🖼️ BORDO OUTPUT: Definisce l'area risultati */
+        
+        padding: 10px;
+        /* 🏠 PADDING: Spazio interno confortevole */
+        
+        text-align: center;
+        /* ⚖️ CENTRATO: I risultati al centro dell'attenzione */
+      }
+      
+      .hide {
+        display: none;
+        /* 👻 NASCOSTO: Classe utility per nascondere elementi */
+      }
+      
+      .output span {
+        font-weight: bold;
+        font-size: 1.2em;
+        /* 📏 RISULTATO PRINCIPALE: 120% più grande e grassetto */
+      }
+      
+      .surplus {
+        color: var(--light-pink);
+        /* 🌸 SURPLUS: Rosa = hai mangiato troppo! */
+      }
+      
+      .deficit {
+        color: var(--light-green);
+        /* 🌿 DEFICIT: Verde = sei in linea con gli obiettivi! */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 🍽️ ===== L'APP PRENDE VITA ===== -->
+    
+    <main>
+      <h1>Calorie Counter</h1>
+      <!-- 🏆 TITOLO: Il nostro contatore personale -->
+      
+      <div class="container">
+        <!-- 📦 CONTENITORE: Limita la larghezza per leggibilità -->
+        
+        <form id="calorie-counter">
+          <!-- 📝 FORM PRINCIPALE: Il cuore dell'applicazione -->
+          
+          <label for="budget">Budget</label>
+          <input
+            type="number"
+            min="0"
+            id="budget"
+            placeholder="Daily calorie budget"
+            required
+          />
+          <!-- 💰 BUDGET CALORICO: Il tuo obiettivo giornaliero -->
+          <!-- type="number" = solo numeri -->
+          <!-- min="0" = no numeri negativi -->
+          <!-- required = campo obbligatorio -->
+          
+          <!-- 🍽️ ===== I 5 PASTI/CATEGORIE ===== -->
+          
+          <fieldset id="breakfast">
+            <!-- 🌅 COLAZIONE: Il pasto più importante! -->
+            <legend>Breakfast</legend>
+            <!-- 🏷️ LEGEND: Il titolo del fieldset -->
+            
+            <div class="input-container"></div>
+            <!-- 📦 CONTENITORE VUOTO: Qui JS aggiungerà gli input -->
+          </fieldset>
+          
+          <fieldset id="lunch">
+            <!-- 🌞 PRANZO: Energia a metà giornata -->
+            <legend>Lunch</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <fieldset id="dinner">
+            <!-- 🌙 CENA: Il pasto serale -->
+            <legend>Dinner</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <fieldset id="snacks">
+            <!-- 🍿 SNACK: Gli spuntini tra i pasti -->
+            <legend>Snacks</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <fieldset id="exercise">
+            <!-- 🏃 ESERCIZIO: Calorie bruciate! -->
+            <legend>Exercise</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <div class="controls">
+            <!-- 🎮 CONTROLLI: Per aggiungere nuove voci -->
+            <span>
+              <label for="entry-dropdown">Add food or exercise:</label>
+              <select id="entry-dropdown" name="options">
+                <!-- 📋 DROPDOWN: Scegli dove aggiungere -->
+                <option value="breakfast" selected>Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snacks">Snacks</option>
+                <option value="exercise">Exercise</option>
+              </select>
+              <button type="button" id="add-entry">Add Entry</button>
+              <!-- 🔘 AGGIUNGI: Crea nuovi campi dinamicamente -->
+              <!-- type="button" = non invia il form -->
+            </span>
+          </div>
+          <div>
+            <button type="submit">
+              Calculate Remaining Calories
+            </button>
+            <!-- 🧮 CALCOLA: Il bottone principale -->
+            <!-- type="submit" = invia il form -->
+            
+            <button type="button" id="clear">Clear</button>
+            <!-- 🗑️ PULISCI: Resetta tutto -->
+          </div>
+        </form>
+        
+        <div id="output" class="output hide"></div>
+        <!-- 📊 OUTPUT: Nascosto inizialmente con classe "hide" -->
+      </div>
+    </main>
+    
+    <script>
+      /* 🧠 ===== JAVASCRIPT: Il Cervello del Contatore ===== */
+      
+      // 🎯 ===== SELEZIONE ELEMENTI DOM =====
+      const calorieCounter = document.getElementById('calorie-counter');
+      // 📝 FORM: Il form principale
+      
+      const budgetNumberInput = document.getElementById('budget');
+      // 💰 INPUT BUDGET: Dove inserisci l'obiettivo calorico
+      
+      const entryDropdown = document.getElementById('entry-dropdown');
+      // 📋 DROPDOWN: Per selezionare il tipo di entry
+      
+      const addEntryButton = document.getElementById('add-entry');
+      // ➕ BOTTONE ADD: Per aggiungere nuovi campi
+      
+      const clearButton = document.getElementById('clear');
+      // 🗑️ BOTTONE CLEAR: Per resettare tutto
+      
+      const output = document.getElementById('output');
+      // 📊 OUTPUT: Dove mostriamo i risultati
+      
+      let isError = false;
+      // 🚨 FLAG ERRORE: Tiene traccia se c'è un errore
+      // let = può cambiare durante l'esecuzione
+      
+      // 🧹 ===== FUNZIONE PULIZIA STRINGA =====
+      function cleanInputString(str) {
+        const regex = /[+-\s]/g;
+        // 🔍 REGEX: Pattern per trovare caratteri da rimuovere
+        // [+-\s] = trova +, - o spazi
+        // g = global, trova tutte le occorrenze
+        
+        return str.replace(regex, '');
+        // 🧹 PULISCE: Rimuove +, - e spazi
+        // Es: "+100" → "100", "- 50" → "50"
+      }
+      
+      // 🚫 ===== VALIDAZIONE INPUT =====
+      function isInvalidInput(str) {
+        const regex = /\d+e\d+/i;
+        // 🔬 REGEX SCIENTIFICA: Trova notazione scientifica
+        // \d+ = una o più cifre
+        // e = la lettera 'e'
+        // \d+ = una o più cifre
+        // i = case insensitive (E o e)
+        // Es: "1e10", "5E3" (notazione scientifica)
+        
+        return str.match(regex);
+        // 🔍 MATCH: Ritorna l'array del match o null
+        // Se trova notazione scientifica = invalido!
+      }
+      
+      // ➕ ===== AGGIUNGI NUOVA ENTRY =====
+      function addEntry() {
+        const targetInputContainer = document.querySelector(`#${entryDropdown.value} .input-container`);
+        // 🎯 TROVA CONTAINER: Usa il valore del dropdown
+        // Template literal con backticks ``
+        // Es: se dropdown = "breakfast" → "#breakfast .input-container"
+        
+        const entryNumber = targetInputContainer.querySelectorAll('input[type="text"]').length + 1;
+        // 🔢 CONTA ENTRIES: Quanti input di testo ci sono già + 1
+        // Per numerare progressivamente le entries
+        
+        const HTMLString = `
+        <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+        <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+        <label for="${entryDropdown.value}-${entryNumber}-calories">Entry ${entryNumber} Calories</label>
+        <input
+          type="number"
+          min="0"
+          id="${entryDropdown.value}-${entryNumber}-calories"
+          placeholder="Calories"
+        />`;
+        // 📝 TEMPLATE HTML: Crea dinamicamente i nuovi campi
+        // Template literals permettono multilinea e interpolazione
+        // ${} = inserisce variabili JavaScript
+        // Risultato: breakfast-1-name, breakfast-1-calories, ecc.
+        
+        targetInputContainer.insertAdjacentHTML('beforeend', HTMLString);
+        // 💉 INIETTA HTML: Aggiunge alla fine del container
+        // 'beforeend' = dentro l'elemento, dopo l'ultimo figlio
+        // È come aggiungere una riga al tuo diario alimentare!
+      }
+      
+      // 🧮 ===== CALCOLA LE CALORIE =====
+      function calculateCalories(e) {
+        e.preventDefault();
+        // 🛑 BLOCCA DEFAULT: Impedisce il refresh della pagina
+        // I form di default ricaricano la pagina!
+        
+        isError = false;
+        // 🔄 RESET FLAG: Azzera lo stato di errore
+      
+        // 🔍 ===== SELEZIONA TUTTI GLI INPUT NUMERICI =====
+        const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type='number']");
+        const lunchNumberInputs = document.querySelectorAll("#lunch input[type='number']");
+        const dinnerNumberInputs = document.querySelectorAll("#dinner input[type='number']");
+        const snacksNumberInputs = document.querySelectorAll("#snacks input[type='number']");
+        const exerciseNumberInputs = document.querySelectorAll("#exercise input[type='number']");
+        // 📊 NODELIST: Array-like di tutti gli input numerici per categoria
+        // querySelectorAll = trova TUTTI gli elementi che matchano
+      
+        // 🧮 ===== CALCOLA CALORIE PER CATEGORIA =====
+        const breakfastCalories = getCaloriesFromInputs(breakfastNumberInputs);
+        const lunchCalories = getCaloriesFromInputs(lunchNumberInputs);
+        const dinnerCalories = getCaloriesFromInputs(dinnerNumberInputs);
+        const snacksCalories = getCaloriesFromInputs(snacksNumberInputs);
+        const exerciseCalories = getCaloriesFromInputs(exerciseNumberInputs);
+        const budgetCalories = getCaloriesFromInputs([budgetNumberInput]);
+        // 🔢 TOTALI: Somma le calorie di ogni categoria
+        // Nota: budget è in array [] perché è un singolo elemento
+      
+        if (isError) {
+          return;
+          // 🚫 STOP: Se c'è stato un errore, ferma tutto
+        }
+      
+        // 🧮 ===== CALCOLI FINALI =====
+        const consumedCalories = breakfastCalories + lunchCalories + dinnerCalories + snacksCalories;
+        // 🍽️ CONSUMATE: Tutto quello che hai mangiato
+        
+        const remainingCalories = budgetCalories - consumedCalories + exerciseCalories;
+        // 💰 RIMANENTI: Budget - consumate + bruciate con esercizio
+        // Esercizio si AGGIUNGE perché brucia calorie!
+        
+        const surplusOrDeficit = remainingCalories < 0 ? 'Surplus' : 'Deficit';
+        // 🚦 STATO: Se negativo = surplus (hai mangiato troppo)
+        // Se positivo = deficit (sei sotto il budget)
+        // Operatore ternario: condizione ? vero : falso
+        
+        // 📊 ===== MOSTRA RISULTATI =====
+        output.innerHTML = `
+        <span class="${surplusOrDeficit.toLowerCase()}">${Math.abs(remainingCalories)} Calorie ${surplusOrDeficit}</span>
+        <hr>
+        <p>${budgetCalories} Calories Budgeted</p>
+        <p>${consumedCalories} Calories Consumed</p>
+        <p>${exerciseCalories} Calories Burned</p>
+        `;
+        // 📝 TEMPLATE OUTPUT: Mostra tutti i dati
+        // Math.abs() = valore assoluto (rimuove il segno -)
+        // .toLowerCase() = trasforma in minuscolo per la classe CSS
+      
+        output.classList.remove('hide');
+        // 👁️ MOSTRA: Rimuove la classe che nasconde l'output
+      }
+      
+      // 🔢 ===== ESTRAI CALORIE DAGLI INPUT =====
+      function getCaloriesFromInputs(list) {
+        let calories = 0;
+        // 🔢 ACCUMULATORE: Parte da zero
+      
+        for (const item of list) {
+          // 🔄 LOOP: Per ogni input nella lista
+          
+          const currVal = cleanInputString(item.value);
+          // 🧹 PULISCI: Rimuovi caratteri non voluti
+          
+          const invalidInputMatch = isInvalidInput(currVal);
+          // 🔍 VALIDA: Controlla notazione scientifica
+      
+          if (invalidInputMatch) {
+            alert(`Invalid Input: ${invalidInputMatch[0]}`);
+            // 🚨 ALERT: Mostra errore all'utente
+            // [0] = primo elemento del match array
+            
+            isError = true;
+            // 🚩 SETTA FLAG: Marca che c'è un errore
+            
+            return null;
+            // 🛑 STOP: Esci dalla funzione
+          }
+          
+          calories += Number(currVal);
+          // ➕ ACCUMULA: Converti in numero e somma
+          // Number() converte stringa in numero
+        }
+        return calories;
+        // 📤 RITORNA: Il totale delle calorie
+      }
+      
+      // 🗑️ ===== PULISCI FORM =====
+      function clearForm() {
+        const inputContainers = Array.from(document.querySelectorAll('.input-container'));
+        // 🔄 ARRAY.FROM: Converte NodeList in vero Array
+        // Necessario per alcuni metodi array
+      
+        for (const container of inputContainers) {
+          container.innerHTML = '';
+          // 🗑️ SVUOTA: Rimuove tutto l'HTML interno
+          // È come strappare le pagine dal diario
+        }
+      
+        budgetNumberInput.value = '';
+        // 🔄 RESET BUDGET: Svuota il campo
+        
+        output.innerText = '';
+        // 🔄 RESET OUTPUT: Svuota il testo
+        
+        output.classList.add('hide');
+        // 👻 NASCONDI: Aggiunge di nuovo la classe hide
+      }
+      
+      // 🎧 ===== EVENT LISTENERS: Le Orecchie dell'App =====
+      
+      addEntryButton.addEventListener("click", addEntry);
+      // 🖱️ CLICK ADD: Quando clicchi "Add Entry" → esegui addEntry()
+      
+      calorieCounter.addEventListener("submit", calculateCalories);
+      // 📤 SUBMIT FORM: Quando invii il form → esegui calculateCalories()
+      
+      clearButton.addEventListener("click", clearForm);
+      // 🗑️ CLICK CLEAR: Quando clicchi "Clear" → esegui clearForm()
+      
+      /* 🎯 ===== FLUSSO DELL'APP =====
+      1. L'utente inserisce il budget calorico
+      2. Seleziona una categoria dal dropdown
+      3. Clicca "Add Entry" per aggiungere campi
+      4. Inserisce nome e calorie del cibo/esercizio
+      5. Ripete per tutti i pasti/esercizi
+      6. Clicca "Calculate" per vedere i risultati
+      7. L'app mostra se è in surplus o deficit
+      8. Può cliccare "Clear" per ricominciare
+      
+      È come avere un nutrizionista digitale sempre con te! 🥗📱
+      */
+    </script>
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+### Un Progetto che Mi Sta a Cuore
+
+È un tema a cui sono molto legato: mi alleno in palestra da 6 anni e ho attraversato diversi periodi in cui ho utilizzato applicazioni di calorie counter. In particolare ho trovato **MyFitnessPal** molto valido, al punto da insegnarne l’uso anche ad amici che si allenavano, per renderli autonomi.
+
+Non ho mai promosso l’inserimento compulsivo quotidiano degli alimenti, ma piuttosto l’utilizzo dello strumento per **pianificare la dieta** e, di tanto in tanto, registrare ciò che si mangia in un determinato periodo per individuare abitudini alimentari che supportano gli obiettivi e quelle che invece li ostacolano.
+
+Ed è straordinario che questo tool creato con freeCodeCamp sia **sufficiente proprio per questo scopo**! Anche se MyFitnessPal offre funzionalità avanzate come l’inserimento degli alimenti tramite barcode scanning, questa applicazione, pur essendo più “grezza”, raggiunge lo stesso obiettivo finale.
+
+### La Scoperta dell’HTML Dinamico
+
+Questo progetto mi ha dato tantissimi spunti! Facendo ricerca ho scoperto la potenza dell’**HTML dinamico** rispetto all’HTML statico.
+
+Se dovessi scrivere tutto manualmente, dovresti prevedere centinaia di campi per ogni categoria, rendendo il file HTML enorme e impossibile da mantenere.
+
+Con JavaScript dinamico invece:
+
+```javascript
+const HTMLString = `
+  <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+  <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+`;
+```
+
+Un unico template si adatta automaticamente a qualsiasi situazione: l’utente vuole 1 entry? Ne crea 1. Ne vuole 50? Lo stesso identico codice!
+
+Sono rimasto colpito dall’HTML integrato nel JS, anche se in forma semplice tramite HTMLString.
+
+**Insight sull’accessibilità:** ho realizzato che, dato che elementi utili all’accessibilità sono automatizzabili (come l’attributo `for` che collega automaticamente label e input), ogni entry generata è **immediatamente accessibile**. Modifichi il template una sola volta e migliaia di elementi diventano automaticamente compatibili con screen reader e navigazione da tastiera!
+
+### La Sfida Finale
+
+Gli ultimi 10 step circa sono stati i più difficili. Ho fatto largo uso del Code Tutor, non tanto per ottenere la soluzione delle challenge, ma per farmi **spiegare il perché di ogni passaggio**, perché nella funzione `clearForm` vedevo troppi concetti astratti tutti insieme. Infatti molti messaggi finivano con:
+“Ho superato correttamente questo step scrivendo (...), ma potresti spiegarmelo?”
+
+### Cosa Ho Imparato
+
+**DOM Manipulation Avanzata:**
+
+* `document.querySelector()` con selettori specifici
+* `querySelectorAll()` per liste di elementi
+* `insertAdjacentHTML()` per inserimento dinamico
+* Template literals per la generazione di HTML
+
+**Creazione di Contenuti Dinamici:**
+
+* HTMLString con variabili interpolate
+* Generazione dinamica degli ID con `entryNumber`
+* Adattamento automatico alle scelte dell’utente
+
+**Form Validation & Input Handling:**
+
+* Regular expressions per la pulizia dei dati (`/[+-\s]/g`)
+* Validazione degli input con pattern matching (`/\d+e\d+/i`)
+* Gestione degli errori con boolean flag
+
+**Event Handling:**
+
+* `addEventListener()` per le interazioni utente
+* Gestione degli eventi su elementi dinamici
+
+### Riflessione
+
+Questo progetto è stato un vero **punto di svolta**! Sto iniziando ad apprezzare JavaScript, anche se non mi sento ancora padrone della materia: ho bisogno di tanta pratica.
+
+Domani aggiornerò il vademecum, perché in questi ultimissimi progetti sono stati introdotti davvero moltissimi nuovi concetti.
+
+---
+
+**Prossimo Progetto**: Ripassare la DOM Manipulation costruendo un gioco Rock, Paper, Scissors

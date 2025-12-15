@@ -1,0 +1,39 @@
+/* Stile Base - Definisce i colori del tuo Brand */
+:root {
+  --ifm-color-primary: #D4A373; /* Un colore accento (tipo Bronzo/Sabbia) per staccare */
+  --ifm-color-primary-dark: #be8e5e;
+  --ifm-color-primary-darker: #b38556;
+  --ifm-color-primary-darkest: #946d45;
+  --ifm-color-primary-light: #decba4;
+  --ifm-color-primary-lighter: #eaddc5;
+  --ifm-color-primary-lightest: #f5efe2;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* DARK MODE (Il tuo Default) */
+[data-theme='dark'] {
+  /* Sfondo Generale */
+  --ifm-background-color: #140A07; /* Il tuo Marrone scuro quasi nero */
+  
+  /* Colore delle Card e delle superfici */
+  --ifm-background-surface-color: #322620; /* Il tuo Marrone Cioccolato */
+  
+  /* Testo */
+  --ifm-color-content: #FFFFFF;
+  --ifm-color-content-secondary: #EAEAEA;
+  
+  /* Bordi e Linee */
+  --ifm-toc-border-color: #574C43;
+  --ifm-color-emphasis-200: #574C43; /* Usato per i bordi sottili */
+  
+  /* Sidebar */
+  --ifm-menu-color: #e0e0e0;
+  --ifm-menu-color-active: #D4A373; /* L'accento quando clicchi */
+}
+
+/* Forza un po' di stile sulle card della home */
+.card {
+    background-color: var(--ifm-background-surface-color);
+    border: 1px solid var(--ifm-toc-border-color);
+}

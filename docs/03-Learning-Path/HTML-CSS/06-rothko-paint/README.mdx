@@ -1,0 +1,218 @@
+---
+sidebar_position: 5
+sidebar_label: 'Rothko Painting'
+title: 'Rothko Painting'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+CSS Visual Practice
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Rothko Painting</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="frame">
+      <div class="canvas">
+        <div class="one"></div>
+        <div class="two"></div>
+        <div class="three"></div>
+      </div>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+<style>
+  .canvas {
+    width: 500px;
+    height: 600px;
+    background-color: #4d0f00;
+    overflow: hidden;
+    filter: blur(2px);
+  }
+
+  .frame {
+    border: 50px solid black;
+    width: 500px;
+    padding: 50px;
+    margin: 20px auto;
+  }
+
+  .one {
+    width: 425px;
+    height: 150px;
+    background-color: #efb762;
+    margin: 20px auto;
+    box-shadow: 0 0 3px 3px #efb762;
+    border-radius: 9px;
+    transform: rotate(-0.6deg);
+  }
+
+  .two {
+    width: 475px;
+    height: 200px;
+    background-color: #8f0401;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 3px 3px #8f0401;
+    border-radius: 8px 10px;
+    transform: rotate(0.4deg);
+  }
+
+  .one, .two {
+    filter: blur(1px);
+  }
+
+  .three {
+    width: 91%;
+    height: 28%;
+    background-color: #b20403;
+    margin: auto;
+    filter: blur(2px);
+    box-shadow: 0 0 5px 5px #b20403;
+    border-radius: 30px 25px 60px 12px;
+    transform: rotate(-0.2deg);
+  }
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- <!DOCTYPE html>: Indicates to the browser that HTML5 is being used, fundamental for compatibility and standards. -->
+
+<html lang="en">
+<!-- <html lang="en">: Root of the entire HTML document. lang="en" signals that the content language is English (for screen readers, SEO, etc.) -->
+
+  <head>
+    <!-- <head></head>: Contains metadata, titles and references to stylesheets. Not directly visible on the page. -->
+
+    <meta charset="UTF-8">
+    <!-- <meta charset="UTF-8">: Defines character encoding → UTF-8 is the modern standard for supporting accented letters, symbols, emojis, etc. -->
+
+    <title>Rothko Painting</title>
+    <!-- <title></title>: The page title, visible in the browser tab. Also important for SEO. -->
+
+    <style>
+      /* ===== CSS STYLE INTEGRATED IN THE DOCUMENT ===== */
+
+      .canvas {
+        width: 500px;                /* Width of the painting area */
+        height: 600px;               /* Height of the painting area */
+        background-color: #4d0f00;   /* Dark background color, similar to a very dark red */
+        overflow: hidden;           /* Hides any element that goes outside the container */
+        filter: blur(2px);          /* Applies a slight blur to the entire canvas */
+      }
+
+      .frame {
+        border: 50px solid black;   /* 50px thick black frame */
+        width: 500px;               /* Internal width (does not include padding or border) */
+        padding: 50px;              /* Internal space between frame and canvas */
+        margin: 20px auto;          /* 20px top and bottom, horizontally centered with auto */
+      }
+
+      .one {
+        width: 425px;               /* Width of the first rectangle */
+        height: 150px;              /* Height of the first rectangle */
+        background-color: #efb762;  /* Orange/honey color */
+        margin: 20px auto;          /* Space above/below and horizontally centered */
+        box-shadow: 0 0 3px 3px #efb762; /* Glow effect with the same background color */
+        border-radius: 9px;         /* Uniform rounded corners */
+        transform: rotate(-0.6deg); /* Slight rotation to give a "hand-painted" look */
+      }
+
+      .two {
+        width: 475px;
+        height: 200px;
+        background-color: #8f0401;  /* Intense dark red */
+        margin: 0 auto 20px;        /* No margin above, centered, 20px below */
+        box-shadow: 0 0 3px 3px #8f0401; /* Glow similar to the internal color */
+        border-radius: 8px 10px;    /* Different radii for corners (vertical vs horizontal) */
+        transform: rotate(0.4deg);  /* Another subtle rotation */
+      }
+
+      .one, .two {
+        filter: blur(1px);          /* Light blur on both rectangles */
+      }
+
+      .three {
+        width: 91%;                 /* Percentage relative to the canvas → 91% of the width */
+        height: 28%;                /* Same for height (28% of the canvas) */
+        background-color: #b20403;  /* Intense red */
+        margin: auto;               /* Centers automatically */
+        filter: blur(2px);          /* More pronounced blur */
+        box-shadow: 0 0 5px 5px #b20403; /* More extensive glow compared to .one and .two */
+        border-radius: 30px 25px 60px 12px;
+        /* Different rounded corners → creates an organic/non-symmetric effect */
+        transform: rotate(-0.2deg); /* Small tilt */
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <!-- <body></body>: All visible user content goes here -->
+
+    <div class="frame">
+      <!-- .frame: Simulates a frame around the "canvas" -->
+
+      <div class="canvas">
+        <!-- .canvas: The background and container of the three painted "rectangles" -->
+
+        <div class="one"></div>
+        <!-- Upper rectangle: light honey color, slightly blurred -->
+
+        <div class="two"></div>
+        <!-- Middle rectangle: intense red, similar shape but different from .one -->
+
+        <div class="three"></div>
+        <!-- Lower rectangle: bright red, with very rounded corners and greater blur -->
+      </div>
+      <!-- End canvas -->
+    </div>
+    <!-- End frame -->
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+What I Learned
+
+- HTML layout with nested divs to build abstract compositions
+
+- CSS techniques for expressive visuals: 
+
+  - filter: blur() for soft, painterly edges
+
+  - box-shadow and border-radius for depth and shape variation
+
+  - transform: rotate() for natural imperfection
+
+- Color blocking and visual hierarchy using only CSS
+
+- How layout, effects, and proportions come together to simulate artwork
+
+
+Time
+🕒 2 hours 5 minutes (while on vacation!)
+
+Personal Note
+I had a lot of fun with this one more than with static forms or standard layouts. As soon as the project took a visual direction, I felt lit up inside, maybe thanks to my design background. It's surprising how motivated I was: I literally coded part of this while ferry-hopping around an island. That moment made me realize… maybe this really is passion.

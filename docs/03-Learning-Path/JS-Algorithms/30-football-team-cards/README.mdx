@@ -1,0 +1,1244 @@
+---
+sidebar_position: 9
+sidebar_label: 'Football Team Cards'
+title: 'Football Team Cards'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Football Team Cards
+
+<img width="100%" alt="All Players Filter (Main Page) - Screenshot" src="https://github.com/user-attachments/assets/2ea43c92-4069-4e64-9f51-ba848a865a3a" />
+<img width="100%" alt="Forward Position Filter - Screenshot" src="https://github.com/user-attachments/assets/2d34e8ed-c56c-43cc-9fa6-b48be1ff47c1" />
+<img width="100%" alt="Defender Position Filter - Screenshot" src="https://github.com/user-attachments/assets/426faaf2-75cc-458a-88d2-16f382c6d44c" />
+
+### The Project
+Interactive Football Team Cards with advanced filtering system, developed using modern JavaScript methods, destructuring, and flow control with switch statements. A digital museum of the 1986 Argentina team.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Learn Modern JavaScript methods by building football team cards
+    </title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1 class="title">Team stats</h1>
+    <main>
+      <div class="team-stats">
+        <p>Team: <span id="team"></span></p>
+        <p>Sport: <span id="sport"></span></p>
+        <p>Year: <span id="year"></span></p>
+        <p>Head coach: <span id="head-coach"></span></p>
+      </div>
+      <label class="options-label" for="players">Filter Teammates:</label>
+      <select name="players" id="players">
+        <option value="all">All Players</option>
+        <option value="nickname">Nicknames</option>
+        <option value="forward">Position Forward</option>
+        <option value="midfielder">Position Midfielder</option>
+        <option value="defender">Position Defender</option>
+        <option value="goalkeeper">Position Goalkeeper</option>
+      </select>
+      <div class="cards" id="player-cards">
+        <div class="player-card">
+          <h2>Sergio Almirón</h2>
+          <p>Position: forward</p>
+          <p>Number: 1</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Sergio Batista</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 2</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Ricardo Bochini</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 3</p>
+          <p>Nickname: El Bocha</p>
+        </div>
+        <div class="player-card">
+          <h2>Claudio Borghi</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 4</p>
+          <p>Nickname: Bichi</p>
+        </div>
+        <div class="player-card">
+          <h2>José Luis Brown</h2>
+          <p>Position: defender</p>
+          <p>Number: 5</p>
+          <p>Nickname: Tata</p>
+        </div>
+        <div class="player-card">
+          <h2>Daniel Passarella</h2>
+          <p>Position: defender</p>
+          <p>Number: 6</p>
+          <p>Nickname: El Gran Capitán</p>
+        </div>
+        <div class="player-card">
+          <h2>Jorge Burruchaga</h2>
+          <p>Position: forward</p>
+          <p>Number: 7</p>
+          <p>Nickname: Burru</p>
+        </div>
+        <div class="player-card">
+          <h2>Néstor Clausen</h2>
+          <p>Position: defender</p>
+          <p>Number: 8</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>José Luis Cuciuffo</h2>
+          <p>Position: defender</p>
+          <p>Number: 9</p>
+          <p>Nickname: El Cuchu</p>
+        </div>
+        <div class="player-card">
+          <h2>(Captain) Diego Maradona</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 10</p>
+          <p>Nickname: El Pibe de Oro</p>
+        </div>
+        <div class="player-card">
+          <h2>Jorge Valdano</h2>
+          <p>Position: forward</p>
+          <p>Number: 11</p>
+          <p>Nickname: The Philosopher of Football</p>
+        </div>
+        <div class="player-card">
+          <h2>Héctor Enrique</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 12</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Oscar Garré</h2>
+          <p>Position: defender</p>
+          <p>Number: 13</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Ricardo Giusti</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 14</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Luis Islas</h2>
+          <p>Position: goalkeeper</p>
+          <p>Number: 15</p>
+          <p>Nickname: El loco</p>
+        </div>
+        <div class="player-card">
+          <h2>Julio Olarticoechea</h2>
+          <p>Position: defender</p>
+          <p>Number: 16</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Pedro Pasculli</h2>
+          <p>Position: forward</p>
+          <p>Number: 17</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Nery Pumpido</h2>
+          <p>Position: goalkeeper</p>
+          <p>Number: 18</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Oscar Ruggeri</h2>
+          <p>Position: defender</p>
+          <p>Number: 19</p>
+          <p>Nickname: El Cabezón</p>
+        </div>
+        <div class="player-card">
+          <h2>Carlos Tapia</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 20</p>
+          <p>Nickname: N/A</p>
+        </div>
+        <div class="player-card">
+          <h2>Marcelo Trobbiani</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 21</p>
+          <p>Nickname: Calesita</p>
+        </div>
+        <div class="player-card">
+          <h2>Héctor Zelada</h2>
+          <p>Position: goalkeeper</p>
+          <p>Number: 22</p>
+          <p>Nickname: N/A</p>
+        </div>
+      </div>
+    </main>
+    <footer>&copy; freeCodeCamp</footer>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --dark-grey: #0a0a23;
+  --light-grey: #f5f6f7;
+  --white: #ffffff;
+  --black: #000;
+}
+
+body {
+  background-color: var(--dark-grey);
+  text-align: center;
+  padding: 10px;
+}
+
+.title,
+.options-label,
+.team-stats,
+footer {
+  color: var(--white);
+}
+
+.title {
+  margin: 1.3rem 0;
+}
+
+.team-stats {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  font-size: 1.3rem;
+  margin: 1.2rem 0;
+}
+
+.options-label {
+  font-size: 1.2rem;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-card {
+  background-color: var(--light-grey);
+  padding: 1.3rem;
+  margin: 1.2rem;
+  width: 300px;
+  border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+  .team-stats {
+    flex-direction: column;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const teamName = document.getElementById("team");
+const typeOfSport = document.getElementById("sport");
+const worldCupYear = document.getElementById("year");
+const headCoach = document.getElementById("head-coach");
+const playerCards = document.getElementById("player-cards");
+const playersDropdownList = document.getElementById("players");
+const myFavoriteFootballTeam = {
+  team: "Argentina",
+  sport: "Football",
+  year: 1986,
+  isWorldCupWinner: true,
+  headCoach: {
+    coachName: "Carlos Bilardo",
+    matches: 7,
+  },
+  players: [
+    {
+      name: "Sergio Almirón",
+      position: "forward",
+      number: 1,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Sergio Batista",
+      position: "midfielder",
+      number: 2,
+      isCaptain: false,
+      nickname: null,
+    },
+     {
+      name: "Ricardo Bochini",
+      position: "midfielder",
+      number: 3,
+      isCaptain: false,
+      nickname: "El Bocha",
+    },
+    {
+      name: "Claudio Borghi",
+      position: "midfielder",
+      number: 4,
+      isCaptain: false,
+      nickname: "Bichi",
+    },
+    {
+      name: "José Luis Brown",
+      position: "defender",
+      number: 5,
+      isCaptain: false,
+      nickname: "Tata",
+    },
+    {
+      name: "Daniel Passarella",
+      position: "defender",
+      number: 6,
+      isCaptain: false,
+      nickname: "El Gran Capitán",
+    },
+    {
+      name: "Jorge Burruchaga",
+      position: "forward",
+      number: 7,
+      isCaptain: false,
+      nickname: "Burru",
+    },
+    {
+      name: "Néstor Clausen",
+      position: "defender",
+      number: 8,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "José Luis Cuciuffo",
+      position: "defender",
+      number: 9,
+      isCaptain: false,
+      nickname: "El Cuchu",
+    },
+    {
+      name: "Diego Maradona",
+      position: "midfielder",
+      number: 10,
+      isCaptain: true,
+      nickname: "El Pibe de Oro",
+    },
+    {
+      name: "Jorge Valdano",
+      position: "forward",
+      number: 11,
+      isCaptain: false,
+      nickname: "The Philosopher of Football",
+    },
+    {
+      name: "Héctor Enrique",
+      position: "midfielder",
+      number: 12,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Oscar Garré",
+      position: "defender",
+      number: 13,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Ricardo Giusti",
+      position: "midfielder",
+      number: 14,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Luis Islas",
+      position: "goalkeeper",
+      number: 15,
+      isCaptain: false,
+      nickname: "El loco",
+    },
+    {
+      name: "Julio Olarticoechea",
+      position: "defender",
+      number: 16,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Pedro Pasculli",
+      position: "forward",
+      number: 17,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Nery Pumpido",
+      position: "goalkeeper",
+      number: 18,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Oscar Ruggeri",
+      position: "defender",
+      number: 19,
+      isCaptain: false,
+      nickname: "El Cabezón",
+    },
+    {
+      name: "Carlos Tapia",
+      position: "midfielder",
+      number: 20,
+      isCaptain: false,
+      nickname: null,
+    },
+    {
+      name: "Marcelo Trobbiani",
+      position: "midfielder",
+      number: 21,
+      isCaptain: false,
+      nickname: "Calesita",
+    },
+    {
+      name: "Héctor Zelada",
+      position: "goalkeeper",
+      number: 22,
+      isCaptain: false,
+      nickname: null,
+    },
+  ],
+};
+
+Object.freeze(myFavoriteFootballTeam);
+const { sport, team, year, players } = myFavoriteFootballTeam;
+const { coachName } = myFavoriteFootballTeam.headCoach;
+
+typeOfSport.textContent = sport;
+teamName.textContent = team;
+worldCupYear.textContent = year;
+headCoach.textContent = coachName;
+
+const setPlayerCards = (arr = players) => {
+  playerCards.innerHTML += arr
+    .map(
+      ({ name, position, number, isCaptain, nickname }) => {
+        return `
+        <div class="player-card">
+          <h2>${isCaptain ? "(Captain)" : ""} ${name}</h2>
+          <p>Position: ${position}</p>
+          <p>Number: ${number}</p>
+          <p>Nickname: ${nickname !== null ? nickname : "N/A"}</p>
+        </div>
+      ` }
+    )
+    .join("");
+};
+
+playersDropdownList.addEventListener("change", (e) => {
+  playerCards.innerHTML = "";
+
+  switch (e.target.value) {
+    case "nickname":
+      setPlayerCards(players.filter((player) => player.nickname !== null));
+      break;
+    case "forward":
+      setPlayerCards(players.filter((player) => player.position === "forward"));
+      break;
+    case "midfielder":
+      setPlayerCards(
+        players.filter((player) => player.position === "midfielder")
+      );
+      break;
+    case "defender":
+      setPlayerCards(
+        players.filter((player) => player.position === "defender")
+      );
+      break;
+    case "goalkeeper":
+      setPlayerCards(
+        players.filter((player) => player.position === "goalkeeper")
+      );
+      break;
+
+    default:
+      setPlayerCards()
+
+  }
+});
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the digital football museum!" -->
+<!-- It's like opening the doors to the stadium of history! ⚽ -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our virtual playing field -->
+<!-- lang="en" = English, the language of international football! 🏆 -->
+
+  <head>
+    <!-- 🧠 THE TACTICAL ROOM: Where we prepare the formation -->
+    <!-- It's like the coach's whiteboard before the match! -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for names with accents! Héctor, José... -->
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- 🌐 IE COMPATIBILITY: "Works even on Internet Explorer!" -->
+    <!-- It's like making sure even grandparents can watch the match -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE DESIGN: "From mobile to big screen!" -->
+    <!-- It's like having a field that adapts to every stadium -->
+    
+    <title>
+      Learn Modern JavaScript methods by building football team cards
+    </title>
+    <!-- 📑 TITLE: Learn JavaScript with player cards! -->
+    
+    <style>
+      /* ⚽ ===== STYLES FOR OUR STICKER ALBUM ===== */
+      
+      /* 🔄 ===== UNIVERSAL RESET: Clean the field! ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        /* 📦 BORDER-BOX: Includes everything in the dimensions */
+        
+        margin: 0;
+        padding: 0;
+        /* 🚫 ZERO SPACES: Starting from zero like a new match */
+      }
+      
+      /* 🎨 ===== CSS VARIABLES: The Team Colors ===== */
+      :root {
+        --dark-grey: #0a0a23;
+        /* ⚫ DARK GREY: Like the sky before a final */
+        
+        --light-grey: #f5f6f7;
+        /* 🔘 LIGHT GREY: For player cards */
+        
+        --white: #ffffff;
+        /* ⚪ WHITE: For important text */
+        
+        --black: #000;
+        /* ⚫ BLACK: For strong contrasts */
+      }
+      
+      /* 🏟️ ===== BODY: The Stadium ===== */
+      body {
+        background-color: var(--dark-grey);
+        /* 🌑 DARK BACKGROUND: Like playing at night */
+        
+        text-align: center;
+        /* ⚖️ EVERYTHING CENTERED: Like the center circle of the field */
+        
+        padding: 10px;
+        /* 🏠 PADDING: A bit of space from the edges */
+      }
+      
+      /* 📝 ===== WHITE TEXTS ===== */
+      .title,
+      .options-label,
+      .team-stats,
+      footer {
+        color: var(--white);
+        /* ⚪ WHITE TEXT: Stands out against dark background */
+        /* Multiple selector for efficiency! */
+      }
+      
+      .title {
+        margin: 1.3rem 0;
+        /* 🌬️ VERTICAL SPACE: 1.3rem above and below */
+        /* rem = relative to root font-size */
+      }
+      
+      /* 📊 ===== TEAM STATS ===== */
+      .team-stats {
+        display: flex;
+        /* 🎯 FLEXBOX: The modern layout! */
+        
+        justify-content: space-around;
+        /* 🌐 DISTRIBUTION: Equal space between elements */
+        /* space-around = uniform space around */
+        
+        flex-wrap: wrap;
+        /* 🔄 WRAP: If there's no space, go to the next line */
+        
+        font-size: 1.3rem;
+        /* 📏 LARGE TEXT: For readability */
+        
+        margin: 1.2rem 0;
+        /* 🌬️ MARGINS: Vertical breathing room */
+      }
+      
+      .options-label {
+        font-size: 1.2rem;
+        /* 📏 LABEL: A bit bigger than normal */
+      }
+      
+      /* 🃏 ===== CARDS CONTAINER ===== */
+      .cards {
+        display: flex;
+        /* 🎯 FLEXBOX: To manage cards */
+        
+        flex-wrap: wrap;
+        /* 🔄 WRAP: Cards wrap to next line */
+        
+        justify-content: center;
+        /* ⚖️ CENTERED: In the middle of the field */
+        
+        align-items: center;
+        /* 📐 ALIGNMENT: Vertically centered */
+      }
+      
+      /* 🎴 ===== PLAYER CARD ===== */
+      .player-card {
+        background-color: var(--light-grey);
+        /* 🔘 LIGHT BACKGROUND: Like a real player card */
+        
+        padding: 1.3rem;
+        /* 🏠 INTERNAL SPACE: For content */
+        
+        margin: 1.2rem;
+        /* 🌬️ EXTERNAL SPACE: Between cards */
+        
+        width: 300px;
+        /* 📏 FIXED WIDTH: All the same */
+        
+        border-radius: 15px;
+        /* 🔄 ROUNDED CORNERS: Like modern cards */
+      }
+      
+      /* 📱 ===== MEDIA QUERY: Mobile ===== */
+      @media (max-width: 768px) {
+        /* 📱 UNDER 768px: Mobile mode */
+        
+        .team-stats {
+          flex-direction: column;
+          /* 📦 COLUMN: Stats one below the other */
+          /* On mobile, vertical is better! */
+        }
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- ⚽ ===== THE HTML PLAYING FIELD ===== -->
+    
+    <h1 class="title">Team stats</h1>
+    <!-- 🏆 TITLE: The team statistics -->
+    
+    <main>
+      <!-- 📄 MAIN CONTENT: Where everything happens -->
+      
+      <div class="team-stats">
+        <!-- 📊 STATISTICS: The team data -->
+        
+        <p>Team: <span id="team"></span></p>
+        <!-- 🏳️ TEAM: Will be filled by JavaScript -->
+        
+        <p>Sport: <span id="sport"></span></p>
+        <!-- ⚽ SPORT: This too from JS -->
+        
+        <p>Year: <span id="year"></span></p>
+        <!-- 📅 YEAR: The year of victory -->
+        
+        <p>Head coach: <span id="head-coach"></span></p>
+        <!-- 👨‍💼 COACH: The manager -->
+      </div>
+      
+      <label class="options-label" for="players">Filter Teammates:</label>
+      <!-- 🏷️ LABEL: For dropdown menu -->
+      <!-- for="players" connects label and select for accessibility -->
+      
+      <select name="players" id="players">
+        <!-- 📋 DROPDOWN MENU: To filter players -->
+        
+        <option value="all">All Players</option>
+        <!-- 👥 ALL: Default option -->
+        
+        <option value="nickname">Nicknames</option>
+        <!-- 🏷️ NICKNAMES: Only those with a nickname -->
+        
+        <option value="forward">Position Forward</option>
+        <!-- ⚡ FORWARDS: The strikers -->
+        
+        <option value="midfielder">Position Midfielder</option>
+        <!-- 🎯 MIDFIELDERS: The playmakers -->
+        
+        <option value="defender">Position Defender</option>
+        <!-- 🛡️ DEFENDERS: The wall -->
+        
+        <option value="goalkeeper">Position Goalkeeper</option>
+        <!-- 🥅 GOALKEEPERS: The last line of defense -->
+      </select>
+      
+      <div class="cards" id="player-cards">
+        <!-- 🃏 CARDS CONTAINER: Where the player cards go -->
+        <!-- The static HTML will be replaced by JavaScript! -->
+        
+        <!-- 🎴 EXAMPLE OF STATIC CARD -->
+        <div class="player-card">
+          <h2>Sergio Almirón</h2>
+          <!-- 👤 NAME: The player -->
+          
+          <p>Position: forward</p>
+          <!-- ⚡ ROLE: Forward -->
+          
+          <p>Number: 1</p>
+          <!-- 🔢 NUMBER: Jersey number -->
+          
+          <p>Nickname: N/A</p>
+          <!-- 🏷️ NICKNAME: N/A = Not Available -->
+        </div>
+        
+        <!-- 🎴 ALL OTHER CARDS... -->
+        <!-- There are 22 players in total! -->
+        <!-- This static HTML will be overwritten by JavaScript -->
+        
+        <div class="player-card">
+          <h2>Sergio Batista</h2>
+          <p>Position: midfielder</p>
+          <p>Number: 2</p>
+          <p>Nickname: N/A</p>
+        </div>
+        
+        <!-- ... (other 20 cards with same structure) ... -->
+        
+        <div class="player-card">
+          <h2>(Captain) Diego Maradona</h2>
+          <!-- 🏆 THE CAPTAIN: Note the (Captain) prefix -->
+          <p>Position: midfielder</p>
+          <p>Number: 10</p>
+          <!-- 🔟 THE 10: The most iconic number in football! -->
+          <p>Nickname: El Pibe de Oro</p>
+          <!-- ✨ EL PIBE DE ORO: The Golden Boy -->
+        </div>
+        
+        <!-- ... rest of the cards up to 22 ... -->
+      </div>
+    </main>
+    
+    <footer>&copy; freeCodeCamp</footer>
+    <!-- 🦶 FOOTER: Copyright with HTML entity &copy; -->
+    
+    <script>
+      /* 🎮 ===== JAVASCRIPT: Where Magic Comes to Life! ===== */
+      
+      /* 🎯 ===== DOM ELEMENTS SELECTION ===== */
+      const teamName = document.getElementById("team");
+      // 🏳️ TEAM ELEMENT: The span where we'll show the name
+      // getElementById = get element by ID (super fast!)
+      
+      const typeOfSport = document.getElementById("sport");
+      // ⚽ SPORT ELEMENT: The span for type of sport
+      
+      const worldCupYear = document.getElementById("year");
+      // 📅 YEAR ELEMENT: The span for World Cup year
+      
+      const headCoach = document.getElementById("head-coach");
+      // 👨‍💼 COACH ELEMENT: The span for the manager
+      
+      const playerCards = document.getElementById("player-cards");
+      // 🃏 CARDS CONTAINER: The div that will contain all cards
+      
+      const playersDropdownList = document.getElementById("players");
+      // 📋 DROPDOWN MENU: The select for filters
+      
+      /* 🏆 ===== THE TEAM OBJECT: The Database! ===== */
+      const myFavoriteFootballTeam = {
+        // 📦 MAIN OBJECT: Contains all the data
+        
+        team: "Argentina",
+        // 🇦🇷 TEAM: Maradona's Argentina!
+        
+        sport: "Football",
+        // ⚽ SPORT: Football (European football)
+        
+        year: 1986,
+        // 📅 YEAR: The Mexico World Cup
+        
+        isWorldCupWinner: true,
+        // 🏆 CHAMPIONS: Yes, they won!
+        
+        headCoach: {
+          // 👨‍💼 NESTED OBJECT: Coach info
+          
+          coachName: "Carlos Bilardo",
+          // 📋 NAME: The legendary Bilardo
+          
+          matches: 7,
+          // 🎮 MATCHES: 7 matches in the World Cup
+        },
+        
+        players: [
+          // 👥 PLAYER ARRAY: The complete squad!
+          // Array of objects, each one is a player
+          
+          {
+            name: "Sergio Almirón",
+            position: "forward",
+            number: 1,
+            isCaptain: false,
+            nickname: null,
+            // null = no nickname
+          },
+          
+          {
+            name: "Sergio Batista",
+            position: "midfielder",
+            number: 2,
+            isCaptain: false,
+            nickname: null,
+          },
+          
+          {
+            name: "Ricardo Bochini",
+            position: "midfielder",
+            number: 3,
+            isCaptain: false,
+            nickname: "El Bocha",
+            // 🏷️ NICKNAME: El Bocha!
+          },
+          
+          {
+            name: "Claudio Borghi",
+            position: "midfielder",
+            number: 4,
+            isCaptain: false,
+            nickname: "Bichi",
+          },
+          {
+            name: "José Luis Brown",
+            position: "defender",
+            number: 5,
+            isCaptain: false,
+            nickname: "Tata",
+          },
+          {
+            name: "Daniel Passarella",
+            position: "defender",
+            number: 6,
+            isCaptain: false,
+            nickname: "El Gran Capitán",
+          },
+          {
+            name: "Jorge Burruchaga",
+            position: "forward",
+            number: 7,
+            isCaptain: false,
+            nickname: "Burru",
+          },
+          {
+            name: "Néstor Clausen",
+            position: "defender",
+            number: 8,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "José Luis Cuciuffo",
+            position: "defender",
+            number: 9,
+            isCaptain: false,
+            nickname: "El Cuchu",
+          },
+          
+          {
+            name: "Diego Maradona",
+            position: "midfielder",
+            number: 10,
+            isCaptain: true,
+            // ✅ HE IS THE CAPTAIN!
+            nickname: "El Pibe de Oro",
+            // ✨ EL PIBE DE ORO: Living legend
+          },
+          
+          {
+            name: "Jorge Valdano",
+            position: "forward",
+            number: 11,
+            isCaptain: false,
+            nickname: "The Philosopher of Football",
+          },
+          {
+            name: "Héctor Enrique",
+            position: "midfielder",
+            number: 12,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Oscar Garré",
+            position: "defender",
+            number: 13,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Ricardo Giusti",
+            position: "midfielder",
+            number: 14,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Luis Islas",
+            position: "goalkeeper",
+            number: 15,
+            isCaptain: false,
+            nickname: "El loco",
+          },
+          {
+            name: "Julio Olarticoechea",
+            position: "defender",
+            number: 16,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Pedro Pasculli",
+            position: "forward",
+            number: 17,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Nery Pumpido",
+            position: "goalkeeper",
+            number: 18,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Oscar Ruggeri",
+            position: "defender",
+            number: 19,
+            isCaptain: false,
+            nickname: "El Cabezón",
+          },
+          {
+            name: "Carlos Tapia",
+            position: "midfielder",
+            number: 20,
+            isCaptain: false,
+            nickname: null,
+          },
+          {
+            name: "Marcelo Trobbiani",
+            position: "midfielder",
+            number: 21,
+            isCaptain: false,
+            nickname: "Calesita",
+          },
+          {
+            name: "Héctor Zelada",
+            position: "goalkeeper",
+            number: 22,
+            isCaptain: false,
+            nickname: null,
+          },
+        ],
+      };
+      
+      /* 🔒 ===== FREEZE: Freeze the Object! ===== */
+      Object.freeze(myFavoriteFootballTeam);
+      // ❄️ FREEZE: The object can no longer be modified!
+      // It's like putting the team under glass
+      // Prevents accidental changes to historical data
+      
+      /* 🎁 ===== DESTRUCTURING: Unwrap the Gifts! ===== */
+      const { sport, team, year, players } = myFavoriteFootballTeam;
+      // 📦 OBJECT DESTRUCTURING: Extracts properties
+      // Instead of writing myFavoriteFootballTeam.sport each time
+      // Now we have direct variables: sport, team, year, players
+      
+      const { coachName } = myFavoriteFootballTeam.headCoach;
+      // 📦 NESTED DESTRUCTURING: Extracts from inner object
+      // Takes coachName from the headCoach object
+      
+      /* 📝 ===== POPULATE THE DATA: Fill the Spans! ===== */
+      typeOfSport.textContent = sport;
+      // ✍️ INSERT SPORT: "Football" in the span
+      // textContent = inserts text (safe against XSS)
+      
+      teamName.textContent = team;
+      // ✍️ INSERT TEAM: "Argentina" in the span
+      
+      worldCupYear.textContent = year;
+      // ✍️ INSERT YEAR: "1986" in the span
+      
+      headCoach.textContent = coachName;
+      // ✍️ INSERT COACH: "Carlos Bilardo" in the span
+      
+      /* 🎴 ===== CREATE CARDS FUNCTION: The Card Factory! ===== */
+      const setPlayerCards = (arr = players) => {
+        // 🏭 ARROW FUNCTION: Creates HTML cards
+        // arr = players: parameter with default value
+        // If nothing is passed, use all players
+        
+        playerCards.innerHTML += arr
+          // 📝 innerHTML +=: ADDS to existing HTML
+          // += instead of = to not erase what's already there
+          
+          .map(
+            // 🔄 MAP: Transforms each player into HTML
+            // map() = for each element of the array, create something new
+            
+            ({ name, position, number, isCaptain, nickname }) => {
+              // 📦 PARAMETER DESTRUCTURING: Extracts properties
+              // Instead of writing player.name, player.position...
+              
+              return `
+              <div class="player-card">
+                <h2>${isCaptain ? "(Captain)" : ""} ${name}</h2>
+                <p>Position: ${position}</p>
+                <p>Number: ${number}</p>
+                <p>Nickname: ${nickname !== null ? nickname : "N/A"}</p>
+              </div>
+            `;
+              // 📝 TEMPLATE LITERAL: Multi-line string with ${variables}
+              // The backticks `` allow writing HTML on multiple lines
+              
+              // ${isCaptain ? "(Captain)" : ""}
+              // TERNARY OPERATOR: If captain, add "(Captain)"
+              // condition ? ifTrue : ifFalse
+              
+              // ${nickname !== null ? nickname : "N/A"}
+              // If they have a nickname show it, otherwise "N/A"
+            }
+          )
+          .join("");
+        // 🔗 JOIN: Merges the array into a single string
+        // join("") = join without separators
+        // Transforms array of HTML into single string
+      };
+      
+      /* 🎮 ===== EVENT LISTENER: Listen to the Dropdown! ===== */
+      playersDropdownList.addEventListener("change", (e) => {
+        // 👂 LISTEN FOR EVENT: When selection changes
+        // "change" = event that triggers when an option is selected
+        // (e) = event passed as parameter
+        
+        playerCards.innerHTML = "";
+        // 🧹 CLEAN UP: Empty existing cards
+        // Before showing new ones, clear old ones
+      
+        /* 🎯 ===== SWITCH: The Case Distributor! ===== */
+        switch (e.target.value) {
+          // 🔀 SWITCH: Based on selected value
+          // e.target = element that triggered the event
+          // .value = the value of the selected option
+          
+          case "nickname":
+            // 🏷️ NICKNAME CASE: Only players with nickname
+            
+            setPlayerCards(players.filter((player) => player.nickname !== null));
+            // 🔍 FILTER: Only those with nickname
+            // filter() = creates new array with only elements that pass the test
+            // player.nickname !== null = has a nickname
+            break;
+            // 🛑 BREAK: Exit the switch
+            
+          case "forward":
+            // ⚡ FORWARDS CASE: Only forwards
+            
+            setPlayerCards(players.filter((player) => player.position === "forward"));
+            // 🔍 FILTER: Only position === "forward"
+            break;
+            
+          case "midfielder":
+            // 🎯 MIDFIELDERS CASE: Only midfielders
+            
+            setPlayerCards(
+              players.filter((player) => player.position === "midfielder")
+            );
+            // 🔍 FILTER: Only midfielders
+            break;
+            
+          case "defender":
+            // 🛡️ DEFENDERS CASE: Only defenders
+            
+            setPlayerCards(
+              players.filter((player) => player.position === "defender")
+            );
+            // 🔍 FILTER: Only defenders
+            break;
+            
+          case "goalkeeper":
+            // 🥅 GOALKEEPERS CASE: Only goalkeepers
+            
+            setPlayerCards(
+              players.filter((player) => player.position === "goalkeeper")
+            );
+            // 🔍 FILTER: Only goalkeepers
+            break;
+      
+          default:
+            // 📋 DEFAULT CASE: Show all
+            // If value = "all" or any other value
+            
+            setPlayerCards()
+            // Call without parameters = use default (all players)
+            // Missing semicolon! (works anyway)
+        }
+      });
+      
+      /* 🎉 ===== END JAVASCRIPT ===== */
+      // The code is complete!
+      // - Shows team data in spans
+      // - Creates cards dynamically
+      // - Filters based on selection
+      // - Uses modern methods: map, filter, destructuring
+      // - Template literals for dynamic HTML
+    </script>
+  </body>
+</html>
+
+<!-- 🏆 ===== PROJECT SUMMARY ===== -->
+<!-- 
+⚽ FOOTBALL CARDS ARCHITECTURE:
+│
+├── 🧠 HEAD
+│   └── 🎨 CSS with:
+│       ├── 📚 CSS Variables for colors
+│       ├── 🎯 Flexbox for layout
+│       ├── 🃏 Card styling
+│       └── 📱 Responsive media query
+│
+├── 📄 HTML BODY
+│   ├── 📊 Team Stats (4 empty spans)
+│   ├── 📋 Filter dropdown
+│   └── 🃏 Cards container (22 static cards)
+│
+└── 🎮 JAVASCRIPT
+    ├── 🎯 DOM elements selection
+    ├── 🏆 Team object (complete data)
+    ├── ❄️ Object.freeze()
+    ├── 📦 Destructuring
+    ├── ✍️ Data population
+    ├── 🏭 setPlayerCards function
+    │   ├── 🔄 map() to create HTML
+    │   ├── 📝 Template literals
+    │   └── 🔗 join() to unite
+    └── 👂 Event listener
+        ├── 🔍 filter() by category
+        └── 🔀 switch for cases
+
+🎨 MODERN JAVASCRIPT TECHNIQUES:
+├── 📦 Destructuring (objects and parameters)
+├── 🔄 Array methods (map, filter)
+├── 📝 Template literals with ${}
+├── ➡️ Arrow functions
+├── 🎯 Default parameters
+├── ❓ Ternary operator
+├── 🔀 Switch statement
+└── 👂 Event handling
+
+It's like creating an interactive sticker album with modern JavaScript! ⚽✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Consolidated Approach
+
+I adopted the same methodical approach used in the previous project. I now have new structured paragraphs ready to add to the vademecum. At this point it's as if I had developed two parallel vademecums, so it's finally time to unify and integrate all these new concepts into the main vademecum!
+
+### Deepening My Understanding of Switch Statements
+
+I enjoyed this project, particularly the opportunity to deepen my understanding of the switch control statement. I thought I had reached the peak of code readability with if/else conditional statements, but switch might surpass them. However, I discovered they shouldn't be used arbitrarily, they have specific characteristics that this table summarizes:
+
+#### Comparison Table: if...else if vs switch
+
+| Feature | if... else if... else | switch |
+|---|---|---|
+| **Type of Comparison** | Flexible: Can evaluate complex and different conditions for each block (e.g. `x > 10`, `y === 'test'`, `z <= 5`). | Rigid: Compares a single variable/expression with a series of constant values (e.g. `x === 1`, `x === 'a'`). |
+| **Readability** | Less readable when there are many similar conditions. The variable to check is repeated in every if. | Much more readable and clean when comparing a single variable with many possible values. The intent is clearer. |
+| **Ideal Use Cases** | When you need to check value ranges (e.g. `score > 90`) or multiple unrelated conditions. | When you have a list of specific and discrete values to check (e.g. days of the week, menu options, status codes). |
+| **"Default" Handling** | Handled by the last `else` block, which catches all uncovered cases. | Handled by the `default` block, which has the same purpose and is highly recommended for robustness. |
+| **Performance** | Generally considered slightly slower by modern JavaScript engines when there are many conditions, but the difference is almost always negligible. | In many scenarios, it can be slightly faster because JavaScript engines can optimize it better (e.g. using a jump table), but it shouldn't be the main reason for choice. |
+| **"Fall-through" Risk** | Doesn't exist. Each block is isolated. | Exists if you forget the `break` statement. This can be both a bug and an advanced feature (for grouping cases). |
+
+### What I Learned
+
+**Modern JavaScript Destructuring:**
+- Object destructuring with `const { sport, team, year, players } = myFavoriteFootballTeam`
+- Nested object destructuring with `const { coachName } = myFavoriteFootballTeam.headCoach`
+- Array destructuring in function parameters
+
+**Switch Statement Mastery:**
+- Switch statement for handling multiple conditions
+- Break statements to avoid fall-through behavior
+- Default case for robust error handling
+- Event value switching with `e.target.value`
+
+**Advanced Array Methods:**
+- `.filter()` for conditional array filtering
+- `.map()` for array transformation to HTML
+- Method chaining for consecutive operations
+
+**Object Methods:**
+- `Object.freeze()` for creating immutable objects
+- Object property access with dot notation
+- Complex nested object navigation
+
+**Template Literals & Conditional Rendering:**
+- Advanced template literals with conditional logic
+- Ternary operators for conditional content (`isCaptain ? "(Captain)" : ""`)
+- Null checking with conditional rendering (`nickname !== null ? nickname : "N/A"`)
+
+**Event Handling & DOM Manipulation:**
+- Event listener with event object destructuring
+- Dynamic content clearing with `innerHTML = ""`
+- Function calls with optional parameters
+
+**Modern ES6+ Features:**
+- Arrow functions for concise syntax
+- Template literals for HTML generation
+- Const/let for proper variable scoping
+
+### Reflection
+
+I'm not a football lover, but I admit that freeCodeCamp's idea of creating a digital museum dedicated to legendary players of the past through code moved me.
+
+***
+
+**Next Project**: Learn localStorage by Building a Todo App

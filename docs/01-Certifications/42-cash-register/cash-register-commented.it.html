@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<!-- 🎯 DICHIARAZIONE HTML5: "Benvenuti nel simulatore di registratore di cassa!" -->
+<!-- È come annunciare l'apertura di un negozio digitale dove avvengono transazioni monetarie! 💵 -->
+
+<html lang="en">
+<!-- 🌍 CONTENITORE PRINCIPALE: Il nostro scontrino virtuale e registratore di cassa -->
+<!-- lang="en" = Inglese, la lingua di questa interfaccia di transazione! -->
+
+    <head>
+        <!-- 🧠 IL CENTRO DI COMANDO: Dove prepariamo la nostra applicazione in stile scontrino -->
+        <!-- È come preparare il registratore di cassa prima di aprire il negozio! ⚙️ -->
+        
+        <title>Cash Register</title>
+        <!-- 📑 TITOLO SCHEDA: Semplice e diretto come l'intestazione di uno scontrino -->
+        <!-- Ciò che i clienti vedranno nella loro scheda del browser -->
+        
+        <meta charset="UTF-8" />
+        <!-- 📝 CODIFICA CARATTERI: UTF-8 supporta simboli di valuta da tutto il mondo! -->
+        <!-- Garantisce che possiamo visualizzare correttamente $ e altri simboli di valuta -->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 📱 DESIGN RESPONSIVE: "Questo registratore funziona su qualsiasi dispositivo!" -->
+        <!-- Garantisce che lo scontrino si adatti correttamente su tutti gli schermi, dai telefoni ai desktop -->
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <!-- 🚀 PRECONNESSIONI: Ottimizzazione della velocità per il caricamento dei font -->
+        <!-- Come preparare l'inchiostro prima di stampare lo scontrino - migliora le prestazioni -->
+        
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+        <!-- 🔤 CARICAMENTO FONT: Roboto Mono con diversi pesi -->
+        <!-- Questo font monospazio imita l'aspetto delle stampanti per scontrini tradizionali -->
+        <!-- I pesi 300, 400, 700 offrono opzioni chiaro, normale e grassetto -->
+        
+        <style>
+          /* 🎨 ===== STILI CSS: Il Design dello Scontrino ===== */
+          
+          /* 📱 ===== STRATEGIA RESPONSIVE ===== */
+          /* 🔄 APPROCCIO MOBILE-FIRST: Lo stile predefinito è per dispositivi mobili */
+          /* Proprio come i negozi moderni che danno priorità ai pagamenti da mobile! */
+          /* Il mobile carica solo CSS essenziale - più veloce su connessioni più lente */
+          
+          
+          /* 🌐 ===== VARIABILI UNIVERSALI: Condivise tra Tutti i Dispositivi ===== */
+          
+          :root {
+              /* 🖼️ SFONDO */ 
+              --background: url("https://github.com/user-attachments/assets/6b1734ff-6f1c-4c9f-8b5d-463daea23f85"); 
+              /* 🖼️ SFONDO LEGGERO: Immagine leggera di soli 70KB */
+              /* Crea uno sfondo con texture sottile per il nostro scontrino */
+              
+              --font-color: #000;
+              /* ⚫ TESTO NERO: Come nelle stampanti termiche per scontrini tradizionali */
+              
+              /* 🔤 TIPOGRAFIA */
+              --font-family: "Roboto Mono", monospace, sans-serif;
+              /* 🖨️ FONT MONOSPAZIO: Imita le stampanti termiche a matrice di punti */
+              /* Ogni carattere occupa la stessa larghezza, come negli scontrini reali */
+              
+              --font-weight-light: 300;
+              /* 🔤 PESO LEGGERO: Per testo secondario sottile */
+              
+              --font-weight-normal: 400;
+              /* 🔤 PESO NORMALE: Testo standard dello scontrino */
+              
+              --font-weight-medium: 500;
+              /* 🔤 PESO MEDIO: Per enfatizzare i dettagli importanti */
+          
+              /* 🎨 COLORI DI ACCENTO */
+              --input-dots-hover-button-color: #6b6b6a;
+              /* 🔘 GRIGIO SCURO: Per elementi interattivi al passaggio del mouse */
+              /* Cambio di colore sottile fornisce feedback senza essere appariscente */
+              
+              /* ✨ ANIMAZIONI */
+              --result-animation: slideInFade 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+              /* 🎞️ INGRESSO FLUIDO: Per visualizzare i risultati del calcolo del resto */
+              /* Crea una transizione piacevole quando appaiono i risultati */
+          }
+          
+          
+          /* 📱 ===== VERSIONE MOBILE: Impostazioni Predefinite ===== */
+          
+          :root {
+              /* 📃 DESIGN SCONTRINO */
+              --receipt-image: url("https://github.com/user-attachments/assets/c16ae536-5d58-41d2-8712-d52244549792"); 
+              /* 📃 SFONDO SCONTRINO: Ultraleggero, solo 2KB */
+              /* Creato su misura in Figma per sembrare carta termica */
+              
+              --receipt-width: 377.702px;
+              /* 📏 LARGHEZZA SCONTRINO: Dimensionato come uno scontrino standard */
+              
+              --receipt-height: 662.999px;
+              /* 📏 ALTEZZA SCONTRINO: Abbastanza alto per tutti i dettagli della transazione */
+              
+              --receipt-position-top: 50%;
+              --receipt-position-left: 50%;
+              /* 📍 POSIZIONAMENTO: Centrato nel viewport */
+              
+              --aspect-ratio: 377.702 / 662.999;
+              /* 📐 PROPORZIONI: Mantiene la forma durante il ridimensionamento */
+          
+              /* 📏 LAYOUT E POSIZIONAMENTO */
+              --receipt-padding: 0 54px 24px 44px;
+              /* 📏 SPAZIATURA INTERNA: Margini confortevoli all'interno dello scontrino */
+              /* L'asimmetria sinistra/destra imita le imperfezioni di stampa del mondo reale */
+              
+              --title-margin-top: 110px;
+              /* ⬆️ POSIZIONE TITOLO: Spazio nella parte superiore dello scontrino */
+              
+              --subtitle-margin-top: 5px;
+              /* ⬆️ SPAZIO SOTTOTITOLO: Piccolo divario dopo il titolo principale */
+              
+              --total-1-margin-top: 85px;
+              /* ⬆️ POSIZIONE TOTALE: Spazio significativo prima dell'importo */
+              
+              --hyphens-1-margin-top: 0px;
+              /* ⬆️ PRIMO SEPARATORE: Nessuno spazio aggiuntivo necessario */
+              
+              --label-margin-top: 28px;
+              /* ⬆️ SPAZIO ETICHETTA: Margine generoso prima delle sezioni di input */
+              
+              --input-margin-top: 4px;
+              /* ⬆️ POSIZIONE INPUT: Piccolo divario dopo la sua etichetta */
+              
+              --button-margin-top: 12px;
+              /* ⬆️ SPAZIO PULSANTE: Margine confortevole dopo il campo di input */
+              
+              --hyphens-2-margin-top: 24px;
+              /* ⬆️ SECONDO SEPARATORE: Separa input dai risultati */
+              
+              --result-margin-top: 3px;
+              /* ⬆️ POSIZIONE RISULTATO: Spazio minimo dopo il separatore */
+              
+              --hyphens-3-margin-top: 5px;
+              /* ⬆️ TERZO SEPARATORE: Dopo la visualizzazione dei risultati */
+              
+              --footer-block-margin-top: 16px; 
+              /* ⬆️ AREA FOOTER: Spazio prima della sezione finale */
+              
+              --tribute-margin-top: 2px;
+              /* ⬆️ SPAZIO ATTRIBUZIONE: Divario minimo per la riga di credito */
+              
+              --footer-margin-top: 12px;
+              /* ⬆️ MESSAGGIO FINALE: Spazio prima del ringraziamento finale */
+          
+              /* 🔤 DIMENSIONI TIPOGRAFICHE */
+              --font-size-base: 18px;
+              /* 📝 FONT BASE: Dimensione standard per la maggior parte del contenuto */
+              
+              --font-size-title: 24px;
+              /* 📝 DIMENSIONE TITOLO: Più grande per l'intestazione */
+              
+              --font-size-small: 16px;
+              /* 📝 TESTO PICCOLO: Per informazioni secondarie */
+              
+              --font-size-result: 14px;
+              /* 📝 TESTO RISULTATO: Leggermente più piccolo per informazioni dettagliate sul resto */
+              
+              --font-size-hyphens: 15px;
+              /* 📝 DIMENSIONE SEPARATORI: Per i separatori a linea tratteggiata */
+              
+              --font-size-x-small: 12px;
+              /* 📝 TESTO MINIMO: Per attribuzione e testo fine stampa */
+          
+              /* 📝 STILE INPUT */
+              --input-padding: 5px 0;
+              /* 📏 SPAZIATURA INPUT: Area confortevole per la digitazione */
+              
+              --input-dots-width: 28%;
+              /* 📏 LINEA PUNTEGGIATA: Larghezza della sottolineatura dell'input */
+              
+              --input-dots-height: 2px;
+              /* 📏 ALTEZZA PUNTO: Spessore della linea punteggiata */
+              
+              --input-dots-size: 1.2px;
+              /* 📏 DIMENSIONE PUNTO: Diametro di ciascun punto nella sottolineatura */
+              
+              --input-dots-spacing: 8px;
+              /* 📏 SPAZIATURA PUNTI: Distanza tra punti */
+          
+              /* 🔘 STILE PULSANTE */
+              --button-padding: 2px 0;
+              /* 📏 SPAZIATURA PULSANTE: Padding minimo per un aspetto pulito */
+              
+              --button-underline-thickness: 1.5px;
+              /* 📏 DIMENSIONE SOTTOLINEATURA: Spessore della sottolineatura del pulsante */
+              
+              --button-underline-offset: 8px;
+              /* 📏 POSIZIONE SOTTOLINEATURA: Spazio tra testo e sottolineatura */
+          
+              /* 📋 VISUALIZZAZIONE RISULTATO */
+              --result-min-height: 2em;
+              /* 📏 AREA RISULTATO: Altezza minima per la visualizzazione del resto */
+              /* Garantisce che lo spazio sia riservato anche prima dell'apparizione dei risultati */
+          }
+          
+          
+          
+          /* 🧹 ===== RESET CSS: Pulizia Totale ===== */
+          
+          * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              /* 📦 RESET UNIVERSALE: Garantisce un rendering coerente tra i browser */
+              /* Come azzerare il registratore di cassa all'inizio della giornata */
+          }
+          
+          body {
+              background-image: var(--background);
+              /* 🖼️ IMMAGINE DI SFONDO: Imposta lo sfondo con texture */
+              
+              background-size: cover;
+              /* 📏 COPERTURA COMPLETA: Lo sfondo si estende su tutto il viewport */
+              
+              background-repeat: no-repeat;
+              /* 🔄 NESSUNA RIPETIZIONE: L'immagine appare una sola volta */
+              
+              min-height: 100vh; /* Fallback per browser che non supportano dvh */
+              min-height: 100dvh; /* Altezza dinamica del viewport per browser mobile */
+              /* 📏 ALTEZZA COMPLETA: Assicura che lo sfondo riempia l'intero schermo */
+              /* dvh gestisce i cambiamenti della barra degli indirizzi dei browser mobile */
+              
+              background-attachment: fixed;
+              /* 📌 POSIZIONE FISSA: Lo sfondo rimane fermo durante lo scorrimento */
+              
+              background-position: 65% 0%;
+              /* 📍 POSIZIONAMENTO: Leggermente sfalsato per interesse visivo */
+              
+              font-family: var(--font-family);
+              /* 🔤 TIPOGRAFIA: Il font monospazio imita le stampanti per scontrini */
+              
+              color: var(--font-color);
+              /* ⚫ COLORE TESTO: Testo nero come la stampa termica */
+              
+              font-weight: var(--font-weight-light);
+              /* 🔤 PESO FONT: Peso leggero per la maggior parte del testo */
+              
+              font-size: var(--font-size-base);
+              /* 🔤 DIMENSIONE FONT: Dimensione base per il contenuto standard */
+              
+              overflow: hidden;
+              /* 🚫 PREVENZIONE OVERFLOW: Mantiene l'interfaccia pulita */
+          }
+          
+          .receipt-container {
+              background-image: var(--receipt-image);
+              /* 🧾 SFONDO SCONTRINO: L'immagine della carta termica */
+              
+              position: absolute;
+              /* 📍 POSIZIONAMENTO ASSOLUTO: Per un posizionamento preciso */
+              
+              top: var(--receipt-position-top);
+              left: var(--receipt-position-left);
+              /* 📍 CENTRATURA: Posizionato al centro del viewport */
+              
+              transform: translate(-50%, -50%);
+              /* 🔄 TRUCCO DI CENTRATURA: Si sposta della metà delle sue dimensioni per una centratura perfetta */
+              
+              width: var(--receipt-width);
+              /* 📏 LARGHEZZA SCONTRINO: Impostata dalla variabile */
+              
+              background-repeat: no-repeat;
+              /* 🔄 IMMAGINE SINGOLA: Lo sfondo appare una sola volta */
+              
+              background-size: 100% 100%;
+              /* 📏 ESTENSIONE COMPLETA: Lo sfondo copre l'intero contenitore */
+              
+              max-height: var(--receipt-height);
+              /* 📏 LIMITE ALTEZZA: Vincolo massimo di altezza */
+              
+              aspect-ratio: var(--aspect-ratio);
+              /* 📐 PROPORZIONI: Mantiene la forma dello scontrino durante il ridimensionamento */
+          }
+          
+          .receipt-content {
+              display: flex;
+              /* 📦 LAYOUT FLESSIBILE: Approccio moderno alla disposizione del contenuto */
+              
+              flex-direction: column;
+              /* 📦 CONTENUTO IMPILATO: Elementi disposti verticalmente */
+              
+              text-align: center;
+              /* ⚖️ TESTO CENTRATO: La maggior parte del contenuto dello scontrino è centrata */
+              
+              padding: var(--receipt-padding);
+              /* 📏 SPAZIATURA INTERNA: Margini confortevoli all'interno dello scontrino */
+          }
+          
+          .receipt-header {
+              margin-top: var(--title-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Spinge l'intestazione verso il basso dal bordo superiore */
+              
+              transform: rotate(0.674deg);
+              /* 🔄 LEGGERA ROTAZIONE: Crea un aspetto imperfetto, realistico */
+              /* Gli scontrini reali spesso si stampano leggermente storti */
+          }
+          
+          .receipt-footer {
+              width: 100%;
+              /* 📏 LARGHEZZA COMPLETA: Il footer si estende per l'intero scontrino */
+              
+              margin-top: var(--footer-block-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del footer */
+          }
+          
+          h1 {
+              font-size: var(--font-size-title);
+              /* 🔤 DIMENSIONE TITOLO: Più grande del testo standard */
+              
+              font-weight: var(--font-weight-normal);
+              /* 🔤 PESO NORMALE: Non troppo grassetto, come negli scontrini reali */
+          }
+          
+          button {
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Leggermente più grassetto per enfasi */
+          }
+          
+          .receipt-header > p, .receipt-footer > p:nth-child(2) {
+              font-size: var(--font-size-small);
+              /* 🔤 TESTO PIÙ PICCOLO: Per informazioni secondarie */
+              /* Si applica sia all'ID del terminale che al messaggio di ringraziamento */
+          }
+          
+          .receipt-header > p {
+              margin-top: var(--subtitle-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo spazio dopo il titolo */
+          }
+          
+          .total {
+            display: flex;
+            /* 📦 LAYOUT FLESSIBILE: Consente un facile allineamento */
+            
+            justify-content: space-between;
+            /* ⚖️ DISTANZIATI: "TOTALE" a sinistra, importo a destra */
+            
+            width: 100%;
+            /* 📏 LARGHEZZA COMPLETA: Si estende per l'intero scontrino */
+            
+            margin-top: var(--total-1-margin-top);
+            /* ⬆️ SPAZIATURA SUPERIORE: Divario significativo sopra il totale */
+          }
+          
+          .total > p {
+              margin-top: 0; 
+              /* ⬆️ NESSUNO SPAZIO EXTRA: Sovrascrive il margine predefinito del paragrafo */
+              
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Enfatizza l'importo totale */
+          }
+          .total > p:nth-child(2) {
+              margin-top: 0;
+              /* ⬆️ NESSUNO SPAZIO EXTRA: Mantiene l'allineamento con il testo a sinistra */
+          }
+          
+          .receipt-body > p {
+              font-size: var(--font-size-hyphens);
+              /* 🔤 DIMENSIONE SEPARATORI: Per le linee tratteggiate */
+          }
+          
+          .receipt-body > p:nth-child(2) {
+              margin-top: var(--hyphens-1-margin-top);
+              /* ⬆️ SPAZIO PRIMA: Spaziatura del primo separatore */
+              
+              transform: rotate(0.561deg);
+              /* 🔄 LEGGERA ROTAZIONE: Il primo separatore si inclina leggermente */
+              /* Crea un'imperfezione realistica come negli scontrini reali */
+          }
+          .receipt-body > p:nth-child(4) {
+              margin-top: var(--hyphens-2-margin-top);
+              /* ⬆️ SPAZIO PRIMA: Spaziatura del secondo separatore */
+              
+              transform: rotate(0.371deg);
+              /* 🔄 LEGGERA ROTAZIONE: Il secondo separatore si inclina in modo leggermente diverso */
+              /* Ogni separatore ha un'imperfezione unica */
+          }
+          .receipt-body > p:nth-child(6) {
+              margin-top: var(--hyphens-3-margin-top);
+              /* ⬆️ SPAZIO PRIMA: Spaziatura del terzo separatore */
+          }
+          
+          
+          #cash-register-form {
+              margin-top: var(--label-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del form */
+              
+              text-align: left;
+              /* ⬅️ ALLINEAMENTO A SINISTRA: I campi del form si allineano a sinistra */
+              
+              font-weight: var(--font-weight-normal);
+              /* 🔤 PESO NORMALE: Testo standard per gli elementi del form */
+          }
+          
+          .user-input {
+              position: relative;
+              /* 📍 POSIZIONAMENTO RELATIVO: Crea contesto per la sottolineatura punteggiata */
+          }
+          
+          .user-input::before {
+              content: "";
+              /* 🔍 CONTENUTO VUOTO: Crea un pseudo-elemento */
+              
+              position: absolute;
+              /* 📍 POSIZIONAMENTO ASSOLUTO: Posiziona con precisione la linea punteggiata */
+              
+              bottom: 0;
+              left: 0;
+              /* 📍 POSIZIONAMENTO: Nella parte inferiore del campo di input */
+              
+              width: var(--input-dots-width);
+              /* 📏 LARGHEZZA LINEA PUNTI: La larghezza parziale crea un effetto "compila il vuoto" */
+              
+              height: var(--input-dots-height);
+              /* 📏 ALTEZZA LINEA: Spessore della linea punteggiata */
+              
+              background-image: radial-gradient(
+                  circle,
+                  var(--input-dots-hover-button-color) var(--input-dots-size),
+                  transparent 1px
+              );
+              /* 🔵 EFFETTO LINEA PUNTEGGIATA: Crea singoli punti con gradiente radiale */
+              /* Simula intelligentemente una linea punteggiata di uno scontrino senza usare border */
+              
+              background-size: var(--input-dots-spacing) 100%;
+              /* 📏 SPAZIATURA PUNTI: Controlla la distanza tra i punti */
+              
+              background-repeat: repeat-x;
+              /* 🔄 RIPETIZIONE ORIZZONTALE: I punti si ripetono solo orizzontalmente */
+              
+              background-position: bottom left;
+              /* 📍 ALLINEAMENTO: I punti appaiono in basso a sinistra */
+          }
+          
+          input {
+              margin-top: var(--input-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo divario dopo l'etichetta */
+              
+              border: none;
+              /* 🚫 NESSUN BORDO: Aspetto pulito senza bordo predefinito */
+              
+              background: transparent;
+              /* 🔍 SFONDO TRASPARENTE: L'input si fonde con lo scontrino */
+              
+              width: 100%;
+              /* 📏 LARGHEZZA COMPLETA: L'input si estende per l'intera larghezza del form */
+              
+              padding: var(--input-padding);
+              /* 📏 SPAZIATURA INTERNA: Area confortevole per l'inserimento del testo */
+              
+              font-family: var(--font-family);
+              /* 🔤 FONT CORRISPONDENTE: Lo stesso monospazio del resto dello scontrino */
+              
+              font-size: var(--font-size-base);
+              /* 🔤 DIMENSIONE STANDARD: Coerente con altro testo */
+              
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Fa risaltare leggermente l'input */
+          }
+          
+          input:focus {
+              outline: none;
+              /* 🚫 NESSUN CONTORNO: Rimuove il contorno di focus predefinito del browser */
+              /* Mantiene l'estetica dello scontrino */
+          }
+          
+          /* 🔢 ===== NASCONDI CONTROLLI INPUT NUMERICI ===== */
+          
+          /* queste due regole nascondono le frecce tipiche dei campi numerici (0.00 ▲ ▼)
+           * su tutti i browser basati su WebKit (come Safari, Chrome, Edge)
+          */
+          input::-webkit-outer-spin-button,
+          input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            /* 🚫 NASCONDI FRECCE: Rimuove i controlli su/giù predefiniti */
+            
+            margin: 0;
+            /* 🚫 NESSUN MARGINE: Assicura che non venga riservato spazio per le frecce */
+          }
+          
+          input[type=number] { /* fa la stessa cosa del blocco sopra, ma per Firefox */
+            -moz-appearance: textfield;
+            /* 🚫 FIX FIREFOX: Rimuove gli spinner numerici in Firefox */
+            /* Fa apparire l'input come un normale campo di testo */
+          }
+          
+          button {
+              margin-top: var(--button-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del pulsante */
+              
+              background: transparent;
+              /* 🔍 SFONDO TRASPARENTE: Il pulsante si fonde con lo scontrino */
+              
+              border: none;
+              /* 🚫 NESSUN BORDO: Aspetto pulito senza bordo predefinito */
+              
+              cursor: pointer;
+              /* 👆 CURSORE A MANO: Mostra che l'elemento è cliccabile */
+              
+              font-family: var(--font-family);
+              /* 🔤 FONT CORRISPONDENTE: Lo stesso monospazio del resto dello scontrino */
+              
+              font-size: var(--font-size-base);
+              /* 🔤 DIMENSIONE STANDARD: Coerente con altro testo */
+              
+              text-decoration: underline;
+              /* ✏️ SOTTOLINEATO: Indicatore visivo che è un pulsante */
+              
+              text-decoration-thickness: var(--button-underline-thickness);
+              /* 📏 SPESSORE SOTTOLINEATURA: Controlla il peso della linea */
+              
+              text-underline-offset: var(--button-underline-offset);
+              /* 📏 SPAZIATURA SOTTOLINEATURA: Divario tra testo e sottolineatura */
+              
+              padding: var(--button-padding);
+              /* 📏 SPAZIATURA INTERNA: Padding minimo per un aspetto pulito */
+              
+              color: black;
+              /* ⚫ COLORE TESTO: Nero standard come il resto dello scontrino */
+          }
+          
+          #change-due {
+              margin-top: var(--result-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo divario prima dei risultati */
+              
+              min-height: var(--result-min-height);
+              /* 📏 ALTEZZA MINIMA: Riserva spazio anche quando vuoto */
+              
+              font-size: var(--font-size-result);
+              /* 🔤 DIMENSIONE RISULTATO: Leggermente più piccola per informazioni dettagliate */
+              
+              font-weight: var(--font-weight-medium);
+              /* 🔤 PESO MEDIO: Fa risaltare i risultati */
+          }
+          
+          .tribute {
+              margin-top: var(--tribute-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Piccolo divario prima dell'attribuzione */
+              
+              font-size: var(--font-size-x-small);
+              /* 🔤 DIMENSIONE MINIMA: Il testo di attribuzione è sottile */
+          }
+          .tribute a {
+              color: var(--font-color);
+              /* ⚫ COLORE LINK: Uguale al testo normale per sottigliezza */
+              
+              text-decoration: none;
+              /* 🚫 NESSUNA SOTTOLINEATURA: Aspetto pulito per il link di attribuzione */
+          }
+          
+          .receipt-footer > p:nth-child(2) {
+              margin-top: var(--footer-margin-top);
+              /* ⬆️ SPAZIATURA SUPERIORE: Divario prima del messaggio di ringraziamento */
+          }
+          
+          
+          button:hover {
+              color: var(--input-dots-hover-button-color);
+              /* 🔘 COLORE HOVER: Sottile cambio di colore al passaggio del mouse */
+              /* Fornisce feedback visivo senza rompere l'estetica dello scontrino */
+          }
+          
+          
+          /* 🖥️ ===== VERSIONE DESKTOP: Scontrino Migliorato ===== */
+          
+          @media (min-width: 600px) and (min-height: 850px) {
+          /* 📐 SOGLIA DIMENSIONI: Gli stili desktop si attivano su schermi più grandi */
+          
+          :root {
+              /* 📃 DESIGN SCONTRINO */
+              --receipt-image: url("https://github.com/user-attachments/assets/272d1484-ae7b-4027-ae06-ce93290a36b5");
+              /* 📃 SCONTRINO DESKTOP: Immagine diversa per schermi più grandi */
+              
+              --receipt-width: 447.315px;
+              /* 📏 LARGHEZZA AUMENTATA: Scontrino più largo per desktop */
+              
+              --receipt-height: 785.195px;
+              /* 📏 ALTEZZA AUMENTATA: Scontrino più alto per desktop */
+              
+              --receipt-position-top: 55%;
+              /* ⬆️ POSIZIONE VERTICALE: Leggermente più in basso rispetto al centro */
+              
+              --receipt-position-left: 70%;
+              /* ⬅️ POSIZIONE ORIZZONTALE: Decentrato verso destra */
+              /* Crea un layout asimmetrico per interesse visivo */
+              
+              --aspect-ratio: 377.702 / 662.999;
+              /* 📐 PROPORZIONI: Mantiene la forma durante il ridimensionamento */
+          
+              /* 📏 LAYOUT E POSIZIONE: Regolati per schermi più grandi */
+              --receipt-padding: 0 64px 24px 54px;
+              /* 📏 PADDING AUMENTATO: Più spazio attorno al contenuto */
+              
+              --title-margin-top: 130px;
+              /* ⬆️ PIÙ SPAZIO SUPERIORE: Il titolo si posiziona più in basso sul desktop */
+              
+              --subtitle-margin-top: 10px;
+              /* ⬆️ PIÙ SPAZIO SOTTOTITOLO: Divario aumentato tra gli elementi del titolo */
+              
+              --total-1-margin-top: 112px;
+              /* ⬆️ PIÙ SPAZIO TOTALE: Divario maggiore prima della riga del totale */
+              
+              --label-margin-top: 32px;
+              /* ⬆️ PIÙ SPAZIO ETICHETTA: Spaziatura aumentata prima delle etichette */
+              
+              --button-margin-top: 20px;
+              /* ⬆️ PIÙ SPAZIO PULSANTE: Divario maggiore prima dei pulsanti */
+              
+              --hyphens-2-margin-top: 38px;
+              /* ⬆️ PIÙ SPAZIO SEPARATORE: Spaziatura aumentata per i separatori */
+              
+              --result-margin-top: 12px;
+              /* ⬆️ PIÙ SPAZIO RISULTATO: Divario maggiore prima dei risultati */
+              
+              --hyphens-3-margin-top: 12px;
+              /* ⬆️ PIÙ SPAZIO SEPARATORE: Spaziatura aumentata dopo i risultati */
+              
+              --tribute-margin-top: 8px;
+              /* ⬆️ PIÙ SPAZIO TRIBUTO: Divario maggiore prima dell'attribuzione */
+              
+              --footer-margin-top: 16px;
+              /* ⬆️ PIÙ SPAZIO FOOTER: Spaziatura aumentata nel footer */
+          
+              /* 🔤 REGOLAZIONI TIPOGRAFICHE */
+              --font-size-hyphens: 17.7px;
+              /* 🔤 SEPARATORI PIÙ GRANDI: Dimensione aumentata per le linee divisorie */
+          
+              /* 📋 VISUALIZZAZIONE RISULTATO */
+              --result-min-height: 2em;
+              /* 📏 AREA RISULTATO: Stessa altezza minima per coerenza */
+          }
+          }
+        </style>
+    </head>
+
+    <body>
+        <!-- 💵 ===== L'INTERFACCIA DEL REGISTRATORE DI CASSA! ===== -->
+        
+        <main>
+            <!-- 📋 CONTENITORE PRINCIPALE: L'intera applicazione -->
+            <!-- Come l'area del bancone di un negozio dove avvengono le transazioni -->
+            
+            <div class="receipt-container">
+                <!-- 🧾 SFONDO SCONTRINO: La simulazione della carta termica -->
+                <!-- Questo crea la cornice visiva per il nostro registratore di cassa -->
+                
+                <div class="receipt-content">
+                    <!-- 📝 CONTENUTO SCONTRINO: Tutti gli elementi testuali e interattivi -->
+                    <!-- Tutto ciò che verrebbe stampato su uno scontrino reale -->
+                    
+                    <div class="receipt-header">
+                        <!-- 📑 PARTE SUPERIORE SCONTRINO: Nome negozio e info terminale -->
+                        
+                        <h1>CASH REGISTER</h1>
+                        <!-- 🏪 NOME NEGOZIO: Titolo in grassetto nella parte superiore -->
+                        
+                        <p>TERMINAL #09-FCC</p>
+                        <!-- 🔢 ID TERMINALE: Identifica il punto vendita -->
+                        <!-- Come il numero del registratore di cassa in un vero negozio -->
+                    </div>
+                    
+                    <div class="receipt-body">
+                        <!-- 📝 AREA PRINCIPALE SCONTRINO: Dettagli della transazione e input -->
+                        
+                        <div class="total">
+                            <!-- 💰 IMPORTO ACQUISTO: Il costo prima del pagamento -->
+                            
+                            <p>TOTAL</p>
+                            <!-- 📊 ETICHETTA TOTALE: Testo allineato a sinistra -->
+                            
+                            <p>$19.50</p>
+                            <!-- 💵 IMPORTO DOVUTO: Prezzo allineato a destra -->
+                            <!-- Il costo fisso che deve essere pagato -->
+                        </div>
+                        
+                        <p>-------------------------------</p>
+                        <!-- 📏 LINEA DIVISORIA: Separa visivamente le sezioni -->
+                        <!-- Fatta di trattini come nelle vecchie stampanti per scontrini -->
+                        
+                        <form id="cash-register-form">
+                            <!-- 📋 FORM DI INPUT: Raccoglie informazioni sul pagamento -->
+                            
+                            <label for="cash">CASH PAID</label>
+                            <!-- 🏷️ ETICHETTA INPUT: Descrive cosa inserire -->
+                            
+                            <div class="user-input">
+                                <!-- 📝 CONTENITORE INPUT: Contiene il campo per il contante -->
+                                
+                                <input type="number" id="cash" name="cash" placeholder="0.00" step="0.01" min="0" required>
+                                <!-- 💵 INPUT CONTANTE: Dove l'utente inserisce l'importo del pagamento -->
+                                <!-- type="number" = solo input numerico -->
+                                <!-- step="0.01" = consente centesimi (due decimali) -->
+                                <!-- min="0" = impedisce valori negativi -->
+                                <!-- required = il campo non può essere vuoto -->
+                            </div>
+                            
+                            <button type="button" id="purchase-btn" class="cta-button">PROCESS PAYMENT</button>
+                            <!-- 🔘 PULSANTE AZIONE: Attiva l'elaborazione del pagamento -->
+                            <!-- type="button" impedisce l'invio del form -->
+                            <!-- Cliccando questo si calcola il resto dovuto -->
+                        </form>
+                        
+                        <p>-------------------------------</p>
+                        <!-- 📏 LINEA DIVISORIA: Separa input dai risultati -->
+                        
+                        <div id="change-due"></div>
+                        <!-- 📋 AREA RISULTATI: Dove appare il calcolo del resto -->
+                        <!-- Inizialmente vuota, riempita da JavaScript -->
+                        
+                        <p>-------------------------------</p>
+                        <!-- 📏 LINEA DIVISORIA: Separa i risultati dal footer -->
+                    </div>
+                    
+                    <div class="receipt-footer">
+                        <!-- 📑 PARTE INFERIORE SCONTRINO: Crediti e messaggio finale -->
+                        
+                        <p class="tribute"><a href="https://www.freecodecamp.org/" target="_blank" rel="noopener noreferrer" aria-label="Visita il sito web di freeCodeCamp (si apre in una nuova scheda)">Trans. ID: FCC-CERT-PROJECT-09</a></p>
+                        <!-- 🔢 ID TRANSAZIONE: Numero di riferimento univoco -->
+                        <!-- Collega a freeCodeCamp come attribuzione -->
+                        <!-- target="_blank" si apre in una nuova scheda -->
+                        <!-- rel="noopener noreferrer" previene problemi di sicurezza -->
+                        
+                        <p>THANKS FOR VISITING!</p>
+                        <!-- 👋 MESSAGGIO DI CHIUSURA: Saluto amichevole -->
+                        <!-- Come il "Grazie per il tuo acquisto" sugli scontrini reali -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <script>
+          /* 💵 ===== JAVASCRIPT: La Logica del Registratore di Cassa! ===== */
+          
+          /* 📋 ===== ARCHITETTURA APPLICAZIONE ===== */
+          /* Utilizza la programmazione orientata agli oggetti (OOP) con un approccio basato su classi */
+          /* Proprio come un vero registratore di cassa ha un sistema chiaro per la gestione del denaro */
+          
+          /* 🔢 ===== GESTIONE DEI NUMERI ===== */
+          /* Tutti i calcoli monetari utilizzano centesimi (interi) anziché dollari (decimali) */
+          /* Questo evita i problemi di precisione in virgola mobile di JavaScript */
+          /* Come contare i centesimi invece dei dollari per una precisione perfetta! */
+          
+          /* 💰 ===== CALCOLO DEL RESTO ===== */
+          /* Utilizza un algoritmo greedy - inizia dalle denominazioni più grandi */
+          /* Proprio come un cassiere che consegna banconote da $20 prima di quelle da $1 */
+          
+          
+          /* 🔗 ===== RIFERIMENTI DOM: Collegamento all'HTML ===== */
+          
+          const cashInput = document.getElementById("cash");
+          /* 💵 INPUT CONTANTE: Riferimento al campo pagamento */
+          
+          const purchaseBtn = document.getElementById("purchase-btn");
+          /* 🔘 PULSANTE ACQUISTO: Riferimento al pulsante azione */
+          
+          const result = document.getElementById("change-due");
+          /* 📋 VISUALIZZAZIONE RISULTATO: Dove appaiono le informazioni sul resto */
+          
+          
+          /* 💰 ===== VARIABILI GLOBALI: Dati Principali della Transazione ===== */
+          
+          let price = 19.5;
+          /* 💵 PREZZO ARTICOLO: Costo dell'acquisto ($19.50) */
+          
+          let cid = [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]];
+          /* 💰 CONTANTI NEL CASSETTO: Valuta disponibile nel registratore */
+          /* Formato: [["DENOMINAZIONE", IMPORTO], ...] */
+          /* Come il conteggio iniziale del contante all'inizio di un turno */
+          
+          const DENOMINATIONS = [["ONE HUNDRED", 10000], ["TWENTY", 2000], ["TEN", 1000], ["FIVE", 500], ["ONE", 100], ["QUARTER", 25], ["DIME", 10], ["NICKEL", 5], ["PENNY", 1]];
+          /* 💵 VALORI VALUTA: Denominazioni in centesimi, ordinate dalla più grande alla più piccola */
+          /* Questo determina l'ordine di distribuzione del resto */
+          /* I valori sono in centesimi (100 × valore in dollari) per precisione */
+          
+          
+          /* 🏧 ===== CLASSE REGISTRATORE DI CASSA: La Logica Principale ===== */
+          
+          class CashRegister {
+              /* 🏧 DEFINIZIONE CLASSE: Modello per l'oggetto registratore */
+              /* Come il manuale di istruzioni per l'utilizzo del cassetto portamonete */
+          
+              constructor(cid) {
+                  /* 🔧 INIZIALIZZAZIONE: Configura il cassetto portamonete */
+                  /* Come aprire il registratore all'inizio della giornata */
+                  
+                  this.cashInDrawer = new Map();
+                  /* 🗃️ DEPOSITO DENARO: Usa Map per accesso coerente alle chiavi */
+                  /* Pensa a questo come ai compartimenti organizzati in un cassetto portamonete */
+                  
+                  this.totalInDrawer = 0; // Totale contanti nel cassetto, in centesimi
+                  /* 💰 TOTALE CORRENTE: Tiene traccia del totale denaro disponibile */
+                  /* Aggiungeremo a questo mentre contiamo ogni denominazione */
+          
+                  cid.forEach(([currencyName, amountInDollars]) => { // prima facciamo destrutturazione
+                      /* 🔄 ITERA ATTRAVERSO LE VALUTE: Elabora ogni denominazione */
+                      /* La destrutturazione estrae nome e importo per un uso più semplice */
+                      
+                      const amountInCents = Math.round(amountInDollars * 100); // round perché arrotonda all'intero più vicino, es. 4.4 -> 4, 4.5 -> 5
+                      /* 🔢 CONVERTI IN CENTESIMI: Moltiplica per 100 e arrotonda */
+                      /* Questo previene errori di virgola mobile in JavaScript */
+                      
+                      this.cashInDrawer.set(currencyName, amountInCents); // imposta i contanti nel cassetto esattamente come in cid ma questa volta i valori sono in centesimi
+                      /* 💰 MEMORIZZA NELLA MAPPA: Salva l'importo per ogni denominazione */
+                      
+                      this.totalInDrawer += amountInCents; // poiché siamo partiti da zero (this.totalInDrawer = 0) ora sommiamo e assegniamo con i valori
+                      /* 💰 AGGIUNGI AL TOTALE: Mantieni una somma corrente di tutto il contante */
+                  });
+          
+                  this.sortedCashInDrawer = new Map(); // creiamo una nuova mappa perché vogliamo che i valori siano ordinati come in DENOMINATIONS, quindi dal più grande al più piccolo (algoritmo greedy)
+                  /* 🗂️ DEPOSITO ORDINATO: Organizza il denaro dal più grande al più piccolo */
+                  /* Questo è cruciale per il corretto funzionamento dell'algoritmo greedy */
+                  
+                  DENOMINATIONS.forEach(([name, value]) => {
+                    /* 🔄 ITERA DENOMINAZIONI: Elabora in ordine discendente */
+                    
+                    if(this.cashInDrawer.has(name)) { // verifichiamo se esiste effettivamente nella mappa this.cashInDrawer
+                      /* 🔍 VERIFICA ESISTENZA: Aggiungi solo le denominazioni che abbiamo effettivamente */
+                      
+                      this.sortedCashInDrawer.set(name, this.cashInDrawer.get(name)); // non possiamo usare += perché si usa solo quando si lavora con numeri, .set() è il suo equivalente quando si lavora con mappe. Quindi con .get() leggiamo il valore dalla mappa originale (cashInDrawer), mentre con set scriviamo quel valore nella nuova mappa (sortedCashInDrawer)
+                      /* 💰 MEMORIZZA IN ORDINE: Aggiungi alla collezione ordinata */
+                      /* Questo crea la nostra copia di lavoro nell'ordine corretto */
+                    }
+                  })
+              }
+          
+              processPurchase(priceInCents, cashGivenInCents) {
+                  /* 🧮 ELABORAZIONE PAGAMENTO: Calcola il resto in base al pagamento */
+                  /* Questa è la funzione principale che gestisce la transazione */
+                  
+                let changeDueInCents = cashGivenInCents - priceInCents;
+                /* 🧮 CALCOLA RESTO: Sottrai il prezzo dal pagamento */
+                /* In centesimi per evitare problemi di virgola mobile */
+          
+                const originalChangeDue = changeDueInCents;
+                /* 📋 SALVA ORIGINALE: Conserva il valore iniziale per confronto successivo */
+                /* Ne avremo bisogno per determinare se il cassetto è stato svuotato */
+          
+                if (this.totalInDrawer < changeDueInCents) {
+                  /* 🚫 CONTROLLO FONDI INSUFFICIENTI: Non abbastanza soldi per dare il resto */
+                  
+                  return {status: "INSUFFICIENT_FUNDS", change: []};
+                  /* 🚫 RISULTATO ERRORE: Impossibile completare la transazione */
+                  /* Restituisce un oggetto con stato e array di resto vuoto */
+                }
+          
+                else {
+                  /* ✅ FONDI SUFFICIENTI: Continua con il calcolo del resto */
+                  
+                  let changeToGive = []; // qui salviamo il resto da dare
+                  /* 📋 COLLEZIONE RESTO: Conterrà le banconote/monete da restituire */
+                  
+                  this.sortedCashInDrawer.forEach((amountInDrawer, name) => { // iteriamo sulle denominazioni nel cassetto, dalla più grande alla più piccola (grazie a sortedCashInDrawer)
+                    /* 🔄 ITERA DENOMINAZIONI: Elabora dalla più grande alla più piccola */
+                    /* Questo è l'algoritmo greedy in azione */
+                    
+                    let amountToReturn = 0;
+                    /* 💰 CONTATORE CORRENTE: Tiene traccia dell'importo di questa denominazione da restituire */
+                    
+                    const currencyValue = DENOMINATIONS.find(denom => denom[0] === name) [1]; // trova il valore in centesimi della denominazione corrente (es. 2000 per "TWENTY")
+                    /* 🔢 OTTIENI VALORE DENOMINAZIONE: Trova il valore in centesimi di questa valuta */
+                    /* Per esempio: "TWENTY" vale 2000 centesimi */
+                    
+                    let availableAmount = amountInDrawer; // copia dell'importo disponibile di denaro nel cassetto
+                    /* 💰 CONTANTE DISPONIBILE: Quanto di questa denominazione abbiamo */
+          
+                    while (changeDueInCents >= currencyValue && availableAmount > 0) { // Con questo ciclo, continua a prendere questa denominazione finché il resto è sufficiente e finché ce n'è nel cassetto
+                      /* 🔄 PRENDI BANCONOTE/MONETE FINCHÉ POSSIBILE: */
+                      /* Continua finché la denominazione si adatta al resto necessario */
+                      /* E abbiamo ancora questa denominazione disponibile */
+                      
+                      changeDueInCents -= currencyValue; // sottrai dal resto totale dovuto
+                      /* 🧮 RIDUCI RESTO NECESSARIO: La denominazione è stata assegnata */
+                      
+                      availableAmount -= currencyValue; // sottrai dalla scorta di questa denominazione
+                      /* 🧮 RIDUCI DISPONIBILE: Abbiamo usato una di queste banconote/monete */
+                      
+                      amountToReturn += currencyValue; // aggiungi al totale parziale da restituire
+                      /* 🧮 AUMENTA RESTITUZIONE: Conteggia questo nel nostro resto da dare */
+                    }
+          
+                    if (amountToReturn > 0) {
+                      /* 💰 VERIFICA SE USATA: Abbiamo usato qualcuna di questa denominazione? */
+                      
+                      changeToGive.push([name, amountToReturn / 100]) // convertiamo i centesimi in dollari per l'output
+                      /* 📋 AGGIUNGI ALL'ELENCO DEL RESTO: Includi questo nel resto da restituire */
+                      /* Riconverte in dollari per un output leggibile dall'uomo */
+                    }
+                  });
+                  
+                  if (changeDueInCents > 0) { // qui verifichiamo se (dopo il ciclo) c'è resto rimanente, il che significa che non avevamo le monete/banconote giuste
+                    /* 🚫 RESTO IMPOSSIBILE: Impossibile dare il resto esatto con le denominazioni disponibili */
+                    
+                    return {status: "INSUFFICIENT_FUNDS", change: []};
+                    /* 🚫 RISULTATO ERRORE: Impossibile completare la transazione */
+                  }
+          
+                  if (this.totalInDrawer === originalChangeDue) { // infine verifichiamo se il resto dovuto ha svuotato il cassetto, come? confrontando con il totale originale
+                    /* 🔄 CASSETTO SVUOTATO: Il resto equivale a tutti i soldi nel cassetto */
+                    
+                    return {status: "CLOSED", change: changeToGive};
+                    /* 🔒 RISULTATO CHIUSO: Il cassetto è ora vuoto */
+                    /* Questo è un caso speciale nella sfida */
+                  }
+          
+                  else {
+                    /* ✅ RESTO NORMALE: Il cassetto ha ancora soldi rimasti */
+                    
+                    return {status: "OPEN", change: changeToGive};
+                    /* ✅ RISULTATO SUCCESSO: Transazione completata, cassetto ancora operativo */
+                  }
+          
+                }
+              }
+          
+          }
+          
+          
+          /* 📱 ===== CORREZIONI MOBILE: Regolazioni Specifiche per Piattaforma ===== */
+          
+          cashInput.addEventListener("blur", () => { // Ho notato che sul mio iPhone 12 mini, quindi su iOS, dopo aver cliccato l'input e poi esserne usciti, lo scontrino rimane scorrevole verso l'alto, in questo modo lo riportiamo allo stato originale
+            /* 📱 GESTISCI BLUR INPUT: Quando l'utente finisce con il campo di input */
+            /* Correzione specifica per problemi di posizione di scorrimento iOS */
+            
+            window.scrollTo(0, 0);
+            /* 📜 RESET SCORRIMENTO: Sposta il viewport di nuovo in cima */
+            /* Impedisce allo scontrino di rimanere scorrevole su mobile */
+          });
+          
+          /* ⌨️ ===== SUPPORTO TASTIERA: Esperienza Utente Migliorata ===== */
+          
+          cashInput.addEventListener("keydown", (event) => {
+            /* ⌨️ RILEVAMENTO TASTIERA: Ascolta le pressioni dei tasti nell'input */
+            
+            if (event.key === "Enter") {
+              /* ⏎ TASTO INVIO: L'utente ha premuto Invio per inviare */
+              
+              event.preventDefault();
+              /* 🛑 PREVIENI DEFAULT: Ferma il comportamento di invio del form */
+              
+              purchaseBtn.click();
+              /* 🔘 ATTIVA PULSANTE: Simula il clic sul pulsante di elaborazione */
+              /* Consente il funzionamento solo da tastiera */
+            }
+          });
+          
+          
+          /* 🔘 ===== GESTORE CLIC PULSANTE: Elabora la Transazione ===== */
+          
+          purchaseBtn.addEventListener("click", () => { 
+            /* 🖱️ CLIC PULSANTE: L'utente vuole elaborare il pagamento */
+            
+            const register = new CashRegister(cid); // Creiamo una nuova istanza di classe ogni volta che l'utente clicca il pulsante, questo è essenziale perché i test di freeCodeCamp modificheranno la variabile globale "cid" per eseguire il test
+            /* 🏧 CREA REGISTRATORE: Nuova istanza per questa transazione */
+            /* L'istanza fresca garantisce uno stato accurato per ogni caso di test */
+            
+            const cashGiven = parseFloat(cashInput.value); // leggiamo il valore dall'input (che è una stringa, es. "20") e lo convertiamo in un numero (es. 20.0) usando parseFloat() per poter fare calcoli
+            /* 💵 OTTIENI PAGAMENTO: Converti la stringa di input in numero */
+            
+            // convertiamo tutto in centesimi per calcoli "sicuri"
+            const priceInCents = Math.round(price * 100);
+            const cashGivenInCents = Math.round(cashGiven * 100); 
+            /* 🔢 CONVERTI IN CENTESIMI: Evita errori di calcolo in virgola mobile */
+            /* La moltiplicazione e l'arrotondamento garantiscono valori esatti in centesimi */
+          
+            if (isNaN(cashGiven) || cashGiven <= 0 ) {
+              /* 🚫 CONTROLLI INPUT NON VALIDO: */
+              /* Non è un numero OPPURE valore negativo/zero */
+              
+              alert("Please enter a valid positive number");
+              /* ⚠️ MESSAGGIO ERRORE: Informa l'utente del problema */
+              
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per un nuovo tentativo */
+              
+              return;
+              /* 🛑 INTERROMPI ESECUZIONE: Non continuare l'elaborazione */
+            } 
+            
+            else if (cashGivenInCents < priceInCents) {
+              /* 🚫 PAGAMENTO INSUFFICIENTE: Il cliente non ha pagato abbastanza */
+              
+              alert("Customer does not have enough money to purchase the item");
+              /* ⚠️ MESSAGGIO ERRORE: Informa l'utente del problema */
+              
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per un nuovo tentativo */
+              
+              return;
+              /* 🛑 INTERROMPI ESECUZIONE: Non continuare l'elaborazione */
+            }
+            
+            else if (cashGivenInCents === priceInCents) {
+              /* ⚖️ PAGAMENTO ESATTO: Non è necessario resto */
+              
+              result.textContent = "No change due - customer paid with exact cash";
+              /* 📝 MESSAGGIO SUCCESSO: Informa che non è necessario resto */
+              
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per un nuovo tentativo */
+              
+              return;
+              /* 🛑 INTERROMPI ESECUZIONE: Non è necessario il calcolo del resto */
+            }
+            
+            else { // questo accade quando il cliente ha pagato di più, quindi calcoliamo il resto
+              /* 💰 RESTO NECESSARIO: Calcola e visualizza il resto */
+              
+              const transactionResult = register.processPurchase(priceInCents, cashGivenInCents); // Questa è la riga che "attiva" la logica principale del nostro registratore di cassa. Chiamiamo il metodo 'processPurchase' (il "cervello" che fa tutti i calcoli) passandogli il prezzo e il contante ricevuto. Il metodo restituirà un "rapporto" (un oggetto) che contiene lo 'status' della transazione e, se necessario, il 'change' (il resto calcolato)
+              /* 🧮 ELABORA TRANSAZIONE: Chiama il metodo di calcolo principale */
+              /* Questo determina se il resto è possibile e calcola le denominazioni */
+              
+              if (transactionResult.status === "INSUFFICIENT_FUNDS") { // formattiamo l'output in base allo stato
+                /* 🚫 FONDI INSUFFICIENTI: Impossibile dare il resto esatto */
+                
+                result.textContent = "Status: INSUFFICIENT_FUNDS";
+                /* 📝 MESSAGGIO ERRORE: Informa che la transazione è fallita */
+              
+              } else if (transactionResult.status === "OPEN" || transactionResult.status === "CLOSED") {
+                /* ✅ TRANSAZIONE OK: O resto normale o cassetto svuotato */
+                
+                let changeText = transactionResult.change.map(item => `${item[0]}: $${item[1]}`).join(" ");
+                /* 📝 FORMATTA RESTO: Crea elenco leggibile delle denominazioni */
+                /* Converte [["QUARTER", 0.5]] in "QUARTER: $0.5" */
+                
+                result.textContent = `Status: ${transactionResult.status} ${changeText}`;
+                /* 📝 MESSAGGIO SUCCESSO: Mostra stato e dettaglio del resto */
+              }
+              cashInput.value = "";
+              /* 🧹 CANCELLA INPUT: Reimposta per una nuova transazione */
+            }
+          });
+        </script>
+    </body>    
+</html>
+
+<!-- 🎯 ===== RIEPILOGO DEL REGISTRATORE DI CASSA ===== -->
+<!-- 
+💵 ARCHITETTURA APP:
+│
+├── 🧠 HEAD (configurazione)
+│   └── 🎨 CSS con design scontrino termico:
+│       ├── 📱 Approccio responsive mobile-first
+│       ├── 📄 Immagini di sfondo scontrino personalizzate
+│       ├── 📏 Posizionamento preciso con variabili CSS
+│       └── ✨ Dettagli visivi come linee punteggiate e leggera rotazione
+│
+├── 📄 BODY (interfaccia)
+│   └── 🧾 Layout scontrino
+│       ├── 📑 Intestazione scontrino (nome negozio, terminale)
+│       ├── 💰 Dettagli transazione (prezzo, input pagamento)
+│       ├── 🔘 Pulsante elaborazione pagamento
+│       └── 📋 Area risultati calcolo resto
+│
+└── 🧮 JAVASCRIPT (logica)
+    ├── 🏧 Classe CashRegister con metodi:
+    │   ├── constructor (configura il cassetto)
+    │   └── processPurchase (calcola il resto)
+    ├── 💵 Gestione stato transazione:
+    │   ├── OPEN: Resto normale dato
+    │   ├── CLOSED: Cassetto svuotato esattamente
+    │   └── INSUFFICIENT_FUNDS: Impossibile dare il resto
+    └── 🧪 Validazione input e gestione eventi
+
+⚙️ TECNICHE CHIAVE:
+├── 💰 Calcoli basati su centesimi per precisione
+├── 🔄 Algoritmo greedy per resto ottimale
+├── 🗃️ Struttura dati Map per il cassetto
+├── 📱 Correzioni UX specifiche per mobile
+└── 🎨 Design skeuomorfico dello scontrino
+
+È come avere un registratore di cassa virtuale che dà sempre il resto perfetto! 💵✨
+-->

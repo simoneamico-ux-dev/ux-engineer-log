@@ -1,0 +1,1076 @@
+---
+sidebar_position: 9
+sidebar_label: 'Balance Sheet'
+title: 'Balance Sheet'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Balance Sheet
+
+### The Project
+Balance sheet developed with advanced CSS, focused on responsive layout and accessibility.
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balance Sheet</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>
+          <span class="flex">
+            <span>AcmeWidgetCorp</span>
+            <span>Balance Sheet</span>
+          </span>
+        </h1>
+        <div id="years" aria-hidden="true">
+          <span class="year">2019</span>
+          <span class="year">2020</span>
+          <span class="year">2021</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <caption>Assets</caption>
+            <thead>
+              <tr>
+                <td></td>
+                <th><span class="sr-only year">2019</span></th>
+                <th><span class="sr-only year">2020</span></th>
+                <th class="current"><span class="sr-only year">2021</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="data">
+                <th>Cash <span class="description">This is the cash we currently have on hand.</span></th>
+                <td>$25</td>
+                <td>$30</td>
+                <td class="current">$28</td>
+              </tr>
+              <tr class="data">
+                <th>Checking <span class="description">Our primary transactional account.</span></th>
+                <td>$54</td>
+                <td>$56</td>
+                <td class="current">$53</td>
+              </tr>
+              <tr class="data">
+                <th>Savings <span class="description">Funds set aside for emergencies.</span></th>
+                <td>$500</td>
+                <td>$650</td>
+                <td class="current">$728</td>
+              </tr>
+              <tr class="total">
+                <th>Total <span class="sr-only">Assets</span></th>
+                <td>$579</td>
+                <td>$736</td>
+                <td class="current">$809</td>
+              </tr>
+            </tbody>
+          </table>
+          <table>
+            <caption>Liabilities</caption>
+            <thead>
+              <tr>
+              <td></td>
+              <th><span class="sr-only">2019</span></th>
+              <th><span class="sr-only">2020</span></th>
+              <th><span class="sr-only">2021</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="data">
+                <th>Loans <span class="description">The outstanding balance on our startup loan.</span></th>
+                <td>$500</td>
+                <td>$250</td>
+                <td class="current">$0</td>
+              </tr>
+              <tr class="data">
+                <th>Expenses <span class="description">Annual anticipated expenses, such as payroll.</span></th>
+                <td>$200</td>
+                <td>$300</td>
+                <td class="current">$400</td>
+              </tr>
+              <tr class="data">
+                <th>Credit <span class="description">The outstanding balance on our credit card.</span></th>
+                <td>$50</td>
+                <td>$50</td>
+                <td class="current">$75</td>
+              </tr>
+              <tr class="total">
+                <th>Total <span class="sr-only">Liabilities</span></th>
+                <td>$750</td>
+                <td>$600</td>
+                <td class="current">$475</td>
+              </tr>
+            </tbody>
+          </table>
+          <table>
+            <caption>Net Worth</caption>
+            <thead>
+              <tr>
+              <td></td>
+              <th><span class="sr-only">2019</span></th>
+              <th><span class="sr-only">2020</span></th>
+              <th><span class="sr-only">2021</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="total">
+                <th>Total <span class="sr-only">Net Worth</span></th>
+                <td>$-171</td>
+                <td>$136</td>
+                <td class="current">$334</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+span[class~="sr-only"] {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  width: 1px !important;
+  position: absolute !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  padding: 0 !important;
+  margin: -1px !important;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  color: #0a0a23;
+}
+
+h1 {
+  max-width: 37.25rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+}
+
+h1 .flex {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1rem;
+}
+
+h1 .flex span:first-of-type {
+  font-size: 0.7em;
+}
+
+h1 .flex span:last-of-type {
+  font-size: 1.2em;
+}
+
+section {
+  max-width: 40rem;
+  margin: 0 auto;
+  border: 2px solid #d0d0d5;
+}
+
+#years {
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  z-index: 999;
+  top: 0;
+  background: #0a0a23;
+  color: #fff;
+  padding: 0.5rem calc(1.25rem + 2px) 0.5rem 0;
+  margin: 0 -2px;
+}
+
+#years span[class] {
+  font-weight: bold;
+  width: 4.5rem;
+  text-align: right;
+}
+
+.table-wrap {
+  padding: 0 0.75rem 1.5rem 0.75rem;
+}
+
+table {
+  border-collapse: collapse;
+  border: 0;
+  width: 100%;
+  position: relative;
+  margin-top: 3rem;
+}
+
+table caption {
+  color: #356eaf;
+  font-size: 1.3em;
+  font-weight: normal;
+  position: absolute;
+  top: -2.25rem;
+  left: 0.5rem;
+}
+
+tbody td {
+  width: 100vw;
+  min-width: 4rem;
+  max-width: 4rem;
+}
+
+tbody th {
+  width: calc(100% - 12rem);
+}
+
+tr[class="total"] {
+  border-bottom: 4px double #0a0a23;
+  font-weight: bold;
+}
+
+tr[class="total"] th {
+  text-align: left;
+  padding: 0.5rem 0 0.25rem 0.5rem;
+}
+
+tr.total td {
+  text-align: right;
+  padding: 0 0.25rem;
+}
+
+tr.total td:nth-of-type(3) {
+  padding-right: 0.5rem;
+}
+
+tr.total:hover {
+  background-color: #99c9ff;
+}
+
+td.current {
+  font-style: italic;
+}
+
+tr.data {
+  background-image: linear-gradient(to bottom, #dfdfe2 1.845rem, white 1.845rem);
+}
+
+tr.data th {
+  text-align: left;
+  padding-top: 0.3rem;
+  padding-left: 0.5rem;
+}
+
+tr.data th .description {
+  display: block;
+  font-weight: normal;
+  font-style: italic;
+  padding: 1rem 0 0.75rem;
+  margin-right: -13.5rem;
+}
+
+tr.data td {
+  vertical-align: top;
+  padding: 0.3rem 0.25rem 0;
+  text-align: right;
+}
+
+tr.data td:last-of-type {
+  padding-right: 0.5rem;
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: The business card of our document -->
+<!-- It's like saying "Hello, I'm a modern and professional HTML document!" -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: The vault that contains the entire balance sheet -->
+<!-- lang="en" = "this document is in English" - helps screen readers pronounce correctly -->
+
+  <head>
+    <!-- 🧠 THE BRAIN OF THE BALANCE SHEET: All the invisible but fundamental instructions -->
+    <!-- It's like the electrical panel of a house - you don't see it, but it makes everything work! -->
+    
+    <meta charset="UTF-8">
+    <!-- 📝 UNIVERSAL ALPHABET: UTF-8 = understands currency symbols $€¥£ and special characters -->
+    <!-- Fundamental for an international balance sheet! -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 📱 MOBILE ADAPTATION: "Adapt to the screen, whether it's a phone or computer!" -->
+    <!-- It's like having an Excel sheet that automatically resizes -->
+    
+    <title>Balance Sheet</title>
+    <!-- 📑 TAB TITLE: What you see in the browser tab -->
+    <!-- Brief and professional, like a label on a document folder -->
+    
+    <style>
+      /* 🎨 ===== STYLE SHEET: The Visual Rules of Our Balance Sheet ===== */
+      
+      /* 👁️‍🗨️ ===== ACCESSIBILITY: Text Only for Screen Readers ===== */
+      span[class~="sr-only"] {
+        /* 🦮 SCREEN READER ONLY: Content invisible to the eyes but readable by screen readers */
+        /* It's like Braille - information for those who need it, invisible to others */
+        /* [class~="sr-only"] = selects elements that have "sr-only" among their classes */
+        
+        border: 0 !important;
+        /* 🚫 NO BORDERS: Eliminates any possible border */
+        
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        /* ✂️ OLD-SCHOOL CLIPPING: Old method for hiding elements */
+        /* rect() creates a tiny clipping rectangle (1px x 1px) */
+        /* It's like looking through a microscopic keyhole */
+        
+        clip-path: inset(50%) !important;
+        /* ✂️ MODERN CLIPPING: New method for hiding elements */
+        /* inset(50%) = cuts 50% from each side, nothing remains! */
+        /* It's like completely closing the curtains */
+        
+        height: 1px !important;
+        width: 1px !important;
+        /* 📏 MINIMAL DIMENSIONS: 1 pixel, practically invisible */
+        /* It's like shrinking something until it becomes microscopic */
+        
+        position: absolute !important;
+        /* 🎯 ABSOLUTE POSITION: Exits the normal flow of the page */
+        /* It's like removing a book from the shelf - it no longer occupies space */
+        
+        overflow: hidden !important;
+        /* 🚪 HIDE EVERYTHING THAT STICKS OUT: If something protrudes, hide it */
+        /* It's like closing the door of a messy closet */
+        
+        white-space: nowrap !important;
+        /* 📜 TEXT ON ONE LINE: Never wrap to a new line */
+        /* It's like writing everything on a single long roll of paper */
+        
+        padding: 0 !important;
+        margin: -1px !important;
+        /* 🎯 ZERO SPACES + NEGATIVE MARGIN: Ensures it's truly invisible */
+        /* The -1px margin is a trick to avoid focus problems */
+        /* !important = "these rules are MANDATORY, don't change them!" */
+      }
+
+      /* 🏗️ ===== BASIC SETTINGS ===== */
+      
+      html {
+        box-sizing: border-box;
+        /* 📦 INTELLIGENT CALCULATION: Includes padding and borders in the total width */
+        /* It's like saying "a 30cm box already includes the cardboard of the walls" */
+        /* Without this, you'd have to make complicated calculations for each element! */
+      }
+
+      body {
+        font-family: sans-serif;
+        /* ✍️ CLEAN FONT: sans-serif = without "serifs" (those small decorations) */
+        /* It's like using Arial or Helvetica - clean and professional for numbers */
+        
+        color: #0a0a23;
+        /* 🎨 DARK BLUE ALMOST BLACK: More elegant than pure black */
+        /* It's like wearing a midnight blue suit instead of black */
+      }
+
+      /* 📊 ===== BALANCE SHEET HEADER ===== */
+      
+      h1 {
+        max-width: 37.25rem;
+        /* 📏 MAXIMUM WIDTH: 37.25rem ≈ 596px */
+        /* rem = relative unit, adapts if the user changes the text size */
+        /* It's like saying "not wider than an A4 sheet" */
+        
+        margin: 0 auto;
+        /* ⚖️ MAGIC CENTERING: 0 top/bottom, auto on sides = horizontally centered */
+        /* It's like placing a picture perfectly in the center of the wall */
+        
+        padding: 1.5rem 1.25rem;
+        /* 🏠 INTERNAL BREATHING ROOM: 1.5rem top/bottom, 1.25rem on sides */
+        /* It's like leaving elegant margins on an important document */
+      }
+
+      h1 .flex {
+        display: flex;
+        /* 🎯 FLEXIBLE LAYOUT: Elements arrange themselves intelligently */
+        /* It's like having boxes that organize themselves on the shelf */
+        
+        flex-direction: column-reverse;
+        /* 🔄 REVERSED ORDER: The last element appears first */
+        /* It's like reading from bottom to top - "Balance Sheet" above, "AcmeWidgetCorp" below */
+        /* Useful for giving more visual importance to "Balance Sheet" */
+        
+        gap: 1rem;
+        /* 🌬️ SPACE BETWEEN ELEMENTS: 1rem distance between the two rows */
+        /* It's like leaving an empty line between paragraphs */
+      }
+
+      h1 .flex span:first-of-type {
+        font-size: 0.7em;
+        /* 📏 FIRST SPAN SMALLER: 70% of normal size */
+        /* "AcmeWidgetCorp" appears smaller */
+        /* It's like writing the company name in small text under the title */
+      }
+
+      h1 .flex span:last-of-type {
+        font-size: 1.2em;
+        /* 📏 LAST SPAN LARGER: 120% of normal size */
+        /* "Balance Sheet" appears larger and more important */
+        /* It's like a newspaper headline - large and prominent */
+      }
+
+      /* 📋 ===== MAIN SECTION ===== */
+      
+      section {
+        max-width: 40rem;
+        /* 📏 MAXIMUM WIDTH: 40rem ≈ 640px */
+        /* It's like the width of a standard document */
+        
+        margin: 0 auto;
+        /* ⚖️ CENTERING: The balance sheet is centered on the page */
+        
+        border: 2px solid #d0d0d5;
+        /* 🖼️ GRAY FRAME: 2px thick, light gray color */
+        /* It's like putting the balance sheet in an elegant frame */
+      }
+
+      /* 📅 ===== YEARS BAR (STICKY HEADER) ===== */
+      
+      #years {
+        display: flex;
+        /* 🎯 FLEXIBLE LAYOUT: Years arrange horizontally */
+        
+        justify-content: flex-end;
+        /* ➡️ RIGHT ALIGNMENT: Years are aligned to the right */
+        /* It's like aligning Excel columns to the right */
+        
+        position: sticky;
+        /* 🔝 STICKY POSITION: Stays at the top when scrolling! */
+        /* It's like the Excel header that remains visible while scrolling */
+        /* MODERN MAGIC of CSS! */
+        
+        z-index: 999;
+        /* 🏔️ HEIGHT LEVEL: 999 = stays above almost everything */
+        /* It's like putting a transparent sheet on top of all others */
+        /* High z-index ensures it remains visible above the tables */
+        
+        top: 0;
+        /* 📍 STUCK TO TOP: Attaches to the top edge when scrolling */
+        
+        background: #0a0a23;
+        /* 🎨 DARK BLUE BACKGROUND: Same color as the text for contrast */
+        
+        color: #fff;
+        /* ⚪ WHITE TEXT: Maximum contrast on dark background */
+        
+        padding: 0.5rem calc(1.25rem + 2px) 0.5rem 0;
+        /* 🏠 CALCULATED PADDING: calc() does the math for us! */
+        /* 1.25rem + 2px = compensates for the section border */
+        /* It's like doing calculations with the built-in CSS calculator */
+        
+        margin: 0 -2px;
+        /* 📐 NEGATIVE MARGIN: -2px compensates for the section border */
+        /* It's like extending the bar beyond the limits to cover everything */
+      }
+
+      #years span[class] {
+        font-weight: bold;
+        /* 🔤 BOLD TEXT: Years are clearly visible */
+        
+        width: 4.5rem;
+        /* 📏 FIXED WIDTH: Each year occupies the same space */
+        /* It's like Excel columns with fixed width */
+        
+        text-align: right;
+        /* ➡️ RIGHT ALIGNMENT: Like numbers in accounting */
+      }
+
+      /* 📊 ===== TABLES CONTAINER ===== */
+      
+      .table-wrap {
+        padding: 0 0.75rem 1.5rem 0.75rem;
+        /* 🏠 PADDING: 0 top, 0.75rem sides, 1.5rem bottom */
+        /* It's like the margins of a well-formatted Word document */
+      }
+
+      /* 📋 ===== TABLE STYLES ===== */
+      
+      table {
+        border-collapse: collapse;
+        /* 🔗 UNITED BORDERS: Eliminates spaces between cells */
+        /* It's like when in Excel you merge the borders of cells */
+        /* Without this, each cell would have its own separate border! */
+        
+        border: 0;
+        /* 🚫 NO BORDER: The table itself has no border */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Occupies all available space */
+        
+        position: relative;
+        /* 📍 RELATIVE POSITION: Needed to position the caption */
+        /* It's like saying "my children will position themselves relative to me" */
+        
+        margin-top: 3rem;
+        /* 🌬️ SPACE ABOVE: 3rem of separation between tables */
+      }
+
+      table caption {
+        /* 🏷️ TABLE TITLE: "Assets", "Liabilities", "Net Worth" */
+        
+        color: #356eaf;
+        /* 🎨 ATTRACTIVE BLUE: Color that draws attention */
+        
+        font-size: 1.3em;
+        /* 📏 LARGER SIZE: 130% of normal text */
+        
+        font-weight: normal;
+        /* 🔤 NORMAL WEIGHT: Not bold, elegant */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: Positions itself relative to the table */
+        /* It's like a sticky note attached above the table */
+        
+        top: -2.25rem;
+        /* ⬆️ ABOVE THE TABLE: -2.25rem moves it upward */
+        /* Negative values pull it out of the table */
+        
+        left: 0.5rem;
+        /* ⬅️ SLIGHT INDENT: 0.5rem from the left edge */
+      }
+
+      /* 📊 ===== TABLE BODY CELLS ===== */
+      
+      tbody td {
+        width: 100vw;
+        /* 📏 VIEWPORT WIDTH: 100vw = 100% of window width */
+        /* vw = viewport width, modern and responsive unit */
+        
+        min-width: 4rem;
+        /* 📏 MINIMUM WIDTH: Not narrower than 4rem */
+        
+        max-width: 4rem;
+        /* 📏 MAXIMUM WIDTH: Not wider than 4rem */
+        /* min and max together = fixed width of 4rem! */
+        /* It's like saying "this column must be EXACTLY 4rem" */
+      }
+
+      tbody th {
+        width: calc(100% - 12rem);
+        /* 🧮 DYNAMIC CALCULATION: 100% minus 12rem (3 columns of 4rem) */
+        /* calc() is like having a calculator in CSS! */
+        /* Occupies all remaining space after the 3 number columns */
+      }
+
+      /* 💰 ===== TOTAL ROWS ===== */
+      
+      tr[class="total"] {
+        border-bottom: 4px double #0a0a23;
+        /* 📏 DOUBLE LINE BELOW: 4px with double style (double line) */
+        /* It's like the double underline in paper balance sheets! */
+        /* Indicates "this is the final total" in accounting */
+        
+        font-weight: bold;
+        /* 🔤 BOLD: Totals are highlighted */
+      }
+
+      tr[class="total"] th {
+        text-align: left;
+        /* ⬅️ LEFT ALIGNMENT: The "Total" text to the left */
+        
+        padding: 0.5rem 0 0.25rem 0.5rem;
+        /* 🏠 PADDING: Internal space to breathe */
+        /* 0.5rem top, 0 right, 0.25rem bottom, 0.5rem left */
+      }
+
+      tr.total td {
+        text-align: right;
+        /* ➡️ NUMBERS TO THE RIGHT: Accounting standard */
+        /* Numbers align to the right for easier reading */
+        
+        padding: 0 0.25rem;
+        /* 🏠 SIDE PADDING: A bit of space on the sides */
+      }
+
+      tr.total td:nth-of-type(3) {
+        /* 🎯 THIRD COLUMN: The last column (current year) */
+        /* nth-of-type(3) = "select the third td" */
+        
+        padding-right: 0.5rem;
+        /* ➡️ EXTRA PADDING ON RIGHT: More space for the last column */
+      }
+
+      tr.total:hover {
+        /* 🖱️ HOVER EFFECT: When you hover with the mouse */
+        
+        background-color: #99c9ff;
+        /* 🎨 LIGHT BLUE BACKGROUND: It lights up when the mouse passes over */
+        /* It's like highlighting a row with a highlighter! */
+      }
+
+      /* 📅 ===== CURRENT YEAR ===== */
+      
+      td.current {
+        font-style: italic;
+        /* ✍️ ITALIC: The current year (2021) is in italic */
+        /* It's like circling the current year with a pen */
+      }
+
+      /* 📊 ===== DATA ROWS ===== */
+      
+      tr.data {
+        background-image: linear-gradient(to bottom, #dfdfe2 1.845rem, white 1.845rem);
+        /* 🎨 GRADIENT BACKGROUND: "Lined paper" effect for accounting! */
+        /* linear-gradient = linear fade */
+        /* to bottom = from top to bottom */
+        /* #dfdfe2 for 1.845rem = light gray for the title height */
+        /* white after = white for the rest */
+        /* It's like graph paper for accounting! */
+      }
+
+      tr.data th {
+        text-align: left;
+        /* ⬅️ LEFT-ALIGNED TITLES: "Cash", "Checking", etc. */
+        
+        padding-top: 0.3rem;
+        padding-left: 0.5rem;
+        /* 🏠 PADDING: Space to breathe */
+      }
+
+      tr.data th .description {
+        /* 📝 DESCRIPTIONS: The explanatory text below each entry */
+        
+        display: block;
+        /* 📦 BLOCK: Wraps to a new line from the title */
+        /* It's like putting a note under the title */
+        
+        font-weight: normal;
+        /* 🔤 NORMAL WEIGHT: Not bold like the title */
+        
+        font-style: italic;
+        /* ✍️ ITALIC: To distinguish it from the title */
+        
+        padding: 1rem 0 0.75rem;
+        /* 🏠 PADDING: 1rem top, 0 sides, 0.75rem bottom */
+        /* Creates space between title and description */
+        
+        margin-right: -13.5rem;
+        /* ➡️ NEGATIVE MARGIN: Extends into number columns! */
+        /* It's a trick to make the description span multiple columns */
+        /* Like writing a note that crosses multiple columns in Excel */
+      }
+
+      tr.data td {
+        vertical-align: top;
+        /* ⬆️ VERTICAL ALIGNMENT: Numbers start from the top */
+        /* It's like writing numbers in the top part of the cell */
+        
+        padding: 0.3rem 0.25rem 0;
+        /* 🏠 PADDING: Small breathing room around numbers */
+        
+        text-align: right;
+        /* ➡️ NUMBERS TO THE RIGHT: Accounting standard */
+      }
+
+      tr.data td:last-of-type {
+        /* 🎯 LAST COLUMN: The last td of each row */
+        
+        padding-right: 0.5rem;
+        /* ➡️ EXTRA PADDING: More space on the right for the last column */
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 🏗️ ===== START OF VISIBLE DOCUMENT ===== -->
+    
+    <main>
+      <!-- 📄 MAIN CONTENT: The semantic tag that says "here's the important stuff" -->
+      <!-- It's like the main area of an office where the principal activities take place -->
+      
+      <section>
+        <!-- 📋 BALANCE SHEET SECTION: The container for our entire balance sheet -->
+        <!-- It's like the folder that contains all financial documents -->
+        
+        <h1>
+          <!-- 📰 MAIN HEADING: The title of our document -->
+          
+          <span class="flex">
+            <!-- 🎯 FLEXIBLE CONTAINER: To invert the visual order -->
+            
+            <span>AcmeWidgetCorp</span>
+            <!-- 🏢 COMPANY NAME: Will appear below thanks to flex-direction: column-reverse -->
+            
+            <span>Balance Sheet</span>
+            <!-- 📊 DOCUMENT TYPE: Will appear above, larger and more important -->
+          </span>
+        </h1>
+        
+        <div id="years" aria-hidden="true">
+          <!-- 📅 YEARS BAR: The header that stays always visible -->
+          <!-- aria-hidden="true" = "screen readers, ignore this" -->
+          <!-- It's hidden because the information is already present in the tables for accessibility -->
+          
+          <span class="year">2019</span>
+          <span class="year">2020</span>
+          <span class="year">2021</span>
+          <!-- 📅 YEARS: The time columns of our balance sheet -->
+          <!-- Like column labels in Excel -->
+        </div>
+        
+        <div class="table-wrap">
+          <!-- 📊 TABLES CONTAINER: Groups all tables with uniform padding -->
+          
+          <!-- 💰 ===== ASSETS TABLE ===== -->
+          <table>
+            <caption>Assets</caption>
+            <!-- 🏷️ TABLE TITLE: "Assets" - what the company owns -->
+            <!-- It's like the "INCOME" label on a drawer in a filing cabinet -->
+            
+            <thead>
+              <!-- 🎩 TABLE HEADER: The upper part with columns -->
+              
+              <tr>
+                <!-- 📏 ROW: A table row -->
+                
+                <td></td>
+                <!-- 🔲 EMPTY CELL: Upper left corner, above the item names -->
+                
+                <th><span class="sr-only year">2019</span></th>
+                <th><span class="sr-only year">2020</span></th>
+                <th class="current"><span class="sr-only year">2021</span></th>
+                <!-- 👁️‍🗨️ INVISIBLE HEADERS: Years are already in the sticky bar -->
+                <!-- sr-only = visible only to screen readers for accessibility -->
+                <!-- It's like having Braille on a document -->
+              </tr>
+            </thead>
+            
+            <tbody>
+              <!-- 📊 TABLE BODY: Where the actual data is -->
+              
+              <tr class="data">
+                <!-- 💵 DATA ROW: A balance sheet item -->
+                
+                <th>Cash <span class="description">This is the cash we currently have on hand.</span></th>
+                <!-- 💵 CASH: First item with description -->
+                <!-- th = table header, also in rows to indicate the row title -->
+                
+                <td>$25</td>
+                <td>$30</td>
+                <td class="current">$28</td>
+                <!-- 💰 VALUES: The money for each year -->
+                <!-- class="current" = current year in italic -->
+              </tr>
+              
+              <tr class="data">
+                <th>Checking <span class="description">Our primary transactional account.</span></th>
+                <!-- 🏦 CHECKING ACCOUNT: For daily transactions -->
+                
+                <td>$54</td>
+                <td>$56</td>
+                <td class="current">$53</td>
+              </tr>
+              
+              <tr class="data">
+                <th>Savings <span class="description">Funds set aside for emergencies.</span></th>
+                <!-- 💰 SAVINGS: The company's piggy bank -->
+                
+                <td>$500</td>
+                <td>$650</td>
+                <td class="current">$728</td>
+              </tr>
+              
+              <tr class="total">
+                <!-- ➕ TOTAL ROW: The sum of all assets -->
+                
+                <th>Total <span class="sr-only">Assets</span></th>
+                <!-- 🧮 TOTAL: "Assets" is visually hidden but present for screen readers -->
+                
+                <td>$579</td>
+                <td>$736</td>
+                <td class="current">$809</td>
+                <!-- 💰 TOTALS: With double underline in CSS! -->
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- 💸 ===== LIABILITIES TABLE ===== -->
+          <table>
+            <caption>Liabilities</caption>
+            <!-- 🏷️ LIABILITIES: What the company owes -->
+            <!-- It's like the "EXPENSES" label on another drawer -->
+            
+            <thead>
+              <tr>
+              <td></td>
+              <th><span class="sr-only">2019</span></th>
+              <th><span class="sr-only">2020</span></th>
+              <th><span class="sr-only">2021</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="data">
+                <th>Loans <span class="description">The outstanding balance on our startup loan.</span></th>
+                <!-- 🏦 LOANS: Money that must be repaid -->
+                
+                <td>$500</td>
+                <td>$250</td>
+                <td class="current">$0</td>
+                <!-- 🎉 NOTE: The loan was fully repaid in 2021! -->
+              </tr>
+              
+              <tr class="data">
+                <th>Expenses <span class="description">Annual anticipated expenses, such as payroll.</span></th>
+                <!-- 💼 EXPENSES: Salaries and operating costs -->
+                
+                <td>$200</td>
+                <td>$300</td>
+                <td class="current">$400</td>
+              </tr>
+              
+              <tr class="data">
+                <th>Credit <span class="description">The outstanding balance on our credit card.</span></th>
+                <!-- 💳 CREDIT CARD: Short-term debt -->
+                
+                <td>$50</td>
+                <td>$50</td>
+                <td class="current">$75</td>
+              </tr>
+              
+              <tr class="total">
+                <th>Total <span class="sr-only">Liabilities</span></th>
+                <td>$750</td>
+                <td>$600</td>
+                <td class="current">$475</td>
+                <!-- 📉 GOOD NEWS: Debts are decreasing! -->
+              </tr>
+            </tbody>
+          </table>
+          
+          <!-- 💎 ===== NET WORTH TABLE ===== -->
+          <table>
+            <caption>Net Worth</caption>
+            <!-- 🏷️ NET WORTH: Assets - Liabilities = What the company is really worth -->
+            <!-- It's like the final balance of your account after paying all debts -->
+            
+            <thead>
+              <tr>
+              <td></td>
+              <th><span class="sr-only">2019</span></th>
+              <th><span class="sr-only">2020</span></th>
+              <th><span class="sr-only">2021</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="total">
+                <!-- 🎯 SINGLE ROW: Only the final total -->
+                
+                <th>Total <span class="sr-only">Net Worth</span></th>
+                <td>$-171</td>
+                <!-- 🔴 2019: Negative value! The company owed more than it owned -->
+                
+                <td>$136</td>
+                <!-- 🟡 2020: Back in the black! -->
+                
+                <td class="current">$334</td>
+                <!-- 🟢 2021: Growing! The company is doing well -->
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+
+<!-- 🎯 ===== ARCHITECTURE SUMMARY ===== -->
+<!-- 
+💼 BALANCE SHEET STRUCTURE:
+│
+├── 🧠 HEAD (invisible configurations)
+│   ├── 📝 Meta tags (charset, viewport)
+│   └── 🎨 Internal CSS with:
+│       ├── 👁️‍🗨️ sr-only class for accessibility
+│       ├── 📊 Styles for accounting tables
+│       ├── 🔝 Sticky header for years
+│       └── 🖱️ Hover effects on totals
+│
+└── 📊 BODY (the visible balance sheet)
+    └── 📄 Main
+        └── 📋 Section (balance sheet frame)
+            ├── 📰 H1 (company name + "Balance Sheet")
+            ├── 📅 Sticky years bar (2019-2021)
+            └── 📊 Table-wrap
+                ├── 💰 Assets Table (cash, accounts, savings)
+                ├── 💸 Liabilities Table (loans, expenses, credits)
+                └── 💎 Net Worth Table (net worth)
+
+🎨 SPECIAL CSS TRICKS:
+├── 🔝 Position: sticky for the years bar (like Excel!)
+├── 🧮 calc() for automatic width calculations
+├── 🎨 linear-gradient for the "accounting paper" effect
+├── 👁️‍🗨️ sr-only for accessible but invisible text
+└── 🖱️ :hover to highlight totals
+
+📱 RESPONSIVE: Tables adapt thanks to:
+├── rem for scalable dimensions
+├── Widths in percentages
+└── max-width to avoid exploding on large screens
+
+It's like having an Excel sheet that transforms into an elegant web page! 💼✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Week's Rhythm
+
+This week I worked the night shift and found it worked well to do the Balance Sheet project when I was home and then read Refactoring UI while I was at work.
+
+### The Daily Progress Log
+
+For about 7 days now, after finishing the day I write down exactly how many freeCodeCamp steps, how many pages of one book or another I've read, adding everything to a txt file. I created a folder on the desktop where I add the txt file every day. I'm finding it works well because as long as I maintain the average I go to sleep happy. Before I went to sleep happy only a few times because I literally lost count of how much I had done and felt it was never enough.
+
+**This week's average:**
+- 20 daily freeCodeCamp steps
+- 15 pages of Refactoring UI
+
+### The Lesson on Patience
+
+Even now I still have that fire inside me that wants me to always exceed the amount of work done the day before, but I stop myself remembering that it's **a marathon and not a sprint**. Above all, you have to understand every concept 100%. Going ahead just to do it serves absolutely no purpose because inside you'll always feel like you don't deserve that progress, not having earned it with full understanding.
+
+### The Refined Study Method
+
+I read Refactoring UI at work and I'm halfway through the book. My method consists of:
+
+1. **Reading** the original content
+2. **Translating** words I don't know as a native Italian speaker
+3. **Asking Code Tutor** (that writing style I created in Claude) only when I don't understand
+4. **Reworking** everything without AI, writing it in my own words in the UI handbook
+
+### The UI Handbook
+
+I don't remember if I mentioned it, but in this handbook I've written everything I learned from Breccia's course and I'm adding everything I'm learning from Google UX and Refactoring UI. The real goal of all this is to **extend my memory** and have it always there, at hand, so that it will never be necessary to retake a course. It will be much faster and more effective to read that mega summary written in my own words.
+
+### The Code Tutor
+
+The Code Tutor I created is really helping me a lot. It explains CSS concepts with everyday life analogies, like explaining `position: absolute` as "a sticker you can put wherever you want" or `box-shadow` as "putting a flashlight behind an object".
+
+**Code Tutor Custom Instructions:**
+
+```
+Explain HTML/CSS concepts with simple words, diagrams, and relating concepts to everyday life, here are three examples:
+
+Does auto work in other contexts? Beyond margin
+
+Yes! auto is a very intelligent value that works in different CSS contexts. Here are the main ones:
+1. Width and Height
+width: auto;  /* Element takes natural width */
+height: auto; /* Element takes content height */
+
+2. Top, Right, Bottom, Left (with position)
+position: absolute;
+left: auto;  /* Browser decides the best position */
+
+3. Flex
+flex: auto; /* Element adapts to available space */
+
+4. Grid
+grid-template-columns: auto auto; /* Columns adapt to content */
+
+5. Overflow
+overflow: auto; /* Show scroll only if needed */
+
+6. Text-align (less common)
+text-align: auto; /* Follows text direction */
+
+The basic concept is always the same:
+auto means "browser, you decide the most sensible thing to do based on context!"
+It's like saying "do what seems best" instead of giving a precise number.
+Very useful because it makes design more flexible and adaptable!
+
+What does absolute mean instead?
+
+position: absolute is one of the most powerful CSS values!
+What it means: The element "exits" the normal page flow and positions itself based on its nearest container that has position: relative (or other values like fixed, absolute).
+
+Think of a sheet of paper:
+- Normal elements are written one after another on the sheet
+- With absolute it's like taking a piece of transparent tape and sticking it on top of the sheet wherever you want
+
+Practical example:
+<div style="position: relative; width: 300px; height: 200px; background: lightgray;">
+  <div style="position: absolute; top: 20px; right: 10px; background: red;">
+    I'm in the top right!
+  </div>
+  <p>This is normal text that continues normally...</p>
+</div>
+
+Important characteristics:
+- Element no longer takes up space in the normal page
+- You can position it with top, right, bottom, left
+- Other elements behave as if it doesn't exist
+- Useful for popups, dropdown menus, tooltips
+- Warning: if parent container doesn't have position: relative, element positions relative to entire page!
+
+It's like having a sticker you can put wherever you want, independent of everything else!
+
+I'm learning box shadow, would you explain it?
+
+Of course! box-shadow is one of the coolest CSS effects. It lets you add a shadow behind your elements.
+
+Basic syntax:
+box-shadow: x y blur color;
+
+What each value means:
+1. X (horizontal displacement)
+box-shadow: 10px 0 0 black; /* Shadow to the right */
+box-shadow: -10px 0 0 black; /* Shadow to the left */
+
+2. Y (vertical displacement)
+box-shadow: 0 10px 0 black; /* Shadow below */
+box-shadow: 0 -10px 0 black; /* Shadow above */
+
+3. Blur (blur)
+box-shadow: 10px 10px 0 black; /* Hard shadow */
+box-shadow: 10px 10px 20px black; /* Blurred shadow */
+
+4. Color
+box-shadow: 10px 10px 10px red;
+box-shadow: 10px 10px 10px rgba(0,0,0,0.5); /* Transparent */
+
+Practical example:
+<div style="width: 200px; height: 100px; background: lightblue; box-shadow: 5px 5px 10px gray;">
+  Hi! I have a shadow!
+</div>
+
+Useful tricks:
+- Light shadow: box-shadow: 0 2px 5px rgba(0,0,0,0.1)
+- Strong shadow: box-shadow: 0 10px 20px rgba(0,0,0,0.3)
+- Inner shadow: box-shadow: inset 0 2px 5px gray
+
+It's like putting a flashlight behind an object!
+```
+
+---
+
+**Next Project**: Learn Intermediate CSS by Building a Cat Painting

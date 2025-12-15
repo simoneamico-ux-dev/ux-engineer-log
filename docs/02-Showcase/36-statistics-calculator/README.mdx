@@ -1,0 +1,748 @@
+---
+sidebar_position: 5
+sidebar_label: 'Statistics Calculator'
+title: 'Statistics Calculator'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Statistics Calculator
+
+<img width="100%" alt="Screenshot of the Statistics Calculator app, simulating the analysis of user satisfaction ratings." src="https://github.com/user-attachments/assets/e11f5daf-aa96-4abc-a847-c559f9b38ef4" />
+<p align="center"><i>Practical example of the Statistics Calculator analyzing user satisfaction survey (UX) data.</i></p>
+The entered numbers (4, 5, 3,...) simulate ratings given by a group of users for a new feature, on a scale from 1 to 5 stars.<br />
+The Mode and Median of 4 reveal that the most common reaction and the "typical" user's experience were very positive.<br />
+The Mean (3.89), while slightly lower due to a single negative rating, confirms an overall more than favorable reception.<br />
+Finally, the low Standard Deviation is an excellent sign, as it indicates that the experience was consistent and predictable for most users. In a real-world context, these results would suggest validating the design's success and, as a next step, investigating the reasons behind that single negative feedback for further optimization.
+
+---
+
+### The Project
+Statistical calculator developed with JavaScript and advanced array methods, capable of calculating mean, median, mode, range, variance and standard deviation from a series of numbers entered by the user.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Statistics Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  
+  <body>
+    <h1>Statistics Calculator</h1>
+    <p>Enter a list of comma-separated numbers.</p>
+    <form onsubmit="calculate(); return false;">
+      <label for="numbers">Numbers:</label>
+      <input type="text" name="numbers" id="numbers" />
+      <button type="submit">Calculate</button>
+    </form>
+    <div class="results">
+      <p>
+        The <dfn>mean</dfn> of a list of numbers is the average, calculated by
+        taking the sum of all numbers and dividing that by the count of numbers.
+      </p>
+      <p class="bold">Mean: <span id="mean"></span></p>
+      <p>
+        The <dfn>median</dfn> of a list of numbers is the number that appears in
+        the middle of the list, when sorted from least to greatest.
+      </p>
+      <p class="bold">Median: <span id="median"></span></p>
+      <p>
+        The <dfn>mode</dfn> of a list of numbers is the number that appears most
+        often in the list.
+      </p>
+      <p class="bold">Mode: <span id="mode"></span></p>
+      <p>
+        The <dfn>range</dfn> of a list of numbers is the difference between the
+        largest and smallest numbers in the list.
+      </p>
+      <p class="bold">Range: <span id="range"></span></p>
+      <p>
+        The <dfn>variance</dfn> of a list of numbers measures how far the values
+        are from the mean, on average.
+      </p>
+      <p class="bold">Variance: <span id="variance"></span></p>
+      <p>
+        The <dfn>standard deviation</dfn> of a list of numbers is the square
+        root of the variance.
+      </p>
+      <p class="bold">
+        Standard Deviation: <span id="standardDeviation"></span>
+      </p>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+body {
+  margin: 0;
+  background-color: rgb(27, 27, 50);
+  text-align: center;
+  color: #fff;
+}
+
+button {
+  cursor: pointer;
+  background-color: rgb(59, 59, 79);
+  border: 3px solid white;
+  color: white;
+}
+
+input {
+  background-color: rgb(10, 10, 35);
+  color: white;
+  border: 1px solid rgb(59, 59, 79);
+}
+
+.bold {
+  font-weight: bold;
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const getMean = (array) => array.reduce((acc, el) => acc + el, 0) / array.length;
+
+const getMedian = (array) => {
+  const sorted = array.toSorted((a, b) => a - b);
+  const median =
+    sorted.length % 2 === 0
+      ? getMean([sorted[sorted.length / 2], sorted[sorted.length / 2 - 1]])
+      : sorted[Math.floor(sorted.length / 2)];
+  return median;
+}
+
+const getMode = (array) => {
+  const counts = {};
+  array.forEach(el => counts[el] = counts[el] ? counts[el] + 1 : 1);
+
+  if (new Set(Object.values(counts)).size === 1) {
+    return null;
+  }
+  const highest = Object.keys(counts).sort(
+    (a, b) => counts[b] - counts[a]
+  )[0];
+  const mode = Object.keys(counts).filter(
+    (el) => counts[el] === counts[highest]
+  );
+  return mode.join(", ");
+}
+
+const getRange = (array) => {
+  return Math.max(...array) - Math.min(...array);
+}
+
+const getVariance = (array) => {
+  const mean = getMean(array);
+  const variance = array.reduce((acc, el) => {
+    const difference = el - mean;
+    const squared = difference ** 2;
+    return acc + squared;
+  }, 0) / array.length;
+  return variance;
+}
+
+const getStandardDeviation = (array) => {
+  const variance = getVariance(array);
+  const standardDeviation = Math.sqrt(variance);
+  return standardDeviation;
+}
+
+const calculate = () => {
+  const value = document.querySelector("#numbers").value;
+  const array = value.split(/,\s*/g);
+  const numbers = array.map(el => Number(el)).filter(el => !isNaN(el));
+  
+  const mean = getMean(numbers);
+  const median = getMedian(numbers);
+  const mode = getMode(numbers);
+  const range = getRange(numbers);
+  const variance = getVariance(numbers);
+  const standardDeviation = getStandardDeviation(numbers);
+
+  document.querySelector("#mean").textContent = mean;
+  document.querySelector("#median").textContent = median;
+  document.querySelector("#mode").textContent = mode;
+  document.querySelector("#range").textContent = range;
+  document.querySelector("#variance").textContent = variance;
+  document.querySelector("#standardDeviation").textContent = standardDeviation;
+
+}
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the statistics laboratory!" -->
+<!-- It's like opening the doors of a mathematical calculation center! 📊 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our statistical calculator -->
+<!-- lang="en" = English, the language of universal mathematics! 🔢 -->
+
+  <head>
+    <!-- 🧠 THE MATHEMATICAL BRAIN: Where we prepare formulas and styles -->
+    <!-- It's like the blackboard where we write instructions before calculating -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for all numerical symbols! 🔢 -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- 📱 RESPONSIVE DESIGN: "Calculate on any device!" -->
+    <!-- width=device-width = device width -->
+    <!-- initial-scale=1 = initial zoom at 100% -->
+    
+    <title>Statistics Calculator</title>
+    <!-- 📑 TAB TITLE: Simple and descriptive -->
+    
+    <style>
+      /* 🎨 ===== CSS STYLES: The Calculator's Appearance ===== */
+      
+      body {
+        margin: 0;
+        /* 🚫 NO MARGINS: We start from the edges */
+        
+        background-color: rgb(27, 27, 50);
+        /* 🌃 DEEP NIGHT BLUE: rgb(27, 27, 50)
+        An elegant dark blue to reduce visual fatigue */
+        
+        text-align: center;
+        /* ⚖️ EVERYTHING CENTERED: The calculator sits in the center */
+        
+        color: #fff;
+        /* ⚪ WHITE TEXT: Perfect contrast on dark blue */
+      }
+      
+      button {
+        cursor: pointer;
+        /* 👆 HAND: Indicates the button is clickable */
+        
+        background-color: rgb(59, 59, 79);
+        /* 🔵 GRAY BLUE: Lighter than body for distinction */
+        
+        border: 3px solid white;
+        /* 🔲 THICK WHITE BORDER: 3px for visibility */
+        
+        color: white;
+        /* ⚪ WHITE TEXT: Readable on dark button */
+      }
+      
+      input {
+        background-color: rgb(10, 10, 35);
+        /* 🌑 ALMOST BLACK BLUE: Darker than body for depth */
+        
+        color: white;
+        /* ⚪ WHITE TEXT: For readable input */
+        
+        border: 1px solid rgb(59, 59, 79);
+        /* 🔲 THIN BORDER: Same color as button for consistency */
+      }
+      
+      .bold {
+        font-weight: bold;
+        /* 💪 BOLD: To highlight results */
+      }
+    </style>
+  </head>
+  
+  <body>
+    <!-- 📊 ===== THE CALCULATOR COMES TO LIFE ===== -->
+    
+    <h1>Statistics Calculator</h1>
+    <!-- 📊 MAIN TITLE: Large and central -->
+    
+    <p>Enter a list of comma-separated numbers.</p>
+    <!-- 📝 INSTRUCTIONS: Clear and simple for the user -->
+    
+    <form onsubmit="calculate(); return false;">
+      <!-- 📋 INTERACTIVE FORM: The heart of the interface -->
+      <!-- onsubmit="calculate(); return false;" -->
+      <!-- When you submit the form: -->
+      <!-- 1. Calls the calculate() function -->
+      <!-- 2. return false prevents page refresh! -->
+      <!-- It's like saying "do the calculations but stay here!" -->
+      
+      <label for="numbers">Numbers:</label>
+      <!-- 🏷️ LABEL: Associated with input through "for" -->
+      <!-- Improves accessibility and usability -->
+      
+      <input type="text" name="numbers" id="numbers" />
+      <!-- 📝 INPUT FIELD: Where the user enters numbers -->
+      <!-- type="text" = accepts any text -->
+      <!-- id="numbers" = unique identifier for JavaScript -->
+      
+      <button type="submit">Calculate</button>
+      <!-- 🔘 SUBMIT BUTTON: Starts the calculations -->
+      <!-- type="submit" = submits the form when clicked -->
+    </form>
+    
+    <div class="results">
+      <!-- 📊 RESULTS SECTION: Where we show the calculations -->
+      
+      <p>
+        The <dfn>mean</dfn> of a list of numbers is the average, calculated by
+        taking the sum of all numbers and dividing that by the count of numbers.
+        <!-- 📚 MEAN DEFINITION: The <dfn> tag indicates a definition -->
+        <!-- It's semantically correct for technical terms! -->
+      </p>
+      <p class="bold">Mean: <span id="mean"></span></p>
+      <!-- 📊 MEAN RESULT: The span will be filled by JavaScript -->
+      <!-- class="bold" = bold for visibility -->
+      
+      <p>
+        The <dfn>median</dfn> of a list of numbers is the number that appears in
+        the middle of the list, when sorted from least to greatest.
+        <!-- 📚 MEDIAN DEFINITION: The central value -->
+      </p>
+      <p class="bold">Median: <span id="median"></span></p>
+      <!-- 📊 MEDIAN RESULT: Placeholder for the value -->
+      
+      <p>
+        The <dfn>mode</dfn> of a list of numbers is the number that appears most
+        often in the list.
+        <!-- 📚 MODE DEFINITION: The most frequent -->
+      </p>
+      <p class="bold">Mode: <span id="mode"></span></p>
+      <!-- 📊 MODE RESULT: Can be multiple! -->
+      
+      <p>
+        The <dfn>range</dfn> of a list of numbers is the difference between the
+        largest and smallest numbers in the list.
+        <!-- 📚 RANGE DEFINITION: Max - Min -->
+      </p>
+      <p class="bold">Range: <span id="range"></span></p>
+      <!-- 📊 RANGE RESULT: The interval of values -->
+      
+      <p>
+        The <dfn>variance</dfn> of a list of numbers measures how far the values
+        are from the mean, on average.
+        <!-- 📚 VARIANCE DEFINITION: Quadratic dispersion -->
+      </p>
+      <p class="bold">Variance: <span id="variance"></span></p>
+      <!-- 📊 VARIANCE RESULT: Dispersion measure -->
+      
+      <p>
+        The <dfn>standard deviation</dfn> of a list of numbers is the square
+        root of the variance.
+        <!-- 📚 STANDARD DEVIATION DEFINITION: Square root of variance -->
+      </p>
+      <p class="bold">
+        Standard Deviation: <span id="standardDeviation"></span>
+        <!-- 📊 STANDARD DEVIATION RESULT: Normalized dispersion -->
+      </p>
+    </div>
+    
+    <script>
+      /* 🧮 ===== THE MATHEMATICAL ENGINE: JavaScript in Action! ===== */
+      
+      /* 📊 ===== MEAN FUNCTION ===== */
+      const getMean = (array) => array.reduce((acc, el) => acc + el, 0) / array.length;
+      /* 🎯 COMPACT ARROW FUNCTION: One line of pure power!
+         
+         BREAKDOWN:
+         1. (array) => : Takes an array as parameter
+         2. array.reduce() : Method that "reduces" the array to a single value
+         3. (acc, el) => acc + el : For each element, add it to the accumulator
+         4. , 0 : The accumulator starts at 0
+         5. / array.length : Divide the sum by the number of elements
+         
+         EXAMPLE: [2, 4, 6]
+         - Sum: 2 + 4 + 6 = 12
+         - Count: 3 elements
+         - Mean: 12 / 3 = 4
+      */
+
+      /* 📊 ===== MEDIAN FUNCTION ===== */
+      const getMedian = (array) => {
+        const sorted = array.toSorted((a, b) => a - b);
+        /* 🔄 SORTING: toSorted() creates a sorted copy!
+           (a, b) => a - b : Sorts in ascending order
+           - If a - b < 0, a comes before b
+           - If a - b > 0, b comes before a
+           - If a - b = 0, they are equal
+           
+           NOTE: toSorted() is new! Doesn't modify the original array
+        */
+        
+        const median =
+          sorted.length % 2 === 0
+            ? getMean([sorted[sorted.length / 2], sorted[sorted.length / 2 - 1]])
+            : sorted[Math.floor(sorted.length / 2)];
+        /* 🎯 TERNARY OPERATOR: Like a compact if/else!
+           
+           condition ? ifTrue : ifFalse
+           
+           EVEN CASE (e.g.: [1,2,3,4]):
+           - sorted.length % 2 === 0 : true (4 is even)
+           - Takes the two middle elements: index 2 and 1 (values 3 and 2)
+           - Calculates the mean: getMean([3, 2]) = 2.5
+           
+           ODD CASE (e.g.: [1,2,3,4,5]):
+           - sorted.length % 2 === 0 : false (5 is odd)
+           - Math.floor(5 / 2) = 2 (rounds down)
+           - Takes the element at index 2: value 3
+        */
+        
+        return median;
+        /* 📤 RETURNS: The calculated median value */
+      }
+      
+      /* 📊 ===== MODE FUNCTION ===== */
+      const getMode = (array) => {
+        const counts = {};
+        /* 📦 COUNTER OBJECT: {} creates an empty object
+           We'll use properties as counters for each number
+        */
+        
+        array.forEach(el => counts[el] = counts[el] ? counts[el] + 1 : 1);
+        /* 🔄 COUNT FREQUENCIES: For each element in the array
+           
+           TERNARY OPERATOR:
+           counts[el] ? counts[el] + 1 : 1
+           
+           - If counts[el] already exists: increment it by 1
+           - If it doesn't exist (undefined): initialize it to 1
+           
+           EXAMPLE with [1, 2, 2, 3]:
+           - el = 1: counts[1] = undefined ? 1 : 1 → counts = {1: 1}
+           - el = 2: counts[2] = undefined ? 1 : 1 → counts = {1: 1, 2: 1}
+           - el = 2: counts[2] = 1 ? 2 : 1 → counts = {1: 1, 2: 2}
+           - el = 3: counts[3] = undefined ? 1 : 1 → counts = {1: 1, 2: 2, 3: 1}
+        */
+      
+        if (new Set(Object.values(counts)).size === 1) {
+          return null;
+          /* 🔍 CHECK EQUAL FREQUENCIES:
+             
+             1. Object.values(counts) : Extracts all values (the frequencies)
+             2. new Set(...) : Creates a Set (collection without duplicates)
+             3. .size === 1 : If the Set has only 1 element, all frequencies are equal
+             
+             EXAMPLE: If counts = {1: 2, 2: 2, 3: 2}
+             - Object.values = [2, 2, 2]
+             - new Set([2, 2, 2]) = Set{2}
+             - size = 1 → No mode! Returns null
+          */
+        }
+        
+        const highest = Object.keys(counts).sort(
+          (a, b) => counts[b] - counts[a]
+        )[0];
+        /* 🏆 FIND THE HIGHEST FREQUENCY:
+           
+           1. Object.keys(counts) : Array of keys (the numbers)
+           2. .sort((a, b) => counts[b] - counts[a]) : Sort by DESCENDING frequency
+           3. [0] : Takes the first element (highest frequency)
+           
+           EXAMPLE with counts = {1: 1, 2: 3, 3: 2}:
+           - Keys: ["1", "2", "3"]
+           - After sort: ["2", "3", "1"] (sorted by frequency: 3, 2, 1)
+           - highest = "2"
+        */
+        
+        const mode = Object.keys(counts).filter(
+          (el) => counts[el] === counts[highest]
+        );
+        /* 🔍 FILTER ALL VALUES WITH MAXIMUM FREQUENCY:
+           
+           There could be multiple modes!
+           filter() keeps only elements that satisfy the condition
+           
+           EXAMPLE: If two numbers both appear 3 times, they're both modes
+        */
+        
+        return mode.join(", ");
+        /* 📤 RETURNS: The modes joined by commas
+           join(", ") transforms the array into a string: [1, 3] → "1, 3"
+        */
+      }
+      
+      /* 📊 ===== RANGE FUNCTION ===== */
+      const getRange = (array) => {
+        return Math.max(...array) - Math.min(...array);
+        /* 🎯 SPREAD OPERATOR + MATH: Pure elegance!
+           
+           ...array : "Spreads" the array as separate arguments
+           
+           EXAMPLE with [3, 7, 2, 9, 1]:
+           - Math.max(...[3, 7, 2, 9, 1]) → Math.max(3, 7, 2, 9, 1) = 9
+           - Math.min(...[3, 7, 2, 9, 1]) → Math.min(3, 7, 2, 9, 1) = 1
+           - Range = 9 - 1 = 8
+        */
+      }
+      
+      /* 📊 ===== VARIANCE FUNCTION ===== */
+      const getVariance = (array) => {
+        const mean = getMean(array);
+        /* 📊 CALCULATE THE MEAN: Needed for next calculations */
+        
+        const variance = array.reduce((acc, el) => {
+          const difference = el - mean;
+          /* 📐 DIFFERENCE: How much each value deviates from the mean */
+          
+          const squared = difference ** 2;
+          /* ➡️ SQUARED: ** is the exponential operator
+             We square to make all differences positive
+          */
+          
+          return acc + squared;
+          /* ➕ ACCUMULATE: Sum all squared differences */
+        }, 0) / array.length;
+        /* ➗ DIVIDE: By the number of elements (mean of squares) */
+        
+        return variance;
+        /* 📤 RETURNS: The calculated variance
+        
+           MATHEMATICAL FORMULA: σ² = Σ(xi - μ)² / n
+           where μ is the mean and n is the number of elements
+        */
+      }
+      
+      /* 📊 ===== STANDARD DEVIATION FUNCTION ===== */
+      const getStandardDeviation = (array) => {
+        const variance = getVariance(array);
+        /* 📊 USE THE VARIANCE: Calculated by the previous function */
+        
+        const standardDeviation = Math.sqrt(variance);
+        /* 🔢 SQUARE ROOT: Standard deviation is √variance
+           Math.sqrt() calculates the square root
+        */
+        
+        return standardDeviation;
+        /* 📤 RETURNS: σ = √σ² */
+      }
+      
+      /* 🎮 ===== MAIN CALCULATE FUNCTION ===== */
+      const calculate = () => {
+        const value = document.querySelector("#numbers").value;
+        /* 🔍 GET THE VALUE: querySelector finds the element with id="numbers"
+           .value gets the text entered by the user
+        */
+        
+        const array = value.split(/,\s*/g);
+        /* ✂️ SPLIT THE STRING: split() cuts the string into an array */
+               
+        const numbers = array.map(el => Number(el)).filter(el => !isNaN(el));
+        /* 🔄 CONVERT AND FILTER:
+           
+           1. map(el => Number(el)) : Converts each string to a number
+              - "1" → 1, "abc" → NaN
+           
+           2. filter(el => !isNaN(el)) : Keeps only valid numbers
+              - isNaN() = is Not a Number (true for non-numbers)
+              - !isNaN() = NOT isNaN (true for real numbers)
+           
+           RESULT: Only valid numbers in the array!
+        */
+        
+        /* 🧮 CALCULATE ALL STATISTICS */
+        const mean = getMean(numbers);
+        const median = getMedian(numbers);
+        const mode = getMode(numbers);
+        const range = getRange(numbers);
+        const variance = getVariance(numbers);
+        const standardDeviation = getStandardDeviation(numbers);
+      
+        /* 📝 UPDATE THE DOM: Show results on the page */
+        document.querySelector("#mean").textContent = mean;
+        document.querySelector("#median").textContent = median;
+        document.querySelector("#mode").textContent = mode;
+        document.querySelector("#range").textContent = range;
+        document.querySelector("#variance").textContent = variance;
+        document.querySelector("#standardDeviation").textContent = standardDeviation;
+        /* 🎯 querySelector + textContent:
+           - querySelector("#id") : Finds the element with that ID
+           - textContent = value : Inserts the text into the element
+           
+           It's like filling empty fields with calculated results!
+        */
+      }
+    </script>
+  </body>
+</html>
+
+<!-- 🎯 ===== STATISTICS CALCULATOR SUMMARY ===== -->
+<!-- 
+📊 APP ARCHITECTURE:
+│
+├── 🧠 HEAD (setup)
+│   └── 🎨 Minimal but effective CSS
+│       ├── 🌃 Dark theme for the eyes
+│       ├── 🔲 Distinctive white borders
+│       └── 💪 .bold class for results
+│
+├── 📊 BODY (interface)
+│   ├── 📋 Interactive form
+│   └── 📊 Results section with definitions
+│
+└── 🧮 JAVASCRIPT (the brain)
+    ├── 📐 6 pure mathematical functions
+    ├── 🎮 1 controller function (calculate)
+    └── 🔧 Final DOM manipulation
+
+🔧 MODERN JAVASCRIPT TECHNIQUES:
+├── ➡️ Arrow functions everywhere
+├── 🔄 Array methods: reduce, map, filter, forEach
+├── 📦 Object manipulation for counts
+├── 🎯 Ternary operator for compact logic
+├── ... Spread operator for Math.max/min
+├── ** Exponential operator for squares
+└── 🆕 toSorted() for sorted copies
+
+📚 STATISTICAL CONCEPTS:
+├── Mean: Arithmetic average
+├── Median: Central value
+├── Mode: Most frequent value
+├── Range: Max - Min
+├── Variance: Mean of squared differences
+└── Std Dev: Square root of variance
+
+It's like having a statistics lab in the browser! 🧪📊✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Two-Phase Journey
+
+This was a project I experienced in two different ways.
+
+**Phase 1: Mathematical Understanding**
+Before tackling it, I went back to review each of the required mathematical concepts. I therefore expected to understand them more deeply thanks to this exercise, and that's exactly what happened. I spent the first half of the project with this awareness.
+
+**Phase 2: The Revelation of Usefulness**
+In the second half, around step 30, I realized how useful this knowledge could be. Having just done another usability study a few days ago for the project I'm working on in the Google UX course, I had the feeling that a similar program could help me a lot in condensing all the data resulting from the research.
+Here's a table that summarizes everything:
+
+| Statistical Concept | What It Measures in UX | Key Scenario (Revelation) |
+|---|---|---|
+| **Mean** | The "overall performance". | Provides a quick benchmark (e.g. average checkout time), but can be misleading when outliers (very slow users) skew the results. |
+| **Median** | The "typical experience" of the average user. | If the median is much lower than the mean, it means most users are fast and only a small group has problems. It reveals where to focus efforts. |
+| **Mode** | The "most common reaction" or most frequent feedback. | Perfect for ratings. If out of 100 votes, 80 are "5 stars", the mode tells you the feature is a success, even if a few low votes ruin the average. |
+| **Standard Deviation**| The consistency and predictability of the experience. | Our ultimate goal. Low = clear and reliable design. High = confusing and frustrating design. In an A/B test, with equal means, the design with lower standard deviation always wins. |
+
+I believe that thanks to these 4 concepts, you can move from "I conducted Usability Tests and the prototype works well for people" to "I conducted Usability Tests and the prototype works well for people and the data proves it".
+
+### What I Learned
+
+**Advanced Array Methods:**
+- `.reduce()` to calculate sums (mean, variance) in a compact and efficient way.
+- `.toSorted()` to create a sorted copy of the array without mutating the original, fundamental for calculating the median.
+- `.map()` to transform the array of strings into an array of numbers.
+- `.filter()` to clean the input from non-numeric values.
+- `.forEach()` to iterate and populate the UI.
+
+**Statistical Logic in JS:**
+- Implementation of **mean**, **median** (handling both even and odd array lengths), **mode** (with handling of multimodal cases or absence of mode), **range**, **variance** and **standard deviation**.
+
+**Object and String Manipulation:**
+- Creation and manipulation of objects to count occurrences in the `getMode` function.
+- Use of `Object.keys()` and `Object.values()` to analyze frequencies.
+- `new Set()` to verify if all elements appear with the same frequency.
+- `.split(/,\s*/g)` to parse user input robustly, handling variable spaces.
+
+**Functional Programming:**
+- Writing pure functions that take an array as input and return a calculated value.
+- Function composition (e.g. `getVariance` calling `getMean`).
+
+### Reflection
+
+The sprint I experienced in the second half came from the thought that everything I was learning could give life to a "UX calculator": a program that not only calculates numbers, but interprets them from a user experience perspective
+
+---
+
+**Next Project**: Learn Functional Programming by Building a Spreadsheet
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+## Versione Italiana
+
+<img width="1050" height="591" alt="Screenshot of the Statistics Calculator app, simulating the analysis of user satisfaction ratings." src="https://github.com/user-attachments/assets/e11f5daf-aa96-4abc-a847-c559f9b38ef4" />
+
+<p align="center"><i>Esempio pratico della calcolatrice statistica mentre analizza i dati di un sondaggio di soddisfazione utente (UX).</i></p>
+I numeri inseriti (4, 5, 3,...) simulano le valutazioni date da un gruppo di utenti a una nuova funzionalità, su una scala da 1 a 5 stelle.<br />
+La Moda e la Mediana di 4 rivelano che la reazione più comune e l'esperienza dell'utente "tipico" sono state molto positive.<br />
+La Media (3.89), pur essendo leggermente inferiore a causa di un singolo voto negativo, conferma un'accoglienza generale più che favorevole.<br />
+Infine, la bassa Deviazione Standard è un ottimo segnale, perché indica che l'esperienza è stata consistente e prevedibile per la maggior parte degli utenti. In un contesto reale, questi risultati suggerirebbero di validare il successo del design e, come passo successivo, indagare le ragioni di quel singolo feedback negativo per un'ulteriore ottimizzazione.
+
+### Il Progetto
+Calcolatrice statistica sviluppata con JavaScript e metodi array avanzati, capace di calcolare media, mediana, moda, range, varianza e deviazione standard da una serie di numeri inseriti dall'utente.
+
+### Il Percorso in Due Fasi
+
+È stato un progetto che ho percepito in due modi diversi.
+
+**Fase 1: La Comprensione Matematica**
+Prima di affrontarlo, sono andato a ripassare ognuno dei concetti matematici richiesti. Mi aspettavo quindi di capirli in modo più profondo grazie a questo esercizio, e così è stato. Ho passato la prima metà del progetto con questa cognizione.
+
+**Fase 2: La Rivelazione dell'Utilità**
+Nella metà successiva, verso lo step 30, mi sono reso conto di quanto fosse utile ciò che stavo imparando. Avendo fatto proprio qualche giorno fa un altro usability study per il progetto che sto facendo nel corso Google UX, ho avuto la sensazione che un programma simile potesse aiutarmi parecchio nel condensare tutti i dati scaturiti dalla ricerca.
+Ecco una tabella che riassume il tutto:
+
+| Concetto Statistico | Cosa Misura nell'UX | Scenario Chiave (Rivelazione) |
+|---|---|---|
+| **Media (Mean)** | La performance generale. | Fornisce un benchmark rapido (es. tempo medio di checkout), ma è ingannevole se ci sono molti outlier (utenti molto lenti) che alzano il valore. |
+| **Mediana (Median)** | L'esperienza tipica dell'utente medio. | Se la mediana è molto più bassa della media, significa che la maggior parte degli utenti è veloce e solo un piccolo gruppo ha problemi. Rivela dove concentrare gli sforzi. |
+| **Moda (Mode)** | La reazione più comune o il feedback più frequente. | Perfetta per i rating. Se su 100 voti, 80 sono "5 stelle", la moda ti dice che la feature è un successo, anche se pochi voti bassi rovinano la media. |
+| **Deviazione Standard**| La consistenza e prevedibilità dell'esperienza. | Il nostro obiettivo finale. Bassa = design chiaro e affidabile. Alta = design confusionario e frustrante. In un A/B test, a parità di media, vince sempre il design con deviazione standard più bassa. |
+
+Credo che grazie a questi 4 concetti si possa passare da "Ho effettuato gli Usability Test ed il prototipo funziona bene per le persone" a "Ho effettuato gli Usability Test ed il prototipo funziona bene per le persone e i dati lo dimostrano".
+
+### Cosa Ho Imparato
+
+**Metodi Array Avanzati:**
+- `.reduce()` per calcolare somme (media, varianza) in modo compatto ed efficiente.
+- `.toSorted()` per creare una copia ordinata dell'array senza mutare l'originale, fondamentale per calcolare la mediana.
+- `.map()` per trasformare l'array di stringhe in un array di numeri.
+- `.filter()` per pulire l'input da valori non numerici.
+- `.forEach()` per iterare e popolare la UI.
+
+**Logica Statistica in JS:**
+- Implementazione della **media**, **mediana** (gestendo sia array di lunghezza pari che dispari), **moda** (con gestione di casi multimodali o assenza di moda), **range**, **varianza** e **deviazione standard**.
+
+**Manipolazione di Oggetti e Stringhe:**
+- Creazione e manipolazione di oggetti per contare le occorrenze nella funzione `getMode`.
+- Utilizzo di `Object.keys()` e `Object.values()` per analizzare le frequenze.
+- `new Set()` per verificare se tutti gli elementi appaiono con la stessa frequenza.
+- `.split(/,\s*/g)` per parsare l'input dell'utente in modo robusto, gestendo spazi variabili.
+
+**Programmazione Funzionale:**
+- Scrittura di funzioni pure che prendono un array come input e restituiscono un valore calcolato.
+- Composizione di funzioni (es. `getVariance` che chiama `getMean`).
+
+### Riflessione
+
+Lo sprint che ho avuto nella seconda metà è stato dovuto al pensiero che tutto ciò che stavo imparando potesse dar vita a una **"calcolatrice UX"**: un programma che non solo calcola numeri, ma li interpreta in un'ottica di esperienza utente.
+
+***
+
+**Next Project**: Learn Functional Programming by Building a Spreadsheet

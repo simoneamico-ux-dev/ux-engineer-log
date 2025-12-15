@@ -1,0 +1,419 @@
+---
+sidebar_position: 7
+sidebar_label: 'Nutrition Label'
+title: 'Nutrition Label'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**Learn Typography Project**
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Nutrition Label</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <div class="label">
+      <header>
+        <h1 class="bold">Nutrition Facts</h1>
+        <div class="divider"></div>
+        <p>8 servings per container</p>
+        <p class="bold">Serving size <span>2/3 cup (55g)</span></p>
+      </header>
+      <div class="divider large"></div>
+      <div class="calories-info">
+        <div class="left-container">
+          <h2 class="bold small-text">Amount per serving</h2>
+          <p>Calories</p>
+        </div>
+        <span>230</span>
+      </div>
+      <div class="divider medium"></div>
+      <div class="daily-value small-text">
+        <p class="bold right no-divider">% Daily Value *</p>
+        <div class="divider"></div>
+        <p><span><span class="bold">Total Fat</span> 8g</span> <span class="bold">10%</span></p>
+        <p class="indent no-divider">Saturated Fat 1g <span class="bold">5%</span></p>
+        <div class="divider"></div>
+        <p class="indent no-divider"><span><i>Trans</i> Fat 0g</span></p>
+        <div class="divider"></div>
+        <p><span><span class="bold">Cholesterol</span> 0mg</span> <span class="bold">0%</span></p>
+        <p><span><span class="bold">Sodium</span> 160mg</span> <span class="bold">7%</span></p>
+        <p><span><span class="bold">Total Carbohydrate</span> 37g</span> <span class="bold">13%</span></p>
+        <p class="indent no-divider">Dietary Fiber 4g</p>
+        <div class="divider"></div>
+        <p class="indent no-divider">Total Sugars 12g</p>
+        <div class="divider double-indent"></div>
+        <p class="double-indent no-divider">Includes 10g Added Sugars <span class="bold">20%</span></p>
+        <div class="divider"></div>
+        <p class="no-divider"><span><span class="bold">Protein</span> 3g</span></p>
+        <div class="divider large"></div>
+        <p>Vitamin D 2mcg <span>10%</span></p>
+        <p>Calcium 260mg <span>20%</span></p>
+        <p>Iron 8mg <span>45%</span></p>
+        <p class="no-divider">Potassium 235mg <span>6%</span></p>
+      </div>
+      <div class="divider medium"></div>
+      <p class="note">* The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily
+        diet. 2,000 calories a day is used for general nutrition advice.</p>
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+.label {
+  border: 2px solid black;
+  width: 270px;
+  margin: 20px auto;
+  padding: 0 7px;
+}
+
+header h1 {
+  text-align: center;
+  margin: -4px 0;
+  letter-spacing: 0.15px
+}
+
+p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.divider {
+  border-bottom: 1px solid #888989;
+  margin: 2px 0;
+}
+
+.bold {
+  font-weight: 800;
+}
+
+.large {
+  height: 10px;
+}
+
+.large, .medium {
+  background-color: black;
+  border: 0;
+}
+
+.medium {
+  height: 5px;
+}
+
+.small-text {
+  font-size: 0.85rem;
+}
+
+.calories-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.calories-info h2 {
+  margin: 0;
+}
+
+.left-container p {
+  margin: -5px -2px;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.calories-info span {
+  margin: -7px -2px;
+  font-size: 2.4em;
+  font-weight: 700;
+}
+
+.right {
+  justify-content: flex-end;
+}
+
+.indent {
+  margin-left: 1em;
+}
+
+.double-indent {
+  margin-left: 2em;
+}
+
+.daily-value p:not(.no-divider) {
+  border-bottom: 1px solid #888989;
+}
+
+.note {
+  font-size: 0.6rem;
+  margin: 5px 0;
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- Declares HTML5: must always be the first line -->
+
+<html lang="en">
+<!-- Root tag; lang="en" indicates the language (SEO, accessibility) -->
+
+<head>
+  <meta charset="UTF-8">
+  <!-- UTF-8 encoding: universal support for letters and symbols -->
+
+  <title>Nutrition Label</title>
+  <!-- Title that appears in the browser tab -->
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+  <!-- Imports the 'Open Sans' font in various weights from Google Fonts -->
+
+  <style>
+    /* ===== BASE RESET ===== */
+    * {
+      box-sizing: border-box;
+      /* Padding and border included in width/height calculation */
+    }
+
+    html {
+      font-size: 16px;
+      /* 1rem = 16px, base for all typography */
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      /* Modern, readable, sans-serif font */
+    }
+
+    /* ===== LABEL CONTAINER ===== */
+    .label {
+      border: 2px solid black;
+      /* Black border like on real labels */
+      width: 270px;
+      /* Fixed width similar to real labels */
+      margin: 20px auto;
+      /* Centers the label horizontally and gives space above/below */
+      padding: 0 7px;
+      /* Horizontal padding to prevent text from touching borders */
+    }
+
+    /* ===== HEADER ===== */
+    header h1 {
+      text-align: center;
+      /* Centered title */
+      margin: -4px 0;
+      /* Remove space above/below, "squeezes" the title upward */
+      letter-spacing: 0.15px;
+      /* Very slight letter spacing */
+    }
+
+    /* ===== PARAGRAPHS AND ROW STRUCTURE ===== */
+    p {
+      margin: 0;
+      /* No space above/below */
+      display: flex;
+      justify-content: space-between;
+      /* Distributes text on the left and values on the right on a row */
+    }
+
+    /* ===== SEPARATOR LINES ===== */
+    .divider {
+      border-bottom: 1px solid #888989;
+      /* Thin gray line */
+      margin: 2px 0;
+      /* Space above and below the line */
+    }
+
+    .bold {
+      font-weight: 800;
+      /* Very thick text (simulates titles/main nutrients) */
+    }
+
+    .large {
+      height: 10px;
+    }
+
+    .large, .medium {
+      background-color: black;
+      border: 0;
+      /* Thicker separator line, black, without external border */
+    }
+
+    .medium {
+      height: 5px;
+    }
+
+    .small-text {
+      font-size: 0.85rem;
+      /* Reduces text size for notes */
+    }
+
+    /* ===== CALORIES SECTION ===== */
+    .calories-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      /* Aligns calorie amount at the bottom relative to the text */
+    }
+
+    .calories-info h2 {
+      margin: 0;
+    }
+
+    .left-container p {
+      margin: -5px -2px;
+      /* Reduces space above/below to bring "Calories" closer to the number */
+      font-size: 2em;
+      font-weight: 700;
+    }
+
+    .calories-info span {
+      margin: -7px -2px;
+      font-size: 2.4em;
+      font-weight: 700;
+    }
+
+    /* ===== VALUES ALIGNMENT ===== */
+    .right {
+      justify-content: flex-end;
+      /* Aligns content all the way to the right */
+    }
+
+    .indent {
+      margin-left: 1em;
+      /* Left indentation for sub-categories (e.g., Saturated Fat) */
+    }
+
+    .double-indent {
+      margin-left: 2em;
+      /* Double indentation (e.g., Includes Added Sugars) */
+    }
+
+    /* ===== DAILY VALUES ROWS ===== */
+    .daily-value p:not(.no-divider) {
+      border-bottom: 1px solid #888989;
+      /* Separator line only for rows that do NOT have the .no-divider class */
+    }
+
+    .note {
+      font-size: 0.6rem;
+      margin: 5px 0;
+      /* Smaller and spaced-out final note */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===== LABEL CONTAINER ===== -->
+  <div class="label">
+    <header>
+      <h1 class="bold">Nutrition Facts</h1>
+      <!-- Main title large, bold, centered -->
+      <div class="divider"></div>
+      <!-- Gray separator line -->
+      <p>8 servings per container</p>
+      <!-- Number of servings per container -->
+      <p class="bold">Serving size <span>2/3 cup (55g)</span></p>
+      <!-- Recommended serving size (bold), value on the right -->
+    </header>
+    <div class="divider large"></div>
+    <!-- Thick black line, major visual separation -->
+
+    <div class="calories-info">
+      <!-- "Amount per serving / Calories" section -->
+      <div class="left-container">
+        <h2 class="bold small-text">Amount per serving</h2>
+        <!-- Small and bold subtitle -->
+        <p>Calories</p>
+      </div>
+      <span>230</span>
+      <!-- Large and prominent calorie number -->
+    </div>
+    <div class="divider medium"></div>
+    <!-- Less thick black line -->
+
+    <div class="daily-value small-text">
+      <!-- Beginning of % daily values list -->
+      <p class="bold right no-divider">% Daily Value *</p>
+      <div class="divider"></div>
+      <p><span><span class="bold">Total Fat</span> 8g</span> <span class="bold">10%</span></p>
+      <p class="indent no-divider">Saturated Fat 1g <span class="bold">5%</span></p>
+      <div class="divider"></div>
+      <p class="indent no-divider"><span><i>Trans</i> Fat 0g</span></p>
+      <div class="divider"></div>
+      <p><span><span class="bold">Cholesterol</span> 0mg</span> <span class="bold">0%</span></p>
+      <p><span><span class="bold">Sodium</span> 160mg</span> <span class="bold">7%</span></p>
+      <p><span><span class="bold">Total Carbohydrate</span> 37g</span> <span class="bold">13%</span></p>
+      <p class="indent no-divider">Dietary Fiber 4g</p>
+      <div class="divider"></div>
+      <p class="indent no-divider">Total Sugars 12g</p>
+      <div class="divider double-indent"></div>
+      <p class="double-indent no-divider">Includes 10g Added Sugars <span class="bold">20%</span></p>
+      <div class="divider"></div>
+      <p class="no-divider"><span><span class="bold">Protein</span> 3g</span></p>
+      <div class="divider large"></div>
+      <!-- Micronutrients section -->
+      <p>Vitamin D 2mcg <span>10%</span></p>
+      <p>Calcium 260mg <span>20%</span></p>
+      <p>Iron 8mg <span>45%</span></p>
+      <p class="no-divider">Potassium 235mg <span>6%</span></p>
+    </div>
+    <div class="divider medium"></div>
+    <!-- Medium black final line -->
+    <p class="note">
+      * The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily
+      diet. 2,000 calories a day is used for general nutrition advice.
+      <!-- Small informative note at the bottom of the label -->
+    </p>
+  </div>
+</body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+What I Learned:
+- Structuring a real-world nutrition label with semantic HTML and CSS
+- Typography: font weights, sizes, alignment, and spacing
+- Customizing lines, borders, and layout for a real-life look
+- CSS tricks for indentation, divider styles, and aligning numbers
+- How to analyze real nutrition labels and recreate them from scratch
+
+Time: 2 hour 35 minutes  
+(Most of it built in the airport before my flight back to Torino, finished right after getting home because I couldn't wait!)
+
+Personal Note:  
+This project was seriously enjoyable, probably because nutrition labels are part of my everyday life with bodybuilding. I went beyond the freeCodeCamp steps, I checked real labels on Google and tried to replicate their layout and style using only what I’ve learned so far. Not every experiment worked, but every mistake taught me something new. The more I code, the more confident I get—and the more I realize how much more there is to explore. It's like a matryoshka doll, every time you open a layer, there’s another inside, even more detailed and interesting.
+
+Next: Continue expanding my HTML/CSS handbook into the real world and move on to the chapter: Learn accessibility by building a quiz

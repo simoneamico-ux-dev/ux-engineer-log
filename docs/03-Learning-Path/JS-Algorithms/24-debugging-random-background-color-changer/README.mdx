@@ -1,0 +1,481 @@
+---
+sidebar_position: 4
+sidebar_label: 'Random Background Color Changer'
+title: 'Random Background Color Changer'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Random Background Color Changer
+
+<img width="100%" alt="Screenshot 2025-09-03 alle 13 20 26" src="https://github.com/user-attachments/assets/2359f1a9-e56d-4437-af92-ff0067156cc6" />
+
+<img width="100%" alt="Screenshot 2025-09-03 alle 13 19 40" src="https://github.com/user-attachments/assets/c38cfb5e-8d6f-4c2e-b93e-395e8bb3c6a4" />
+
+### The Project
+Web application to randomly change background color, developed as a debugging exercise. A project that made me feel more confident in my acquired JavaScript skills.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build a random background color changer</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1>Random Background Color changer</h1>
+
+    <main>
+      <section class="bg-information-container">
+        <p>Hex Code: <span id="bg-hex-code">#110815</span></p>
+      </section>
+
+      <button class="btn" id="btn">Change Background Color</button>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --yellow: #f1be32;
+  --golden-yellow: #feac32;
+  --dark-purple: #110815;
+  --light-grey: #efefef;
+}
+
+body {
+  background-color: var(--dark-purple);
+  color: var(--light-grey);
+  text-align: center;
+}
+
+.bg-information-container {
+  margin: 15px 0 25px;
+  font-size: 1.2rem;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+  color: var(--dark-purple);
+  background-color: var(--golden-yellow);
+  background-image: linear-gradient(#fecc4c, #ffac33);
+  border-color: var(--golden-yellow);
+  border-width: 3px;
+}
+
+.btn:hover {
+  background-image: linear-gradient(#ffcc4c, #f89808);
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const darkColorsArr = [
+  "#2C3E50",
+  "#34495E",
+  "#2C2C2C",
+  "#616A6B",
+  "#4A235A",
+  "#2F4F4F",
+  "#0E4B5A",
+  "#36454F",
+  "#2C3E50",
+  "#800020",
+];
+
+function getRandomIndex() {
+  const randomIndex = Math.floor(darkColorsArr.length * Math.random());
+  return randomIndex;
+}
+
+const body = document.querySelector("body");
+const bgHexCodeSpanElement = document.querySelector("#bg-hex-code");
+
+function changeBackgroundColor() {
+  const color = darkColorsArr[getRandomIndex()];
+
+  bgHexCodeSpanElement.innerText = color;
+  body.style.backgroundColor = color;
+}
+const btn = document.querySelector("#btn");
+
+btn.onclick = changeBackgroundColor;
+</script>
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 DEBUG EXERCISE: "Fix CamperBot's Color Generator!" -->
+<!-- CamperBot wrote this code but it's full of bugs... let's help him! 🐛🔧 -->
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build a random background color changer</title>
+    <style>
+      /* 🎨 THE CSS IS PERFECT! CamperBot at least didn't make errors here 😅 */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      :root {
+        --yellow: #f1be32;
+        --golden-yellow: #feac32;
+        --dark-purple: #110815;
+        --light-grey: #efefef;
+      }
+      
+      body {
+        background-color: var(--dark-purple);
+        color: var(--light-grey);
+        text-align: center;
+      }
+      
+      .bg-information-container {
+        margin: 15px 0 25px;
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        cursor: pointer;
+        padding: 10px;
+        margin: 10px;
+        color: var(--dark-purple);
+        background-color: var(--golden-yellow);
+        background-image: linear-gradient(#fecc4c, #ffac33);
+        border-color: var(--golden-yellow);
+        border-width: 3px;
+      }
+      
+      .btn:hover {
+        background-image: linear-gradient(#ffcc4c, #f89808);
+      }
+    </style>
+  </head>
+  
+  <body>
+    <h1>Random Background Color changer</h1>
+
+    <main>
+      <section class="bg-information-container">
+        <p>Hex Code: <span id="bg-hex-code">#110815</span></p>
+      </section>
+
+      <button class="btn" id="btn">Change Background Color</button>
+    </main>
+    
+    <script>
+      // 🐛 ===== BUG #1: SYNTAX ERROR IN THE ARRAY =====
+      
+      // ❌ CAMPERBOT'S BUGGY VERSION:
+      /*
+      const darkColorsArr = [
+        "#2C3E50"
+        "#34495E"  // 🚫 ERROR! Missing comma after the first element!
+        "#2C2C2C"  // SyntaxError: Unexpected token, expected ","
+        "#616A6B"
+        "#4A235A"
+        "#2F4F4F"
+        "#0E4B5A"
+        "#36454F"
+        "#2C3E50"
+        "#800020"
+      ];
+      */
+      
+      // ✅ CORRECT VERSION:
+      const darkColorsArr = [
+        "#2C3E50",  // ✓ Comma after each element
+        "#34495E",  // ✓ JavaScript arrays require commas
+        "#2C2C2C",  // ✓ It's like a shopping list: "apples, pears, bananas"
+        "#616A6B",  // ✓ Not "apples pears bananas" all together!
+        "#4A235A",
+        "#2F4F4F",
+        "#0E4B5A",
+        "#36454F",
+        "#2C3E50",
+        "#800020",  // ✓ Even the last comma is ok (trailing comma)
+      ];
+      // 📝 LESSON: In JavaScript, each array element must be separated by a comma
+      // Without commas, the parser doesn't know where one element ends and the next begins
+      
+      
+      // 🐛 ===== BUG #2 & #3: ERRORS IN THE RANDOM FUNCTION =====
+      
+      // ❌ CAMPERBOT'S BUGGY VERSION:
+      /*
+      function getRandomIndex() {
+        // BUG #2: math instead of Math
+        // 🚫 ReferenceError: math is not defined
+        // JavaScript is CASE-SENSITIVE! math ≠ Math
+        
+        // BUG #3: Mathematical formula completely wrong
+        const randomIndex = Math.floor(darkColorsArr.length * math.random());
+        // Even correcting math → Math, the formula is inverted!
+        // darkColorsArr.length * Math.random() = wrong number
+        // If length = 10 and random = 0.5, you get 5 (ok)
+        // But if random = 0.9, you get 9 * 10 = 90! 😱
+        
+        return randomIndex;
+      }
+      */
+      
+      // ✅ CORRECT VERSION:
+      function getRandomIndex() {
+        // First Math.random() generates 0.0 - 0.999...
+        // Then we multiply by the array length
+        // Finally Math.floor() rounds down
+        const randomIndex = Math.floor(Math.random() * darkColorsArr.length);
+        // Example: Math.random() = 0.7, length = 10
+        // 0.7 * 10 = 7
+        // Math.floor(7) = 7 (valid index!)
+        
+        return randomIndex;
+      }
+      // 📝 LESSON 1: JavaScript is case-sensitive! Math not math
+      // 📝 LESSON 2: The correct formula is Math.floor(Math.random() * max)
+      
+      
+      // 🐛 ===== BUG #4: QUERY SELECTOR CASE SENSITIVITY =====
+      
+      // ❌ BUGGY VERSION:
+      /*
+      const body = document.queryselector("body");
+      // 🚫 TypeError: document.queryselector is not a function
+      // Case sensitivity again! querySelector not queryselector
+      */
+      
+      // ✅ CORRECT VERSION (option 1):
+      const body = document.querySelector("body");
+      
+      // ✅ EVEN BETTER (option 2):
+      // const body = document.body; // More direct for the body!
+      
+      // 📝 LESSON: DOM methods follow camelCase: querySelector, getElementById, addEventListener
+      
+      
+      // 🐛 ===== BUG #5: SELECTOR WITHOUT # FOR ID =====
+      
+      // ❌ BUGGY VERSION:
+      /*
+      const bgHexCodeSpanElement = document.querySelector("bg-hex-code");
+      // 🚫 Returns null! It's looking for a TAG <bg-hex-code>, not the ID!
+      */
+      
+      // ✅ CORRECT VERSION (option 1):
+      const bgHexCodeSpanElement = document.querySelector("#bg-hex-code");
+      // The # is ESSENTIAL for IDs in querySelector!
+      
+      // ✅ ALTERNATIVE (option 2):
+      // const bgHexCodeSpanElement = document.getElementById("bg-hex-code");
+      // With getElementById you DON'T need the #
+      
+      // 📝 LESSON: querySelector uses CSS selectors:
+      // #id for IDs, .class for classes, tag for elements
+      
+      
+      // 🐛 ===== BUG #6: FUNCTION NOT CALLED =====
+      
+      function changeBackgroundColor() {
+        // ❌ BUGGY VERSION:
+        /*
+        const color = darkColorsArr[getRandomIndex];
+        // 🚫 color becomes undefined!
+        // getRandomIndex without () is the REFERENCE to the function
+        // not the RESULT of the function!
+        */
+        
+        // ✅ CORRECT VERSION:
+        const color = darkColorsArr[getRandomIndex()];
+        // The parentheses () EXECUTE the function!
+        // getRandomIndex → [Function: getRandomIndex] (the function object)
+        // getRandomIndex() → 3 (the numeric result)
+        
+        // 📝 DEBUGGING TIP: When you see undefined, check:
+        // 1. Did you call the function with ()?
+        // 2. Does the index exist in the array?
+        console.log("Random index:", getRandomIndex()); // Debug
+        console.log("Selected color:", color);       // Debug
+        
+        // Applica il colore allo sfondo
+        bgHexCodeSpanElement.innerText = color;
+        body.style.backgroundColor = color;
+      }
+      
+      // 📝 LESSON: In JavaScript:
+      // funcName = reference to the function (like an address)
+      // funcName() = execution of the function (go to that address and do something)
+      
+      
+      // CLICK EVENT - This was already correct! 👍
+      const btn = document.querySelector("#btn");
+      btn.onclick = changeBackgroundColor;
+      // Here we WANT the reference without (), because onclick
+      // will call the function when the user clicks
+      
+      
+      // 🎯 ===== SUMMARY OF CAMPERBOT'S ERRORS =====
+      /*
+      1. ARRAY SYNTAX: Forgot commas between elements
+         → Solution: Add commas after each element
+      
+      2. CASE SENSITIVITY #1: Wrote "math" instead of "Math"
+         → Solution: Math with capital M
+      
+      3. WRONG FORMULA: Inverted the order of random operations
+         → Solution: Math.floor(Math.random() * length)
+      
+      4. CASE SENSITIVITY #2: "queryselector" instead of "querySelector"
+         → Solution: querySelector with capital S
+      
+      5. WRONG SELECTOR: Forgot # for the ID
+         → Solution: "#bg-hex-code" not "bg-hex-code"
+      
+      6. FUNCTION CALL: Forgot the parentheses ()
+         → Solution: getRandomIndex() not getRandomIndex
+      */
+      
+      // 🏆 MORAL OF THE STORY:
+      // - JavaScript is CASE-SENSITIVE (Math ≠ math)
+      // - Arrays want commas
+      // - querySelector wants CSS selectors (#, ., etc)
+      // - Functions are called with parentheses ()
+      // - Use console.log() to debug step by step!
+    </script>
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+### The Debugging Experience
+
+**There isn't much to say, it was a very short project that I absolutely loved doing.**
+
+I don't know if it was designed to be so simple on purpose or if I found it simple myself, because **most of the time I read the instructions after I had already solved the bugs**.
+
+That aside, it reinforced once again the concepts I've learned so far in JavaScript and that's what matters! 💪
+
+### The Bugs Resolved
+
+I identified and corrected **6 main errors** in CamperBot's code:
+
+**1. Array Syntax Error:**
+```javascript
+// ❌ Bug: missing commas
+const darkColorsArr = [
+  "#2C3E50"
+  "#34495E"  // SyntaxError
+];
+
+// ✅ Fixed: commas added
+const darkColorsArr = [
+  "#2C3E50",
+  "#34495E",
+];
+```
+
+**2. Case Sensitivity - Math Object:**
+```javascript
+// ❌ Bug: math instead of Math
+const randomIndex = math.random();  // ReferenceError
+
+// ✅ Fixed: Math capitalized
+const randomIndex = Math.random();
+```
+
+**3. Inverted Random Formula:**
+```javascript
+// ❌ Bug: wrong operation order
+Math.floor(darkColorsArr.length * math.random());
+
+// ✅ Fixed: correct order
+Math.floor(Math.random() * darkColorsArr.length);
+```
+
+**4. Case Sensitivity - querySelector:**
+```javascript
+// ❌ Bug: queryselector lowercase
+document.queryselector("body");  // TypeError
+
+// ✅ Fixed: querySelector correct
+document.querySelector("body");
+```
+
+**5. ID Selector Without #:**
+```javascript
+// ❌ Bug: missing # for ID
+document.querySelector("bg-hex-code");  // null
+
+// ✅ Fixed: # added
+document.querySelector("#bg-hex-code");
+```
+
+**6. Function Not Called:**
+```javascript
+// ❌ Bug: missing parentheses
+const color = darkColorsArr[getRandomIndex];  // undefined
+
+// ✅ Fixed: parentheses added
+const color = darkColorsArr[getRandomIndex()];
+```
+
+### What I Learned
+
+**Debugging Skills:**
+- **Case sensitivity** - JavaScript distinguishes upper/lowercase
+- **Precise syntax** - commas in arrays, parentheses in calls
+- **CSS selectors** - # for IDs, . for classes
+- **Console.log debugging** to verify values step by step
+
+**JavaScript Concepts Reinforcement:**
+- **Array manipulation** and index access
+- **Math object** and random/floor methods
+- **DOM manipulation** with querySelector
+- **Event handling** with onclick
+- **Function calls** vs function references
+
+### Reflection
+
+This project confirmed that I'm assimilating JavaScript fundamentals well. The fact that I solved many bugs intuitively before reading the instructions gives me confidence in my progress.
+
+The most common bugs (case sensitivity, missing syntax, wrong selectors) are exactly the type of errors every developer learns to recognize quickly with experience.
+
+---
+
+**Next Project**: Learn Form Validation by Building a Calorie Counter

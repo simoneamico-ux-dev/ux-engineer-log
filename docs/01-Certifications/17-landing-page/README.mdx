@@ -1,0 +1,1594 @@
+---
+sidebar_position: 4
+sidebar_label: 'Product Landing Page'
+title: 'Product Landing Page'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Product Landing Page
+
+<img width="100%" alt="Figma Version - Desktop" src="https://github.com/user-attachments/assets/367f3b19-feff-4de3-8952-f7df75dd7e61" />
+<img width="100%" alt="VS Code Version - Desktop" src="https://github.com/user-attachments/assets/44a68dfe-f6dc-4a24-8e65-ed073e612bd0" />
+<img width="50.203%" alt="Figma Version - Mobile" src="https://github.com/user-attachments/assets/23970a7d-87ee-4d48-86c4-c77b26052d6f" />
+<img width="49%" alt="VS Code Version - Mobile" src="https://github.com/user-attachments/assets/b21400f1-e07d-4eff-9e9d-bd778d4d43a2" />
+
+### The Project
+Landing page for an intelligent maintenance platform, developed as a freeCodeCamp certification project. "A Ferrari with some scratches" - as defined by Claude for the massive use of advanced techniques with some errors intentionally left.
+
+**Strategic choice:** I decided on this specific website subject precisely because it's exactly what I'm working on in the Google UX course - to unite the two different learning paths synergistically.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title> My First Landing Page</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <main>
+            <header id="header">
+                <img src="" alt="" id="header-img">
+                <nav id="nav-bar">
+                    <img src="logo.png" class="logo-image">
+                    <div class="central-link">
+                    <a href="#Solution" class="nav-link">Solution</a>
+                    <a href="#How-It-Works" class="nav-link">How It Works</a>
+                    <a href="#Contact" class="nav-link">Contact</a>
+                    </div>
+                    <button id="nav-start-demo" type="submit" class="start-demo">START DEMO</button>
+                </nav>
+
+                <section class="title-subtitle-button">
+                <h2 class="subtitle subtitle-top">Keep running, no maintenance worries.</h2>
+                <h1 class="title">Smart maintenance,<br>Zero downtime</h1>
+                <h2 class="subtitle subtitle-bottom">Stay on top of maintenance. Log issues, track fixes, keep production <br class="desktop-only">running— no interruptions.</span></h2>
+                <button id="hero-start-demo" type="submit" class="start-demo first-start-demo">START DEMO</button>
+                </section>
+
+                <section id="Solution" class="solution">
+                    <h3>Real‑time Tracking</h3>
+                    <p>Follow each maintenance request as it<br>happens, with nothing slipping through.</p>
+                    <h3>Automatic Shift Handover</h3>
+                    <p>Smooth handover between teams, with no<br>details lost.</p>
+                    <h3>Live Priority Dashboard</h3>
+                    <p class="end-solution">See urgent interventions at a glance, all in<br>one view.</p>
+                </section>
+            
+                <section id="How-It-Works" class="how-it-works">
+                    <ol>
+                        <li>Report an issue in just a few taps, attach photos for clarity</li>
+                        <li>Maintenance team receives and manages requests instantly</li>
+                        <li>Get automatic notifications when the problem is resolved</li>
+                    </ol>
+                </section>
+
+                <section id="youtube-video" class="youtube-video">
+                    <div class="iframe">
+                        <iframe src="https://www.youtube.com/watch?v=pCtkD5AMbDo" id="video" width="650" height="400"></iframe>
+                    </div>
+                </section>
+                
+                <section id="Contact">
+                    <form action="https://www.freecodecamp.com/email-submit" id="form">
+                        <h4 class="form-start">Enter your email to start demo</h4>
+                        <div class="email-address">
+                            <input name="email" type="email" id="email" placeholder="Enter your email address" required>
+                        </div>
+                        <button id="form-start-demo" type="submit" class="start-demo">START DEMO</button>
+                    </form>
+                </section>
+
+            </header>
+        </main>
+        <footer>
+            <address>
+                <img src="logo.png" alt="logo azienda 'SA'" class="logo-footer">
+                <div class="social-link">
+                    <img src="youtube.svg" alt="link a YouTube Channel di SA" class="social-youtube">
+                    <img src="instagram.svg" alt="link ad Instagram di SA" class="social-instagram">
+                    <img src="linkedin.svg" alt="link a Linkedin di SA" class="social-linkedin">
+                </div>
+            </address>
+        </footer>
+    </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+    --wallpaper: #F1F4F8;
+    --color-1: #377A84;
+    --color-2: #7F94D6;
+    --color-3: #4C63B6;
+    --color-4: #35469C;
+    --color-5: #19216C;
+    --color-black: black;
+    --color-hover: #0A6C74;
+    --color-input-bg: rgba(0, 0, 0, 10%);
+    
+    --spacing-title-top: 32px;
+    --spacing-title-bottom: 32px;
+    --spacing-first-buttom-top: 48px;
+    --spacing-first-buttom-bottom: 700px;
+    --spacing-p-bottom: 16px;
+    --spacing-h3-top: 48px;
+    --navbar-height: 60px;
+    --spacing-nav-padding: 16px 32px;
+    --spacing-nav-link: 16px;
+    --spacing-gap: 80px;
+    --spacing-hero-padding: 60px 40px 100px 40px;
+    --spacing-hero-padding-clean: 60px 0 100px 0;
+    --spacing-button-padding: 16px 32px;
+    --spacing-form-top: 192px;
+    --spacing-how-it-works: 128px;
+    --spacing-email-margin: 48px 0 32px;
+    --spacing-footer-bottom: 25px;
+    --spacing-footer-side: 100px;
+    --spacing-social-right: 24px;
+    --spacing-li-bottom: 16px;
+    --spacing-button-input: 16px 24px;
+    --spacing-transform: -1px;
+    
+    --font-size-title: 65px;
+    --font-size-subtitle: 24px;
+    --font-size-nav: 16px;
+    --font-size-p: 16px;
+    --font-size-h4: 32px;
+    --font-size-nav-button: 10px;
+    
+    --font-weight-bold: 700;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    
+    --radius-button: 33px;
+    --radius-input: 32px;
+    --radius-hero: 0 0 20px 20px;
+    
+    --logo-width: 66px;
+    --logo-height: 39px;
+    --button-width-nav: 110px;
+    --button-height-nav: 40px;
+    --button-width: 180px;
+    --button-height: 65px;
+    --input-width: 230px;
+    --input-height: 63px;
+    --youtube-width: 44px;
+    --youtube-height: 33px;
+    --instagram-width: 37px;
+    --instagram-height: 36px;
+    --linkedin-width: 37px;
+    --linkedin-height: 36px;
+    
+    --transition-normal: all 0.2s ease;
+    --line-height-title: 1;
+    --background-size: 100%;
+    --background-position: center 30px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: var(--wallpaper);
+    scroll-behavior: smooth;
+}
+
+nav {
+    width: 100%;
+    font-size: var(--font-size-nav);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-nav-padding);
+    background: var(--wallpaper);
+    position: fixed;
+    top: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-black);
+}
+
+.central-link {
+    display: flex;
+    gap: var(--spacing-gap);
+}
+
+.logo-image {
+    width: var(--logo-width);
+    height: var(--logo-height);
+}
+
+.nav-link:first-child {
+    margin-left: var(--spacing-nav-link);
+}
+
+#nav-start-demo {
+    margin-right: var(--spacing-nav-link);
+}
+
+.title-subtitle-button {
+    text-align: center;
+    margin-top: var(--navbar-height);
+    background: url('sfondo-hero.png');
+    background-size: var(--background-size);
+    background-position: var(--background-position);
+    background-repeat: no-repeat;
+    padding: var(--spacing-hero-padding);
+    border-radius: var(--radius-hero);
+    padding: var(--spacing-hero-padding-clean);
+}
+
+.title {
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-bold);
+    margin-top: var(--spacing-title-top);
+    margin-bottom: var(--spacing-title-bottom);
+    line-height: var(--line-height-title);
+}
+
+.subtitle {
+    font-weight: var(--font-weight-normal);
+}
+
+.subtitle-top {
+    font-size: var(--font-size-subtitle-top);
+}
+
+.subtitle-bottom {
+    font-size: var(--font-size-subtitle-bottom);
+}
+
+.subtitle-bottom {
+    margin-bottom: var(--spacing-first-buttom-top);
+}
+
+.desktop-only {
+    display: inline;
+}
+
+.solution {
+    text-align: center;
+}
+
+.first-start-demo {
+    margin-bottom: var(--spacing-first-buttom-bottom);
+}
+
+h3 {
+    margin-top: var(--spacing-h3-top);
+}
+
+.start-demo {
+    display: inline-block;
+    padding: var(--spacing-button-padding);
+    text-decoration: none;
+    border-radius: var(--radius-button);
+    font-weight: var(--font-weight-normal);
+    font-size: var(--font-size-nav);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    text-align: center;
+    width: var(--button-width);
+    height: var(--button-height);
+    background: none;
+}
+
+#nav-start-demo {
+    width: var(--button-width-nav);
+    height: var(--button-height-nav);
+    font-size: var(--font-size-nav-button);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#submit:hover {
+    background: var(--color-hover);
+    transform: translateY(var(--spacing-transform));
+}
+
+.form-start {
+    margin-top: var(--spacing-form-top);
+}
+
+.how-it-works {
+    text-align: center;
+    margin: var(--spacing-how-it-works);
+}
+
+.how-it-works ol{
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+.how-it-works li{
+    margin-bottom: var(--spacing-li-bottom);
+}
+
+.how-it-works li:last-child {
+    margin-bottom: 0;
+}
+
+.iframe > iframe {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0 !important;
+    width: 100% !important;
+    height: 200px !important;
+}
+
+#Contact {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+#email {
+    margin-top: var(--spacing-first-buttom-top);
+    margin-bottom: var(--spacing-title-bottom);
+    width: var(--input-width);
+    height: var(--input-height);
+    background-color: var(--color-input-bg);
+}
+
+h4 {
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-medium);
+}
+
+input[type="email"] {
+    width: fit-content;
+    padding: var(--spacing-button-input);
+    font-size: var(--font-size-nav);
+    border-radius: var(--radius-input);
+    margin: var(--spacing-email-margin);
+}
+
+footer {
+    margin-bottom: var(--spacing-footer-bottom);
+}
+
+address {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo-footer {
+    width: var(--logo-width);
+    height: var(--logo-height);
+    margin-left: var(--spacing-footer-side);
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    margin-right: var(--spacing-footer-side);
+}
+
+.social-youtube {
+    width: var(--youtube-width);
+    height: var(--youtube-height);
+    margin-right: var(--spacing-social-right);
+}
+
+.social-instagram {
+    width: var(--instagram-width);
+    height: var(--instagram-height);
+    margin-right: var(--spacing-social-right);
+}
+
+.social-linkedin {
+    width: var(--linkedin-width);
+    height: var(--linkedin-height);
+}
+
+@media (max-width: 768px) {
+    :root {
+    --spacing-title-top: 16px;
+    --spacing-title-bottom: 16px;
+    --spacing-first-buttom-top: 24px;
+    --spacing-first-buttom-bottom: 230px;
+    --spacing-p-bottom: 8px;
+    --spacing-h3-top: 24px;
+    --navbar-height: 30px;
+    --spacing-nav-padding: 16px 32px;
+    --spacing-nav-link: 16px;
+    --spacing-gap: 20px;
+    --spacing-hero-padding: 60px 40px 100px 40px;
+    --spacing-hero-padding-clean: 60px 0 100px 0;
+    --spacing-button-padding: 16px 32px;
+    --spacing-form-top: 192px;
+    --spacing-how-it-works: 64px;
+    --spacing-email-margin: 24px 0 16px;
+    --spacing-footer-bottom: 12px;
+    --spacing-footer-side: 50px;
+    --spacing-social-right: 12px;
+    --spacing-li-bottom: 8px;
+    --spacing-button-input: 8px 12px;
+    --spacing-transform: -1px;
+    
+    --font-size-title: 35px;
+    --font-size-subtitle-top: 18px;
+    --font-size-subtitle-bottom: 12px;
+    --font-size-nav: 12px;
+    --font-size-p: 12px;
+    --font-size-h4: 20px;
+    --font-size-nav-button: 10px;
+    
+    --font-weight-bold: 700;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    
+    --radius-button: 33px;
+    --radius-input: 32px;
+    --radius-hero: 0 0 20px 20px;
+    
+    --logo-width: 33px;
+    --logo-height: 19.5px;
+    --button-width-nav: 110px;
+    --button-height-nav: 40px;
+    --button-width: 110px;
+    --button-height: 40px;
+    --input-width: 163px;
+    --input-height: 40px;
+    --youtube-width: 44px;
+    --youtube-height: 33px;
+    --instagram-width: 37px;
+    --instagram-height: 36px;
+    --linkedin-width: 37px;
+    --linkedin-height: 36px;
+    
+    --transition-normal: all 0.2s ease;
+    --line-height-title: 1;
+    --background-size: 150%;
+    --background-position: center 130px;
+}
+
+    .subtitle-top {
+        margin-top: -20px;
+    }
+
+    #nav-start-demo {
+        display: none;
+    }
+
+    .start-demo {
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    nav {
+        padding: 16px;
+        margin-left: -10px;
+    }
+
+    .central-link {
+        position: absolute;
+        left: 100px; 
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+
+    .iframe {
+        margin-bottom: -70px;
+    }
+
+    footer {
+        margin-top: 48px;
+    }
+
+    address {
+        display: flex;
+        align-items: center;
+        gap: 90px;
+    }
+
+    .logo-footer {
+        margin-left: 40px;
+    }
+
+    .social-link {
+        transform: scale(0.8);
+    }
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the landing page factory!" -->
+<!-- It's like opening the doors of a digital marketing agency 🚀 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our digital showcase -->
+<!-- lang="en" = English, the language of online business! 💼 -->
+
+    <head>
+        <!-- 🧠 THE HEADQUARTERS: Where we plan visitor conversion -->
+        <!-- It's like the meeting room where sales strategy is decided -->
+        
+        <meta charset="UTF-8">
+        <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 to communicate with the whole world! 🌐 -->
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 📱 RESPONSIVE DESIGN: "Works on every device, guaranteed!" -->
+        <!-- It's like having a store that resizes for every customer -->
+        
+        <title> My First Landing Page</title>
+        <!-- 📑 TAB TITLE: The first digital business card -->
+        
+        <style>
+            /* 🎨 ===== THE CSS VARIABLES LIBRARY: The Holy Grail of Design System! ===== */
+            
+            :root {
+                /* 🎨 COLOR PALETTE: Digital paint cans */
+                --wallpaper: #F1F4F8;
+                /* 🏠 BACKGROUND: Elegant light gray, like a modern wall */
+                
+                --color-1: #377A84;
+                /* 🌊 DARK TURQUOISE: Sophisticated primary color */
+                
+                --color-2: #7F94D6;
+                /* 💙 LAVENDER BLUE: For delicate accents */
+                
+                --color-3: #4C63B6;
+                /* 🔵 ROYAL BLUE: More intense and professional */
+                
+                --color-4: #35469C;
+                /* 🌌 DEEP BLUE: For important elements */
+                
+                --color-5: #19216C;
+                /* 🌃 NIGHT BLUE: The darkest in the palette */
+                
+                --color-black: black;
+                /* ⚫ BLACK: For texts and strong contrasts */
+                
+                --color-hover: #0A6C74;
+                /* 🎯 TURQUOISE HOVER: Visual feedback on mouse over */
+                
+                --color-input-bg: rgba(0, 0, 0, 10%);
+                /* 🔲 INPUT BACKGROUND: Black at 10% opacity, subtle but visible */
+                
+                /* 📏 ===== SPACING SYSTEM: The Invisible Grid ===== */
+                /* It's like having a universal ruler for the entire site! */
+                
+                --spacing-title-top: 32px;
+                --spacing-title-bottom: 32px;
+                /* 📐 TITLE SPACING: Breathing room above and below */
+                
+                --spacing-first-buttom-top: 48px;
+                --spacing-first-buttom-bottom: 700px;
+                /* 🔘 BUTTON SPACING: Note the typo "buttom" instead of "button"! */
+                /* 700px bottom = HUGE space for the hero section */
+                
+                --spacing-p-bottom: 16px;
+                /* 📝 PARAGRAPH SPACING: Between paragraphs */
+                
+                --spacing-h3-top: 48px;
+                /* 📰 H3 SPACING: Well separates sections */
+                
+                --navbar-height: 60px;
+                /* 🧭 NAVBAR HEIGHT: To compensate with margin-top */
+                
+                --spacing-nav-padding: 16px 32px;
+                /* 🧭 NAV PADDING: 16px vertical, 32px horizontal */
+                
+                --spacing-nav-link: 16px;
+                /* 🔗 LINK SPACING: Between navigation links */
+                
+                --spacing-gap: 80px;
+                /* 🌉 FLEXBOX GAP: Space between flex elements */
+                
+                --spacing-hero-padding: 60px 40px 100px 40px;
+                --spacing-hero-padding-clean: 60px 0 100px 0;
+                /* 🦸 HERO PADDING: Two versions, one with side padding, one without */
+                
+                --spacing-button-padding: 16px 32px;
+                /* 🔘 BUTTON PADDING: Comfortable internal space */
+                
+                --spacing-form-top: 192px;
+                /* 📝 FORM SPACING: Large margin above the form */
+                
+                --spacing-how-it-works: 128px;
+                /* 🔧 SECTION SPACING: For "How It Works" */
+                
+                --spacing-email-margin: 48px 0 32px;
+                /* 📧 EMAIL MARGINS: Top, sides, bottom */
+                
+                --spacing-footer-bottom: 25px;
+                /* 🦶 FOOTER SPACING: From bottom of the page */
+                
+                --spacing-footer-side: 100px;
+                /* 🦶 FOOTER MARGINS: Generous side spacing */
+                
+                --spacing-social-right: 24px;
+                /* 🔗 SOCIAL SPACING: Between social icons */
+                
+                --spacing-li-bottom: 16px;
+                /* 📋 LIST SPACING: Between list elements */
+                
+                --spacing-button-input: 16px 24px;
+                /* 🔘 INPUT/BUTTON PADDING: For form elements */
+                
+                --spacing-transform: -1px;
+                /* 🎯 MICRO-MOVEMENT: For subtle hover effect */
+                
+                /* 🔤 ===== TYPOGRAPHY SYSTEM: Font Sizes ===== */
+                
+                --font-size-title: 65px;
+                /* 📰 BIG TITLE: Impossible to ignore! */
+                
+                --font-size-subtitle: 24px;
+                /* 📄 SUBTITLE: Readable but not intrusive */
+                
+                --font-size-nav: 16px;
+                /* 🧭 NAVIGATION: Standard size */
+                
+                --font-size-p: 16px;
+                /* 📝 PARAGRAPHS: Same as nav for consistency */
+                
+                --font-size-h4: 32px;
+                /* 📰 HEADING 4: Important but not as much as the title */
+                
+                --font-size-nav-button: 10px;
+                /* 🔘 NAV BUTTON: Smaller to fit in the navbar */
+                
+                /* 💪 ===== FONT WEIGHTS: Bold or Normal? ===== */
+                
+                --font-weight-bold: 700;
+                /* 🏋️ BOLD: For impactful titles */
+                
+                --font-weight-normal: 400;
+                /* 🏃 NORMAL: For readable text */
+                
+                --font-weight-medium: 500;
+                /* 🚶 MEDIUM: An elegant compromise */
+                
+                /* 🔄 ===== BORDER RADIUS: Rounded Corners ===== */
+                
+                --radius-button: 33px;
+                /* 🔘 BUTTONS: Super rounded, almost pills! */
+                
+                --radius-input: 32px;
+                /* 📝 INPUT: Same style as buttons */
+                
+                --radius-hero: 0 0 20px 20px;
+                /* 🦸 HERO: Rounded only at the bottom */
+                /* It's like a curtain flowing down softly */
+                
+                /* 📐 ===== FIXED DIMENSIONS: Widths and Heights ===== */
+                
+                --logo-width: 66px;
+                --logo-height: 39px;
+                /* 🏷️ LOGO: Precise proportions */
+                
+                --button-width-nav: 110px;
+                --button-height-nav: 40px;
+                /* 🔘 NAVBAR BUTTON: Compact for the nav */
+                
+                --button-width: 180px;
+                --button-height: 65px;
+                /* 🔘 STANDARD BUTTON: Bigger and more clickable */
+                
+                --input-width: 230px;
+                --input-height: 63px;
+                /* 📝 EMAIL INPUT: Wide enough for an email */
+                
+                --youtube-width: 44px;
+                --youtube-height: 33px;
+                /* 📺 YOUTUBE: Proportioned icon */
+                
+                --instagram-width: 37px;
+                --instagram-height: 36px;
+                /* 📷 INSTAGRAM: Almost square */
+                
+                --linkedin-width: 37px;
+                --linkedin-height: 36px;
+                /* 💼 LINKEDIN: Like Instagram */
+                
+                /* 🎭 ===== EFFECTS AND ANIMATIONS ===== */
+                
+                --transition-normal: all 0.2s ease;
+                /* 🎢 TRANSITION: 0.2 seconds, smooth movement */
+                /* all = animates all properties */
+                /* ease = naturally accelerates and decelerates */
+                
+                --line-height-title: 1;
+                /* 📏 TITLE LINE HEIGHT: No extra space between lines */
+                
+                --background-size: 100%;
+                /* 🖼️ BACKGROUND SIZE: Covers everything */
+                
+                --background-position: center 30px;
+                /* 📍 BACKGROUND POSITION: Centered, 30px from top */
+            }
+
+            /* 🔄 ===== UNIVERSAL RESET ===== */
+            
+            * {
+                margin: 0;
+                padding: 0;
+                /* 🚫 RESET EVERYTHING: Starting from zero! */
+                
+                box-sizing: border-box;
+                /* 📦 INTELLIGENT CALCULATION: Includes padding and borders */
+            }
+
+            html {
+                background-color: var(--wallpaper);
+                /* 🏠 HTML BACKGROUND: Using the variable! */
+                
+                scroll-behavior: smooth;
+                /* 🎢 SMOOTH SCROLLING: Like sliding on silk */
+                /* When you click an internal link, it scrolls smoothly */
+            }
+
+            /* 🧭 ===== NAVBAR: The Fixed Navigation Bar ===== */
+            
+            nav {
+                width: 100%;
+                /* 📏 FULL WIDTH: From edge to edge */
+                
+                font-size: var(--font-size-nav);
+                /* 🔤 FONT SIZE: From variable */
+                
+                display: flex;
+                /* 🎯 FLEXBOX: The modern way to align */
+                
+                justify-content: space-between;
+                /* ⚖️ SPACE BETWEEN: Logo on left, links center, button right */
+                
+                align-items: center;
+                /* 📐 VERTICAL ALIGNMENT: Everything on the same line */
+                
+                padding: var(--spacing-nav-padding);
+                /* 🏠 PADDING: Internal breathing room from variable */
+                
+                background: var(--wallpaper);
+                /* 🎨 BACKGROUND: Same color as the page */
+                
+                position: fixed;
+                /* 🔒 FIXED POSITION: Always stays at the top! */
+                /* It's like a sticky note attached to the screen */
+                
+                top: 0;
+                /* 📍 AT THE TOP: Stuck to the upper edge */
+                
+                box-sizing: border-box;
+                /* 📦 CALCULATION: Includes padding in the width */
+            }
+
+            a {
+                text-decoration: none;
+                /* 🚫 NO UNDERLINE: Clean links */
+                
+                color: var(--color-black);
+                /* ⚫ BLACK COLOR: For all links */
+            }
+
+            .central-link {
+                display: flex;
+                /* 🎯 FLEX CONTAINER: For central links */
+                
+                gap: var(--spacing-gap);
+                /* 🌉 GAP: 80px between each link! Tons of space */
+                /* gap is the modern property for spacing flex elements */
+            }
+
+            .logo-image {
+                width: var(--logo-width);
+                height: var(--logo-height);
+                /* 🏷️ LOGO DIMENSIONS: Precise from variables */
+            }
+
+            .nav-link:first-child {
+                margin-left: var(--spacing-nav-link);
+                /* ⬅️ FIRST LINK MARGIN: Small offset from logo */
+            }
+
+            #nav-start-demo {
+                margin-right: var(--spacing-nav-link);
+                /* ➡️ BUTTON MARGIN: Offset from right edge */
+            }
+
+            /* 🦸 ===== HERO SECTION: The Main Section ===== */
+            
+            .title-subtitle-button {
+                text-align: center;
+                /* ⚖️ ALL CENTERED: The hero content */
+                
+                margin-top: var(--navbar-height);
+                /* ⬆️ COMPENSATE FOR NAVBAR: 60px to avoid being underneath */
+                
+                background: url('sfondo-hero.png');
+                /* 🖼️ BACKGROUND IMAGE: The main visual */
+                
+                background-size: var(--background-size);
+                /* 📏 BACKGROUND SIZE: 100% from variable */
+                
+                background-position: var(--background-position);
+                /* 📍 POSITION: Centered with offset */
+                
+                background-repeat: no-repeat;
+                /* 🚫 NO REPETITION: Single image */
+                
+                padding: var(--spacing-hero-padding);
+                /* 🏠 PADDING: First value with padding */
+                
+                border-radius: var(--radius-hero);
+                /* 🔄 ROUNDED CORNERS: Only at bottom! */
+                
+                padding: var(--spacing-hero-padding-clean);
+                /* 🏠 CLEAN PADDING: Overrides the previous one! */
+                /* ⚠️ ATTENTION: Duplicate that overwrites! */
+            }
+
+            .title {
+                font-size: var(--font-size-title);
+                /* 📏 SIZE: 65px of pure impact! */
+                
+                font-weight: var(--font-weight-bold);
+                /* 💪 BOLD: 700 for maximum strength */
+                
+                margin-top: var(--spacing-title-top);
+                margin-bottom: var(--spacing-title-bottom);
+                /* 🌬️ MARGINS: 32px above and below */
+                
+                line-height: var(--line-height-title);
+                /* 📏 LINE HEIGHT: 1 = no extra space */
+            }
+
+            .subtitle {
+                font-weight: var(--font-weight-normal);
+                /* 🏃 NORMAL WEIGHT: For contrast with title */
+            }
+
+            .subtitle-top {
+                font-size: var(--font-size-subtitle-top);
+                /* ⚠️ UNDEFINED VARIABLE! Bug in the code */
+            }
+
+            .subtitle-bottom {
+                font-size: var(--font-size-subtitle-bottom);
+                /* ⚠️ ALSO UNDEFINED! */
+                
+                margin-bottom: var(--spacing-first-buttom-top);
+                /* ⬇️ MARGIN: 48px before the button */
+            }
+
+            .desktop-only {
+                display: inline;
+                /* 💻 DESKTOP ONLY: Will be hidden on mobile */
+                /* inline = stays in the text line */
+            }
+
+            .solution {
+                text-align: center;
+                /* ⚖️ CENTERED: The solutions section */
+            }
+
+            .first-start-demo {
+                margin-bottom: var(--spacing-first-buttom-bottom);
+                /* ⬇️ HUGE SPACE: 700px! Creates a lot of scrolling */
+            }
+
+            h3 {
+                margin-top: var(--spacing-h3-top);
+                /* ⬆️ SPACE ABOVE: 48px for each h3 */
+            }
+
+            /* 🔘 ===== START DEMO BUTTONS ===== */
+            
+            .start-demo {
+                display: inline-block;
+                /* 📦 INLINE-BLOCK: Behaves like text but accepts dimensions */
+                
+                padding: var(--spacing-button-padding);
+                /* 🏠 PADDING: 16px 32px for clickable area */
+                
+                text-decoration: none;
+                /* 🚫 NO UNDERLINE: Clean */
+                
+                border-radius: var(--radius-button);
+                /* 🔄 SUPER ROUNDED: 33px = pill! */
+                
+                font-weight: var(--font-weight-normal);
+                /* 🏃 NORMAL WEIGHT: Not bold */
+                
+                font-size: var(--font-size-nav);
+                /* 📏 SIZE: 16px standard */
+                
+                cursor: pointer;
+                /* 👆 POINTER CURSOR: "I'm clickable!" */
+                
+                transition: var(--transition-normal);
+                /* 🎢 TRANSITION: For smooth hover effects */
+                
+                text-align: center;
+                /* ⚖️ CENTERED TEXT: In the button */
+                
+                width: var(--button-width);
+                height: var(--button-height);
+                /* 📐 FIXED DIMENSIONS: 180x65px */
+                
+                background: none;
+                /* 🚫 NO BACKGROUND: Transparent by default */
+            }
+
+            #nav-start-demo {
+                width: var(--button-width-nav);
+                height: var(--button-height-nav);
+                /* 📏 REDUCED DIMENSIONS: 110x40px for navbar */
+                
+                font-size: var(--font-size-nav-button);
+                /* 🔤 SMALL FONT: 10px to fit in button */
+                
+                white-space: nowrap;
+                /* 📏 NO WRAP: Text stays on one line */
+                
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /* 🎯 PERFECT CENTERING: Flexbox for alignment */
+            }
+
+            #submit:hover {
+                background: var(--color-hover);
+                /* 🎨 HOVER BACKGROUND: Dark turquoise */
+                
+                transform: translateY(var(--spacing-transform));
+                /* ⬆️ MICRO-MOVEMENT: -1px upward */
+                /* It's like the button rises slightly! */
+            }
+
+            .form-start {
+                margin-top: var(--spacing-form-top);
+                /* ⬆️ LARGE SPACE: 192px above form */
+            }
+
+            /* 🔧 ===== HOW IT WORKS SECTION ===== */
+            
+            .how-it-works {
+                text-align: center;
+                /* ⚖️ ALL CENTERED: Text and list */
+                
+                margin: var(--spacing-how-it-works);
+                /* 🌬️ MARGINS: 128px above and below */
+            }
+
+            .how-it-works ol{
+                list-style-position: inside;
+                /* 📋 NUMBERS INSIDE: Numbers are part of the content */
+                /* inside = numbers are inside the element box */
+                
+                padding-left: 0;
+                /* 🚫 NO PADDING: Already centered */
+            }
+
+            .how-it-works li{
+                margin-bottom: var(--spacing-li-bottom);
+                /* ⬇️ SPACE BETWEEN ELEMENTS: 16px */
+            }
+
+            .how-it-works li:last-child {
+                margin-bottom: 0;
+                /* 🚫 LAST ONE WITHOUT MARGIN: For cleanliness */
+                /* :last-child = selector for the last element */
+            }
+
+            /* 📺 ===== IFRAME VIDEO ===== */
+            
+            .iframe > iframe {
+                /* > = direct child selector */
+                
+                display: flex;
+                /* 🎯 FLEX: But doesn't make much sense on iframe... */
+                
+                justify-content: center;
+                /* ⚖️ CENTERING: This also doesn't work on iframe */
+                
+                margin-bottom: 0 !important;
+                /* 🚨 !IMPORTANT: Forced override, bad practice! */
+                
+                width: 100% !important;
+                /* 📏 FULL WIDTH: Forced with !important */
+                
+                height: 200px !important;
+                /* 📐 FIXED HEIGHT: Always 200px */
+            }
+
+            /* 📧 ===== CONTACT SECTION ===== */
+            
+            #Contact {
+                display: flex;
+                /* 🎯 FLEX CONTAINER: To center the form */
+                
+                justify-content: center;
+                /* ⚖️ HORIZONTAL CENTERING: Form in center */
+                
+                text-align: center;
+                /* 📝 CENTERED TEXT: Content too */
+            }
+
+            #email {
+                margin-top: var(--spacing-first-buttom-top);
+                margin-bottom: var(--spacing-title-bottom);
+                /* 🌬️ MARGINS: 48px top, 32px bottom */
+                
+                width: var(--input-width);
+                height: var(--input-height);
+                /* 📐 DIMENSIONS: 230x63px */
+                
+                background-color: var(--color-input-bg);
+                /* 🔲 BACKGROUND: Black at 10% opacity */
+            }
+
+            h4 {
+                font-size: var(--font-size-h4);
+                /* 📏 SIZE: 32px for importance */
+                
+                font-weight: var(--font-weight-medium);
+                /* 💪 MEDIUM WEIGHT: 500, between normal and bold */
+            }
+
+            input[type="email"] {
+                /* 📧 ATTRIBUTE SELECTOR: Only email-type inputs */
+                
+                width: fit-content;
+                /* 📏 WIDTH: Adapts to content */
+                /* ⚠️ Conflict with #email width! */
+                
+                padding: var(--spacing-button-input);
+                /* 🏠 PADDING: 16px 24px internal */
+                
+                font-size: var(--font-size-nav);
+                /* 🔤 FONT: 16px standard */
+                
+                border-radius: var(--radius-input);
+                /* 🔄 ROUNDED: 32px like buttons */
+                
+                margin: var(--spacing-email-margin);
+                /* 🌬️ MARGINS: 48px top, 0 sides, 32px bottom */
+            }
+
+            /* 🦶 ===== FOOTER ===== */
+            
+            footer {
+                margin-bottom: var(--spacing-footer-bottom);
+                /* ⬇️ BOTTOM MARGIN: 25px from bottom */
+            }
+
+            address {
+                /* 📍 SEMANTIC TAG: For contact information */
+                
+                display: flex;
+                /* 🎯 FLEX: To align logo and social */
+                
+                justify-content: space-between;
+                /* ⚖️ SPACE BETWEEN: Logo left, social right */
+            }
+
+            .logo-footer {
+                width: var(--logo-width);
+                height: var(--logo-height);
+                /* 📐 SAME DIMENSIONS: As navbar logo */
+                
+                margin-left: var(--spacing-footer-side);
+                /* ⬅️ MARGIN: 100px from left edge */
+            }
+
+            .social-link {
+                display: flex;
+                /* 🎯 FLEX: To align icons */
+                
+                align-items: center;
+                /* 📐 VERTICAL ALIGNMENT: Icons on the same line */
+                
+                margin-right: var(--spacing-footer-side);
+                /* ➡️ MARGIN: 100px from right edge */
+            }
+
+            /* 🔗 ===== SOCIAL ICONS ===== */
+            
+            .social-youtube {
+                width: var(--youtube-width);
+                height: var(--youtube-height);
+                /* 📺 YOUTUBE: 44x33px */
+                
+                margin-right: var(--spacing-social-right);
+                /* ➡️ SPACE: 24px before the next one */
+            }
+
+            .social-instagram {
+                width: var(--instagram-width);
+                height: var(--instagram-height);
+                /* 📷 INSTAGRAM: 37x36px */
+                
+                margin-right: var(--spacing-social-right);
+                /* ➡️ SPACE: Another 24px */
+            }
+
+            .social-linkedin {
+                width: var(--linkedin-width);
+                height: var(--linkedin-height);
+                /* 💼 LINKEDIN: 37x36px, no right margin */
+            }
+
+            /* 📱 ===== MEDIA QUERY: The Magic of Mobile! ===== */
+            
+            @media (max-width: 768px) {
+                /* 📱 TABLET AND MOBILE: Below 768px everything changes! */
+                
+                :root {
+                    /* 🔄 VARIABLES OVERRIDE: Brilliant! */
+                    /* By redefining variables, everything adapts automatically */
+                    
+                    /* 📏 REDUCED SPACING: Everything more compact */
+                    --spacing-title-top: 16px;
+                    --spacing-title-bottom: 16px;
+                    /* From 32px to 16px = half the space */
+                    
+                    --spacing-first-buttom-top: 24px;
+                    --spacing-first-buttom-bottom: 230px;
+                    /* From 700px to 230px = much less scrolling */
+                    
+                    --spacing-p-bottom: 8px;
+                    --spacing-h3-top: 24px;
+                    --navbar-height: 30px;
+                    /* Lower navbar on mobile */
+                    
+                    --spacing-gap: 20px;
+                    /* From 80px to 20px = closer links */
+                    
+                    --spacing-how-it-works: 64px;
+                    /* Half the desktop space */
+                    
+                    /* 🔤 SMALLER FONTS: For more visible content */
+                    --font-size-title: 35px;
+                    /* From 65px to 35px = almost half! */
+                    
+                    --font-size-subtitle-top: 18px;
+                    --font-size-subtitle-bottom: 12px;
+                    /* Finally defined! */
+                    
+                    --font-size-nav: 12px;
+                    --font-size-p: 12px;
+                    --font-size-h4: 20px;
+                    /* All proportionally reduced */
+                    
+                    /* 📐 REDUCED DIMENSIONS: Smaller elements */
+                    --logo-width: 33px;
+                    --logo-height: 19.5px;
+                    /* Logo at half size */
+                    
+                    --button-width: 110px;
+                    --button-height: 40px;
+                    /* More compact buttons */
+                    
+                    --input-width: 163px;
+                    --input-height: 40px;
+                    /* Narrower input */
+                    
+                    /* 🖼️ ADAPTED BACKGROUND: For mobile */
+                    --background-size: 150%;
+                    /* Enlarged to fill better */
+                    
+                    --background-position: center 130px;
+                    /* Moved lower */
+                }
+
+                .subtitle-top {
+                    margin-top: -20px;
+                    /* ⬆️ NEGATIVE MARGIN: Brings closer to title */
+                    /* Negative margins "pull" elements */
+                }
+
+                #nav-start-demo {
+                    display: none;
+                    /* 🚫 HIDDEN: The navbar button disappears */
+                    /* No room on mobile! */
+                }
+
+                .start-demo {
+                    white-space: nowrap;
+                    /* 📏 NO WRAP: Text on one line */
+                    
+                    display: inline-flex;
+                    /* 🎯 INLINE-FLEX: For better centering */
+                    
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    /* ⚖️ TRIPLE CENTERING: Overkill but safe! */
+                }
+
+                nav {
+                    padding: 16px;
+                    /* 🏠 UNIFORM PADDING: Instead of 16px 32px */
+                    
+                    margin-left: -10px;
+                    /* ⬅️ NEGATIVE MARGIN: Compensates for something... */
+                }
+
+                .central-link {
+                    position: absolute;
+                    /* 🎯 ABSOLUTE POSITION: Comes out of normal flow */
+                    
+                    left: 100px; 
+                    /* ⬅️ FIXED POSITION: 100px from edge */
+                    /* Could be problematic on very small screens */
+                }
+
+                .desktop-only {
+                    display: none;
+                    /* 🚫 HIDDEN ON MOBILE: As promised by the name */
+                }
+
+                h3 {
+                    font-size: 16px;
+                    /* 📏 DIRECT OVERRIDE: Instead of using variable */
+                }
+
+                p {
+                    font-size: 12px;
+                    /* 📏 SMALL PARAGRAPHS: For mobile */
+                }
+
+                .iframe {
+                    margin-bottom: -70px;
+                    /* ⬆️ NEGATIVE MARGIN: Brings closer to content below */
+                    /* Trick to compensate for iframe height */
+                }
+
+                footer {
+                    margin-top: 48px;
+                    /* ⬆️ SPACE ABOVE: Separates from content */
+                }
+
+                address {
+                    display: flex;
+                    align-items: center;
+                    /* 📐 ALIGNMENT: Vertically centers */
+                    
+                    gap: 90px;
+                    /* 🌉 GAP: Space between logo and social */
+                }
+
+                .logo-footer {
+                    margin-left: 40px;
+                    /* ⬅️ REDUCED MARGIN: From 100px to 40px */
+                }
+
+                .social-link {
+                    transform: scale(0.8);
+                    /* 🔍 SCALE: Icons at 80% of size */
+                    /* transform: scale() visually resizes */
+                    /* It's like shrinking with a lens! */
+                }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <!-- 🚀 ===== THE LANDING PAGE BODY ===== -->
+        
+        <main>
+            <!-- 📄 MAIN CONTENT: The semantic wrapper -->
+            
+            <header id="header">
+                <!-- 📰 HEADER: Contains the entire upper part -->
+                <!-- ⚠️ Strange structure: everything inside header, even non-header sections -->
+                
+                <img src="" alt="" id="header-img">
+                <!-- 🖼️ HEADER IMAGE: Empty! src and alt are empty -->
+                <!-- Probably required for freeCodeCamp tests -->
+                
+                <nav id="nav-bar">
+                    <!-- 🧭 NAVIGATION BAR: The main menu -->
+                    
+                    <img src="logo.png" class="logo-image">
+                    <!-- 🏷️ COMPANY LOGO: First element in nav -->
+                    
+                    <div class="central-link">
+                        <!-- 🔗 CENTRAL LINKS: Container for navigation -->
+                        
+                        <a href="#Solution" class="nav-link">Solution</a>
+                        <!-- 🔗 LINK 1: Internal anchor to Solution section -->
+                        
+                        <a href="#How-It-Works" class="nav-link">How It Works</a>
+                        <!-- 🔗 LINK 2: Anchor to How It Works section -->
+                        
+                        <a href="#Contact" class="nav-link">Contact</a>
+                        <!-- 🔗 LINK 3: Anchor to Contact section -->
+                    </div>
+                    
+                    <button id="nav-start-demo" type="submit" class="start-demo">START DEMO</button>
+                    <!-- 🔘 NAVBAR CTA: Call-to-action always visible -->
+                    <!-- type="submit" on a button outside a form is strange... -->
+                </nav>
+
+                <section class="title-subtitle-button">
+                    <!-- 🦸 HERO SECTION: The main impact section -->
+                    
+                    <h2 class="subtitle subtitle-top">Keep running, no maintenance worries.</h2>
+                    <!-- 📰 TOP SUBTITLE: Inverted with h1! -->
+                    <!-- ⚠️ h2 before h1 = wrong semantic hierarchy -->
+                    
+                    <h1 class="title">Smart maintenance,<br>Zero downtime</h1>
+                    <!-- 📰 MAIN TITLE: The key message -->
+                    <!-- <br> = forced line break in title -->
+                    
+                    <h2 class="subtitle subtitle-bottom">Stay on top of maintenance. Log issues, track fixes, keep production <br class="desktop-only">running— no interruptions.</span></h2>
+                    <!-- 📄 BOTTOM SUBTITLE: More descriptive -->
+                    <!-- ⚠️ </span> closing tag without opening! HTML bug -->
+                    
+                    <button id="hero-start-demo" type="submit" class="start-demo first-start-demo">START DEMO</button>
+                    <!-- 🔘 MAIN CTA: The most important button -->
+                </section>
+
+                <section id="Solution" class="solution">
+                    <!-- 💡 SOLUTIONS SECTION: The product benefits -->
+                    
+                    <h3>Real‑time Tracking</h3>
+                    <!-- 🔍 BENEFIT 1: Real-time tracking -->
+                    <!-- ‑ = non-breaking hyphen to avoid line break -->
+                    
+                    <p>Follow each maintenance request as it<br>happens, with nothing slipping through.</p>
+                    <!-- 📝 DESCRIPTION: With <br> for line control -->
+                    
+                    <h3>Automatic Shift Handover</h3>
+                    <!-- 🔄 BENEFIT 2: Automatic shift handover -->
+                    
+                    <p>Smooth handover between teams, with no<br>details lost.</p>
+                    
+                    <h3>Live Priority Dashboard</h3>
+                    <!-- 📊 BENEFIT 3: Priority dashboard -->
+                    
+                    <p class="end-solution">See urgent interventions at a glance, all in<br>one view.</p>
+                    <!-- 📝 LAST DESCRIPTION: Special class but not used in CSS -->
+                </section>
+            
+                <section id="How-It-Works" class="how-it-works">
+                    <!-- 🔧 HOW IT WORKS SECTION: The 3 steps -->
+                    
+                    <ol>
+                        <!-- 📋 ORDERED LIST: Perfect for sequential steps -->
+                        
+                        <li>Report an issue in just a few taps, attach photos for clarity</li>
+                        <!-- 1️⃣ STEP 1: Easy reporting -->
+                        
+                        <li>Maintenance team receives and manages requests instantly</li>
+                        <!-- 2️⃣ STEP 2: Instant management -->
+                        
+                        <li>Get automatic notifications when the problem is resolved</li>
+                        <!-- 3️⃣ STEP 3: Automatic notifications -->
+                    </ol>
+                </section>
+
+                <section id="youtube-video" class="youtube-video">
+                    <!-- 📺 VIDEO SECTION: Demo or explanation -->
+                    
+                    <div class="iframe">
+                        <!-- 📦 IFRAME CONTAINER: For styling -->
+                        
+                        <iframe src="https://www.youtube.com/watch?v=pCtkD5AMbDo" id="video" width="650" height="400"></iframe>
+                        <!-- 📺 YOUTUBE VIDEO: But the URL is wrong! -->
+                        <!-- ⚠️ Should be /embed/ not /watch/ for iframe -->
+                    </div>
+                </section>
+                
+                <section id="Contact">
+                    <!-- 📧 CONTACT SECTION: The final form -->
+                    
+                    <form action="https://www.freecodecamp.com/email-submit" id="form">
+                        <!-- 📝 FORM: Action to freeCodeCamp (for testing) -->
+                        
+                        <h4 class="form-start">Enter your email to start demo</h4>
+                        <!-- 📰 FORM TITLE: Clear call-to-action -->
+                        
+                        <div class="email-address">
+                            <!-- 📦 INPUT CONTAINER: For styling -->
+                            
+                            <input name="email" type="email" id="email" placeholder="Enter your email address" required>
+                            <!-- 📧 EMAIL INPUT: With HTML5 validation -->
+                            <!-- required = mandatory field -->
+                            <!-- type="email" = automatic email validation -->
+                        </div>
+                        
+                        <button id="form-start-demo" type="submit" class="start-demo">START DEMO</button>
+                        <!-- 🔘 SUBMIT BUTTON: To send the form -->
+                        <!-- type="submit" = this makes sense! -->
+                    </form>
+                </section>
+
+            </header>
+            <!-- ⚠️ Header closing after all main content! -->
+        </main>
+        
+        <footer>
+            <!-- 🦶 FOOTER: Final information -->
+            
+            <address>
+                <!-- 📍 ADDRESS: Semantic tag for contacts -->
+                <!-- It's the correct HTML tag for contact information -->
+                
+                <img src="logo.png" alt="logo azienda 'SA'" class="logo-footer">
+                <!-- 🏷️ FOOTER LOGO: Brand repetition -->
+                
+                <div class="social-link">
+                    <!-- 🔗 SOCIAL LINKS: Icons container -->
+                    
+                    <img src="youtube.svg" alt="link a YouTube Channel di SA" class="social-youtube">
+                    <!-- 📺 YOUTUBE: SVG icon -->
+                    
+                    <img src="instagram.svg" alt="link ad Instagram di SA" class="social-instagram">
+                    <!-- 📷 INSTAGRAM: SVG icon -->
+                    
+                    <img src="linkedin.svg" alt="link a Linkedin di SA" class="social-linkedin">
+                    <!-- 💼 LINKEDIN: SVG icon -->
+                    <!-- ⚠️ Missing <a> links around images! -->
+                </div>
+            </address>
+        </footer>
+    </body>
+</html>
+
+<!-- 🎯 ===== LANDING PAGE ARCHITECTURE SUMMARY ===== -->
+<!-- 
+🚀 LANDING STRUCTURE:
+│
+├── 🧠 HEAD (design system)
+│   └── 🎨 CSS with:
+│       ├── 📚 50+ CSS Variables (complete design system!)
+│       ├── 🧭 Fixed navbar with flexbox
+│       ├── 🦸 Hero section with background
+│       ├── 🔘 Pill-shaped buttons (33px radius)
+│       └── 📱 Complete responsive media query
+│
+└── 🚀 BODY (the landing page)
+    ├── 📄 Main
+    │   └── 📰 Header (contains everything! strange structure)
+    │       ├── 🧭 Navbar (logo + links + CTA)
+    │       ├── 🦸 Hero (titles + main CTA)
+    │       ├── 💡 Solution (3 benefits)
+    │       ├── 🔧 How It Works (3 steps)
+    │       ├── 📺 Video (YouTube iframe)
+    │       └── 📧 Contact (email form)
+    └── 🦶 Footer
+        └── 📍 Address (logo + social)
+
+🎨 NOTABLE TECHNIQUES:
+├── 📚 Massive CSS Variables: A real design system!
+├── 🔄 Variables override in media query (brilliant!)
+├── 🎯 Flexbox for precise alignments
+├── 🔘 Ultra-rounded buttons in modern style
+├── 📱 Responsive that changes EVERYTHING on mobile
+└── 🎢 Subtle but effective hover transitions
+
+⚠️ ISSUES IN THE CODE:
+├── 📝 Wrong heading hierarchy (h2 before h1)
+├── 🏷️ Span tag closed without opening
+├── 📺 Incorrect YouTube URL for iframe
+├── 🔗 Social images without links
+└── 📰 Everything inside header (strange semantic structure)
+
+It's like a Ferrari with a few scratches - beautiful but with room for improvement! 🏎️✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Decision for Technical Authenticity
+
+I decided on purpose **not to have my code reviewed before publishing** it, to say: "This is my exact level without AI."
+
+### The Love Affair with CSS Variables
+
+I had said I fell in love with variables and here I decided to integrate them **massively**. Despite completely changing the interface from web to mobile, as Refactoring UI suggests, I found great benefit when in media queries I mostly just had to modify the variables to apply correct spacing and dimensions.
+
+### The Figma → Code Process
+
+Not only did I complicate my life with massive use of variables, I did it even by **first creating the design in Figma** following all the **Refactoring UI** rules I've learned so far, then trying to replicate pixel-perfect everything designed in Figma.
+
+**Mobile-first approach:** I first designed for mobile as Refactoring UI suggests, because by doing so you then realize there isn't much to change for the desktop version. Also, you shouldn't be afraid of white spaces - it's better to add than to remove later.
+
+**I can say today that I fully empathize with front end developers** who are tasked with turning UX/UI designers' Figma designs into code. I understand their "hate" and indeed I realized how difficult it is.
+
+### The "How It Works" Section Failure
+
+I couldn't convert all of the Figma. I'm referring particularly to the "How It Works" section which after several attempts I decided to simplify into a numbered list (`<ol>`), always showing the difference between the **Figma Version** and the **VS Code Version**.
+
+### The Role Difference Insight
+
+Precisely because of this I understand the difference between **Front End Developer** and **UX Engineer**:
+
+- **UX Designer:** Thinks in terms of beauty and usability
+- **Front End Developer:** Thinks in terms of code efficiency
+- **UX Engineer:** When prototyping on Figma doesn't just see components, sees CSS rules, wonders whether to use flexbox rather than grid here...
+
+**The UX Engineer creates a product** that balances all these aspects.
+
+### The Choice of 70% vs 100%
+
+I'm not 100% satisfied, because the content was designed to work with perfect dimensions on MacBook Air and iPhone 16 Pro, therefore it doesn't have perfect proportions in other formats. I understood how demanding the responsive side is.
+
+**You'll ask: why didn't you push until making it perfect?**
+
+I preferred to spend a total of **3 days** between Figma and VS Code, rather than three weeks (if I'm lucky), and use those days to move forward. At the same time I'm also doing course 3/8 of Google UX - tomorrow I plan to finish the last wireframes to complete this third course.
+
+### The Philosophy of Progressive Imperfection
+
+I realized something fundamental: it's precisely this **tendency toward perfection IMMEDIATELY** that blocks the beginner who wants to become senior.
+
+**Gym analogy:** I've been practicing gym for 6 years, I started with friends all "bigger" than me, but despite genetics playing against me, today I'm the "biggest" and by no small margin. Why? They almost all stopped or are inconsistent.
+
+It's like saying: "I'm not leaving the gym until I do the best technically possible workout!" It's simply impossible. **Much better to do many imperfect workouts** - unconsciously you'll reach levels that as a beginner you didn't even imagine existed.
+
+### The Progressive Quality Index
+
+**Much better to do many 70% projects and then reach 100% after some time**, rather than getting trapped in the loop of trying to reach 100% with the first one.
+
+By "70%" I mean: working project, aesthetically decent, basic responsive, but not perfect in every detail. The "100%" would be: pixel-perfect on every device, advanced optimizations, perfectly clean code, every edge case handled.
+
+The paradox is that by doing 10 projects at 70%, you gain the experience to naturally make 90-95% projects without effort. Staying stuck on the first one to make it perfect, you always remain at the initial level.
+
+### The Position on AI
+
+I'm sure that massive use of AI will only bring me "rented" knowledge. Not only because those who get used to it are lost without it, but also because **if I write the code myself, in case of problems I know exactly what I called that variable and where I put that flexbox instead of grid**.
+
+I'll use AI in this journey only to **understand and get advice**, I'll never copy and paste. Not only wouldn't I understand what I'm doing, I wouldn't even be straining myself - **it's precisely this effort that makes you strong and independent**.
+
+### What I Learned
+
+**Notable Techniques:**
+- **Massive CSS Variables** as true design system
+- **Variable overrides in media queries** (genius!)
+- **Flexbox** for precise alignments
+- **Ultra-rounded buttons** modern style
+- **Responsive** that changes everything on mobile
+- **Subtle but effective hover transitions**
+
+**Problems Left Intentionally:**
+- Wrong heading hierarchy (h2 before h1)
+- Span tag closed without opening
+- Wrong YouTube URL for iframe
+- Everything inside header (strange semantic structure)
+
+---
+
+**Next Project**: Learn CSS Animation by Building a Ferris Wheel

@@ -1,0 +1,856 @@
+---
+sidebar_position: 5
+sidebar_label: 'Calorie Counter'
+title: 'Calorie Counter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Calorie Counter
+
+<img width="100%" alt="1" src="https://github.com/user-attachments/assets/8f359e6b-5431-478d-ab5a-fea96ae8ae0e" />
+<img width="100%" alt="2" src="https://github.com/user-attachments/assets/932a5c3e-d577-44a2-ae8b-52b22823258b" />
+
+### The Project
+Calorie counter with advanced form validation, built entirely in vanilla JavaScript. An application that allows adding dynamic entries for different meal categories.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calorie Counter</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <h1>Calorie Counter</h1>
+      <div class="container">
+        <form id="calorie-counter">
+          <label for="budget">Budget</label>
+          <input
+            type="number"
+            min="0"
+            id="budget"
+            placeholder="Daily calorie budget"
+            required
+          />
+          <fieldset id="breakfast">
+            <legend>Breakfast</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="lunch">
+            <legend>Lunch</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="dinner">
+            <legend>Dinner</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="snacks">
+            <legend>Snacks</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <fieldset id="exercise">
+            <legend>Exercise</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          <div class="controls">
+            <span>
+              <label for="entry-dropdown">Add food or exercise:</label>
+              <select id="entry-dropdown" name="options">
+                <option value="breakfast" selected>Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snacks">Snacks</option>
+                <option value="exercise">Exercise</option>
+              </select>
+              <button type="button" id="add-entry">Add Entry</button>
+            </span>
+          </div>
+          <div>
+            <button type="submit">
+              Calculate Remaining Calories
+            </button>
+            <button type="button" id="clear">Clear</button>
+          </div>
+        </form>
+        <div id="output" class="output hide"></div>
+      </div>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+  --light-grey: #f5f6f7;
+  --dark-blue: #0a0a23;
+  --fcc-blue: #1b1b32;
+  --light-yellow: #fecc4c;
+  --dark-yellow: #feac32;
+  --light-pink: #ffadad;
+  --dark-red: #850000;
+  --light-green: #acd157;
+}
+
+body {
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  background-color: var(--fcc-blue);
+  color: var(--light-grey);
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 680px;
+}
+
+h1,
+.container,
+.output {
+  margin: 20px auto;
+}
+
+label,
+legend {
+  font-weight: bold;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  text-decoration: none;
+  background-color: var(--light-yellow);
+  border: 2px solid var(--dark-yellow);
+}
+
+button,
+input,
+select {
+  min-height: 24px;
+  color: var(--dark-blue);
+}
+
+fieldset,
+label,
+button,
+input,
+select {
+  margin-bottom: 10px;
+}
+
+.output {
+  border: 2px solid var(--light-grey);
+  padding: 10px;
+  text-align: center;
+}
+
+.hide {
+  display: none;
+}
+
+.output span {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.surplus {
+  color: var(--light-pink);
+}
+
+.deficit {
+  color: var(--light-green);
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const calorieCounter = document.getElementById('calorie-counter');
+const budgetNumberInput = document.getElementById('budget');
+const entryDropdown = document.getElementById('entry-dropdown');
+const addEntryButton = document.getElementById('add-entry');
+const clearButton = document.getElementById('clear');
+const output = document.getElementById('output');
+let isError = false;
+
+function cleanInputString(str) {
+  const regex = /[+-\s]/g;
+  return str.replace(regex, '');
+}
+
+function isInvalidInput(str) {
+  const regex = /\d+e\d+/i;
+  return str.match(regex);
+}
+
+function addEntry() {
+  const targetInputContainer = document.querySelector(`#${entryDropdown.value} .input-container`);
+  const entryNumber = targetInputContainer.querySelectorAll('input[type="text"]').length + 1;
+  const HTMLString = `
+  <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+  <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+  <label for="${entryDropdown.value}-${entryNumber}-calories">Entry ${entryNumber} Calories</label>
+  <input
+    type="number"
+    min="0"
+    id="${entryDropdown.value}-${entryNumber}-calories"
+    placeholder="Calories"
+  />`;
+  targetInputContainer.insertAdjacentHTML('beforeend', HTMLString);
+}
+
+function calculateCalories(e) {
+  e.preventDefault();
+  isError = false;
+
+  const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type='number']");
+  const lunchNumberInputs = document.querySelectorAll("#lunch input[type='number']");
+  const dinnerNumberInputs = document.querySelectorAll("#dinner input[type='number']");
+  const snacksNumberInputs = document.querySelectorAll("#snacks input[type='number']");
+  const exerciseNumberInputs = document.querySelectorAll("#exercise input[type='number']");
+
+  const breakfastCalories = getCaloriesFromInputs(breakfastNumberInputs);
+  const lunchCalories = getCaloriesFromInputs(lunchNumberInputs);
+  const dinnerCalories = getCaloriesFromInputs(dinnerNumberInputs);
+  const snacksCalories = getCaloriesFromInputs(snacksNumberInputs);
+  const exerciseCalories = getCaloriesFromInputs(exerciseNumberInputs);
+  const budgetCalories = getCaloriesFromInputs([budgetNumberInput]);
+
+  if (isError) {
+    return;
+  }
+
+  const consumedCalories = breakfastCalories + lunchCalories + dinnerCalories + snacksCalories;
+  const remainingCalories = budgetCalories - consumedCalories + exerciseCalories;
+  const surplusOrDeficit = remainingCalories < 0 ? 'Surplus' : 'Deficit';
+  output.innerHTML = `
+  <span class="${surplusOrDeficit.toLowerCase()}">${Math.abs(remainingCalories)} Calorie ${surplusOrDeficit}</span>
+  <hr>
+  <p>${budgetCalories} Calories Budgeted</p>
+  <p>${consumedCalories} Calories Consumed</p>
+  <p>${exerciseCalories} Calories Burned</p>
+  `;
+
+  output.classList.remove('hide');
+}
+
+function getCaloriesFromInputs(list) {
+  let calories = 0;
+
+  for (const item of list) {
+    const currVal = cleanInputString(item.value);
+    const invalidInputMatch = isInvalidInput(currVal);
+
+    if (invalidInputMatch) {
+      alert(`Invalid Input: ${invalidInputMatch[0]}`);
+      isError = true;
+      return null;
+    }
+    calories += Number(currVal);
+  }
+  return calories;
+}
+
+function clearForm() {
+  const inputContainers = Array.from(document.querySelectorAll('.input-container'));
+
+  for (const container of inputContainers) {
+    container.innerHTML = '';
+  }
+
+  budgetNumberInput.value = '';
+  output.innerText = '';
+  output.classList.add('hide');
+}
+
+addEntryButton.addEventListener("click", addEntry);
+calorieCounter.addEventListener("submit", calculateCalories);
+clearButton.addEventListener("click", clearForm);
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the digital calorie restaurant!" -->
+<!-- It's like opening an interactive food diary! 📔 -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our fitness app -->
+<!-- lang="en" = English, the universal language of nutrition! 🥗 -->
+
+  <head>
+    <!-- 🧠 THE DIGITAL NUTRITIONIST: Where we plan the tracking -->
+    <!-- It's like having a dietitian in your browser! -->
+    
+    <meta charset="utf-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for food emojis! 🍕🥦🍰 -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE: "Count calories on any device!" -->
+    
+    <title>Calorie Counter</title>
+    <!-- 📑 TITLE: Simple and direct like a scale -->
+    
+    <style>
+      /* 🎨 ===== COLOR PALETTE: The Flavors of Design ===== */
+      
+      :root {
+        /* 🎨 CSS VARIABLES: The nutritionist's palette */
+        --light-grey: #f5f6f7;
+        /* 🌫️ LIGHT GREY: Like the steam of an herbal tea */
+        
+        --dark-blue: #0a0a23;
+        /* 🌑 DARK BLUE: Professional like a lab coat */
+        
+        --fcc-blue: #1b1b32;
+        /* 💙 FREECODECAMP BLUE: The brand! */
+        
+        --light-yellow: #fecc4c;
+        /* 🌟 LIGHT YELLOW: Like vitamin D sunshine */
+        
+        --dark-yellow: #feac32;
+        /* 🌞 DARK YELLOW: For button borders */
+        
+        --light-pink: #ffadad;
+        /* 🌸 LIGHT PINK: For surplus (too much food!) */
+        
+        --dark-red: #850000;
+        /* 🔴 DARK RED: Alert! (not used here) */
+        
+        --light-green: #acd157;
+        /* 🌿 LIGHT GREEN: For deficit (goal achieved!) */
+      }
+      
+      body {
+        font-family: "Lato", Helvetica, Arial, sans-serif;
+        /* 🔤 LATO FONT: Clean and readable like a nutrition label */
+        
+        font-size: 18px;
+        /* 📏 BASE SIZE: Large enough to avoid eye strain */
+        
+        background-color: var(--fcc-blue);
+        /* 🎨 BACKGROUND: Professional dark blue */
+        
+        color: var(--light-grey);
+        /* 🔤 TEXT: Light grey for soft contrast */
+      }
+      
+      h1 {
+        text-align: center;
+        /* ⚖️ CENTERED: The title dominates the scene */
+      }
+      
+      .container {
+        width: 90%;
+        /* 📏 WIDTH: 90% of the screen */
+        
+        max-width: 680px;
+        /* 🚫 LIMIT: Not wider than 680px */
+        /* It's like a plate that can't be too large */
+      }
+      
+      h1,
+      .container,
+      .output {
+        margin: 20px auto;
+        /* ⚖️ CENTERING + SPACE: 20px top/bottom, auto on sides */
+        /* The universal trick for centering! */
+      }
+      
+      label,
+      legend {
+        font-weight: bold;
+        /* 💪 BOLD: Labels must stand out */
+        /* Like titles on a restaurant menu */
+      }
+      
+      .input-container {
+        display: flex;
+        flex-direction: column;
+        /* 📦 VERTICAL FLEX: Inputs stacked one below another */
+        /* It's like stacking plates */
+      }
+      
+      button {
+        cursor: pointer;
+        /* 👆 HAND CURSOR: "I'm clickable!" */
+        
+        text-decoration: none;
+        /* 🚫 NO UNDERLINE: Clean */
+        
+        background-color: var(--light-yellow);
+        /* 🌟 YELLOW BACKGROUND: Draws attention */
+        
+        border: 2px solid var(--dark-yellow);
+        /* 🖼️ BORDER: Dark yellow for definition */
+      }
+      
+      button,
+      input,
+      select {
+        min-height: 24px;
+        /* 📏 MINIMUM HEIGHT: To be touch-friendly */
+        
+        color: var(--dark-blue);
+        /* 🔤 DARK TEXT: For readability */
+      }
+      
+      fieldset,
+      label,
+      button,
+      input,
+      select {
+        margin-bottom: 10px;
+        /* ⬇️ SPACE BELOW: Breathing room between elements */
+      }
+      
+      .output {
+        border: 2px solid var(--light-grey);
+        /* 🖼️ OUTPUT BORDER: Defines the results area */
+        
+        padding: 10px;
+        /* 🏠 PADDING: Comfortable internal space */
+        
+        text-align: center;
+        /* ⚖️ CENTERED: Results at the center of attention */
+      }
+      
+      .hide {
+        display: none;
+        /* 👻 HIDDEN: Utility class to hide elements */
+      }
+      
+      .output span {
+        font-weight: bold;
+        font-size: 1.2em;
+        /* 📏 MAIN RESULT: 120% larger and bold */
+      }
+      
+      .surplus {
+        color: var(--light-pink);
+        /* 🌸 SURPLUS: Pink = you ate too much! */
+      }
+      
+      .deficit {
+        color: var(--light-green);
+        /* 🌿 DEFICIT: Green = you're in line with your goals! */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 🍽️ ===== THE APP COMES TO LIFE ===== -->
+    
+    <main>
+      <h1>Calorie Counter</h1>
+      <!-- 🏆 TITLE: Our personal counter -->
+      
+      <div class="container">
+        <!-- 📦 CONTAINER: Limits width for readability -->
+        
+        <form id="calorie-counter">
+          <!-- 📝 MAIN FORM: The heart of the application -->
+          
+          <label for="budget">Budget</label>
+          <input
+            type="number"
+            min="0"
+            id="budget"
+            placeholder="Daily calorie budget"
+            required
+          />
+          <!-- 💰 CALORIC BUDGET: Your daily goal -->
+          <!-- type="number" = numbers only -->
+          <!-- min="0" = no negative numbers -->
+          <!-- required = mandatory field -->
+          
+          <!-- 🍽️ ===== THE 5 MEALS/CATEGORIES ===== -->
+          
+          <fieldset id="breakfast">
+            <!-- 🌅 BREAKFAST: The most important meal! -->
+            <legend>Breakfast</legend>
+            <!-- 🏷️ LEGEND: The fieldset title -->
+            
+            <div class="input-container"></div>
+            <!-- 📦 EMPTY CONTAINER: JS will add inputs here -->
+          </fieldset>
+          
+          <fieldset id="lunch">
+            <!-- 🌞 LUNCH: Midday energy -->
+            <legend>Lunch</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <fieldset id="dinner">
+            <!-- 🌙 DINNER: The evening meal -->
+            <legend>Dinner</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <fieldset id="snacks">
+            <!-- 🍿 SNACKS: The between-meals treats -->
+            <legend>Snacks</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <fieldset id="exercise">
+            <!-- 🏃 EXERCISE: Burned calories! -->
+            <legend>Exercise</legend>
+            <div class="input-container"></div>
+          </fieldset>
+          
+          <div class="controls">
+            <!-- 🎮 CONTROLS: To add new entries -->
+            <span>
+              <label for="entry-dropdown">Add food or exercise:</label>
+              <select id="entry-dropdown" name="options">
+                <!-- 📋 DROPDOWN: Choose where to add -->
+                <option value="breakfast" selected>Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snacks">Snacks</option>
+                <option value="exercise">Exercise</option>
+              </select>
+              <button type="button" id="add-entry">Add Entry</button>
+              <!-- 🔘 ADD: Create new fields dynamically -->
+              <!-- type="button" = doesn't submit the form -->
+            </span>
+          </div>
+          <div>
+            <button type="submit">
+              Calculate Remaining Calories
+            </button>
+            <!-- 🧮 CALCULATE: The main button -->
+            <!-- type="submit" = submits the form -->
+            
+            <button type="button" id="clear">Clear</button>
+            <!-- 🗑️ CLEAR: Reset everything -->
+          </div>
+        </form>
+        
+        <div id="output" class="output hide"></div>
+        <!-- 📊 OUTPUT: Initially hidden with "hide" class -->
+      </div>
+    </main>
+    
+    <script>
+      /* 🧠 ===== JAVASCRIPT: The Brain of the Counter ===== */
+      
+      // 🎯 ===== DOM ELEMENTS SELECTION =====
+      const calorieCounter = document.getElementById('calorie-counter');
+      // 📝 FORM: The main form
+      
+      const budgetNumberInput = document.getElementById('budget');
+      // 💰 BUDGET INPUT: Where you enter the caloric goal
+      
+      const entryDropdown = document.getElementById('entry-dropdown');
+      // 📋 DROPDOWN: To select the entry type
+      
+      const addEntryButton = document.getElementById('add-entry');
+      // ➕ ADD BUTTON: To add new fields
+      
+      const clearButton = document.getElementById('clear');
+      // 🗑️ CLEAR BUTTON: To reset everything
+      
+      const output = document.getElementById('output');
+      // 📊 OUTPUT: Where we display the results
+      
+      let isError = false;
+      // 🚨 ERROR FLAG: Keeps track if there's an error
+      // let = can change during execution
+      
+      // 🧹 ===== STRING CLEANING FUNCTION =====
+      function cleanInputString(str) {
+        const regex = /[+-\s]/g;
+        // 🔍 REGEX: Pattern to find characters to remove
+        // [+-\s] = finds +, - or spaces
+        // g = global, finds all occurrences
+        
+        return str.replace(regex, '');
+        // 🧹 CLEANS: Removes +, - and spaces
+        // Ex: "+100" → "100", "- 50" → "50"
+      }
+      
+      // 🚫 ===== INPUT VALIDATION =====
+      function isInvalidInput(str) {
+        const regex = /\d+e\d+/i;
+        // 🔬 SCIENTIFIC REGEX: Finds scientific notation
+        // \d+ = one or more digits
+        // e = the letter 'e'
+        // \d+ = one or more digits
+        // i = case insensitive (E or e)
+        // Ex: "1e10", "5E3" (scientific notation)
+        
+        return str.match(regex);
+        // 🔍 MATCH: Returns the match array or null
+        // If it finds scientific notation = invalid!
+      }
+      
+      // ➕ ===== ADD NEW ENTRY =====
+      function addEntry() {
+        const targetInputContainer = document.querySelector(`#${entryDropdown.value} .input-container`);
+        // 🎯 FIND CONTAINER: Uses the dropdown value
+        // Template literal with backticks ``
+        // Ex: if dropdown = "breakfast" → "#breakfast .input-container"
+        
+        const entryNumber = targetInputContainer.querySelectorAll('input[type="text"]').length + 1;
+        // 🔢 COUNT ENTRIES: How many text inputs already exist + 1
+        // To progressively number the entries
+        
+        const HTMLString = `
+        <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+        <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+        <label for="${entryDropdown.value}-${entryNumber}-calories">Entry ${entryNumber} Calories</label>
+        <input
+          type="number"
+          min="0"
+          id="${entryDropdown.value}-${entryNumber}-calories"
+          placeholder="Calories"
+        />`;
+        // 📝 HTML TEMPLATE: Dynamically creates new fields
+        // Template literals allow multiline and interpolation
+        // ${} = inserts JavaScript variables
+        // Result: breakfast-1-name, breakfast-1-calories, etc.
+        
+        targetInputContainer.insertAdjacentHTML('beforeend', HTMLString);
+        // 💉 INJECT HTML: Adds at the end of the container
+        // 'beforeend' = inside the element, after the last child
+        // It's like adding a line to your food diary!
+      }
+      
+      // 🧮 ===== CALCULATE CALORIES =====
+      function calculateCalories(e) {
+        e.preventDefault();
+        // 🛑 PREVENT DEFAULT: Prevents page refresh
+        // Forms reload the page by default!
+        
+        isError = false;
+        // 🔄 RESET FLAG: Resets the error state
+      
+        // 🔍 ===== SELECT ALL NUMERIC INPUTS =====
+        const breakfastNumberInputs = document.querySelectorAll("#breakfast input[type='number']");
+        const lunchNumberInputs = document.querySelectorAll("#lunch input[type='number']");
+        const dinnerNumberInputs = document.querySelectorAll("#dinner input[type='number']");
+        const snacksNumberInputs = document.querySelectorAll("#snacks input[type='number']");
+        const exerciseNumberInputs = document.querySelectorAll("#exercise input[type='number']");
+        // 📊 NODELIST: Array-like of all numeric inputs by category
+        // querySelectorAll = finds ALL elements that match
+      
+        // 🧮 ===== CALCULATE CALORIES BY CATEGORY =====
+        const breakfastCalories = getCaloriesFromInputs(breakfastNumberInputs);
+        const lunchCalories = getCaloriesFromInputs(lunchNumberInputs);
+        const dinnerCalories = getCaloriesFromInputs(dinnerNumberInputs);
+        const snacksCalories = getCaloriesFromInputs(snacksNumberInputs);
+        const exerciseCalories = getCaloriesFromInputs(exerciseNumberInputs);
+        const budgetCalories = getCaloriesFromInputs([budgetNumberInput]);
+        // 🔢 TOTALS: Sum of calories for each category
+        // Note: budget is in array [] because it's a single element
+      
+        if (isError) {
+          return;
+          // 🚫 STOP: If there was an error, stop everything
+        }
+      
+        // 🧮 ===== FINAL CALCULATIONS =====
+        const consumedCalories = breakfastCalories + lunchCalories + dinnerCalories + snacksCalories;
+        // 🍽️ CONSUMED: Everything you ate
+        
+        const remainingCalories = budgetCalories - consumedCalories + exerciseCalories;
+        // 💰 REMAINING: Budget - consumed + burned with exercise
+        // Exercise is ADDED because it burns calories!
+        
+        const surplusOrDeficit = remainingCalories < 0 ? 'Surplus' : 'Deficit';
+        // 🚦 STATUS: If negative = surplus (you ate too much)
+        // If positive = deficit (you're under budget)
+        // Ternary operator: condition ? true : false
+        
+        // 📊 ===== DISPLAY RESULTS =====
+        output.innerHTML = `
+        <span class="${surplusOrDeficit.toLowerCase()}">${Math.abs(remainingCalories)} Calorie ${surplusOrDeficit}</span>
+        <hr>
+        <p>${budgetCalories} Calories Budgeted</p>
+        <p>${consumedCalories} Calories Consumed</p>
+        <p>${exerciseCalories} Calories Burned</p>
+        `;
+        // 📝 OUTPUT TEMPLATE: Shows all data
+        // Math.abs() = absolute value (removes the - sign)
+        // .toLowerCase() = transforms to lowercase for the CSS class
+      
+        output.classList.remove('hide');
+        // 👁️ SHOW: Removes the class that hides the output
+      }
+      
+      // 🔢 ===== EXTRACT CALORIES FROM INPUTS =====
+      function getCaloriesFromInputs(list) {
+        let calories = 0;
+        // 🔢 ACCUMULATOR: Starts from zero
+      
+        for (const item of list) {
+          // 🔄 LOOP: For each input in the list
+          
+          const currVal = cleanInputString(item.value);
+          // 🧹 CLEAN: Remove unwanted characters
+          
+          const invalidInputMatch = isInvalidInput(currVal);
+          // 🔍 VALIDATE: Check scientific notation
+      
+          if (invalidInputMatch) {
+            alert(`Invalid Input: ${invalidInputMatch[0]}`);
+            // 🚨 ALERT: Show error to the user
+            // [0] = first element of the match array
+            
+            isError = true;
+            // 🚩 SET FLAG: Mark that there's an error
+            
+            return null;
+            // 🛑 STOP: Exit the function
+          }
+          
+          calories += Number(currVal);
+          // ➕ ACCUMULATE: Convert to number and add
+          // Number() converts string to number
+        }
+        return calories;
+        // 📤 RETURN: The total calories
+      }
+      
+      // 🗑️ ===== CLEAR FORM =====
+      function clearForm() {
+        const inputContainers = Array.from(document.querySelectorAll('.input-container'));
+        // 🔄 ARRAY.FROM: Converts NodeList to true Array
+        // Necessary for some array methods
+      
+        for (const container of inputContainers) {
+          container.innerHTML = '';
+          // 🗑️ EMPTY: Removes all internal HTML
+          // It's like tearing pages from the diary
+        }
+      
+        budgetNumberInput.value = '';
+        // 🔄 RESET BUDGET: Empty the field
+        
+        output.innerText = '';
+        // 🔄 RESET OUTPUT: Empty the text
+        
+        output.classList.add('hide');
+        // 👻 HIDE: Adds the hide class again
+      }
+      
+      // 🎧 ===== EVENT LISTENERS: The App's Ears =====
+      
+      addEntryButton.addEventListener("click", addEntry);
+      // 🖱️ CLICK ADD: When you click "Add Entry" → execute addEntry()
+      
+      calorieCounter.addEventListener("submit", calculateCalories);
+      // 📤 SUBMIT FORM: When you submit the form → execute calculateCalories()
+      
+      clearButton.addEventListener("click", clearForm);
+      // 🗑️ CLICK CLEAR: When you click "Clear" → execute clearForm()
+      
+      /* 🎯 ===== APP FLOW =====
+      1. The user enters the caloric budget
+      2. Selects a category from the dropdown
+      3. Clicks "Add Entry" to add fields
+      4. Enters name and calories of food/exercise
+      5. Repeats for all meals/exercises
+      6. Clicks "Calculate" to see results
+      7. The app shows if they're in surplus or deficit
+      8. They can click "Clear" to start over
+      
+      It's like having a digital nutritionist always with you! 🥗📱
+      */
+    </script>
+  </body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+### A Project Close to My Heart
+
+This is a very dear topic to me, as I've been doing gym for 6 years now and I've had many periods where I used calorie counter applications, particularly I found MyFitnessPal to be good. I even taught the tool to friends who were training to make them autonomous.
+
+I never promoted the compulsive daily addition of foods, but rather using the tool to plan the diet and from time to time trying to add what you're eating in a specific period to identify eating habits that support your goals and those that instead hinder them.
+
+And extraordinarily this tool created with freeCodeCamp is sufficient for this purpose! Even though MyFitnessPal has advanced features like adding foods starting from barcode scanning, this application, although "raw", reaches the same final goal.
+
+### The Discovery of Dynamic HTML
+
+This project gave me several insights! Through research I discovered the power of dynamic HTML compared to static HTML.
+
+If you had to write everything manually you'd have to predict hundreds of entries for each category, making the HTML file huge and impossible to maintain.
+
+With dynamic JavaScript instead:
+```javascript
+const HTMLString = `
+  <label for="${entryDropdown.value}-${entryNumber}-name">Entry ${entryNumber} Name</label>
+  <input type="text" id="${entryDropdown.value}-${entryNumber}-name" placeholder="Name" />
+`;
+```
+
+A single template automatically adapts to any situation: user wants 1 entry? Creates 1 entry. Wants 50? Same code!
+
+I was surprised by HTML integrated into JS, albeit simply with HTMLString.
+
+**The accessibility insight:** I realized that since adding elements useful for accessibility is automatable, like the `for` in HTML that automatically connects label and input, every generated entry is instantly accessible. Modify the template once and thousands of elements automatically become compatible with screen readers and keyboard navigation!
+
+### The Final Challenge
+
+The last 10 steps or so were the most difficult, I made extensive use of the code tutor, not so much to get the solution to challenges, but to have each step's reason explained to me, because I saw too many abstract concepts in the clearForm function. In fact, most messages ended with: "I successfully passed this step by writing (...) but would you explain it to me?"
+
+### What I Learned
+
+**Advanced DOM Manipulation:**
+- `document.querySelector()` with specific selectors
+- `querySelectorAll()` for element lists
+- `insertAdjacentHTML()` for dynamic insertion
+- Template literals for HTML generation
+
+**Dynamic Content Creation:**
+- HTMLString with interpolated variables
+- Dynamic ID generation with entryNumber
+- Automatic adaptation to user choices
+
+**Form Validation & Input Handling:**
+- Regular expressions for data cleaning (`/[+-\s]/g`)
+- Input validation with pattern matching (`/\d+e\d+/i`)
+- Error handling with boolean flags
+
+**Event Handling:**
+- `addEventListener()` for user interactions
+- Event management for dynamic elements
+
+### Reflection
+
+This project was the turning point! I'm starting to appreciate JS but I don't feel like a master yet, I need lots of practice.
+
+Tomorrow I'll update the vademecum because in these very last projects so many new concepts have been introduced.
+
+***
+
+**Next Project**: Review DOM Manipulation by Building a Rock, Paper, Scissors Game

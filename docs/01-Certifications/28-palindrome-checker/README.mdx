@@ -1,0 +1,1450 @@
+---
+sidebar_position: 6
+sidebar_label: 'Palindrome Checker'
+title: 'Palindrome Checker'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Palindrome Checker
+
+![mirror-word](https://github.com/user-attachments/assets/d4b2b740-f628-461c-a196-6cfc33a1fbc8)
+<img width="100%" alt="mobile-version-compared" src="https://github.com/user-attachments/assets/57a371b4-1e52-4a17-a0e5-d88df2174c78" />
+<img width="100%" alt="desktop-version-compared" src="https://github.com/user-attachments/assets/cea53b6b-e9ae-4eb1-9401-9dbf7a343638" />
+
+### The Project
+Palindrome Checker with complete design system and dynamic interface. An application that checks if a word or phrase is a palindrome, with smooth transitions between three different visual states and complete performance optimization.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/1a1259f0-0b84-478b-a26f-460d2228203d">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/99a6c549-5d45-4a36-8354-1c8039c4f7cb">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/d1126873-ad30-4742-a1e2-d050088f0af9">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/3b636ec0-524b-40ae-8dbc-a872ebbb49a4">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/9ac63aa1-47ba-41f1-b006-7aba6de92e95">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/9662ce58-c14a-4212-ab5d-2ae226c9ae85">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/77d3bd71-77f1-48aa-9e39-718d601c0239">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/ed4bba81-e535-43a9-958b-af6d0a0d4964">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/e9db924c-83b1-45db-a9ef-5fe17db3b56a">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/989f36b1-383c-4a3b-b1c7-472d7aa38d05">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/950ca8ae-6e4d-4598-bd38-15989d782771">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/076efb6d-4a7c-46e2-85b7-81606216149b">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/33f4a4cd-86c5-42da-be16-6292ec264251">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/1b3257a4-eb5a-4245-9c50-2bd43d5f9926">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/df01223b-9bae-4707-869b-b188b1ac191c">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/2a4e62bd-e766-4fcb-a771-eecbf2d5d713">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/318b9e76-1290-448d-b6cd-242103a60163">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/e6b2e38e-a467-4b18-bba6-31c783b1896b">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/e6edc35e-a909-4cc0-8241-ee83b1ec35b7">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/518957aa-ca39-4456-bd8e-d69fd2497ae0">
+</head>
+<body>
+    <div class="card">
+        <div class="title">Is it a Mirror Word?</div>
+        <div class="description">A palindrome reads the same forward and<br>backward, like a perfect mirror reflection,<br>ignoring punctuation, case, and spacing</div>
+        <div class="input-container">
+            <input type="text" placeholder="Enter text to check its reflection" id="text-input">
+        </div>
+        <div class="button-container">
+            <button id="check-btn">Mirror</button>
+        </div>
+        <div id="result" class="hidden"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+
+    /* Every Page */
+    --background-button-hover: url("https://github.com/user-attachments/assets/d1126873-ad30-4742-a1e2-d050088f0af9");
+    --color-text-primary: #fff;
+    --font-style: normal;
+    --title-letter-spacing: -0.56px;
+    --font-family-primary: "Poppins", sans-serif;
+    --font-family-secondary: "Work Sans", sans-serif;
+    --font-size-title: 39.17px;
+    --font-size-button: 22.38px;
+    --font-weight-primary: 700;
+    --font-size-description: 16.79px;
+    --font-weight-secondary: 400;
+    --size-card-width: 481px;
+    --size-card-height: 512px;
+    --size-card-border-radius: 46px;
+    --size-button-width: 243px;
+    --size-button-height: 73px;
+    --size-button-border-radius: 50px;
+    --space-above-title: 55.86px;
+    --space-above-description: 33.43px;
+    --space-above-button: 35.74px;
+    --space-below-button: 55.86px;
+
+    /* Default Page */
+    --background-page-default: url("https://github.com/user-attachments/assets/1a1259f0-0b84-478b-a26f-460d2228203d");
+    --background-card-default: url("https://github.com/user-attachments/assets/99a6c549-5d45-4a36-8354-1c8039c4f7cb");
+    --background-button-default: url("https://github.com/user-attachments/assets/3b636ec0-524b-40ae-8dbc-a872ebbb49a4");
+    --input-border-width: 1.5px;
+    --input-border-color-default: rgba(255, 255, 255, 0.60);
+    --color-placeholder-text-focus:  rgba(255, 255, 255, 0.30);
+    --input-border-color-focus: #fff;
+    --font-size-input: 20px;
+    --size-input-width: 340px;
+    --size-input-height: 30px;
+    --space-above-input: 89.97px;
+    --padding-text-input: 8px;
+
+    /* Palindrome Checked Page AND Palindrome Not Match Page*/
+    --font-size-result: 30.78px;
+    --top-result: 78px;
+
+    /* Palindrome Checked Page */
+    --background-page-palindrome: url("https://github.com/user-attachments/assets/9ac63aa1-47ba-41f1-b006-7aba6de92e95");
+    --background-card-palindrome: url("https://github.com/user-attachments/assets/9662ce58-c14a-4212-ab5d-2ae226c9ae85");
+    --background-button-palindrome: url("https://github.com/user-attachments/assets/77d3bd71-77f1-48aa-9e39-718d601c0239");
+
+    /* Palindrome Not Match Page */
+    --background-page-not-palindrome: url("https://github.com/user-attachments/assets/ed4bba81-e535-43a9-958b-af6d0a0d4964");
+    --background-card-not-palindrome: url("https://github.com/user-attachments/assets/e9db924c-83b1-45db-a9ef-5fe17db3b56a");
+    --background-button-not-palindrome: url("https://github.com/user-attachments/assets/989f36b1-383c-4a3b-b1c7-472d7aa38d05");
+
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* TEXT */
+
+body {
+    margin: 0;
+    padding: 0;
+    transition: background-image 1s ease-in-out;
+}
+
+html {
+    font-style: normal;
+    line-height: normal;
+    background-image: var(--background-page-default);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.title, .description, #check-btn {
+    color: var(--color-text-primary);
+    font-family: var(--font-family-primary);
+    font-style: var(--font-style);
+}
+
+.description, .placeholder, #check-btn, #result {
+    font-weight: var(--font-weight-secondary);
+}
+
+.title {
+    font-size: var(--font-size-title);
+    font-weight: var(--font-weight-primary);
+    letter-spacing: -0.56px;
+    margin-top: var(--space-above-title);
+}
+
+.description {
+    font-size: var(--font-size-description);
+    margin-top: var(--space-above-description);
+}
+
+.placeholder, #result {
+    font-family: var(--font-family-secondary);
+}
+
+.placeholder {
+    color: var(--color-placeholder-default);
+    font-family: var(--font-family-secondary);
+    font-size: var(--font-size-input);
+}
+
+#result {
+    color: var(--color-text-primary);
+    font-size: var(--font-size-result);
+    top: var(--top-result);
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+}
+
+
+.input-container {
+    margin-top: var(--space-above-input);
+    position: relative;
+    width: var(--size-input-width);
+    height: var(--size-input-height);
+}
+
+#text-input {
+    outline: 0;
+    padding: var(--padding-text-input);
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: "Work Sans";
+    font-size: var(--font-size-input);
+    border-bottom: var(--input-border-width) solid var(--input-border-color-default);
+    text-align: center;
+    transition: width 0.2s ease;
+}
+
+#text-input::placeholder {
+    color: var(--color-placeholder-default);
+}
+
+#text-input:focus {
+    border-bottom-color: var(--input-border-color-focus);;
+    transition: border-bottom 0.3s ease;
+}
+
+/* BOX */
+
+.card {
+    width: var(--size-card-width);
+    height: var(--size-card-height);
+    border-radius: var(--size-card-border-radius);
+    background-image: var(--background-card-default);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+#check-btn {
+    font-size: var(--font-size-button);
+    display: flex;
+    margin-top: var(--space-above-button);
+    margin-bottom: var(--space-below-button);
+    display: flex;
+    width: var(--size-button-width);
+    height: var(--size-button-height);
+    padding: 14px;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    border-radius: var(--size-card-border-radius);
+    background-image: var(--background-button-default);
+    border: none;
+    transition: background-image 0.5s ease, transform 0.25s ease;
+}
+
+#check-btn:hover {
+    background-image: var(--background-button-hover);
+    cursor: pointer;
+    transform: scale(1.02);
+    
+}
+
+#check-btn:active {
+    transform: scale(0.95);
+}
+
+.hidden-input {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+html.palindrome-background {
+    background-image: var(--background-page-palindrome);
+}
+
+html.not-palindrome-background {
+    background-image: var(--background-page-not-palindrome);
+}
+
+.card.palindrome-card {
+    background-image: var(--background-card-palindrome);
+}
+
+.card.not-palindrome-card {
+    background-image: var(--background-card-not-palindrome);
+}
+
+#check-btn.palindrome-button {
+    background-image: var(--background-button-palindrome);
+}
+
+#check-btn.not-palindrome-button {
+    background-image: var(--background-button-not-palindrome);
+}
+
+#text-input:focus::placeholder {
+    color: var(--color-placeholder-text-focus);
+    transition: color 0.25s ease-out;
+}
+
+@media (max-width: 768px) {
+    :root {
+    /* Every Page */
+    --background-button-hover: url("https://github.com/user-attachments/assets/518957aa-ca39-4456-bd8e-d69fd2497ae0");
+    --color-text-primary: #fff;
+    --font-style: normal;
+    --title-letter-spacing: -0.56px;
+    --font-family-primary: "Poppins", sans-serif;
+    --font-family-secondary: "Work Sans", sans-serif;
+    --font-size-title: 28px;
+    --font-size-button: 16px;
+    --font-weight-primary: 700;
+    --font-size-description: 12px;
+    --font-weight-secondary: 400;
+    --size-card-width: 344px;
+    --size-card-height: 366px;
+    --size-card-border-radius: 32px;
+    --size-button-width: 174px;
+    --size-button-height: 52px;
+    --size-button-border-radius: 36px;
+    --space-above-title: 34px;
+    --space-above-description: 24px;
+    --space-above-button: 25px;
+    --space-below-button: 39px;
+
+    /* Default Page */
+    --background-page-default: url("https://github.com/user-attachments/assets/950ca8ae-6e4d-4598-bd38-15989d782771");
+    --background-card-default: url("https://github.com/user-attachments/assets/076efb6d-4a7c-46e2-85b7-81606216149b");
+    --background-button-default: url("https://github.com/user-attachments/assets/33f4a4cd-86c5-42da-be16-6292ec264251");
+    --input-border-width: 1.5px;
+    --input-border-color-default: rgba(255, 255, 255, 0.60);
+    --color-placeholder-text-focus:  rgba(255, 255, 255, 0.30);
+    --input-border-color-focus: #fff;
+    --font-size-input: 14px;
+    --size-input-width: 240px;
+    --size-input-height: 42px;
+    --space-above-input: 64px;
+    --padding-text-input: 6px;
+
+    /* Palindrome Checked Page AND Palindrome Not Match Page*/
+    --font-size-result: 22px;
+    --top-result: 50px;
+
+    /* Palindrome Checked Page */
+    --background-page-palindrome: url("https://github.com/user-attachments/assets/1b3257a4-eb5a-4245-9c50-2bd43d5f9926");
+    --background-card-palindrome: url("https://github.com/user-attachments/assets/df01223b-9bae-4707-869b-b188b1ac191c");
+    --background-button-palindrome: url("https://github.com/user-attachments/assets/2a4e62bd-e766-4fcb-a771-eecbf2d5d713");
+
+    /* Palindrome Not Match Page */
+    --background-page-not-palindrome: url("https://github.com/user-attachments/assets/318b9e76-1290-448d-b6cd-242103a60163");
+    --background-card-not-palindrome: url("https://github.com/user-attachments/assets/e6b2e38e-a467-4b18-bba6-31c783b1896b");
+    --background-button-not-palindrome: url("https://github.com/user-attachments/assets/e6edc35e-a909-4cc0-8241-ee83b1ec35b7");
+    }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const textInput = document.getElementById("text-input");
+const checkBtn = document.getElementById("check-btn");
+const result = document.getElementById("result");
+const card = document.querySelector(".card");
+const htmlElement = document.documentElement;
+let lastValue = "";
+
+
+const checkPalindrome = () => {
+    const userValue = textInput.value;
+    lastValue = userValue;
+
+    if (userValue === "") {
+        alert("Please input a value");
+        return;
+    }
+
+    const cleanInput = userValue.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    const reverseText = cleanInput.split("").reverse().join("");
+
+    textInput.classList.add("hidden-input");
+    result.classList.remove("hidden");
+    
+
+    if (cleanInput===reverseText) {
+        result.textContent = `${userValue} is a palindrome`;
+        htmlElement.classList.add("palindrome-background");
+        card.classList.add("palindrome-card");
+        checkBtn.classList.add("palindrome-button");
+        checkBtn.textContent = "Clear";
+    } else {
+        result.textContent = `${userValue} is not a palindrome`;
+        checkBtn.textContent = "Clear";
+        htmlElement.classList.add("not-palindrome-background");
+        card.classList.add("not-palindrome-card");
+        checkBtn.classList.add("not-palindrome-button");
+    }
+
+};
+
+const resetInterface = () => {
+    textInput.value = "";
+    textInput.classList.remove("hidden-input");
+    result.textContent = "";
+    result.classList.add("hidden");
+    htmlElement.classList.remove("palindrome-background", "not-palindrome-background");
+    card.classList.remove("palindrome-card", "not-palindrome-card");
+    checkBtn.classList.remove("palindrome-button", "not-palindrome-button")
+    checkBtn.textContent = "Mirror";
+    lastValue = "";
+}
+
+checkBtn.addEventListener("click", () => {
+    if (checkBtn.textContent === "Clear" && (textInput.value === lastValue || textInput.value === "")) {
+        resetInterface();
+    } 
+    else {
+        checkPalindrome();
+    }
+})
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the future of Apple design!" -->
+<!-- It's like entering an Apple Store made of code and liquid glass! 🍎✨ -->
+
+<html lang="en">
+<!-- 🌍 MAIN CONTAINER: Our visual effects laboratory -->
+<!-- lang="en" = English, the language of digital innovation! 💫 -->
+
+<head>
+    <!-- 🧠 THE DESIGN CENTER: Where we create the Liquid Glass effect -->
+    <!-- It's like Jony Ive's secret laboratory at Apple! -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 to support all symbols -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE DESIGN: "Adapt like liquid glass to every screen!" -->
+    <!-- The Liquid Glass adapts dynamically, just like our viewport -->
+    
+    <!-- 🔤 ===== GOOGLE FONTS IMPORT ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 🔌 PRECONNECTION: Prepares the connection to Google servers -->
+    <!-- It's like calling the restaurant before arriving to speed up service! -->
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- 🎨 POPPINS + WORK SANS FONTS: Two modern fonts for our design -->
+    <!-- Poppins: all weights from 100 to 900, normal and italic -->
+    <!-- Work Sans: variable font (100..900) = modern technology! -->
+    <!-- display=swap: shows text immediately with system font, then swaps -->
+    
+    <style>
+      /* 🎨 ===== THE LIQUID GLASS DESIGN SYSTEM ===== */
+      
+      :root {
+        /* 🌈 ===== UNIVERSAL VARIABLES: For Every State ===== */
+        
+        /* 🖼️ HOVER IMAGES: The effect when hovering */
+        --background-button-hover: url("https://github.com/user-attachments/assets/d1126873-ad30-4742-a1e2-d050088f0af9");
+        /* 🔄 UNIVERSAL HOVER: Same for all states */
+        /* A more intense Liquid Glass effect */
+        
+        /* 🎨 BASE COLORS AND TYPOGRAPHY */
+        --color-text-primary: #fff;
+        /* ⚪ PURE WHITE: For contrast on colored glass */
+        
+        --font-style: normal;
+        /* 📝 NORMAL STYLE: Not italic */
+        
+        --title-letter-spacing: -0.56px;
+        /* 🔤 NEGATIVE SPACING: Closer letters for modernity */
+        /* Like Apple design: tight and clean */
+        
+        --font-family-primary: "Poppins", sans-serif;
+        /* 🔤 PRIMARY FONT: Poppins for titles and UI */
+        
+        --font-family-secondary: "Work Sans", sans-serif;
+        /* 🔤 SECONDARY FONT: Work Sans for input and results */
+        
+        /* 📏 TEXT SIZES */
+        --font-size-title: 39.17px;
+        /* 📰 LARGE TITLE: Almost 40px, dominant presence */
+        
+        --font-size-button: 22.38px;
+        /* 🔘 BUTTON: Medium size for readability */
+        
+        --font-weight-primary: 700;
+        /* 💪 BOLD: For important titles */
+        
+        --font-size-description: 16.79px;
+        /* 📝 DESCRIPTION: Readable but not invasive text */
+        
+        --font-weight-secondary: 400;
+        /* 🏃 NORMAL WEIGHT: For secondary texts */
+        
+        /* 📐 ELEMENT DIMENSIONS */
+        --size-card-width: 481px;
+        --size-card-height: 512px;
+        /* 📦 MAIN CARD: Our main "liquid glass" */
+        /* Almost square proportions but slightly vertical */
+        
+        --size-card-border-radius: 46px;
+        /* 🔄 SUPER SOFT CORNERS: 46px = very Apple-style */
+        /* Liquid Glass has very rounded borders */
+        
+        --size-button-width: 243px;
+        --size-button-height: 73px;
+        /* 🔘 BUTTON: Golden proportions for touch-friendly */
+        
+        --size-button-border-radius: 50px;
+        /* 🔄 PILL BUTTON: Super rounded */
+        
+        /* 📏 VERTICAL SPACING */
+        --space-above-title: 55.86px;
+        /* ⬆️ ABOVE TITLE: Generous breathing room */
+        
+        --space-above-description: 33.43px;
+        /* ⬆️ ABOVE DESCRIPTION: Medium space */
+        
+        --space-above-button: 35.74px;
+        /* ⬆️ ABOVE BUTTON: Balanced */
+        
+        --space-below-button: 55.86px;
+        /* ⬇️ BELOW BUTTON: Symmetrical with title */
+    
+        /* 🎨 ===== DEFAULT STATE: Base Purple ===== */
+        --background-page-default: url("https://github.com/user-attachments/assets/1a1259f0-0b84-478b-a26f-460d2228203d");
+        /* 🌌 DEFAULT BACKGROUND: A purple and yellow gradient */
+        /* The Liquid Glass reflects and refracts these colors */
+        
+        --background-card-default: url("https://github.com/user-attachments/assets/99a6c549-5d45-4a36-8354-1c8039c4f7cb");
+        /* 🔮 DEFAULT CARD: Purple liquid glass with optical effects */
+        /* Created in Figma with glass effect and custom values */
+        
+        --background-button-default: url("https://github.com/user-attachments/assets/3b636ec0-524b-40ae-8dbc-a872ebbb49a4");
+        /* 🔘 DEFAULT BUTTON: Coordinates with the card */
+        
+        /* 📝 INPUT STYLES */
+        --input-border-width: 1.5px;
+        /* 📏 THIN BORDER: Just a delicate line */
+        
+        --input-border-color-default: rgba(255, 255, 255, 0.60);
+        /* ⚪ WHITE BORDER 60%: Semi-transparent like glass */
+        
+        --color-placeholder-text-focus:  rgba(255, 255, 255, 0.30);
+        /* ⚪ FOCUS PLACEHOLDER: Even more transparent (30%) */
+        
+        --input-border-color-focus: #fff;
+        /* ⚪ FOCUS BORDER: Full white to highlight */
+        
+        --font-size-input: 20px;
+        /* 📝 INPUT SIZE: Readable and modern */
+        
+        --size-input-width: 340px;
+        --size-input-height: 30px;
+        /* 📏 INPUT DIMENSIONS: Proportional to the card */
+        
+        --space-above-input: 89.97px;
+        /* ⬆️ SPACE ABOVE INPUT: Almost 90px, very airy */
+        
+        --padding-text-input: 8px;
+        /* 🏠 INPUT PADDING: Internal space for text */
+    
+        /* 📊 ===== RESULT STYLES ===== */
+        --font-size-result: 30.78px;
+        /* 📏 LARGE RESULT: For visual impact */
+        
+        --top-result: 78px;
+        /* ⬆️ RESULT POSITION: From the top of the card */
+    
+        /* ✅ ===== PALINDROME STATE: Positive Yellow ===== */
+        --background-page-palindrome: url("https://github.com/user-attachments/assets/9ac63aa1-47ba-41f1-b006-7aba6de92e95");
+        /* 🌟 PALINDROME BACKGROUND: Purple gradient and especially bright yellow */
+        /* Success has warm colors! */
+        
+        --background-card-palindrome: url("https://github.com/user-attachments/assets/9662ce58-c14a-4212-ab5d-2ae226c9ae85");
+        /* 💛 PALINDROME CARD: Yellow Liquid Glass */
+        /* Different refraction effects for yellow */
+        
+        --background-button-palindrome: url("https://github.com/user-attachments/assets/77d3bd71-77f1-48aa-9e39-718d601c0239");
+        /* 🔘 PALINDROME BUTTON: Coordinated yellow */
+    
+        /* ❌ ===== NOT PALINDROME STATE: Negative Variant ===== */
+        --background-page-not-palindrome: url("https://github.com/user-attachments/assets/ed4bba81-e535-43a9-958b-af6d0a0d4964");
+        /* 🔮 NOT PALINDROME BACKGROUND: Gradient with more purple */
+        
+        --background-card-not-palindrome: url("https://github.com/user-attachments/assets/e9db924c-83b1-45db-a9ef-5fe17db3b56a");
+        /* 💜 NOT PALINDROME CARD: Intense purple Liquid Glass */
+        
+        --background-button-not-palindrome: url("https://github.com/user-attachments/assets/989f36b1-383c-4a3b-b1c7-472d7aa38d05");
+        /* 🔘 NOT PALINDROME BUTTON: Coordinated tone */
+      }
+    
+      /* 🔄 ===== GLOBAL RESET ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        /* 🚫 RESET EVERYTHING: Starting from zero */
+        
+        box-sizing: border-box;
+        /* 📦 BORDER-BOX: Includes padding and borders in dimensions */
+        /* Essential for precise calculations with Liquid Glass */
+      }
+    
+      /* 🎨 ===== BODY AND HTML STYLES ===== */
+      
+      body {
+        margin: 0;
+        padding: 0;
+        /* 🚫 DOUBLE SECURITY: No margins */
+        
+        transition: background-image 1s ease-in-out;
+        /* 🎭 BACKGROUND TRANSITION: Smooth 1 second */
+        /* ease-in-out = accelerates and decelerates like flowing liquid glass */
+      }
+    
+      html {
+        font-style: normal;
+        /* 📝 NORMAL STYLE: Base for everything */
+        
+        line-height: normal;
+        /* 📏 NORMAL LINE HEIGHT: Browser default */
+        
+        background-image: var(--background-page-default);
+        /* 🌌 INITIAL BACKGROUND: Default purple state */
+        
+        background-size: cover;
+        /* 📏 COVER EVERYTHING: Image fills the screen */
+        
+        background-repeat: no-repeat;
+        /* 🚫 NO REPETITION: Just one image */
+        
+        background-size: cover;
+        /* ⚠️ DUPLICATE: Probably a typo */
+        
+        background-position: center;
+        /* 📍 CENTERED: The center of the Liquid Glass effect */
+        
+        background-attachment: fixed;
+        /* 🔒 FIXED BACKGROUND: Doesn't scroll, parallax effect */
+        /* The Liquid Glass seems to "float" on top */
+      }
+    
+      /* 📝 ===== TYPOGRAPHY ===== */
+      
+      .title, .description, #check-btn {
+        color: var(--color-text-primary);
+        /* ⚪ WHITE TEXT: For all main elements */
+        
+        font-family: var(--font-family-primary);
+        /* 🔤 POPPINS: Main font */
+        
+        font-style: var(--font-style);
+        /* 📝 STYLE: Normal (not italic) */
+      }
+    
+      .description, .placeholder, #check-btn, #result {
+        font-weight: var(--font-weight-secondary);
+        /* 🏃 WEIGHT 400: Normal weight for readability */
+      }
+    
+      .title {
+        font-size: var(--font-size-title);
+        /* 📏 39.17px: Dominant title */
+        
+        font-weight: var(--font-weight-primary);
+        /* 💪 700: Bold for impact */
+        
+        letter-spacing: -0.56px;
+        /* 🔤 NEGATIVE SPACING: Tight Apple style */
+        
+        margin-top: var(--space-above-title);
+        /* ⬆️ 55.86px: Breathing room above */
+      }
+    
+      .description {
+        font-size: var(--font-size-description);
+        /* 📏 16.79px: Readable but not invasive */
+        
+        margin-top: var(--space-above-description);
+        /* ⬆️ 33.43px: Space from title */
+      }
+    
+      .placeholder, #result {
+        font-family: var(--font-family-secondary);
+        /* 🔤 WORK SANS: Secondary font for input */
+      }
+    
+      .placeholder {
+        color: var(--color-placeholder-default);
+        /* ⚠️ UNDEFINED VARIABLE: Probably a bug */
+        
+        font-family: var(--font-family-secondary);
+        /* 🔤 WORK SANS: Repeated */
+        
+        font-size: var(--font-size-input);
+        /* 📏 20px: Input size */
+      }
+    
+      #result {
+        color: var(--color-text-primary);
+        /* ⚪ WHITE: For the result */
+        
+        font-size: var(--font-size-result);
+        /* 📏 30.78px: Large for impact */
+        
+        top: var(--top-result);
+        /* ⬆️ 78px: Position from top */
+        
+        left: 0;
+        /* ⬅️ ALL THE WAY LEFT: For 100% width */
+        
+        width: 100%;
+        height: 100%;
+        /* 📏 FULL SCREEN: Covers the entire card */
+        
+        display: flex;
+        /* 🎯 FLEXBOX: For centering */
+        
+        justify-content: center;
+        align-items: center;
+        /* ⚖️ PERFECT CENTERING: Horizontal and vertical */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: Overlaid on the card */
+        
+        pointer-events: none;
+        /* 🚫 NO CLICK: The result doesn't intercept clicks */
+        /* It's like a hologram: you see it but don't touch it */
+        
+        z-index: 10;
+        /* 📚 LEVEL 10: Above everything else */
+      }
+    
+      /* 📝 ===== INPUT CONTAINER ===== */
+      
+      .input-container {
+        margin-top: var(--space-above-input);
+        /* ⬆️ 89.97px: Large space above */
+        
+        position: relative;
+        /* 📍 REFERENCE: For positioning child elements */
+        
+        width: var(--size-input-width);
+        height: var(--size-input-height);
+        /* 📏 340x30px: Input container dimensions */
+      }
+    
+      #text-input {
+        outline: 0;
+        /* 🚫 NO OUTLINE: Removes default focus border */
+        
+        padding: var(--padding-text-input);
+        /* 🏠 8px: Internal space */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Of the container */
+        
+        border: none;
+        /* 🚫 NO BORDER: Only border-bottom */
+        
+        background: transparent;
+        /* 👻 TRANSPARENT: To see the Liquid Glass underneath */
+        
+        color: var(--color-text-primary);
+        /* ⚪ WHITE TEXT: Contrast on glass */
+        
+        font-family: "Work Sans";
+        /* 🔤 FONT: Direct without variable */
+        
+        font-size: var(--font-size-input);
+        /* 📏 20px: Text size */
+        
+        border-bottom: var(--input-border-width) solid var(--input-border-color-default);
+        /* 📏 BOTTOM BORDER: 1.5px white 60% */
+        /* Just a thin line like in Apple designs */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: For elegance */
+        
+        transition: width 0.2s ease;
+        /* 🎭 TRANSITION: But width never changes... */
+      }
+    
+      #text-input::placeholder {
+        color: var(--color-placeholder-default);
+        /* ⚠️ UNDEFINED VARIABLE: Likely a bug */
+        /* Should be a light gray */
+      }
+    
+      #text-input:focus {
+        border-bottom-color: var(--input-border-color-focus);
+        /* ⚪ FULL WHITE BORDER: On focus */
+        
+        transition: border-bottom 0.3s ease;
+        /* 🎭 TRANSITION: 0.3s for color change */
+        /* ⚠️ Wrong property: should be border-bottom-color */
+      }
+    
+      /* 🎨 ===== THE LIQUID GLASS CARD ===== */
+      
+      .card {
+        width: var(--size-card-width);
+        height: var(--size-card-height);
+        /* 📏 481x512px: The dimensions of our glass */
+        
+        border-radius: var(--size-card-border-radius);
+        /* 🔄 46px: Super rounded Apple style */
+        
+        background-image: var(--background-card-default);
+        /* 🔮 DEFAULT LIQUID GLASS: The image created in Figma */
+        /* With refraction, reflection, and dispersion effects */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: For centering */
+        
+        top: 50%;
+        left: 50%;
+        /* 📍 50/50: At the center of the screen */
+        
+        transform: translate(-50%, -50%);
+        /* 🎯 PERFECT CENTERING: Shifts back by 50% */
+        /* It's the CSS trick for perfect centering */
+        
+        display: flex;
+        flex-direction: column;
+        /* 🎯 VERTICAL FLEX: Elements one below the other */
+        
+        justify-content: center;
+        align-items: center;
+        /* ⚖️ CENTERING: Everything centered */
+        
+        text-align: center;
+        /* 📝 CENTERED TEXT: For completeness */
+      }
+    
+      /* 🔘 ===== THE MIRROR BUTTON ===== */
+      
+      #check-btn {
+        font-size: var(--font-size-button);
+        /* 📏 22.38px: Button text size */
+        
+        display: flex;
+        /* 🎯 FLEX: Repeated below... */
+        
+        margin-top: var(--space-above-button);
+        /* ⬆️ 35.74px: Space above */
+        
+        margin-bottom: var(--space-below-button);
+        /* ⬇️ 55.86px: Space below */
+        
+        display: flex;
+        /* ⚠️ DUPLICATE: Display flex repeated */
+        
+        width: var(--size-button-width);
+        height: var(--size-button-height);
+        /* 📏 243x73px: Large and touch-friendly button */
+        
+        padding: 14px;
+        /* 🏠 PADDING: Internal space */
+        
+        justify-content: center;
+        align-items: center;
+        /* ⚖️ CENTERING: Text in center */
+        
+        gap: 14px;
+        /* 🌉 GAP: If there were multiple elements (not used) */
+        
+        border-radius: var(--size-card-border-radius);
+        /* 🔄 46px: Same radius as the card! */
+        /* ⚠️ Should use --size-button-border-radius (50px) */
+        
+        background-image: var(--background-button-default);
+        /* 🔘 LIQUID GLASS BUTTON: Coordinated with the card */
+        
+        border: none;
+        /* 🚫 NO BORDER: Liquid Glass doesn't need it */
+        
+        transition: background-image 0.5s ease, transform 0.25s ease;
+        /* 🎭 DOUBLE TRANSITION: */
+        /* background-image: 0.5s for state change */
+        /* transform: 0.25s for hover effects */
+      }
+    
+      #check-btn:hover {
+        background-image: var(--background-button-hover);
+        /* 🔄 HOVER: More intense Liquid Glass */
+        
+        cursor: pointer;
+        /* 👆 POINTER: Indicates clickability */
+        
+        transform: scale(1.02);
+        /* 🔍 SLIGHT ZOOM: 2% larger */
+        /* The liquid glass seems to "inflate" */
+      }
+    
+      #check-btn:active {
+        transform: scale(0.95);
+        /* 🔍 PRESSED: 95% of size */
+        /* Like pressing on liquid glass! */
+      }
+    
+      /* 🙈 ===== HIDDEN STATES ===== */
+      
+      .hidden-input {
+        visibility: hidden;
+        /* 👻 INVISIBLE: But still occupies space */
+        
+        position: absolute;
+        /* 🎯 ABSOLUTE POSITION: For overlay */
+        
+        top: 0;
+        left: 0;
+        /* 📍 CORNER: Top-left */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Covers everything */
+      }
+    
+      .hidden {
+        display: none;
+        /* 🚫 COMPLETELY HIDDEN: Doesn't occupy space */
+      }
+    
+      /* 🎨 ===== CLASSES FOR DIFFERENT STATES ===== */
+      
+      /* 🌟 PALINDROME STATE (YELLOW) */
+      html.palindrome-background {
+        background-image: var(--background-page-palindrome);
+        /* 🌟 YELLOW BACKGROUND: Success! */
+      }
+    
+      /* 💜 NOT PALINDROME STATE */
+      html.not-palindrome-background {
+        background-image: var(--background-page-not-palindrome);
+        /* 🔮 DARK PURPLE BACKGROUND: Not a palindrome */
+      }
+    
+      .card.palindrome-card {
+        background-image: var(--background-card-palindrome);
+        /* 💛 YELLOW CARD: Golden Liquid Glass */
+      }
+    
+      .card.not-palindrome-card {
+        background-image: var(--background-card-not-palindrome);
+        /* 💜 PURPLE CARD: Intense purple Liquid Glass */
+      }
+    
+      #check-btn.palindrome-button {
+        background-image: var(--background-button-palindrome);
+        /* 🟡 YELLOW BUTTON: Coordinated */
+      }
+    
+      #check-btn.not-palindrome-button {
+        background-image: var(--background-button-not-palindrome);
+        /* 🟣 PURPLE BUTTON: Coordinated */
+      }
+    
+      /* 🎯 ===== PLACEHOLDER FOCUS EFFECT ===== */
+      
+      #text-input:focus::placeholder {
+        color: var(--color-placeholder-text-focus);
+        /* ⚪ MORE TRANSPARENT PLACEHOLDER: 30% on focus */
+        /* It "dissolves" when you type */
+        
+        transition: color 0.25s ease-out;
+        /* 🎭 TRANSITION: Soft fade */
+      }
+    
+      /* 📱 ===== MOBILE MEDIA QUERY ===== */
+      
+      @media (max-width: 768px) {
+        /* 📱 TABLET AND MOBILE: Everything resizes */
+        
+        :root {
+          /* 🔄 COMPLETE OVERRIDE: All mobile variables */
+          
+          /* 🖼️ MOBILE IMAGES: Optimized versions */
+          --background-button-hover: url("https://github.com/user-attachments/assets/518957aa-ca39-4456-bd8e-d69fd2497ae0");
+          /* 🔄 MOBILE HOVER */
+          
+          /* 🎨 COLORS: Stay the same */
+          --color-text-primary: #fff;
+          --font-style: normal;
+          --title-letter-spacing: -0.56px;
+          --font-family-primary: "Poppins", sans-serif;
+          --font-family-secondary: "Work Sans", sans-serif;
+          
+          /* 📏 FONT RESIZING */
+          --font-size-title: 28px;
+          /* 📉 FROM 39px TO 28px: More compact */
+          
+          --font-size-button: 16px;
+          /* 📉 FROM 22px TO 16px: Proportionate */
+          
+          --font-weight-primary: 700;
+          /* 💪 BOLD: Stays the same */
+          
+          --font-size-description: 12px;
+          /* 📉 FROM 16px TO 12px: Smaller */
+          
+          --font-weight-secondary: 400;
+          /* 🏃 NORMAL: Stays the same */
+          
+          /* 📐 ELEMENT RESIZING */
+          --size-card-width: 344px;
+          --size-card-height: 366px;
+          /* 📉 SMALLER CARD: From 481x512 to 344x366 */
+          
+          --size-card-border-radius: 32px;
+          /* 📉 RADIUS: From 46px to 32px */
+          
+          --size-button-width: 174px;
+          --size-button-height: 52px;
+          /* 📉 BUTTON: From 243x73 to 174x52 */
+          
+          --size-button-border-radius: 36px;
+          /* 📉 BUTTON RADIUS: From 50px to 36px */
+          
+          /* 📏 REDUCED SPACING */
+          --space-above-title: 34px;
+          /* 📉 FROM 55px TO 34px */
+          
+          --space-above-description: 24px;
+          /* 📉 FROM 33px TO 24px */
+          
+          --space-above-button: 25px;
+          /* 📉 FROM 35px TO 25px */
+          
+          --space-below-button: 39px;
+          /* 📉 FROM 55px TO 39px */
+    
+          /* 🎨 MOBILE DEFAULT STATE IMAGES */
+          --background-page-default: url("https://github.com/user-attachments/assets/950ca8ae-6e4d-4598-bd38-15989d782771");
+          --background-card-default: url("https://github.com/user-attachments/assets/076efb6d-4a7c-46e2-85b7-81606216149b");
+          --background-button-default: url("https://github.com/user-attachments/assets/33f4a4cd-86c5-42da-be16-6292ec264251");
+          /* 🔮 MOBILE LIQUID GLASS: Versions optimized for mobile */
+          
+          /* 📝 MOBILE INPUT */
+          --input-border-width: 1.5px;
+          /* 📏 SAME BORDER: Doesn't change */
+          
+          --input-border-color-default: rgba(255, 255, 255, 0.60);
+          --color-placeholder-text-focus:  rgba(255, 255, 255, 0.30);
+          --input-border-color-focus: #fff;
+          /* 🎨 SAME COLORS: Visual consistency */
+          
+          --font-size-input: 14px;
+          /* 📉 FROM 20px TO 14px: Smaller input */
+          
+          --size-input-width: 240px;
+          --size-input-height: 42px;
+          /* 📏 INPUT: 240x42px instead of 340x30px */
+          /* Taller but narrower */
+          
+          --space-above-input: 64px;
+          /* 📉 FROM 89px TO 64px: Less space */
+          
+          --padding-text-input: 6px;
+          /* 📉 FROM 8px TO 6px: Reduced padding */
+    
+          /* 📊 MOBILE RESULT */
+          --font-size-result: 22px;
+          /* 📉 FROM 30px TO 22px: Smaller result */
+          
+          --top-result: 50px;
+          /* 📉 FROM 78px TO 50px: Higher up */
+    
+          /* 🌟 MOBILE PALINDROME IMAGES */
+          --background-page-palindrome: url("https://github.com/user-attachments/assets/1b3257a4-eb5a-4245-9c50-2bd43d5f9926");
+          --background-card-palindrome: url("https://github.com/user-attachments/assets/df01223b-9bae-4707-869b-b188b1ac191c");
+          --background-button-palindrome: url("https://github.com/user-attachments/assets/2a4e62bd-e766-4fcb-a771-eecbf2d5d713");
+          /* 💛 MOBILE YELLOW LIQUID GLASS: Optimized */
+    
+          /* 💜 MOBILE NOT PALINDROME IMAGES */
+          --background-page-not-palindrome: url("https://github.com/user-attachments/assets/318b9e76-1290-448d-b6cd-242103a60163");
+          --background-card-not-palindrome: url("https://github.com/user-attachments/assets/e6b2e38e-a467-4b18-bba6-31c783b1896b");
+          --background-button-not-palindrome: url("https://github.com/user-attachments/assets/e6edc35e-a909-4cc0-8241-ee83b1ec35b7");
+          /* 🟣 MOBILE PURPLE LIQUID GLASS: Optimized */
+        }
+      }
+    </style>
+    
+    <!-- 🚀 ===== IMAGE PRELOADING ===== -->
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/1a1259f0-0b84-478b-a26f-460d2228203d">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/99a6c549-5d45-4a36-8354-1c8039c4f7cb">
+    <link rel="preload" as="image" href="https://github.com/user-attachments/assets/d1126873-ad30-4742-a1e2-d050088f0af9">
+    <!-- ... (all other preloads) ... -->
+    <!-- 🖼️ PRELOAD: Loads all images in advance! -->
+    <!-- as="image" = tells the browser they're images -->
+    <!-- Improves performance by loading everything immediately -->
+    <!-- The Liquid Glass doesn't have to wait when changing state -->
+</head>
+
+<body>
+    <!-- 🎨 ===== THE PALINDROME CHECKER COMES TO LIFE ===== -->
+    
+    <div class="card">
+        <!-- 🔮 THE LIQUID GLASS CARD: Our magic container -->
+        
+        <div class="title">Is it a Mirror Word?</div>
+        <!-- 📰 TITLE: "Is it a mirror word?" -->
+        <!-- Mirror = perfect for palindromes! -->
+        
+        <div class="description">A palindrome reads the same forward and<br>backward, like a perfect mirror reflection,<br>ignoring punctuation, case, and spacing</div>
+        <!-- 📝 DESCRIPTION: Explains what a palindrome is -->
+        <!-- <br> for line breaks at the right places -->
+        
+        <div class="input-container">
+            <!-- 📦 INPUT CONTAINER: For styling -->
+            
+            <input type="text" placeholder="Enter text to check its reflection" id="text-input">
+            <!-- 📝 INPUT: Where the user types -->
+            <!-- placeholder = suggestion text -->
+            <!-- id for JavaScript -->
+        </div>
+        
+        <div class="button-container">
+            <!-- 📦 BUTTON CONTAINER: For layout -->
+            
+            <button id="check-btn">Mirror</button>
+            <!-- 🔘 MIRROR BUTTON: The main action -->
+            <!-- Text changes to "Clear" after check -->
+        </div>
+        
+        <div id="result" class="hidden"></div>
+        <!-- 📊 RESULT: Initially hidden -->
+        <!-- Overlays everything when it appears -->
+    </div>
+    
+    <script>
+      /* 🎯 ===== JAVASCRIPT: The Logic of the Palindrome Checker ===== */
+      
+      // 🔍 DOM ELEMENTS SELECTION
+      const textInput = document.getElementById("text-input");
+      // 📝 INPUT: Where the user types
+      
+      const checkBtn = document.getElementById("check-btn");
+      // 🔘 BUTTON: For checking or clearing
+      
+      const result = document.getElementById("result");
+      // 📊 RESULT: Div to show the result
+      
+      const card = document.querySelector(".card");
+      // 🔮 CARD: To change its Liquid Glass
+      
+      const htmlElement = document.documentElement;
+      // 🌍 HTML: The root element to change background
+      // documentElement = <html> tag
+      
+      let lastValue = "";
+      // 💾 LAST VALUE: Stores the last checked text
+      // let = can change (unlike const)
+      
+      
+      // 🔍 ===== PALINDROME CHECK FUNCTION =====
+      const checkPalindrome = () => {
+          // 🎯 ARROW FUNCTION: Modern ES6 syntax
+          
+          const userValue = textInput.value;
+          // 📝 USER VALUE: What they typed
+          
+          lastValue = userValue;
+          // 💾 SAVE: For future comparison
+      
+          if (userValue === "") {
+              // 🚫 EMPTY CHECK: If there's no text
+              
+              alert("Please input a value");
+              // ⚠️ ALERT: Warning message
+              // (not very Apple-style, but it works!)
+              
+              return;
+              // 🛑 STOP: Exits the function
+          }
+      
+          const cleanInput = userValue.toLowerCase().replace(/[^a-z0-9]/g, "");
+          // 🧹 INPUT CLEANING: The heart of the algorithm!
+          
+          // 1. toLowerCase(): everything lowercase
+          // 2. replace(/[^a-z0-9]/g, ""): removes everything except letters and numbers
+          //    - / / = regex delimiters
+          //    - [^a-z0-9] = NOT (^) letters (a-z) or numbers (0-9)
+          //    - g = global (all occurrences)
+          //    - "" = replace with empty string (remove)
+          
+          // EXAMPLE: "A man, a plan, a canal: Panama!"
+          // becomes: "amanaplanacanalpanama"
+      
+          const reverseText = cleanInput.split("").reverse().join("");
+          // 🔄 REVERSAL: Another piece of magic!
+          
+          // 1. split(""): transforms string into character array
+          //    "hello" → ["h", "e", "l", "l", "o"]
+          // 2. reverse(): reverses the array
+          //    ["h", "e", "l", "l", "o"] → ["o", "l", "l", "e", "h"]
+          // 3. join(""): reunites into string
+          //    ["o", "l", "l", "e", "h"] → "olleh"
+      
+          textInput.classList.add("hidden-input");
+          // 👻 HIDE INPUT: With visibility hidden
+          
+          result.classList.remove("hidden");
+          // 👁️ SHOW RESULT: Removes display none
+          
+      
+          if (cleanInput === reverseText) {
+              // ✅ IS PALINDROME: Text equals its reverse!
+              
+              result.textContent = `${userValue} is a palindrome`;
+              // 📝 MESSAGE: With original text (not cleaned)
+              // Template literal with backticks ``
+              
+              htmlElement.classList.add("palindrome-background");
+              // 🌟 YELLOW BACKGROUND: Success class
+              
+              card.classList.add("palindrome-card");
+              // 💛 YELLOW CARD: Golden Liquid Glass
+              
+              checkBtn.classList.add("palindrome-button");
+              // 🟡 YELLOW BUTTON: Coordinated
+              
+              checkBtn.textContent = "Clear";
+              // 🔄 CHANGE TEXT: From "Mirror" to "Clear"
+              
+          } else {
+              // ❌ NOT A PALINDROME: Text different from reverse
+              
+              result.textContent = `${userValue} is not a palindrome`;
+              // 📝 NEGATIVE MESSAGE: Not a palindrome
+              
+              checkBtn.textContent = "Clear";
+              // 🔄 CHANGE TEXT: Here too becomes "Clear"
+              
+              htmlElement.classList.add("not-palindrome-background");
+              // 💜 PURPLE BACKGROUND: Non-palindrome class
+              
+              card.classList.add("not-palindrome-card");
+              // 🟣 PURPLE CARD: Purple Liquid Glass
+              
+              checkBtn.classList.add("not-palindrome-button");
+              // 🟣 PURPLE BUTTON: Everything coordinated
+          }
+      };
+      
+      // 🔄 ===== INTERFACE RESET FUNCTION =====
+      const resetInterface = () => {
+          // 🧹 TOTAL CLEANUP: Returns to initial state
+          
+          textInput.value = "";
+          // 📝 EMPTY INPUT: Empty string
+          
+          textInput.classList.remove("hidden-input");
+          // 👁️ SHOW INPUT: Becomes visible
+          
+          result.textContent = "";
+          // 📊 EMPTY RESULT: No text
+          
+          result.classList.add("hidden");
+          // 👻 HIDE RESULT: Display none
+          
+          htmlElement.classList.remove("palindrome-background", "not-palindrome-background");
+          // 🎨 REMOVE BACKGROUNDS: Both classes
+          // Can remove multiple classes at once!
+          
+          card.classList.remove("palindrome-card", "not-palindrome-card");
+          // 🔮 RESET CARD: Back to default Liquid Glass
+          
+          checkBtn.classList.remove("palindrome-button", "not-palindrome-button")
+          // 🔘 RESET BUTTON: Back to default purple
+          // ⚠️ Missing semicolon!
+          
+          checkBtn.textContent = "Mirror";
+          // 📝 ORIGINAL TEXT: Back to "Mirror"
+          
+          lastValue = "";
+          // 💾 RESET MEMORY: Forgets the last value
+      }
+      
+      // 🎯 ===== BUTTON EVENT LISTENER =====
+      checkBtn.addEventListener("click", () => {
+          // 🖱️ CLICK LISTENER: When you click the button
+          
+          if (checkBtn.textContent === "Clear" && (textInput.value === lastValue || textInput.value === "")) {
+              // 🔍 COMPLEX LOGIC: When to reset?
+              
+              // 1. The button says "Clear" (not "Mirror")
+              // AND (&&)
+              // 2. The input equals the last checked value
+              //    OR (||)
+              //    The input is empty
+              
+              // This prevents accidental resets if the user
+              // has written something new!
+              
+              resetInterface();
+              // 🧹 RESET: Clean everything
+              
+          } else {
+              // 🔍 OTHERWISE: Check palindrome
+              
+              checkPalindrome();
+              // 🎯 CHECK: Verify if it's a palindrome
+          }
+      })
+      // ⚠️ Missing semicolon here too!
+    </script>
+</body>
+</html>
+
+<!-- 🎯 ===== LIQUID GLASS PALINDROME CHECKER SUMMARY ===== -->
+<!-- 
+🔮 LIQUID GLASS ARCHITECTURE:
+│
+├── 🧠 HEAD
+│   ├── 🔤 Google Fonts (Poppins + Work Sans)
+│   ├── 🎨 CSS with:
+│   │   ├── 📚 Variable system for 3 states
+│   │   ├── 🔮 Liquid Glass images from Figma
+│   │   ├── 🎭 Fluid transitions between states
+│   │   └── 📱 Media query with complete mobile set
+│   └── 🚀 20 preloads for performance
+│
+└── 🎨 BODY
+    ├── 🔮 Liquid Glass Card
+    │   ├── 📰 "Mirror Word" title
+    │   ├── 📝 Palindrome description
+    │   ├── 📝 Transparent input
+    │   ├── 🔘 "Mirror/Clear" button
+    │   └── 📊 Result overlay
+    └── 🎯 JavaScript
+        ├── 🔍 Palindrome algorithm
+        ├── 🎨 Visual state changes
+        └── 🧹 Intelligent reset system
+
+🌈 LIQUID GLASS STATES:
+├── 🔮 DEFAULT: Base purple
+├── 🌟 PALINDROME: Success yellow
+└── 💜 NOT PALINDROME: Intense purple
+
+💡 ADVANCED TECHNIQUES:
+├── 🔮 Liquid Glass effect with Figma images
+├── 🎨 3 complete states (background + card + button)
+├── 📱 Optimized mobile versions
+├── 🧹 Regex for input cleaning
+└── 🎯 Intelligent reset logic
+
+It's like having iOS 26 in the browser! 🍎✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Most Fun Project of My Life!
+This was the most fun code and design project of my life!<br />
+I connected so many dots. A few days ago I was in the car waiting for a person and while waiting I wondered: how do you replicate Apple's Liquid Glass with just CSS? Would React be necessary? I saw a tutorial that promised to achieve Liquid Glass with the simple lines of code it suggested, I didn't delve into it right then but as soon as I was about to look carefully at the tutorial the day before yesterday, when I started the project, I realized afterwards that React would be needed. This is because liquid glass isn't the simple background blur effect or the Aero design born with Windows Vista. It's much more complex, it's actually rich with advanced parameters that the blur effect can only dream of.
+
+### Internal Inspiration
+I didn't need external inspiration this time, because I drew inspiration from my first app created with Figma. It was an assignment from the Breccia course I took, where I used some photos of my puppy Lucy when she was little.<br />
+I'm including two screenshots below:
+
+<img width="100%" alt="My first App" src="https://github.com/user-attachments/assets/4fb89bbc-5782-4948-aa5c-29cbfe614890" />
+
+From it I took the color choices which I then adapted to the backgrounds of everything, from card to buttons, each extracted from every "situation" created in Figma, having first prototyped there, as always. To be honest I still need to research this but I suppose that giving different background-images to every element that always change compared to the next and previous screen isn't a best practice.
+
+### The Optimization Challenge
+As long as I was testing the code with Live Server in Visual Studio Code there were no glitches/lag, because it had image availability at the speed of light, having them in the project folder; but when I exported them to GitHub, in the repository assets, I started seeing the limits. I subsequently tried to solve them with TinyPng but the results were very poor, I didn't even have control over the output quality. Then I came across other formats, particularly WebP but to no avail, it lost too much quality while keeping quality parameters at high levels.
+
+The breakthrough was a program, totally open source, called ImageOptim, which made my computer work like never before: the CPU reached 92°C, this is because it runs completely locally. It reduced quality by just 30%, but it was enough. Now the application has no more glitches and images get pre-loaded thanks to the "preload" property that I had the pleasure of discovering today, while looking for ways to optimize the UX.
+
+### The Growth Sensation
+I'm extremely happy with the result, because inspiration was practically nil and for this very reason I feel it's more "my" project compared to others, despite never ever having copied others' content, but especially it's this sensation of needing less and less inspiration that makes you perceive progress. It's like at the gym, after some years I could have created (and I did) a workout from scratch, even creatively, but not less technical for that.
+
+### The Three Non-Stop Days
+It was 3 non-stop days, I only stopped to make a medical visit. I felt fatigue in the hardest moments, because I'd be lying if I said it was all simple, especially regarding JavaScript. CSS made me lose patience with element positioning but then I solved it and also understanding how to do it next time, it may seem strange but I used Refactoring UI principles and also the calculator to make it exactly like the Figma version, but JavaScript instead gave me problems not so much with calculations, but rather with buttons. A minimal modification, a minimal syntax oversight and I was back to square one. I certainly complicated my life by planning multiple interfaces but I'm happy this way.
+
+### The Three Edge Cases
+Last curiosity, I changed phones almost a year ago to a foldable to take advantage of using it as a reader in the cafeteria at work and in moments where I would have risked wasting time, given that the small phone I had certainly wasn't created to increase productivity, I used it at most to read brief documents but it was always impossible to read books on it. Well I'm talking about the iPhone 12 mini, and it's right here that I understood Liquid Glass, beta after beta, improvement after improvement. But I don't just refer to this. I had the idea to use it as "prototype in progress" while using Figma on desktop, every modification made there I saw it materialize instantly also on the iPhone. I based the dimensions for the mobile version precisely by visualizing it step by step from there. It represents a true edge case, in fact, it remains inevitable that if the experience with it will be perfect, it will be even better with all others. And it's not over here, as written before my main phone is a foldable: without doing it on purpose I have 3 edge cases! Because the iPhone is the small phone, the foldable closed is the narrow phone, the foldable open is the huge phone. From time to time I adopted the previous prototype in progress process also with the foldable.
+
+As always, as taught by Refactoring UI I started designing for mobile.
+
+### What I Learned
+
+**Advanced CSS Variables System:**
+- Complete design system with variables for every element
+- Responsive variables that completely change between desktop and mobile
+- CSS Variables for background-image dynamic switching
+- Structured color system and spacing system
+
+**Performance Optimization:**
+- `rel="preload"` for image pre-loading
+- Image optimization with ImageOptim
+
+**Complex State Management:**
+- JavaScript state tracking with `lastValue` variable
+- Dynamic button text change ("Mirror" ↔ "Clear")
+- UI state synchronization between multiple elements
+- Error handling for empty input validation
+
+**Advanced JavaScript Patterns:**
+- String manipulation for palindrome logic
+- `toLowerCase()`, `replace()` with regex, `split()`, `reverse()`, `join()`
+
+**Mobile-First Responsive Design:**
+- Edge case testing on 3 different devices
+- Real-time prototype testing workflow
+- Mobile-first approach as taught by Refactoring UI
+
+**User Experience Engineering:**
+- Accessibility with placeholder descriptions
+- Immediate visual feedback for user actions
+- Error prevention with input validation
+
+### Reflection
+I'm becoming faster and faster and my interest isn't waning, quite the opposite.
+
+***
+
+**Next Project**: Learn the Date Object by Building a Date Formatter

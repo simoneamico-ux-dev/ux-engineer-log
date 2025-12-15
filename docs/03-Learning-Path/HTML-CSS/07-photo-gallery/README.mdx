@@ -1,0 +1,234 @@
+---
+sidebar_position: 6
+sidebar_label: 'CSS Flexbox Photo Gallery'
+title: 'CSS Flexbox Photo Gallery'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Source Code
+
+<Tabs>
+  <TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="header">
+    <h1>css flexbox photo gallery</h1>
+    </header>
+    <div class="gallery">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/1.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/2.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/3.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/4.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/5.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/6.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/7.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/8.jpg">
+      <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/9.jpg">
+    </div>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f5f6f7;
+}
+
+.header {
+  text-align: center;
+  text-transform: uppercase;
+  padding: 32px;
+  background-color: #0a0a23;
+  color: #fff;
+  border-bottom: 4px solid #fdb347;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 10px;
+}
+
+.gallery img {
+  width: 100%;
+  max-width: 350px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.gallery::after {
+  content: "";
+  width: 350px;
+}
+```
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- Declares that the file is HTML5, always goes on the first line -->
+
+<html lang="en">
+<!-- Root tag. lang="en" indicates the language for SEO, accessibility, automatic translators -->
+
+<head>
+  <meta charset="utf-8">
+  <!-- UTF-8 character encoding (supports all letters, symbols, emojis, etc.) -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Makes the layout responsive: viewport width follows the device -->
+
+  <title>Photo Gallery</title>
+  <!-- Page title, visible in the browser tab -->
+
+  <style>
+    /* ===== RESET AND BASE ===== */
+    * {
+      box-sizing: border-box;
+      /* box-sizing: border-box makes padding and border included in the declared width and height */
+    }
+
+    body {
+      margin: 0;
+      /* Removes the browser's default margin */
+      font-family: sans-serif;
+      /* Modern font, sans-serif, readable everywhere */
+      background: #f5f6f7;
+      /* Very light gray background */
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .header {
+      text-align: center;
+      /* Centers text horizontally */
+      text-transform: uppercase;
+      /* Transforms all text to uppercase */
+      padding: 32px;
+      /* Internal space above/below */
+      background-color: #0a0a23;
+      /* Deep blue/black */
+      color: #fff;
+      /* White text */
+      border-bottom: 4px solid #fdb347;
+      /* Decorative yellow/orange line below the header */
+    }
+
+    /* ===== FLEXBOX PHOTO GALLERY ===== */
+    .gallery {
+      display: flex;
+      /* Enables Flexbox */
+      flex-direction: row;
+      /* Photos are aligned in rows (default) */
+      flex-wrap: wrap;
+      /* If there's no more space, images wrap to the next line */
+      justify-content: center;
+      /* Centers all photos horizontally */
+      align-items: center;
+      /* Centers rows of images vertically */
+      gap: 16px;
+      /* Fixed space between images (new in Flexbox, more practical than margin) */
+      max-width: 1400px;
+      /* Maximum gallery width for responsive layout */
+      margin: 0 auto;
+      /* Centers the gallery horizontally on the page */
+      padding: 20px 10px;
+      /* Internal space above/below (20px), on sides (10px) */
+    }
+
+    /* ===== PHOTO STYLE ===== */
+    .gallery img {
+      width: 100%;
+      /* Each photo occupies the full width of the available slot */
+      max-width: 350px;
+      /* But not more than 350px */
+      height: 300px;
+      /* Fixed height: makes the grid uniform */
+      object-fit: cover;
+      /* Crops images to fill all the space without distortion */
+      border-radius: 10px;
+      /* Rounded corners for a more modern look */
+    }
+
+    /* ===== HACK FOR JUSTIFIED ALIGNMENT ===== */
+    .gallery::after {
+      content: "";
+      /* "Ghost" pseudo-element to complete the last row */
+      width: 350px;
+      /* Occupies the space of one image */
+      /* Helps to prevent the last row of images from being too short
+         and to maintain the justified layout even if the number of images is not a perfect multiple */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===== PAGE HEADER ===== -->
+  <header class="header">
+    <h1>css flexbox photo gallery</h1>
+    <!-- Uppercase, centered and highly visible title -->
+  </header>
+
+  <!-- ===== PHOTO GALLERY ===== -->
+  <div class="gallery">
+    <!-- Flex container for photos; the .gallery class applies all the Flexbox layout -->
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/1.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/2.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/3.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/4.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/5.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/6.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/7.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/8.jpg">
+    <img src="https://cdn.freecodecamp.org/curriculum/css-photo-gallery/9.jpg">
+    <!-- Each image occupies its space in the grid.
+         Flexbox + object-fit: cover + max-width make everything responsive and orderly -->
+  </div>
+</body>
+</html>
+```
+</TabItem>
+
+</Tabs>
+
+What I Learned:
+- Using Flexbox (`display: flex`, `flex-wrap`, `justify-content`, `gap`) to create a responsive, beautiful gallery
+- Responsive layout tricks (max-width, margin auto)
+- Styling images with `object-fit: cover` and border-radius for a polished, modern look
+- The utility of pseudo-elements (`::after`) for layout control
+
+Time: 1 hour 10 min total
+
+Personal Note:  
+This is my favorite project so far — I absolutely love the way it looks. Seeing the visual result come together was really satisfying and motivating.  
+I'm now working on a vademecum: a living, real-world HTML & CSS handbook that I'll keep updating as I learn, always linking techniques to their everyday equivalents.
+
+Next: Continue expanding the real-world HTML/CSS vademecum  
+and **Learn Typography by Building a Nutrition Label**

@@ -1,0 +1,1165 @@
+---
+sidebar_position: 13
+sidebar_label: 'Number Sorter'
+title: 'Number Sorter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Number Sorter
+
+<img  width="100%" alt="Screenshot 2025-10-18 alle 12 40 02" src="https://github.com/user-attachments/assets/1896e9d3-a3d8-444a-9545-6dd09663e5e4" />
+
+### The Project
+Interactive Number Sorter developed with JavaScript, focusing on the implementation and understanding of basic sorting algorithms: Bubble Sort, Selection Sort, and Insertion Sort. A project that unveils the logic behind sorting algorithms.
+
+### Source Code
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    <title>Number Sorter</title>
+  </head>
+  <body>
+    <main>
+      <h1>Number Sorter</h1>
+      <form id="form" class="form">
+        <h2>Input:</h2>
+        <fieldset>
+          <span class="bracket">[</span>
+          <div>
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="first number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8" selected>8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="second number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="third number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="fourth number"
+            >
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="fifth number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+          </div>
+          <span class="bracket">]</span>
+        </fieldset>
+        <button id="sort">Sort</button>
+      </form>
+      <div class="output-container">
+        <h2>Output:</h2>
+        <div class="output-array">
+          <span class="bracket">[</span>
+          <div>
+            <span class="output-value" id="output-value-0">0</span>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <span class="output-value" id="output-value-1">0</span>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <span class="output-value" id="output-value-2">0</span>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <span class="output-value" id="output-value-3">0</span>
+            <span class="comma">,</span>
+          </div>
+          <div>
+            <span class="output-value" id="output-value-4">0</span>
+          </div>
+            <span class="bracket">]</span>
+        </div>
+      </div>
+    </main>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+  --gray-00: #ffffff;
+  --gray-05: #f5f6f7;
+  --gray-15: #d0d0d5;
+  --gray-75: #3b3b4f;
+  --gray-85: #1b1b32;
+  --gray-90: #0a0a23;
+  --blue-50: #198eee;
+  --error: #a94442;
+  --danger-color: #850000;
+  --danger-background: #ffadad;
+}
+
+*,
+::before,
+::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  background-color: var(--gray-85);
+  color: var(--gray-05);
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 30px auto;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+form {
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+}
+
+fieldset {
+  border: 0 none;
+  height: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+fieldset div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bracket,
+.comma {
+  font-size: 2.3em;
+}
+
+form .comma {
+  margin-left: 2px;
+}
+
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  height: 38px;
+  width: 50px;
+  text-align: center;
+}
+
+button {
+  cursor: pointer;
+  margin-top: 15px;
+  text-decoration: none;
+  background-image: linear-gradient(#fecc4c, #ffac33);
+  border: 3px solid #feac32;
+  padding: 10px 16px;
+  font-size: 23px;
+  width: 100%;
+}
+
+select:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--blue-50);
+}
+
+.output-container {
+  width: 95%;
+  min-height: 55px;
+  margin-top: 25px;
+  border-radius: 0;
+  padding: 15px;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+.output-array {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.output-value {
+  font-size: 2em;
+}
+
+.alert {
+  background-color: var(--danger-background);
+  border: 3px solid var(--danger-color);
+  color: var(--danger-color);
+}
+
+@media (min-width: 550px) {
+  form,
+  .output-container {
+    max-width: 480px;
+  }
+
+  fieldset {
+    max-width: 400px;
+  }
+
+  .output-array {
+    max-width: 420px;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const sortButton = document.getElementById("sort");
+
+const sortInputArray = (event) => {
+  event.preventDefault();
+
+  const inputValues = [
+    ...document.getElementsByClassName("values-dropdown")
+  ].map((dropdown) => Number(dropdown.value));
+
+  const sortedValues = inputValues.sort((a, b) => {
+    return a - b;
+  });
+
+  updateUI(sortedValues);
+}
+
+const updateUI = (array = []) => {
+  array.forEach((num, i) => {
+    const outputValueNode = document.getElementById(`output-value-${i}`);
+    outputValueNode.innerText = num;
+  })
+}
+
+const bubbleSort = (array) => {
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < array.length - 1; j++) {
+      if (array[j] > array[j + 1]) {
+        const temp = array[j];
+        array[j] = array[j + 1];
+        array[j + 1] = temp;
+      }
+    }
+  }
+
+  return array;
+}
+
+const selectionSort = (array) => {
+  for (let i = 0; i < array.length; i++) {
+    let minIndex = i;
+
+    for (let j = i + 1; j < array.length; j++) {
+      if (array[j] < array[minIndex]) {
+        minIndex = j;
+      }
+    }
+
+    const temp = array[i];
+    array[i] = array[minIndex];
+    array[minIndex] = temp;
+  }
+
+  return array;
+}
+
+const insertionSort = (array) => {
+  for (let i = 1; i < array.length; i++) {
+    const currValue = array[i];
+    let j = i - 1;
+
+    while (j >= 0 && array[j] > currValue) {
+      array[j + 1] = array[j];
+      j--;
+    }
+    array[j + 1] = currValue;
+  }
+  return array;
+}
+
+sortButton.addEventListener("click", sortInputArray);
+```
+
+</TabItem> 
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to the sorting laboratory!" -->
+<!-- It's like opening the doors of a number-sorting factory! 🔢 -->
+
+<html>
+<!-- 🌍 MAIN CONTAINER: Our sorting application -->
+<!-- Note: missing lang="en" for accessibility -->
+
+  <head>
+    <!-- 🧠 THE CONTROL CENTER: Where we set up everything for our sorter -->
+    <!-- It's like preparing the tools before starting work -->
+    
+    <meta charset="UTF-8" />
+    <!-- 📝 UNIVERSAL CHARACTERS: UTF-8 for all numeric symbols! 🔢 -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 📱 RESPONSIVE DESIGN: "The sorter works on every device!" -->
+    <!-- It's like having a calculator that adapts to the screen -->
+    
+    <style>
+      /* 🎨 ===== COLOR SYSTEM: CSS Variables ===== */
+      
+      :root {
+        /* 🎨 GRAY PALETTE: From white to almost pure black */
+        --gray-00: #ffffff;
+        /* ⚪ PURE WHITE: For clean backgrounds */
+        
+        --gray-05: #f5f6f7;
+        /* 🔲 VERY LIGHT GRAY: Text on dark background */
+        
+        --gray-15: #d0d0d5;
+        /* 🔲 LIGHT GRAY: For borders and separators */
+        
+        --gray-75: #3b3b4f;
+        /* 🔲 DARK GRAY: Not used here but available */
+        
+        --gray-85: #1b1b32;
+        /* ⚫ ALMOST BLACK: Main app background */
+        
+        --gray-90: #0a0a23;
+        /* ⚫ DEEP BLACK: The darkest in the palette */
+        
+        --blue-50: #198eee;
+        /* 🔵 FOCUS BLUE: For keyboard accessibility */
+        
+        --error: #a94442;
+        /* 🔴 ERROR RED: Not used but ready */
+        
+        --danger-color: #850000;
+        /* 🔴 DARK RED: For alert borders */
+        
+        --danger-background: #ffadad;
+        /* 🔴 ALERT PINK: Background for error messages */
+      }
+      
+      /* 🔄 ===== UNIVERSAL RESET ===== */
+      
+      *,
+      ::before,
+      ::after {
+        padding: 0;
+        margin: 0;
+        /* 🚫 ZERO EVERYTHING: No default spaces */
+        
+        box-sizing: border-box;
+        /* 📦 BORDER-BOX: Include padding and borders in dimensions */
+        /* The golden rule of modern CSS! */
+      }
+      
+      /* 🎨 ===== BASE STYLES ===== */
+      
+      body {
+        font-family: "Lato", Helvetica, Arial, sans-serif;
+        /* 🔤 FONT STACK: Lato as first choice, then fallbacks */
+        /* Lato = modern and readable Google font */
+        
+        font-size: 18px;
+        /* 📏 BASE SIZE: 18px for good readability */
+        
+        background-color: var(--gray-85);
+        /* ⚫ DARK BACKGROUND: Dark mode theme */
+        
+        color: var(--gray-05);
+        /* ⚪ LIGHT TEXT: High contrast on dark background */
+      }
+      
+      main {
+        display: flex;
+        /* 🎯 FLEXBOX: Modern layout */
+        
+        flex-direction: column;
+        /* 📦 COLUMN: Elements one below the other */
+        
+        align-items: center;
+        /* ⚖️ CENTERING: Everything centered horizontally */
+      }
+      
+      /* 📰 ===== HEADINGS ===== */
+      
+      h1 {
+        margin: 30px auto;
+        /* 🌬️ MARGINS: 30px top and bottom, auto on sides */
+        /* auto = centers horizontally */
+      }
+      
+      h2 {
+        margin-bottom: 15px;
+        /* ⬇️ SPACE BELOW: Separates from content */
+      }
+      
+      /* 📋 ===== FORM ===== */
+      
+      form {
+        width: 100%;
+        /* 📏 FULL WIDTH: Takes all available space */
+        
+        text-align: center;
+        /* ⚖️ CENTERED TEXT: For alignment */
+        
+        padding: 15px;
+        /* 🏠 PADDING: Internal breathing room */
+      }
+      
+      fieldset {
+        border: 0 none;
+        /* 🚫 NO BORDER: Removes default border */
+        
+        height: 100%;
+        /* 📏 FULL HEIGHT: Of container */
+        
+        margin: auto;
+        /* ⚖️ CENTERING: Automatic */
+        
+        display: flex;
+        /* 🎯 FLEXBOX: To align dropdowns */
+        
+        justify-content: space-around;
+        /* 🌉 DISTRIBUTION: Equal space between elements */
+        /* space-around = equal space around each element */
+        
+        align-items: center;
+        /* 📐 VERTICAL ALIGNMENT: Everything on same line */
+      }
+      
+      fieldset div {
+        display: flex;
+        /* 🎯 FLEX: Inner divs too */
+        
+        justify-content: center;
+        align-items: center;
+        /* ⚖️ CENTERING: Dropdowns and commas aligned */
+      }
+      
+      /* 🔤 ===== TYPOGRAPHIC ELEMENTS ===== */
+      
+      .bracket,
+      .comma {
+        font-size: 2.3em;
+        /* 📏 LARGE SIZE: 2.3 times the base font */
+        /* 2.3 × 18px = 41.4px */
+        /* Square brackets must be clearly visible! */
+      }
+      
+      form .comma {
+        margin-left: 2px;
+        /* ➡️ MICRO-SPACE: Small breathing room after number */
+        /* Subtle but important detail for readability */
+      }
+      
+      /* 🎛️ ===== DROPDOWN ===== */
+      
+      select {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        /* 🧬 INHERIT: Takes font and sizes from parent */
+        /* inherit = use same values as body */
+        
+        height: 38px;
+        /* 📏 FIXED HEIGHT: For uniformity */
+        
+        width: 50px;
+        /* 📏 WIDTH: Enough for one number */
+        
+        text-align: center;
+        /* ⚖️ CENTERED NUMBERS: In dropdown */
+      }
+      
+      /* 🔘 ===== BUTTON ===== */
+      
+      button {
+        cursor: pointer;
+        /* 👆 POINTER CURSOR: Shows it's clickable */
+        
+        margin-top: 15px;
+        /* ⬆️ SPACE ABOVE: Separates from dropdowns */
+        
+        text-decoration: none;
+        /* 🚫 NO DECORATIONS: Clean */
+        
+        background-image: linear-gradient(#fecc4c, #ffac33);
+        /* 🌅 GOLDEN GRADIENT: From light yellow to orange */
+        /* It's like a shining button! */
+        
+        border: 3px solid #feac32;
+        /* 🖼️ BORDER: Solid orange 3px */
+        
+        padding: 10px 16px;
+        /* 🏠 PADDING: 10px vertical, 16px horizontal */
+        
+        font-size: 23px;
+        /* 📏 LARGE TEXT: Clearly visible */
+        
+        width: 100%;
+        /* 📏 FULL WIDTH: Takes all space */
+      }
+      
+      /* 🎯 ===== FOCUS ACCESSIBILITY ===== */
+      
+      select:focus-visible,
+      button:focus-visible {
+        outline: 3px solid var(--blue-50);
+        /* 🔵 BLUE OUTLINE: For keyboard navigation */
+        /* focus-visible = only when using keyboard */
+        /* Essential for accessibility! */
+      }
+      
+      /* 📊 ===== OUTPUT CONTAINER ===== */
+      
+      .output-container {
+        width: 95%;
+        /* 📏 ALMOST FULL: 95% leaves some margin */
+        
+        min-height: 55px;
+        /* 📏 MINIMUM HEIGHT: Never collapses below 55px */
+        
+        margin-top: 25px;
+        /* ⬆️ SPACE ABOVE: Separates from input */
+        
+        border-radius: 0;
+        /* 🔲 SQUARE CORNERS: No rounding */
+        
+        padding: 15px;
+        /* 🏠 PADDING: Internal breathing room */
+        
+        overflow-wrap: break-word;
+        /* 📝 WORD WRAP: If too long, breaks to new line */
+        /* Useful for very long arrays */
+        
+        text-align: center;
+        /* ⚖️ CENTERED: Like everything else */
+      }
+      
+      .output-array {
+        width: 100%;
+        /* 📏 FULL WIDTH: Of container */
+        
+        margin: auto;
+        /* ⚖️ CENTERING: Automatic */
+        
+        display: flex;
+        /* 🎯 FLEXBOX: To align numbers */
+        
+        align-items: center;
+        /* 📐 ALIGNMENT: Vertically centered */
+        
+        justify-content: space-around;
+        /* 🌉 DISTRIBUTION: Like the input */
+      }
+      
+      .output-value {
+        font-size: 2em;
+        /* 📏 LARGE NUMBERS: 2 × 18px = 36px */
+        /* Results clearly visible! */
+      }
+      
+      /* 🚨 ===== ALERT STYLES ===== */
+      
+      .alert {
+        background-color: var(--danger-background);
+        /* 🔴 PINK BACKGROUND: For errors */
+        
+        border: 3px solid var(--danger-color);
+        /* 🔴 RED BORDER: Highlights the problem */
+        
+        color: var(--danger-color);
+        /* 🔴 RED TEXT: Error message */
+        /* Class ready but not used in code */
+      }
+      
+      /* 📱 ===== MEDIA QUERY ===== */
+      
+      @media (min-width: 550px) {
+        /* 🖥️ MEDIUM SCREENS: Above 550px */
+        
+        form,
+        .output-container {
+          max-width: 480px;
+          /* 📏 MAXIMUM WIDTH: Not too wide on desktop */
+        }
+      
+        fieldset {
+          max-width: 400px;
+          /* 📏 NARROWER: To maintain proportions */
+        }
+      
+        .output-array {
+          max-width: 420px;
+          /* 📏 SLIGHTLY WIDER: Than fieldset */
+        }
+      }
+    </style>
+    <title>Number Sorter</title>
+    <!-- 📑 TAB TITLE: Clear and descriptive -->
+  </head>
+  
+  <body>
+    <!-- 🎯 ===== THE APPLICATION COMES TO LIFE ===== -->
+    
+    <main>
+      <!-- 📄 MAIN CONTENT: The heart of the app -->
+      
+      <h1>Number Sorter</h1>
+      <!-- 📰 TITLE: Immediately tells what the app does -->
+      
+      <form id="form" class="form">
+        <!-- 📋 FORM: The input module -->
+        <!-- id="form" for JavaScript access -->
+        
+        <h2>Input:</h2>
+        <!-- 📥 INPUT SECTION: Where user enters numbers -->
+        
+        <fieldset>
+          <!-- 📦 FIELD GROUP: Contains all dropdowns -->
+          
+          <span class="bracket">[</span>
+          <!-- 🔤 OPENING BRACKET: Visual representation of array -->
+          
+          <div>
+            <!-- 📦 CONTAINER: First number -->
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="first number"
+            >
+              <!-- 🎛️ DROPDOWN 1: First number selection -->
+              <!-- name="values" = same name for all (array of values) -->
+              <!-- aria-label = accessibility for screen readers -->
+              
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8" selected>8</option>
+              <!-- ✅ SELECTED: Default value is 8 -->
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+            <!-- 🔤 COMMA: Visual separator -->
+          </div>
+          
+          <div>
+            <!-- 📦 CONTAINER: Second number -->
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="second number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <!-- ✅ DEFAULT: 2 -->
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <!-- 📦 CONTAINER: Third number -->
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="third number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <!-- ✅ DEFAULT: 4 -->
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <!-- 📦 CONTAINER: Fourth number -->
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="fourth number"
+            >
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <!-- ✅ DEFAULT: 1 -->
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <!-- 📦 CONTAINER: Fifth and last number -->
+            <select
+              name="values"
+              class="values-dropdown"
+              aria-label="fifth number"
+            >
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <!-- ✅ DEFAULT: 3 -->
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <!-- 🚫 NO COMMA: Last element! -->
+          </div>
+          
+          <span class="bracket">]</span>
+          <!-- 🔤 CLOSING BRACKET: Completes array representation -->
+        </fieldset>
+        
+        <button id="sort">Sort</button>
+        <!-- 🔘 SORT BUTTON: Starts the sorting -->
+        <!-- id="sort" for JavaScript access -->
+      </form>
+      
+      <div class="output-container">
+        <!-- 📊 OUTPUT CONTAINER: Where we show the result -->
+        
+        <h2>Output:</h2>
+        <!-- 📤 OUTPUT SECTION: Sorting result -->
+        
+        <div class="output-array">
+          <!-- 📊 OUTPUT ARRAY: Result visualization -->
+          
+          <span class="bracket">[</span>
+          <!-- 🔤 OPENING BRACKET: Sorted array start -->
+          
+          <div>
+            <span class="output-value" id="output-value-0">0</span>
+            <!-- 🔢 VALUE 1: Default 0, unique id for JavaScript -->
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <span class="output-value" id="output-value-1">0</span>
+            <!-- 🔢 VALUE 2: Default 0 -->
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <span class="output-value" id="output-value-2">0</span>
+            <!-- 🔢 VALUE 3: Default 0 -->
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <span class="output-value" id="output-value-3">0</span>
+            <!-- 🔢 VALUE 4: Default 0 -->
+            <span class="comma">,</span>
+          </div>
+          
+          <div>
+            <span class="output-value" id="output-value-4">0</span>
+            <!-- 🔢 VALUE 5: Default 0, no comma -->
+          </div>
+            <span class="bracket">]</span>
+            <!-- 🔤 CLOSING BRACKET: Sorted array end -->
+        </div>
+      </div>
+    </main>
+    
+    <script>
+      /* 🧠 ===== JAVASCRIPT: The Brain of the Application ===== */
+      
+      const sortButton = document.getElementById("sort");
+      /* 🔘 BUTTON REFERENCE: We capture the Sort button */
+      /* document.getElementById() = finds element by ID */
+      /* const = variable that won't change */
+
+      /* 🎯 ===== MAIN FUNCTION: Handles the Click ===== */
+      const sortInputArray = (event) => {
+        /* 🚀 ARROW FUNCTION: Modern ES6 syntax */
+        /* event = object containing info about the click event */
+        
+        event.preventDefault();
+        /* 🚫 BLOCK DEFAULT: Prevents form submission */
+        /* Without this, the page would reload! */
+      
+        const inputValues = [
+          ...document.getElementsByClassName("values-dropdown")
+        ].map((dropdown) => Number(dropdown.value));
+        /* 🎪 JAVASCRIPT MAGIC IN 3 STEPS: */
+        
+        /* STEP 1: document.getElementsByClassName("values-dropdown") */
+        /* 📋 FIND ALL: Dropdowns with class "values-dropdown" */
+        /* Returns HTMLCollection (array-like but not quite) */
+        
+        /* STEP 2: [...] = Spread Operator */
+        /* 🎯 CONVERT: Transform HTMLCollection into real Array */
+        /* It's like unpacking a box and putting everything in another */
+        
+        /* STEP 3: .map((dropdown) => Number(dropdown.value)) */
+        /* 🔄 TRANSFORM: For each dropdown... */
+        /* dropdown.value = get the value (it's a string!) */
+        /* Number() = convert it to number */
+        /* map() returns new array with transformed values */
+        
+        /* RESULT: [8, 2, 4, 1, 3] as numbers, not strings! */
+      
+        const sortedValues = inputValues.sort((a, b) => {
+          return a - b;
+        });
+        /* 🔢 NUMERIC SORTING: From smallest to largest */
+        
+        /* sort() WITHOUT PARAMETERS: Sorts as strings! */
+        /* [1, 10, 2] would become [1, 10, 2] (wrong!) */
+        
+        /* sort((a, b) => a - b): Sorts as numbers */
+        /* a - b < 0: a comes before b */
+        /* a - b > 0: b comes before a */
+        /* a - b = 0: stay as they were */
+        
+        /* EXAMPLE: [8, 2, 4, 1, 3] */
+        /* Compare 8 and 2: 8-2=6 (positive), so 2 before 8 */
+        /* Continue until: [1, 2, 3, 4, 8] */
+      
+        updateUI(sortedValues);
+        /* 🖥️ UPDATE UI: Show sorted values */
+        /* Pass sorted array to updateUI function */
+      }
+      
+      /* 🖥️ ===== UPDATE UI FUNCTION: Updates the View ===== */
+      const updateUI = (array = []) => {
+        /* 📊 DEFAULT PARAMETER: If nothing passed, array = [] */
+        /* Avoids errors if called without arguments */
+        
+        array.forEach((num, i) => {
+          /* 🔄 FOR EACH NUMBER: in sorted array */
+          /* num = current number */
+          /* i = index (0, 1, 2, 3, 4) */
+          
+          const outputValueNode = document.getElementById(`output-value-${i}`);
+          /* 🎯 FIND ELEMENT: With dynamic ID */
+          /* Template literal: `output-value-${i}` */
+          /* i=0: finds "output-value-0" */
+          /* i=1: finds "output-value-1", etc. */
+          
+          outputValueNode.innerText = num;
+          /* ✏️ UPDATE TEXT: Replace 0 with sorted number */
+          /* innerText = changes text content */
+        })
+      }
+      
+      /* 🫧 ===== BUBBLE SORT: The Bubbles Algorithm ===== */
+      const bubbleSort = (array) => {
+        /* 🫧 BUBBLE SORT: Numbers "float" like bubbles! */
+        
+        for (let i = 0; i < array.length; i++) {
+          /* 🔄 OUTER LOOP: Number of complete passes */
+          
+          for (let j = 0; j < array.length - 1; j++) {
+            /* 🔄 INNER LOOP: Compare adjacent pairs */
+            /* length - 1 because we compare j with j+1 */
+            
+            if (array[j] > array[j + 1]) {
+              /* 🔀 IF UNORDERED: Larger goes right */
+              
+              const temp = array[j];
+              /* 📦 SAVE: First value in temporary variable */
+              
+              array[j] = array[j + 1];
+              /* ⬅️ MOVE: Second to first position */
+              
+              array[j + 1] = temp;
+              /* ➡️ COMPLETE: First (saved) to second position */
+              
+              /* It's like swapping two cards while holding one! */
+            }
+          }
+        }
+      
+        return array;
+        /* 📤 RETURN: The sorted array */
+        /* Bubble Sort modifies the original array! */
+      }
+      
+      /* 🎯 ===== SELECTION SORT: Minimum Selection ===== */
+      const selectionSort = (array) => {
+        /* 🎯 SELECTION SORT: Find the smallest and put it in place */
+        
+        for (let i = 0; i < array.length; i++) {
+          /* 🔄 FOR EACH POSITION: Find minimum */
+          
+          let minIndex = i;
+          /* 📍 ASSUME: Current position has minimum */
+      
+          for (let j = i + 1; j < array.length; j++) {
+            /* 🔍 SEARCH: Among unsorted elements */
+            /* j = i + 1: start from next element */
+            
+            if (array[j] < array[minIndex]) {
+              /* 🎯 FOUND SMALLER: Update index */
+              minIndex = j;
+            }
+          }
+      
+          const temp = array[i];
+          array[i] = array[minIndex];
+          array[minIndex] = temp;
+          /* 🔀 SWAP: Put minimum in correct position */
+          /* Same swap trick with temporary variable */
+        }
+      
+        return array;
+        /* 📤 RETURN: Sorted array */
+      }
+      
+      /* 📥 ===== INSERTION SORT: Ordered Insertion ===== */
+      const insertionSort = (array) => {
+        /* 📥 INSERTION SORT: Like sorting cards in hand */
+        
+        for (let i = 1; i < array.length; i++) {
+          /* 🔄 START FROM 1: First element already "sorted" */
+          
+          const currValue = array[i];
+          /* 💎 CURRENT VALUE: The card to insert */
+          
+          let j = i - 1;
+          /* ⬅️ PREVIOUS INDEX: Where to start comparing */
+      
+          while (j >= 0 && array[j] > currValue) {
+            /* 🔄 WHILE: There are larger elements */
+            /* j >= 0: don't go out of bounds */
+            /* array[j] > currValue: element is larger */
+            
+            array[j + 1] = array[j];
+            /* ➡️ SHIFT RIGHT: Make space */
+            
+            j--;
+            /* ⬅️ CONTINUE: Towards left */
+          }
+          
+          array[j + 1] = currValue;
+          /* 📥 INSERT: In the right place */
+          /* j + 1 because j is decremented once too many */
+        }
+        
+        return array;
+        /* 📤 RETURN: Sorted array */
+      }
+      
+      sortButton.addEventListener("click", sortInputArray);
+      /* 🎪 CONNECT EVENT: When button clicked, execute sortInputArray */
+      /* addEventListener = "listen for click event" */
+      /* Every time user clicks "Sort", the magic begins! */
+    </script>
+  </body>
+</html>
+
+<!-- 🎯 ===== APPLICATION SUMMARY ===== -->
+<!-- 
+🔢 NUMBER SORTER ARCHITECTURE:
+│
+├── 🧠 HEAD
+│   └── 🎨 CSS with:
+│       ├── 🎨 Color variable system
+│       ├── 📏 Flexbox layout for alignment
+│       ├── 🌅 Button with golden gradient
+│       └── 📱 Media query for responsive
+│
+└── 🔢 BODY
+    └── 📄 Main
+        ├── 📰 Title
+        ├── 📋 Form Input
+        │   ├── 🎛️ 5 dropdowns (0-9)
+        │   └── 🔘 Sort button
+        ├── 📊 Output Container
+        │   └── 🔢 5 spans for results
+        └── 🧠 JavaScript
+            ├── 🎯 sortInputArray (main handler)
+            ├── 🖥️ updateUI (update view)
+            ├── 🫧 bubbleSort (not used)
+            ├── 🎯 selectionSort (not used)
+            └── 📥 insertionSort (not used)
+
+🎨 NOTABLE TECHNIQUES:
+├── 📋 Spread operator [...] to convert HTMLCollection
+├── 🔄 map() to transform strings to numbers
+├── 🔢 sort((a,b) => a-b) for numeric sorting
+├── 📊 Template literals for dynamic IDs
+└── 🎯 preventDefault() to block submission
+
+💡 IMPLEMENTED ALGORITHMS (but not used):
+├── 🫧 Bubble Sort: O(n²) - Compares adjacent pairs
+├── 🎯 Selection Sort: O(n²) - Finds minimum each time
+└── 📥 Insertion Sort: O(n²) - Inserts in right place
+
+It's like having a complete toolbox but only using the screwdriver! 🔧✨
+-->
+```
+</TabItem>
+
+</Tabs>
+
+### The Learning Behind the Triviality
+
+In projects like this, I realize how much we take everything for granted.
+What seems like a very simple program that sorts 5 numbers, from smallest to largest, is seen by any outsider through the glasses of the **Dunning-Kruger Effect**.
+It wasn't easy, but it clearly strengthened my understanding of `for` loops, especially nested ones.
+
+### What I Learned
+
+**Basic Algorithmic Thinking:**
+- **Bubble Sort:** Implementation of a nested `for` loop to compare and swap adjacent elements, causing the largest value to "bubble up" to the end of the array with each iteration.
+- **Selection Sort:** Use of a nested `for` loop to find the index of the minimum value in the unsorted portion of the array and swap it with the first element, progressively building the sorted portion from left to right.
+- **Insertion Sort:** Creation of a virtual sorted array at the beginning, iterating through the array and inserting each element into its correct position within the already sorted portion.
+
+**Nested `for` Loops:**
+- Deep understanding of how inner and outer loops interact to iterate and manipulate data in an array.
+- Use of temporary variables (`temp`) for swapping values during sorting.
+
+**DOM Manipulation:**
+- Selection of a collection of elements with `getElementsByClassName`.
+- Use of the spread operator (`...`) to convert an `HTMLCollection` into an array, making it iterable with methods like `.map()`.
+- Extraction of values from `<select>` elements with `.map((dropdown) => Number(dropdown.value))`.
+- Dynamic UI update with `forEach` to display the sorted array.
+
+**Functions and Events:**
+- Callback function for the `.sort()` method to define an ascending numerical sort (`(a, b) => a - b`).
+- Handling of the `click` event to start the sorting process.
+- Use of `event.preventDefault()` to prevent the default form behavior.
+
+***
+
+**Next Project**: Learn Advanced Array Methods by Building a Statistics Calculator
