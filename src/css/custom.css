@@ -54,6 +54,11 @@
     --ifm-breadcrumb-item-background-active: rgba(0, 0, 0, 0.06);
     --ifm-breadcrumb-color-active: var(--ifm-color-primary-darkest);
 
+    /* Search Bar (Light Mode) */
+    --search-background: rgba(97, 74, 51, 0.08);
+    --search-text: #423223;
+    --search-border-color: rgba(97, 74, 51, 0.3);
+    --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23614a33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
     /* Syntax Highlighting (Light Mode specific tokens) */
     --code-token-cyan-fix: #005a75; /* Dark Petrol (replaces unreadable Cyan) */
     --code-token-doctype: #393a34;  /* Dark Grey (fixes Italic Doctype) */
@@ -88,6 +93,11 @@
     --ifm-breadcrumb-item-background-active: rgba(255, 255, 255, 0.1);
     --ifm-breadcrumb-color-active: var(--ifm-color-primary-lightest);
 
+    /* Search Bar (Dark Mode) */
+    --search-background: rgba(0, 0, 0, 0.25);
+    --search-text: #ffeac1;
+    --search-border-color: rgba(222, 203, 164, 0.2);
+    --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23decba4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
     /* Syntax Highlighting (Dark Mode specific tokens) */
     --code-token-keyword-fix: #d4aaff; /* Light Lavender (for contrast) */
 }
@@ -135,6 +145,24 @@ html, body {
 .footer {
     background-color: transparent;
     border-top: none;
+}
+
+
+/* COMPONENTS: Search Bar */
+
+.navbar__search-input {
+    background-color: var(--search-background) !important;
+    color: var(--search-text) !important;
+    border: 2.5px solid var(--search-border-color) !important;
+    border-radius: var(--ifm-global-radius) !important;
+    transition: all 0.2s ease;
+    background-image: var(--search-icon-url) !important; 
+}
+
+/* Placeholder styling */
+.navbar__search-input::placeholder {
+    color: var(--search-text) !important;
+    opacity: 0.6;
 }
 
 
@@ -279,4 +307,28 @@ html[data-theme='dark'] code span.token.operator,
 html[data-theme='dark'] code span.token.variable {
     color: var(--code-token-keyword-fix) !important; 
     font-style: normal !important;
+}
+
+/* Footer */
+.footer__links {
+  display: flex;
+  justify-content: flex-start; /* Anchors the navigation map to the left edge */
+  padding-left: 2rem; 
+  width: 100%;
+}
+
+.footer__title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+/* Copyright */
+.footer__bottom {
+  text-align: left;   
+  padding-left: 2rem;
+  margin-top: 2rem;
+  opacity: 0.6;
 }

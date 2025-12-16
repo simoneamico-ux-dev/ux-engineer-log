@@ -61,25 +61,26 @@ i18n: {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false ,
         theme: {
           customCss: './src/css/custom.css',
         },
       }),
+    ],
+  ],
+
+  plugins: [
+    [
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      {
+        hashed: true,
+        language: ["en", "it"],
+        indexDocs: true,
+        indexBlog: false,
+        indexPages: true,
+
+        highlightSearchTermsOnTargetPage: true,
+      },
     ],
   ],
 
@@ -92,11 +93,13 @@ i18n: {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'My Site',
+        title: 'UX Engineer Log',
+        /*
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo.svg', 
         },
+        */
         items: [
           {
             type: 'docSidebar',
@@ -104,9 +107,9 @@ i18n: {
             position: 'left',
             label: 'Documentation',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          {to: '/about', label: 'About', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/simoneamico-ux-dev/ux-engineer-system',
             label: 'GitHub',
             position: 'right',
           },
@@ -120,46 +123,45 @@ i18n: {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Navigation',
             items: [
               {
                 label: 'Featured',
                 to: '/docs/Featured/rpg-creature-search-app',
               },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                label: 'Inspirational',
+                to: '/docs/Inspirational/factory-legacy-app',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'Path',
+                to: '/docs/Path/HTML-CSS/cat-photo-app',
               },
               {
-                label: 'X',
-                href: 'https://x.com/docusaurus',
+                label: 'Vademecum',
+                to: '/docs/Vademecum/html-real-world-vademecum',
               },
             ],
           },
           {
-            title: 'More',
+            title: 'Connect',
             items: [
               {
-                label: 'Blog',
-                to: '/blog',
+                label: 'GitHub (Archive)',
+                href: 'https://github.com/simoneamico-ux-dev/zero-to-ux-engineer-logs',
               },
               {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/in/simone-amico-ux-engineer/',
+              },
+              {
+                label: 'Email',
+                href: 'mailto:simone.amico1103@gmail.com',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Simone Amico. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
