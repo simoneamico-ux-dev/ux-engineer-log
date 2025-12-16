@@ -123,8 +123,8 @@ i18n: {
             title: 'Docs',
             items: [
               {
-                label: 'Certifications',
-                to: '/docs/Certifications/survey-form',
+                label: 'Featured',
+                to: '/docs/Featured/rpg-creature-search-app',
               },
             ],
           },
