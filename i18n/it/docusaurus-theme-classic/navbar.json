@@ -1,22 +1,10 @@
 {
   "title": {
-    "message": "My Site",
-    "description": "The title in the navbar"
+    "message": "UX Engineer Log", 
+    "description": "Il titolo del sito nella navbar"
   },
-  "logo.alt": {
-    "message": "My Site Logo",
-    "description": "The alt text of navbar logo"
-  },
-  "item.label.Documentation": {
-    "message": "Documentation",
-    "description": "Navbar item with label Documentation"
-  },
-  "item.label.Blog": {
-    "message": "Blog",
-    "description": "Navbar item with label Blog"
-  },
-  "item.label.GitHub": {
-    "message": "GitHub",
-    "description": "Navbar item with label GitHub"
+  "item.label.About": {
+    "message": "Chi Sono",
+    "description": "Label per il link About"
   }
 }
