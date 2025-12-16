@@ -1,112 +1,282 @@
-:root {
-  --ifm-color-primary: #8c6a48;
-  --ifm-color-primary-dark: #7d5f40;
-  --ifm-color-primary-darker: #76593c;
-  --ifm-color-primary-darkest: #614a32;
-  --ifm-color-primary-light: #a68563;
-  --ifm-color-primary-lighter: #b09170;
-  --ifm-color-primary-lightest: #cfb89e;
-  
-  --ifm-font-family-base: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-  
-  --frame-background: #9B795A;
-  --ifm-background-color: #E4D6C9;
-  --card-border-color: #786F68;
-  --ifm-color-content: #000000;
-  
-  --sidebar-separator: rgba(15, 33, 41, 0.1);
-  
-  --ifm-navbar-background-color: #E4D6C9;
-  --ifm-navbar-shadow: none;
-  
-  --ifm-global-radius: 20px;
+/* DESIGN
+   ------------------------------------------
+   * This configuration overrides the default Infima/Docusaurus theme
+   * to achieve a "UX Engineer System" aesthetic.
 
-  --ifm-table-border-color: #a1907b; 
-  --ifm-table-stripe-background: rgba(0, 0, 0, 0.05);
+   * The architecture follows a "Theme-Driven Variables" system:
+   * - :root contains the Light mode (default) and structural variables.
+   * - [data-theme='dark'] contains only the necessary overrides for Dark mode.
+   * - Layout logic focuses on Gestalt principles (spacing, grouping)
+   *   and WCAG Accessibility (contrast ratios).
+
+   * Key Technical choices:
+   * - "Surgical Gradient": Used instead of borders for the sidebar separator
+   *   to respect internal padding without layout shifts.
+   * - "Token overrides": Specific targeting of PrismJS syntax tokens
+   *   to ensure code readability across both color schemes.
+*/
+
+
+/* UNIVERSAL & LIGHT MODE (Default Variables) */
+
+:root {
+    /* Color Palette (Coffee & Sand) */
+    --ifm-color-primary: #614a33;
+    --ifm-color-primary-dark: #7d5f40;
+    --ifm-color-primary-darker: #76593c;
+    --ifm-color-primary-darkest: #614a32;
+    --ifm-color-primary-light: #a68563;
+    --ifm-color-primary-lighter: #b09170;
+    --ifm-color-primary-lightest: #cfb89e;
+
+    /* Base UI & Fonts */
+    --ifm-font-family-base: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    --ifm-global-radius: 20px;
+    
+    /* Layout Backgrounds & Borders */
+    --frame-background: #9B795A;
+    --ifm-background-color: #E4D6C9;
+    --card-border-color: #433e3a;
+    --ifm-color-content: #000000;
+    --ifm-navbar-background-color: #E4D6C9;
+    --ifm-navbar-shadow: none;
+
+    /* Sidebar & Navigation */
+    --sidebar-separator: rgba(15, 33, 41, 0.14);
+    --ifm-menu-color: #574c45;       /* Inactive links (contrast fix) */
+    --ifm-toc-link-color: #574c45;   /* TOC Inactive links */
+    
+    /* Data Tables */
+    --ifm-table-border-color: #a1907b; 
+    --ifm-table-stripe-background: rgba(0, 0, 0, 0.05);
+
+    /* Breadcrumbs (Navigation Path) */
+    --ifm-breadcrumb-item-background-active: rgba(0, 0, 0, 0.06);
+    --ifm-breadcrumb-color-active: var(--ifm-color-primary-darkest);
+
+    /* Syntax Highlighting (Light Mode specific tokens) */
+    --code-token-cyan-fix: #005a75; /* Dark Petrol (replaces unreadable Cyan) */
+    --code-token-doctype: #393a34;  /* Dark Grey (fixes Italic Doctype) */
 }
+
+
+/* DARK MODE (Overrides) */
 
 [data-theme='dark'] {
-  --ifm-color-primary: #D4A373;
-  --ifm-color-primary-dark: #be8e5e;
-  --ifm-color-primary-darker: #b38556;
-  --ifm-color-primary-darkest: #946d45;
-  --ifm-color-primary-light: #decba4;
-  --ifm-color-primary-lighter: #eaddc5;
-  --ifm-color-primary-lightest: #f5efe2;
+    /* Color Palette (Warm Night) */
+    --ifm-color-primary: #D4A373;
+    --ifm-color-primary-dark: #be8e5e;
+    --ifm-color-primary-darker: #b38556;
+    --ifm-color-primary-darkest: #946d45;
+    --ifm-color-primary-light: #decba4;
+    --ifm-color-primary-lighter: #eaddc5;
+    --ifm-color-primary-lightest: #f5efe2;
 
-  --frame-background: #140A07;
-  --ifm-background-color: #322620;
-  --card-border-color: #574C43;
-  --ifm-color-content: #FFFFFF;
-  
-  --sidebar-separator: rgba(90, 124, 155, 0.15);
-  
-  --ifm-navbar-background-color: #322620;
+    /* Layout Backgrounds */
+    --frame-background: #140A07;
+    --ifm-background-color: #322620;
+    --card-border-color: #574C43;
+    --ifm-color-content: #FFFFFF;
+    --ifm-navbar-background-color: #322620;
+    
+    /* Sidebar & Navigation */
+    --sidebar-separator: rgba(90, 124, 155, 0.35);
+    --ifm-menu-color: #b9a193;
+    --ifm-toc-link-color: #b9a193;
+
+    /* Breadcrumbs */
+    --ifm-breadcrumb-item-background-active: rgba(255, 255, 255, 0.1);
+    --ifm-breadcrumb-color-active: var(--ifm-color-primary-lightest);
+
+    /* Syntax Highlighting (Dark Mode specific tokens) */
+    --code-token-keyword-fix: #d4aaff; /* Light Lavender (for contrast) */
 }
 
+
+/* GLOBAL LAYOUT RESET */
+
 html, body {
-  background-color: var(--frame-background);
-  height: 100%;
+    background-color: var(--frame-background);
+    height: 100%;
 }
 
 #__docusaurus {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--frame-background);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--frame-background);
 }
+
+
+/* COMPONENTS: Navbar & Main Container */
 
 .navbar {
-  margin: 16px 16px 0 16px;
-  border-radius: var(--ifm-global-radius);
-  border: 1px solid var(--card-border-color);
-  width: auto;
-}
-
-.main-wrapper {
-  margin: 16px;
-  background-color: var(--ifm-background-color);
-  border-radius: var(--ifm-global-radius);
-  border: 1px solid var(--card-border-color);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.footer {
-  background-color: transparent;
-  border-top: none;
-}
-
-.menu__list-item {
-  border-bottom: 2px solid var(--sidebar-separator);
-  margin-bottom: 4px;
-}
-
-.menu__link {
-  border-radius: 8px;
-}
-
-.menu__link--active {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme='dark'] .menu__link--active {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.1);
-  display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
-  padding: 0 var(--ifm-pre-padding);
-}
-
-[data-theme='dark'] .docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.3);
+    margin: 16px 16px 0 16px;
+    border-radius: var(--ifm-global-radius);
+    border: 1px solid var(--card-border-color);
+    width: auto;
 }
 
 .navbar__title {
-    font-weight: 700;
+    font-weight: 750;
+}
+
+.main-wrapper {
+    margin: 16px;
+    background-color: var(--ifm-background-color);
+    border-radius: var(--ifm-global-radius);
+    border: 1px solid var(--card-border-color);
+    padding-top: 25px; /* Restores top spacing after removing overflow:hidden */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.footer {
+    background-color: transparent;
+    border-top: none;
+}
+
+
+/* COMPONENTS: Sidebar (Left Navigation) */
+
+.menu {
+    padding-top: 1.5rem; 
+}
+
+.menu__list-item {
+    border-bottom: 2px solid var(--sidebar-separator);
+    margin-bottom: 4px;
+    padding-bottom: 2.5px;
+}
+
+.menu__list-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0rem;
+}
+
+.menu__link {
+    border-radius: 8px;
+}
+
+/* Active State Logic: Syncs Sidebar style with Breadcrumbs */
+.menu__link--active {
+    background-color: var(--ifm-breadcrumb-item-background-active) !important;
+    color: var(--ifm-breadcrumb-color-active) !important;
+    font-weight: 600;
+}
+
+[data-theme='dark'] .menu__link--active {
+    background-color: var(--ifm-breadcrumb-item-background-active) !important;
+    color: var(--ifm-breadcrumb-color-active) !important;
+}
+
+/* Macro Sections (Featured, Path, Vademecum) */
+/* These act as static headers: no highlight, fixed color */
+.theme-doc-sidebar-item-category-level-1 {
+    margin-bottom: 0.95rem; /* Gestalt principle: spacing indicates grouping */
+}
+
+.theme-doc-sidebar-item-category-level-1 > div > .menu__link,
+.theme-doc-sidebar-item-category-level-1 > div > .menu__link--active {
+    color: var(--ifm-menu-color) !important;     /* Force neutral color */
+    background-color: transparent !important;    /* No background */
+    font-weight: 600 !important;                 /* Fixed weight */
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+}
+
+/* Clean up spacing for the very last item */
+.menu__list > .theme-doc-sidebar-item-category-level-1:last-child {
+    margin-bottom: 0;
+}
+
+/* Exception for Vademecum: Keep the separator line visible */
+.menu__list > .theme-doc-sidebar-item-category-level-1:last-child {
+    border-bottom: 2px solid var(--sidebar-separator);
+    padding-bottom: 4px;
+    margin-bottom: 0;
+}
+
+/* Sidebar Separator (The Surgical Gradient) */
+/* I used a gradient instead of a border to respect top padding without layout shift */
+aside[class^='theme-doc-sidebar-container'] {
+    border-right: none !important;
+
+    background-image: linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 54px, /* Start: aligns visually with the content top */
+        var(--sidebar-separator) 54px, 
+        var(--sidebar-separator) calc(100% - 19px), /* Body: the actual line */
+        transparent calc(100% - 19px) /* End: fades out before bottom */
+    );
+    background-position: right top;
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
+}
+
+
+/* COMPONENTS: Content & Navigation (Right/Center) */
+
+/* Breadcrumbs */
+.breadcrumbs__item--active > .breadcrumbs__link {
+    background-color: var(--ifm-breadcrumb-item-background-active);
+    color: var(--ifm-breadcrumb-color-active);
+    font-weight: 600;
+}
+
+/* Table of Contents (Right Sidebar) */
+.table-of-contents {
+    padding-top: 1.5rem; 
+    font-size: 0.95rem;
+}
+
+.table-of-contents__link--active {
+    font-weight: 750;
+    color: var(--ifm-color-primary) !important;
+}
+
+/* Code Block Highlighting */
+.docusaurus-highlight-code-line {
+    background-color: rgba(0, 0, 0, 0.1);
+    display: block;
+    margin: 0 calc(-1 * var(--ifm-pre-padding));
+    padding: 0 var(--ifm-pre-padding);
+}
+
+[data-theme='dark'] .docusaurus-highlight-code-line {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+/* ACCESSIBILITY & SYNTAX (Token Overrides) */
+/* Forces readable colors for specific code tokens based on theme */
+
+/* LIGHT MODE: Fixes low contrast Cyan and Italic Doctype */
+html[data-theme='light'] code span.token.attr-name,
+html[data-theme='light'] code span.token.builtin,
+html[data-theme='light'] code span.token.char,
+html[data-theme='light'] code span.token.inserted,
+html[data-theme='light'] code span.token.selector,
+html[data-theme='light'] code span.token.string,
+html[data-theme='light'] code span.token.property,
+html[data-theme='light'] code span.token.number,
+html[data-theme='light'] code span.token.boolean,
+html[data-theme='light'] code span.token.variable,
+html[data-theme='light'] code span.token.constant {
+    color: var(--code-token-cyan-fix) !important; 
+}
+
+html[data-theme='light'] code span.token.doctype {
+    color: var(--code-token-doctype) !important;
+    font-style: normal !important;
+}
+
+/* DARK MODE: Brightens obscure colors for better contrast */
+html[data-theme='dark'] code span.token.keyword,
+html[data-theme='dark'] code span.token.operator,
+html[data-theme='dark'] code span.token.variable {
+    color: var(--code-token-keyword-fix) !important; 
+    font-style: normal !important;
 }
