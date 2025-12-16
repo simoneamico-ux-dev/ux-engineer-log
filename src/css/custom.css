@@ -55,7 +55,7 @@
     --ifm-breadcrumb-color-active: var(--ifm-color-primary-darkest);
 
     /* Search Bar (Light Mode) */
-    --search-background: rgba(97, 74, 51, 0.08);
+    --search-background: #d9ccbe;
     --search-text: #423223;
     --search-border-color: rgba(97, 74, 51, 0.3);
     --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23614a33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
@@ -94,7 +94,7 @@
     --ifm-breadcrumb-color-active: var(--ifm-color-primary-lightest);
 
     /* Search Bar (Dark Mode) */
-    --search-background: rgba(0, 0, 0, 0.25);
+    --search-background: #322720;
     --search-text: #ffeac1;
     --search-border-color: rgba(222, 203, 164, 0.2);
     --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23decba4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
@@ -331,4 +331,31 @@ html[data-theme='dark'] code span.token.variable {
   padding-left: 2rem;
   margin-top: 2rem;
   opacity: 0.6;
+}
+
+/* MOBILE UX: Dynamic title fade & collapse */
+
+/*
+ I tried to fix the issue where the search bar was collapsing
+ into the site title on very narrow devices by introducing an
+ animation. This way, the experience no longer feels like “something
+ is being taken away because there’s a problem,” but rather like “something
+ is being added through an animation.”
+*/
+@media screen and (max-width: 411px) {
+    
+    .navbar__title {
+        transition: opacity 0.3s ease, max-width 0.3s ease, margin 0.3s ease;
+        opacity: 1;
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .navbar:has(.navbar__search-input:focus) .navbar__title {
+        opacity: 0;
+        max-width: 0;
+        margin: 0;
+        pointer-events: none;
+    }
 }
