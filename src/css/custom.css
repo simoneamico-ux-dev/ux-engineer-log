@@ -39,7 +39,7 @@
     --card-border-color: #433e3a;
     --ifm-color-content: #000000;
     --ifm-navbar-background-color: #E4D6C9;
-    --ifm-navbar-shadow: none;
+    --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.18) !important;
 
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(15, 33, 41, 0.14);
@@ -83,6 +83,7 @@
     --card-border-color: #574C43;
     --ifm-color-content: #FFFFFF;
     --ifm-navbar-background-color: #322620;
+    --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.35) !important; /* Dark Mode adjustment (the black shadow is less visible, so the opacity has been increased) */
     
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(90, 124, 155, 0.35);
@@ -125,6 +126,16 @@ html, body {
     border-radius: var(--ifm-global-radius);
     border: 1px solid var(--card-border-color);
     width: auto;
+
+    /* NAVBAR 3D ELEVATION FIX */
+    /* 
+    I added a very soft and diffused shadow to give a subtle sense of floating.
+    I focused on lightness, as in the rest of the CSS, in order to avoid putting
+    unnecessary load on the GPU.
+    The effect is intentionally almost imperceptible on the main screen, but becomes
+    more noticeable as you scroll down.
+    */
+    box-shadow: var(--ifm-navbar-shadow);
 }
 
 .navbar__title {
@@ -358,4 +369,51 @@ html[data-theme='dark'] code span.token.variable {
         margin: 0;
         pointer-events: none;
     }
+
+}
+
+
+/* SAFARI & MOBILE SEARCH FIX */
+
+/*
+I noticed a very annoying bug on iOS: after tapping on the search bar,
+the screen dims and the search results become unclickable.
+I fixed it by applying a very high z-index (99999)
+*/
+@media (max-width: 996px) { /* Here we force the search container above EVERYTHING (including the fixed navbar) */
+  .DocSearch-Container {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99999 !important;
+    height: 100dvh !important; /* optional, but helps on iOS */
+  }
+
+  .DocSearch-Modal {
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    -webkit-overflow-scrolling: touch !important; /* This allows internal scrolling on iOS */
+  }
+
+  /* If the navbar still overlaps, hide it when search is open */
+  body.DocSearch--active .navbar {
+    display: none !important;
+  }
+
+    
+    /* Here we make code blocks smaller on mobile to get a better overall view */
+
+
+    .theme-code-block pre,
+    .theme-code-block code,
+    .prism-code {
+    font-size: 0.75rem !important; 
+    
+    line-height: 1.4 !important; /* We also slightly reduce line height to make the layout more vertically compact */
+    
+    -webkit-text-size-adjust: 100%; /* We disable iOS automatic text zooming */
+}
+
 }
