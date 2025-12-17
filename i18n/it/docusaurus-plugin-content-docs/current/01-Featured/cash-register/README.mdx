@@ -9,9 +9,17 @@ import TabItem from '@theme/TabItem';
 
 # Cash Register
 
-![Cash Register Demo](https://github.com/user-attachments/assets/3465b196-c7af-469f-ab9a-302d9a5f3bca)
-<img width="100%" alt="Mobile UI" src="https://github.com/user-attachments/assets/e932331a-a8ca-4e15-afb1-e16a40e5a6de" />
-<img width="100%" alt="Desktop UI" src="https://github.com/user-attachments/assets/a081700a-afbe-431f-8e15-bda28d27e329" />
+<video 
+  autoPlay 
+  loop 
+  muted 
+  playsInline 
+  width="100%" 
+  style={{borderRadius: '6px'}}
+  src={require('./assets/cash-register.webm').default} 
+/>
+![Anteprima Cash Register Project Mobile UI](./assets/cash-register-1.webp)
+![Anteprima Cash Register Project Desktop UI](./assets/cash-register-2.webp)
 
 ### Il Progetto
 
@@ -1756,7 +1764,11 @@ Trovi il prototipo Figma qui sotto, così puoi esplorare l'intera esperienza:
 <table>
 <tr>
 <td width="50%">
-  <img src="https://github.com/user-attachments/assets/47cbddf2-8b41-4d52-a4f4-e4c6c2c9ee8f" alt="Mosaic Home Screen" width="300" />
+  <img 
+    src={require('./assets/cash-register-3.webp').default} 
+    alt="Anteprima Mosaic Project (Pagina Principale)" 
+    style={{width: '100%'}}
+  />
 </td>
 <td width="50%">
   <h3>Prototipo Interattivo</h3>
@@ -1779,12 +1791,20 @@ Ho utilizzato un effetto Liquid Glass molto leggero. Per quanto io sia tra le pe
 
 Ecco come Apple ha utilizzato la tab bar nell'app Musica, ci tengo a precisare che nella maggior parte delle applicazioni iOS l'effetto non è tono su tono come in questo esempio:<br />
 <br />
-<img width="40%" alt="Screenshot 2025-11-15 alle 15 38 08" src="https://github.com/user-attachments/assets/fe1a9693-f040-47d9-b7c7-ac4a39cf9586" />
+<img 
+    src={require('./assets/cash-register-6.webp').default} 
+    alt="Apple Music tab bar" 
+    style={{width: '40%'}}
+/>
 <br />
 <br />
 E come ho deciso di utilizzarlo in modo molto leggero in Mosaic:<br />
 <br />
-<img width="40%" alt="Screenshot 2025-11-15 alle 15 43 39" src="https://github.com/user-attachments/assets/ac8818cf-720e-4dc1-be93-e06369170800" />
+<img 
+    src={require('./assets/cash-register-7.webp').default} 
+    alt="Mosaic tab bar" 
+    style={{width: '40%'}}
+/>
 
 Apple permette comunque da iOS 26.1 di disattivarlo nelle impostazioni e quindi ritornare al solo effetto blur. Purtroppo, come appreso nel corso Google, questa non è la strada migliore: adeguarsi agli standard di accessibilità non aiuta solo alcuni, ma porta benefici a tutti. Trovo corretto renderlo opzionale, ma già questo dettaglio lascia intuire che qualcosa non funziona.
 <br />
