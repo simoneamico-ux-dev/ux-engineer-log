@@ -6,51 +6,57 @@ title: 'HTML Real World Vademecum'
 
 # HTML Real World Vademecum
 
-## 1. Struttura base HTML
+## 1. Basic HTML Structure
 
-### Il documento HTML
-**Cosa fa**: Dice al browser "Ehi, questo è un documento HTML moderno!"
+### The HTML document
 
-**Snippet base**:
+**What it does**: Tells the browser "Hey, this is a modern HTML document!"
+
+**Base snippet**:
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Il mio sito</title>
+    <title>My site</title>
 </head>
 <body>
-    <!-- Il contenuto va qui -->
+    <!-- The content goes here -->
 </body>
 </html>
 ```
 
-**Analogia**: È come la struttura di una casa 🏠
-- `<!DOCTYPE html>` = Il permesso di costruzione
-- `<html>` = Le fondamenta
-- `<head>` = Il sottotetto (non si vede ma contiene impianti importanti)
-- `<body>` = Le stanze dove vivi
+**Analogy**: It’s like the structure of a house 🏠
 
-### `<head>` - Il cervello nascosto
-**Cosa contiene**: Informazioni per il browser, non visibili all'utente
+* `<!DOCTYPE html>` = The building permit
+* `<html>` = The foundations
+* `<head>` = The attic (you don’t see it but it contains important systems)
+* `<body>` = The rooms where you live
 
-**Elementi essenziali**:
+### `<head>` - The hidden brain
+
+**What it contains**: Information for the browser, not visible to the user
+
+**Essential elements**:
+
 ```html
 <head>
-    <meta charset="UTF-8"> <!-- Alfabeto universale -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Per mobile -->
-    <title>Titolo nella tab</title> <!-- Quello che vedi nella linguetta -->
-    <link rel="stylesheet" href="style.css"> <!-- Collegamento al CSS -->
+    <meta charset="UTF-8"> <!-- Universal alphabet -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- For mobile -->
+    <title>Title in the tab</title> <!-- What you see in the tab -->
+    <link rel="stylesheet" href="style.css"> <!-- Link to CSS -->
 </head>
 ```
 
-**Analogia**: Come l'etichetta su una scatola - dice cosa c'è dentro senza aprirla!
+**Analogy**: Like the label on a box - it tells what’s inside without opening it!
 
-### I contenitori principali
+### The main containers
 
-#### `<body>` - Il corpo visibile
-**Cosa fa**: Contiene TUTTO quello che l'utente vede
+#### `<body>` - The visible body
+
+**What it does**: Contains EVERYTHING the user sees
 
 ```html
 <body>
@@ -60,542 +66,941 @@ title: 'HTML Real World Vademecum'
 </body>
 ```
 
-#### `<header>` - La testata  
-**Cosa fa**: Contiene l'intestazione della pagina o di una sezione
+#### `<header>` - The header
+
+**What it does**: Contains the header of the page or of a section
 
 ```html
 <header>
-    <img src="logo.png" alt="Logo aziendale">
+    <img src="logo.png" alt="Company logo">
     <nav>
         <a href="#home">Home</a>
-        <a href="#about">Chi siamo</a>
+        <a href="#about">About us</a>
     </nav>
 </header>
 ```
 
-**Analogia**: Come l'insegna di un negozio - la prima cosa che vedi entrando!
+**Analogy**: Like a shop sign - the first thing you see when you walk in!
 
-**Quando usarlo**: Logo, navigazione principale, titolo del sito
+**When to use it**: Logo, main navigation, site title
 
-#### `<main>` - Il protagonista
-**Cosa fa**: Contiene il contenuto principale, quello per cui l'utente è venuto!
+#### `<main>` - The protagonist
+
+**What it does**: Contains the main content, the thing the user came for!
 
 ```html
 <main>
-    <h1>Benvenuto nel mio blog!</h1>
-    <article>Il mio primo post...</article>
+    <h1>Welcome to my blog!</h1>
+    <article>My first post...</article>
 </main>
 ```
 
-**Regola d'oro**: Solo UN `<main>` per pagina!
+**Golden rule**: Only ONE `<main>` per page!
 
-**Analogia**: Il piatto principale del ristorante - non puoi averne due!
+**Analogy**: The main course at a restaurant - you can’t have two!
 
-#### `<footer>` - Il piè di pagina  
-**Cosa fa**: Contiene informazioni di chiusura, contatti, copyright
+#### `<footer>` - The footer
+
+**What it does**: Contains closing information, contacts, copyright
 
 ```html
 <footer>
     <address>
-        Via Roma 123, Milano
+        Via Roma 123, Milan
     </address>
-    <p>&copy; 2024 La mia azienda</p>
+    <p>&copy; 2024 My company</p>
 </footer>
 ```
 
-**Analogia**: Come i titoli di coda di un film - info utili alla fine!
+**Analogy**: Like the end credits of a movie - useful info at the end!
 
-#### `<nav>` - Il navigatore
-**Cosa fa**: Raggruppa i link di navigazione
+#### `<nav>` - The navigator
+
+**What it does**: Groups navigation links
 
 ```html
 <nav>
     <a href="#home">Home</a>
-    <a href="#products">Prodotti</a>
-    <a href="#contact">Contatti</a>
+    <a href="#products">Products</a>
+    <a href="#contact">Contacts</a>
 </nav>
 ```
 
-**Analogia**: Il menu del ristorante - ti dice dove puoi andare!
+**Analogy**: The restaurant menu - it tells you where you can go!
 
-#### `<section>` - Le sezioni
-**Cosa fa**: Divide il contenuto in sezioni tematiche
+#### `<section>` - The sections
+
+**What it does**: Splits the content into thematic sections
 
 ```html
 <section id="about">
-    <h2>Chi siamo</h2>
-    <p>La nostra storia...</p>
+    <h2>About us</h2>
+    <p>Our story...</p>
 </section>
 
 <section id="services">
-    <h2>I nostri servizi</h2>
-    <p>Cosa offriamo...</p>
+    <h2>Our services</h2>
+    <p>What we offer...</p>
 </section>
 ```
 
-**Analogia**: I capitoli di un libro - ogni sezione un argomento!
+**Analogy**: The chapters of a book - each section is a topic!
 
-#### `<article>` - L'articolo
-**Cosa fa**: Contenuto che ha senso anche da solo
+#### `<article>` - The article
+
+**What it does**: Content that makes sense even on its own
 
 ```html
 <article>
-    <h2>Come cucinare la pasta</h2>
-    <p>Prima di tutto, metti l'acqua a bollire...</p>
-    <p>Aggiungi il sale quando bolle...</p>
+    <h2>How to cook pasta</h2>
+    <p>First of all, put the water on to boil...</p>
+    <p>Add salt when it boils...</p>
 </article>
 ```
 
-**Test**: Se lo puoi condividere su Facebook e ha senso → è un `<article>`!
+**Test**: If you can share it on Facebook and it makes sense → it’s an `<article>`!
 
-#### `<aside>` - Il contenuto laterale  
-**Cosa fa**: Informazioni correlate ma non essenziali
+#### `<aside>` - The side content
+
+**What it does**: Related but non-essential information
 
 ```html
 <article>
-    <h2>Storia del caffè</h2>
-    <p>Il caffè venne scoperto...</p>
+    <h2>History of coffee</h2>
+    <p>Coffee was discovered...</p>
     
     <aside>
-        <h3>Lo sapevi che...</h3>
-        <p>Gli italiani bevono 6 miliardi di caffè all'anno!</p>
+        <h3>Did you know that...</h3>
+        <p>Italians drink 6 billion coffees a year!</p>
     </aside>
 </article>
 ```
 
-**Analogia**: Come i box colorati nei libri di scuola - info extra interessanti!
+**Analogy**: Like the colored boxes in school textbooks - extra interesting info!
 
-#### `<address>` - I contatti  
-**Cosa fa**: Contiene informazioni di contatto
+#### `<address>` - Contact info
+
+**What it does**: Contains contact information
 
 ```html
 <address>
-    <a href="mailto:info@azienda.it">info@azienda.it</a><br />
+    <a href="mailto:info@company.it">info@company.it</a><br />
     Tel: <a href="tel:+390212345678">02 1234 5678</a><br />
-    Via Dante 15, 20121 Milano
+    Via Dante 15, 20121 Milan
 </address>
 ```
 
-**NON è solo per indirizzi fisici!** Può contenere email, telefono, social...
+**It’s NOT only for physical addresses!** It can contain email, phone, social...
 
-**Analogia**: Il biglietto da visita digitale!
+**Analogy**: The digital business card!
 
-#### `<div>` - Il tuttofare
-**Cosa fa**: Contenitore generico senza significato speciale
+#### `<div>` - The all-rounder
+
+**What it does**: Generic container with no special meaning
 
 ```html
 <div class="card">
-    <h3>Prodotto speciale</h3>
-    <p>Descrizione...</p>
-    <button>Acquista</button>
+    <h3>Special product</h3>
+    <p>Description...</p>
+    <button>Buy</button>
 </div>
 ```
 
-**Quando usarlo**: Quando non c'è un tag semantico appropriato
+**When to use it**: When there isn’t an appropriate semantic tag
 
-**Analogia**: Una scatola di cartone - ci metti quello che vuoi!
+**Analogy**: A cardboard box - you put whatever you want in it!
 
-#### `<span>` - Il piccolo aiutante
-**Cosa fa**: Come `<div>` ma per contenuti inline (nella riga)
+#### `<span>` - The little helper
 
-```html
-<p>Il prezzo è <span class="price">€99</span> invece di €150!</p>
-```
-
-**Analogia**: L'evidenziatore del testo - marca una parola senza interrompere!
-
-## 2. Elementi di testo
-
-### I titoli - La gerarchia
-```html
-<h1>Titolo principale (uno solo!)</h1>
-<h2>Capitoli principali</h2>
-<h3>Sottocapitoli</h3>
-<h4>Sezioni dei sottocapitoli</h4>
-<h5>Dettagli delle sezioni</h5>
-<h6>Il più piccolo</h6>
-```
-
-**Regola**: Come una matrioska russa - ogni livello dentro l'altro! 🪆
-
-### `<p>` - Il paragrafo
-**Cosa fa**: Raggruppa il testo in paragrafi
+**What it does**: Like `<div>` but for inline content (in the same line)
 
 ```html
-<p>Questo è un paragrafo. Va sempre a capo prima e dopo.</p>
-<p>Questo è un altro paragrafo, separato dal primo.</p>
+<p>The price is <span class="price">€99</span> instead of €150!</p>
 ```
 
-### Enfasi e importanza
+**Analogy**: A text highlighter - it marks a word without interrupting!
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+## 2. Text Elements
+
+### Headings - The hierarchy
+
 ```html
-<em>Testo enfatizzato</em> <!-- Corsivo con significato -->
-<i>Testo in corsivo</i> <!-- Solo stile -->
-
-<strong>Testo importante</strong> <!-- Grassetto con significato -->
-<b>Testo in grassetto</b> <!-- Solo stile -->
+<h1>Main title (only one!)</h1>
+<h2>Main chapters</h2>
+<h3>Subchapters</h3>
+<h4>Subchapter sections</h4>
+<h5>Section details</h5>
+<h6>The smallest</h6>
 ```
 
-**Quando usare quale?**
-- `<em>` e `<strong>`: Quando il testo È davvero importante
-- `<i>` e `<b>`: Solo per stile visivo
+**Rule**: Like a Russian nesting doll - each level inside the other! 🪆
 
-### `<blockquote>` - La citazione  
-**Cosa fa**: Indica una citazione lunga da un'altra fonte
+### `<p>` - The paragraph
+
+**What it does**: Groups text into paragraphs
+
+```html
+<p>This is a paragraph. It always breaks to a new line before and after.</p>
+<p>This is another paragraph, separated from the first.</p>
+```
+
+### Emphasis and importance
+
+```html
+<em>Emphasized text</em> <!-- Italic with meaning -->
+<i>Italic text</i> <!-- Style only -->
+
+<strong>Important text</strong> <!-- Bold with meaning -->
+<b>Bold text</b> <!-- Style only -->
+```
+
+**When to use which?**
+
+* `<em>` and `<strong>`: When the text IS truly important
+* `<i>` and `<b>`: Only for visual style
+
+### `<blockquote>` - The quotation
+
+**What it does**: Indicates a long quotation from another source
 
 ```html
 <blockquote>
-    <p>Il codice è poesia.</p>
-    <cite>- Un programmatore saggio</cite>
+    <p>Code is poetry.</p>
+    <cite>- A wise programmer</cite>
 </blockquote>
 ```
 
-**Analogia**: Come quando citi un libro - dai credito all'autore!
+**Analogy**: Like when you quote a book - you give credit to the author!
 
-### `<hr>` - La linea divisoria
-**Cosa fa**: Crea una separazione tematica
+### `<hr>` - The horizontal rule
+
+**What it does**: Creates a thematic separation
 
 ```html
-<p>Fine del capitolo 1</p>
+<p>End of chapter 1</p>
 <hr>
-<p>Inizio del capitolo 2</p>
+<p>Start of chapter 2</p>
 ```
 
 **Visual**: _______________
 
-### Le liste
+### Lists
 
-#### Lista non ordinata
+#### Unordered list
+
 ```html
 <ul>
-    <li>Mele</li>
-    <li>Pere</li>
-    <li>Banane</li>
+    <li>Apples</li>
+    <li>Pears</li>
+    <li>Bananas</li>
 </ul>
 ```
-**Risultato**: 
-• Mele
-• Pere  
-• Banane
 
-#### Lista ordinata
+**Result**:
+• Apples
+• Pears
+• Bananas
+
+#### Ordered list
+
 ```html
 <ol>
-    <li>Accendi il computer</li>
-    <li>Apri il browser</li>
-    <li>Inizia a programmare!</li>
+    <li>Turn on the computer</li>
+    <li>Open the browser</li>
+    <li>Start coding!</li>
 </ol>
 ```
-**Risultato**:
-1. Accendi il computer
-2. Apri il browser
-3. Inizia a programmare!
 
-## 3. I Link - Le porte del web
+**Result**:
 
-### `<a>` - L'ancora
-**Cosa fa**: Crea collegamenti cliccabili
+1. Turn on the computer
+2. Open the browser
+3. Start coding!
 
-**Link base**:
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+## 3. Links - The doors of the web
+
+### `<a>` - The anchor
+
+**What it does**: Creates clickable links
+
+**Basic link**:
+
 ```html
-<a href="https://www.google.it">Vai a Google</a>
+<a href="https://www.google.it">Go to Google</a>
 ```
 
-**Link nella stessa pagina**:
+**Link within the same page**:
+
 ```html
-<a href="#contatti">Vai ai contatti</a>
-<!-- Più in basso nella pagina: -->
-<section id="contatti">...</section>
+<a href="#contacts">Go to contacts</a>
+<!-- Lower down the page: -->
+<section id="contacts">...</section>
 ```
 
-**Link email**:
+**Email link**:
+
 ```html
-<a href="mailto:info@esempio.it">Scrivimi!</a>
+<a href="mailto:info@example.it">Write to me!</a>
 ```
 
-**Link telefono**:
+**Phone link**:
+
 ```html
-<a href="tel:+391234567890">Chiamami!</a>
+<a href="tel:+391234567890">Call me!</a>
 ```
 
-### Attributi speciali per i link
+### Special attributes for links
 
 #### `target="_blank"`
-**Cosa fa**: Apre il link in una nuova scheda
+
+**What it does**: Opens the link in a new tab
 
 ```html
-<a href="https://esempio.it" target="_blank">Apri in nuova scheda</a>
+<a href="https://example.it" target="_blank">Open in a new tab</a>
 ```
 
-**Analogia**: Come aprire una nuova finestra invece di sostituire quella attuale!
+**Analogy**: Like opening a new window instead of replacing the current one!
 
-#### `rel="noreferrer"`  
-**Cosa fa**: Nasconde da dove viene il click (privacy)
+#### `rel="noreferrer"`
+
+**What it does**: Hides where the click comes from (privacy)
 
 ```html
-<a href="https://esempio.it" target="_blank" rel="noreferrer">Link privato</a>
+<a href="https://example.it" target="_blank" rel="noreferrer">Private link</a>
 ```
 
-**Analogia**: Come entrare in un negozio senza dire chi ti ha consigliato!
+**Analogy**: Like walking into a shop without saying who recommended it to you!
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
 
 ## 4. Media
 
-### `<img>` - Le immagini
-**Cosa fa**: Mostra un'immagine
+### `<img>` - Images
 
-**Snippet completo**:
+**What it does**: Displays an image
+
+**Full snippet**:
+
 ```html
 <img 
-    src="gatto.jpg" 
-    alt="Un gatto arancione che dorme"
+    src="cat.jpg" 
+    alt="An orange cat sleeping"
     width="600"
     height="400"
     loading="lazy"
 >
 ```
 
-#### `loading="lazy"`  
-**Cosa fa**: Carica l'immagine solo quando sta per essere vista!
+#### `loading="lazy"`
 
-**Analogia**: Come un cameriere intelligente che porta i piatti solo quando ti siedi al tavolo!
+**What it does**: Loads the image only when it’s about to be seen!
+
+**Analogy**: Like a smart waiter who brings the dishes only when you sit at the table!
 
 ```html
-<!-- Immagine in alto (si carica subito) -->
-<img src="hero.jpg" alt="Banner principale">
+<!-- Image at the top (loads immediately) -->
+<img src="hero.jpg" alt="Main banner">
 
-<!-- Immagini in fondo (si caricano dopo) -->
-<img src="foto1.jpg" alt="Galleria 1" loading="lazy">
-<img src="foto2.jpg" alt="Galleria 2" loading="lazy">
+<!-- Images at the bottom (load later) -->
+<img src="photo1.jpg" alt="Gallery 1" loading="lazy">
+<img src="photo2.jpg" alt="Gallery 2" loading="lazy">
 ```
 
-**Benefici**: 
-- ⚡ Pagina più veloce
-- 📱 Risparmio dati mobile
-- 🚀 Migliore esperienza utente
+**Benefits**:
 
-### `<iframe>` - La finestra magica  
-**Cosa fa**: Incorpora un'altra pagina web nella tua
+* ⚡ Faster page
+* 📱 Mobile data savings
+* 🚀 Better user experience
+
+### `<iframe>` - The magic window
+
+**What it does**: Embeds another web page inside yours
 
 ```html
 <iframe 
     src="https://www.youtube.com/embed/VIDEO_ID"
     width="560" 
     height="315"
-    title="Video tutorial CSS"
+    title="CSS tutorial video"
 >
 </iframe>
 ```
 
-**Usi comuni**:
-- Video YouTube
-- Mappe Google
-- Post social media
+**Common uses**:
 
-**Analogia**: Come avere una TV nella TV - mostra un altro canale dentro il tuo!
+* YouTube videos
+* Google Maps
+* Social media posts
 
-## 5. Form - L'interazione
+**Analogy**: Like having a TV inside a TV - it shows another channel inside yours!
 
-### La struttura base
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 5. Forms - Interaction
+
+### The basic structure
+
 ```html
-<form action="/invia-dati" method="POST">
-    <!-- Campi del form -->
-    <button type="submit">Invia</button>
+<form action="/send-data" method="POST">
+    <!-- Form fields -->
+    <button type="submit">Submit</button>
 </form>
 ```
 
-### `<label>` e `<input>` - La coppia perfetta
+### Buttons - Types and traps
+
+**What it does**: Defines exactly what happens when you click a button.
+
+**The trap**: If you write only `<button>`, the browser assumes it is `submit`. Click → the page reloads! 😱
+
 ```html
-<label for="nome">Il tuo nome:</label>
-<input type="text" id="nome" name="nome" required>
+<button type="submit">Submit Order</button>
+<button type="button">Add Item</button>
+<button type="reset">Clear</button>
 ```
 
-**Perché il `for`?** Clicchi la label → si attiva l'input! Magia accessibilità! ✨
+**Analogy**:
 
-### Tipi di input più usati
+* `submit` = Dropping the letter in the mailbox 📮 (it’s sent and you don’t have it anymore)
+* `button` = Calculator key 🧮 (you do the calculation but you stay there)
+* `reset` = Whiteboard eraser ✨
+
+### `<label>` and `<input>` - The perfect pair
+
 ```html
-<!-- Testo normale -->
-<input type="text" placeholder="Scrivi qui...">
+<label for="name">Your name:</label>
+<input type="text" id="name" name="name" required>
+```
 
-<!-- Email con validazione -->
-<input type="email" placeholder="tua@email.com" required>
+**Why the `for`?** Click the label → the input gets activated! Accessibility magic! ✨
 
-<!-- Password nascosta -->
+### Most used input types
+
+```html
+<!-- Plain text -->
+<input type="text" placeholder="Write here...">
+
+<!-- Email with validation -->
+<input type="email" placeholder="your@email.com" required>
+
+<!-- Hidden password -->
 <input type="password">
 
-<!-- Numero -->
+<!-- Number -->
 <input type="number" min="0" max="100">
 
-<!-- Data -->
+<!-- Date -->
 <input type="date">
 
 <!-- Checkbox -->
 <input type="checkbox" id="privacy">
-<label for="privacy">Accetto la privacy</label>
+<label for="privacy">I accept the privacy policy</label>
 
-<!-- Radio (scelta singola) -->
+<!-- Radio (single choice) -->
 <input type="radio" name="size" value="S" id="small">
 <label for="small">Small</label>
 <input type="radio" name="size" value="M" id="medium">
 <label for="medium">Medium</label>
 ```
 
-### `<select>` - Il menu a tendina
+### `<select>` - The dropdown menu
+
 ```html
-<label for="paese">Scegli il paese:</label>
-<select id="paese" name="paese">
-    <option value="">-- Seleziona --</option>
-    <option value="IT">Italia</option>
-    <option value="FR">Francia</option>
-    <option value="ES">Spagna</option>
+<label for="country">Choose the country:</label>
+<select id="country" name="country">
+    <option value="">-- Select --</option>
+    <option value="IT">Italy</option>
+    <option value="FR">France</option>
+    <option value="ES">Spain</option>
 </select>
 ```
 
-### `<textarea>` - Il testo lungo
+### `<textarea>` - Long text
+
 ```html
-<label for="messaggio">Il tuo messaggio:</label>
-<textarea id="messaggio" name="messaggio" rows="4" cols="50">
+<label for="message">Your message:</label>
+<textarea id="message" name="message" rows="4" cols="50">
 </textarea>
 ```
 
-### `<fieldset>` e `<legend>` - Raggruppa con stile
+### `<fieldset>` and `<legend>` - Group with style
+
 ```html
 <fieldset>
-    <legend>Dati personali</legend>
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome">
+    <legend>Personal data</legend>
+    <label for="name">Name:</label>
+    <input type="text" id="name">
     
-    <label for="cognome">Cognome:</label>
-    <input type="text" id="cognome">
+    <label for="surname">Surname:</label>
+    <input type="text" id="surname">
 </fieldset>
 ```
 
-**Visual**: Crea un box con bordo e titolo!
+**Visual**: Creates a box with border and title!
 
-### Attributi utili per i form
+### Useful attributes for forms
 
 #### `placeholder`
-**Cosa fa**: Testo di esempio che sparisce quando scrivi
+
+**What it does**: Example text that disappears when you type
+
 ```html
-<input type="text" placeholder="es. Mario Rossi">
+<input type="text" placeholder="e.g. Mario Rossi">
 ```
 
 #### `required`
-**Cosa fa**: Campo obbligatorio
+
+**What it does**: Required field
+
 ```html
 <input type="email" required>
 ```
 
 #### `name`
-**Cosa fa**: Nome del dato quando viene inviato
+
+**What it does**: Name of the data when it’s submitted
+
 ```html
 <input type="text" name="username">
 ```
 
-## 6. Accessibilità - Per tutti! ♿
+#### `inputmode`
 
-### Attributi ARIA base
+**What it does**: Tells the browser which keyboard to show on mobile to make life easier for the user.
+
+```html
+<!-- Text: Default, normal keyboard -->
+<input type="text" inputmode="text">
+
+<!-- Numeric: Numeric keyboard (0-9) -->
+<input type="text" inputmode="numeric">
+
+<!-- Decimal: Numeric keyboard with decimal point -->
+<input type="text" inputmode="decimal">
+
+<!-- Tel: Phone keypad -->
+<input type="text" inputmode="tel">
+
+<!-- Email: Optimized keyboard with "@" and "." -->
+<input type="text" inputmode="email">
+
+<!-- Url: Optimized keyboard with "/" and "." -->
+<input type="text" inputmode="url">
+
+<!-- Search: Enter key becomes "Search" 🔍 -->
+<input type="search" inputmode="search">
+
+```
+
+**Note**: These `inputmode` attributes are pure UX! They don’t validate data (that’s what the type is for), but they make input much faster on smartphones.
+
+**Analogy**: Like handing the mechanic the right wrench directly instead of making them search through the toolbox! 🔧
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 6. Accessibility - For everyone! ♿
+
+### Basic ARIA attributes
 
 #### `role`
-**Cosa fa**: Dice che ruolo ha un elemento
+
+**What it does**: Tells what role an element has
+
 ```html
 <section role="region" aria-labelledby="news">
-    <h2 id="news">Ultime notizie</h2>
+    <h2 id="news">Latest news</h2>
 </section>
 ```
 
 #### `aria-label`
-**Cosa fa**: Etichetta invisibile ma letta dagli screen reader
+
+**What it does**: Invisible label but read by screen readers
+
 ```html
-<button aria-label="Chiudi finestra">X</button>
+<button aria-label="Close window">X</button>
 ```
 
 #### `aria-labelledby`
-**Cosa fa**: Collega un elemento a un'altra etichetta esistente
+
+**What it does**: Links an element to another existing label
+
 ```html
-<section aria-labelledby="titolo-sezione">
-    <h2 id="titolo-sezione">I nostri servizi</h2>
+<section aria-labelledby="section-title">
+    <h2 id="section-title">Our services</h2>
 </section>
 ```
 
-**Analogia**: Come i sottotitoli per non udenti - non li vedi ma ci sono per chi ne ha bisogno!
+**Analogy**: Like subtitles for the hearing impaired - you don’t see them but they’re there for those who need them!
 
-## 7. Attributi globali - Utilizzabili ovunque
 
-### `id` - L'identificativo unico
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 7. Global attributes - Usable anywhere
+
+### `id` - The unique identifier
+
 ```html
-<div id="header-principale">...</div>
+<div id="main-header">...</div>
 ```
-**Regola**: Come il codice fiscale - uno solo per elemento!
 
-### `class` - Le categorie
+**Rule**: Like a tax ID code - only one per element!
+
+### `class` - Categories
+
 ```html
-<div class="card speciale evidenziata">...</div>
+<div class="card special highlighted">...</div>
 ```
-**Può avere più classi!** Separate da spazi
 
-### `style` - CSS inline (da evitare!)
+**It can have multiple classes!** Separated by spaces
+
+### `style` - Inline CSS (to avoid!)
+
 ```html
-<p style="color: red;">Testo rosso</p>
+<p style="color: red;">Red text</p>
 ```
-**Meglio usare CSS esterno!**
 
-### `title` - Il tooltip
+**Better to use external CSS!**
+
+### `title` - The tooltip
+
 ```html
 <abbr title="Hypertext Markup Language">HTML</abbr>
 ```
-**Passa il mouse sopra → appare la spiegazione!**
 
-## 8. Librerie esterne - Superpoteri! 🦸‍♂️
+**Hover your mouse over it → the explanation appears!**
 
-### Font Awesome - Icone bellissime
-**Nel `<head>`**:
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+## 8. External libraries - Superpowers! 🦸‍♂️
+
+### Font Awesome - Beautiful icons
+
+**In the `<head>`**:
+
 ```html
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 ```
 
-**Uso**:
+**Usage**:
+
 ```html
-<!-- Icone social -->
+<!-- Social icons -->
 <i class="fab fa-facebook"></i>
 <i class="fab fa-twitter"></i>
 <i class="fab fa-instagram"></i>
 
-<!-- Icone generiche -->
+<!-- Generic icons -->
 <i class="fas fa-heart"></i>
 <i class="fas fa-star"></i>
 ```
 
-**Analogia**: Come avere migliaia di emoji professionali gratis! 
+**Analogy**: Like having thousands of professional emojis for free!
 
-## Best Practices - I comandamenti dell'HTML 📜
 
-1. **Sempre l'alt nelle immagini**
-   ```html
-   ❌ <img src="foto.jpg">
-   ✅ <img src="foto.jpg" alt="Descrizione foto">
-   ```
+<br />
+<br />
+<br />
+<br />
 
-2. **Chiudi sempre i tag**
-   ```html
-   ❌ <p>Testo senza chiusura
-   ✅ <p>Testo con chiusura</p>
-   ```
 
-3. **Usa tag semantici**
-   ```html
-   ❌ <div class="header">
-   ✅ <header>
-   ```
 
-4. **Un solo h1 per pagina**
-   ```html
-   ✅ <h1>Titolo principale</h1>
-       <h2>Sottotitolo</h2>
-       <h2>Altro sottotitolo</h2>
-   ```
 
-5. **Form sempre con label**
-   ```html
-   ❌ <input type="text">
-   ✅ <label for="nome">Nome:</label>
-      <input type="text" id="nome">
-   ```
+
+
+
+## The 10 commandments of HTML
+
+### 1. Alt Text — The voice of the image 🗣️
+
+**Why**: if the image doesn’t load (or the user uses a screen reader), the `alt` is what “remains”. It also helps SEO and accessibility.
+
+```html
+<!-- ❌ -->
+<img src="cake.jpg">
+
+<!-- ✅ -->
+<img src="cake.jpg" alt="Chocolate cake with whipped cream">
+```
+
+**Analogy**: it’s like describing a photo over the phone: you don’t say “image.jpg”, you say what you actually see.
+
+> Pro note: if the image is *purely decorative*, use `alt=""` (empty alt), so the screen reader skips it.
+
+---
+
+### 2. Close your tags — The sandwich principle 🥪
+
+**Why**: if you open a tag and don’t close it, the browser “guesses” and you risk breaking the layout of everything that follows.
+
+```html
+<!-- ❌ -->
+<p>This paragraph eats everything else...
+  <header>Oops, I ended up inside the paragraph!</header>
+
+<!-- ✅ -->
+<p>This paragraph ends here.</p>
+<header>I’m safe!</header>
+```
+
+**Analogy**: like a sandwich. If you put the bottom slice (`<p>`) and forget the top one (`</p>`), the filling ends up everywhere.
+
+> Pro note: some tags are *void* (they don’t get closed), like `<img>`, `<input>`, `<br>`.
+
+---
+
+### 3. Semantics — The right labels 🏷️
+
+**Why**: code full of `<div>` is a maze. Semantic tags tell *what* is inside, not just *how* it looks.
+
+```html
+<!-- ❌ -->
+<div class="header">...</div>
+<div class="footer">...</div>
+
+<!-- ✅ -->
+<header>...</header>
+<footer>...</footer>
+```
+
+**Analogy**: moving boxes 📦. If you write “STUFF” on everything (`div`), you’ll go crazy. If you write “KITCHEN”, “BATHROOM”, you immediately know where to start.
+
+> Pro note: also think about `<main>`, `<nav>`, `<article>`, `<section>`, `<aside>`.
+
+---
+
+### 4. King H1 — One (almost always) 👑
+
+**Why**: `<h1>` is the main title of the page. Having many makes it harder to understand the central topic (for people and search engines).
+
+```html
+<!-- ❌ -->
+<h1>Welcome</h1>
+...
+<h1>Our services</h1>
+
+<!-- ✅ -->
+<h1>Welcome to the site</h1>
+...
+<h2>Our services</h2>
+```
+
+**Analogy**: the front page of a newspaper 📰. There’s only one BIG HEADLINE. The rest are subheadings. If everything is a headline, nothing is important.
+
+> Pro note: the H hierarchy is a *map* of the content (structure), not a way to choose the font size.
+
+---
+
+### 5. Label and Input — The inseparable pair 🎯
+
+**Why**: without a `label` connected with `for`/`id`, the user has to click *precisely* in the field. With the label, you can also click the text: more convenient (especially on mobile) and more accessible.
+
+```html
+<!-- ❌ -->
+Name: <input type="text">
+
+<!-- ✅ -->
+<label for="name">Name:</label>
+<input type="text" id="name" name="name">
+```
+
+**Analogy**: a light switch 💡. The input is the internal mechanism (small). The label is the big plate: it makes it easy to “turn on” the field.
+
+---
+
+### 6. Don’t skip steps — H hierarchy 🪜
+
+**Why**: don’t jump from `h2` to `h4` just because you “like it bigger/smaller”. Hierarchy is for structure; styling is done with CSS.
+
+```html
+<!-- ❌ -->
+<h2>The product</h2>
+<h4>Features</h4>
+
+<!-- ✅ -->
+<h2>The product</h2>
+<h3>Features</h3>
+```
+
+**Analogy**: a staircase. If you skip steps, readers trip (and so does Google).
+
+---
+
+### 7. No mysterious links — Say where you’re going 🔗
+
+**Why**: “click here” says nothing out of context (screen readers, quick scanning, SEO). Link text must make sense on its own.
+
+```html
+<!-- ❌ -->
+<a href="menu.pdf">Click here</a>
+
+<!-- ✅ -->
+<a href="menu.pdf">Download the menu (PDF)</a>
+```
+
+**Analogy**: a road sign that says “Go there”. Better “Central Station”. 🚏
+
+---
+
+### 8. No inline CSS — Separation of concerns 👕
+
+**Why**: styling inside HTML becomes unmanageable. With CSS classes you change once and update everything, without a “treasure hunt” through tags.
+
+```html
+<!-- ❌ -->
+<p style="color: red; font-size: 20px;">Attention</p>
+
+<!-- ✅ -->
+<p class="alert">Attention</p>
+```
+
+**Analogy**: inline style is a tattoo: hard to change. Classes are clothes: you change them whenever you want.
+
+---
+
+### 9. The suitcase rule — Sensible nesting 🧳
+
+**Why**: some elements can’t go inside others (e.g., a `<div>` inside a `<p>` is invalid markup). Result: confusing HTML and unpredictable rendering.
+
+```html
+<!-- ❌ -->
+<p>Here is my <div>BOX</div> text</p>
+
+<!-- ✅ -->
+<p>Here is my text.</p>
+<div class="box">BOX</div>
+```
+
+**Analogy**: you can’t put a suitcase in a wallet. But you can put a wallet in a suitcase.
+
+---
+
+### 10. Always use quotes — Clean attributes 👟
+
+**Why**: sometimes it “still works”, until it doesn’t. Quotes avoid ambiguity and make code more readable and robust.
+
+```html
+<!-- ❌ -->
+<input type=text class=big>
+
+<!-- ✅ -->
+<input type="text" class="big">
+```
+
+**Analogy**: like tying your shoes. You can walk with untied laces… until you face-plant.
+
+---
+
+## Bonus (highly recommended)
+
+### 11. “Honest” forms — Right type + `required` + `autocomplete` ✅
+
+**Why**: you help the user (especially on mobile), reduce errors, and improve accessibility.
+
+```html
+<!-- ❌ -->
+<input type="text" placeholder="Email">
+
+<!-- ✅ -->
+<label for="email">Email</label>
+<input
+  id="email"
+  name="email"
+  type="email"
+  autocomplete="email"
+  required
+>
+```
+
+**Analogy**: it’s like filling out a form with someone guiding you (“a real email goes here”), instead of leaving you in chaos.
+
+---
+
+### 12. Buttons and links are not interchangeable 🔘🔗
+
+**Why**: a link (`<a>`) is for **navigation**, a button (`<button>`) is for **an action**. If you swap them, you ruin UX, accessibility, and keyboard behavior.
+
+```html
+<!-- ❌: action disguised as a link -->
+<a href="#" onclick="save()">Save</a>
+
+<!-- ✅ -->
+<button type="button" onclick="save()">Save</button>
+
+<!-- ❌: navigation disguised as a button -->
+<button onclick="location.href='/prices'">Prices</button>
+
+<!-- ✅ -->
+<a href="/prices">Prices</a>
+```
+
+**Analogy**: a link is a door (it takes you elsewhere), a button is a switch (it makes something happen).
+

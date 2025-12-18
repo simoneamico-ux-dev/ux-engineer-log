@@ -156,24 +156,10 @@ console.log(utente.eta); // undefined - "Questa proprietà non è stata definita
 
 La differenza filosofica è profonda: `null` è il vuoto buddhista - un vuoto pieno di significato. `undefined` è il vuoto esistenziale - un vuoto che non sa nemmeno di essere vuoto.
 
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### 2\. Tipi di Dati - Le Forme dell'Informazione 🎭
@@ -239,6 +225,30 @@ testo.indexOf("Script");   // 4 - Dove inizia (-1 se non trova)
 testo.replace("potente", "fantastico"); // Sostituisce la *prima* occorrenza
 testo.replaceAll("e", "3");     // Sostituisce *tutte* le occorrenze
 ```
+
+**Il Metodo `.concat()` vs Template Literals**
+
+**Cosa fa**: Unisce due stringhe.
+
+```javascript
+const base = "https://sito.com/";
+const path = "foto.jpg";
+
+// 1. Orientato agli Oggetti (Il Verbo) 🐢
+// "Ehi base, concatena a te stesso path"
+const url1 = base.concat(path); 
+
+// 2. Matematico (Intuitivo) ➕
+const url2 = base + path;
+
+// 3. Moderno (Il Vincitore) 🏆
+const url3 = `${base}${path}`;
+
+```
+
+**Perché `.concat()` esiste?**: Segue la logica Soggetto (`base`) -> Verbo (`.concat`) -> Oggetto (`path`).
+**Consiglio**: Imparalo per i test, ma nella vita reale usa i **Template Literals** (opzione 3). Sono più leggibili e potenti.
+
 
 **Il Metodo .split() - L'Affettatrice di Stringhe**
 
@@ -471,7 +481,11 @@ L'oggetto `Math` è come avere una calcolatrice scientifica sempre a disposizion
     const total = subTotal + taxes; // 108.80
     ```
 
------
+
+<br />
+---
+<br />
+
 
 ### 3\. Date - Il Calendario e l'Orologio 📅
 
@@ -515,7 +529,11 @@ const end = Date.now();
 console.log(`Operazione durata: ${end - start}ms`);
 ```
 
------
+
+<br />
+---
+<br />
+
 
 ### 4\. Booleani (Boolean) - Il Sistema Binario della Logica ✅❌
 
@@ -550,7 +568,11 @@ if (!username) { // !username è true
 }
 ```
 
------
+
+<br />
+---
+<br />
+
 
 ### 5\. Array (Array) - Le Liste Ordinate 🗂️
 
@@ -724,7 +746,11 @@ Questi metodi sono "gentili": creano un **nuovo array** senza toccare l'original
     const medianaPari = (el1 + el2) / 2;             // 3.5
     ```
 
------
+
+<br />
+---
+<br />
+
 
 ### 6\. Oggetti (Object) - I Contenitori Strutturati 📇
 
@@ -788,21 +814,55 @@ const utenteClassico = { nome: nome, eta: eta };
 const utenteModerno = { nome, eta }; // Fa la stessa identica cosa!
 ```
 
-#### Destructuring (ES6)
+#### Destrutturazione (ES6) - Le Matrioske 🪆
 
-L'operazione inversa: estrarre valori da un oggetto e "spacchettarli" in variabili separate.
+**Cosa fa**: L'operazione inversa della creazione: estrae valori da un oggetto e li "spacchetta" in variabili separate in modo chirurgico e pulito.
 
 ```javascript
 const prodotto = { id: 1, nome: "Libro", prezzo: 15 };
 
-// Classico:
-const nomeClassico = prodotto.nome;
-const prezzoClassico = prodotto.prezzo;
+// Vecchio modo (Verboso):
+const nomeVec = prodotto.nome;
+const prezzoVec = prodotto.prezzo;
 
 // Moderno (Destructuring):
 const { nome, prezzo } = prodotto;
-// Ora hai due nuove variabili: nome ("Libro") e prezzo (15)
+// Ora hai due nuove variabili pronte: nome ("Libro") e prezzo (15)
+
 ```
+**Avanzato (Nesting):**
+```javascript
+const data = {
+    topic_list: {
+        topics: ['Post 1', 'Post 2'],
+        more_topics_url: '...'
+    },
+    users: [...]
+};
+
+// Vecchio modo (Noioso):
+const topics = data.topic_list.topics;
+
+// Modo Matrioska (Elegante):
+// Nota la sintassi: uso i ':' per scendere di livello
+const { topic_list: { topics } } = data; 
+
+```
+
+**Analogia**: Invece di tirare fuori la scatola grande, aprirla, tirare fuori la media, aprirla... con la destrutturazione ti teletrasporti direttamente alla bambolina più piccola!
+
+**Best Practice: Il Renaming (CamelCase vs Snake_case)** 🐫 vs 🐍
+Le API spesso parlano in `snake_case` (es. `topic_list`), ma JS ama il `camelCase`.
+Risolvi il problema direttamente mentre destrutturi:
+
+```javascript
+// Leggi 'topic_list' dall'oggetto, ma crea una variabile chiamata 'topicList'
+const { topic_list: topicList } = data;
+
+```
+
+È come avere un traduttore simultaneo mentre apri la scatola!
+
 
 #### Metodi Statici (`Object.keys()`, `Object.values()`, `Object.entries()`)
 
@@ -856,21 +916,10 @@ voti.forEach(voto => {
 // conteggio ora è: { A: 3, B: 2, C: 1 }
 ```
 
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
-
 
 
 ### 7\. Operatori Logici e Sintassi ⚙️
@@ -1124,7 +1173,7 @@ Comunicare è fondamentale, non solo con l'utente, ma anche con te stesso e con 
 
 #### console - La Cabina di Controllo
 
-Pensa alla `console` come alla **cabina di pilotaggio** del tuo programma. Non è un output per i tuoi passeggeri (gli utenti) - per quello userai il DOM (vedi Parte IV). È il pannello di controllo per te, il pilota (lo sviluppatore). È il posto dove il motore ti dice se sta funzionando bene, dove controlli i valori al volo e dove diagnostichi i problemi.
+Pensa alla `console` come alla **cabina di pilotaggio** del tuo programma. Non è un output per i tuoi passeggeri (gli utenti) - per quello userai il DOM (vedi Parte V). È il pannello di controllo per te, il pilota (lo sviluppatore). È il posto dove il motore ti dice se sta funzionando bene, dove controlli i valori al volo e dove diagnostichi i problemi.
 
 Il metodo `console.log()` è il tuo strumento principale. È come un "walkie-talkie" che ti permette di inviare un messaggio da qualsiasi punto del tuo codice alla cabina di controllo.
 
@@ -1238,22 +1287,10 @@ let count = 0;  // Contatore tentativi falliti (max 3 prima del blocco account)
 
 Un buon commento è come una nota a margine su un libro difficile: non ripete il testo, ma ti dà la chiave di lettura per capirlo.
 
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
-
-
 
 
 ### 9\. Controllo del Flusso - Le Decisioni del Programma 🚦
@@ -1271,7 +1308,7 @@ if (condizione) {
 }
 ```
 
-La parte cruciale da capire è che la `condizione` viene *sempre* costretta a diventare un booleano. Qui è dove i concetti di **Truthy e Falsy** (Parte I, Sezione 2) diventano fondamentali.
+La parte cruciale da capire è che la `condizione` viene *sempre* costretta a diventare un booleano. Qui è dove i concetti di **Truthy e Falsy** (Parte I) diventano fondamentali.
 
 ```javascript
 const username = "Mario";
@@ -1440,20 +1477,10 @@ Questo stile è immensamente superiore perché:
   * Rende la logica principale della funzione immediatamente visibile.
   * Gestisce tutti i casi limite all'inizio, come un buttafuori che filtra la coda.
 
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
 
 
 ### 10\. Cicli - Le Ripetizioni Automatizzate 🔄
@@ -1963,20 +1990,11 @@ const indici = arr.map((_elemento, indice) => {
 // indici è [0, 1, 2]
 // L'_elemento dice "ignoro il primo parametro, non è un bug"
 ```
+
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
 
 
 ### 12\. Scope - La Visibilità delle Variabili 👁️
@@ -2181,7 +2199,11 @@ const luigi = new Giocatore();
 // ma sono stati entrambi creati dallo stesso "stampo" Giocatore.
 ```
 
------
+
+<br />
+---
+<br />
+
 
 ### 14\. Zucchero Sintattico (vs Funzioni Costruttore) 👻
 
@@ -2225,7 +2247,11 @@ mario.saluta();
 
 I due esempi sopra fanno *esattamente la stessa identica cosa*. La parola `class` è solo un "travestimento" più pulito e leggibile per creare una funzione costruttore e assegnare metodi al suo `prototype`.
 
------
+
+<br />
+---
+<br />
+
 
 ### 15\. `constructor()` e Parametri 🛠️
 
@@ -2259,7 +2285,11 @@ const piattaforma2 = new Piattaforma(250, 400);
 
 Se non devi impostare nulla, puoi omettere il `constructor` (JavaScript ne userà uno vuoto di default).
 
------
+
+<br />
+---
+<br />
+
 
 ### 16\. `new` (I 4 Passaggi) ✨
 
@@ -2272,7 +2302,11 @@ Cosa fa *davvero* la parola chiave `new`? È un processo magico che avviene in q
 
 Non sei tu che fai `return this` nel costruttore, lo fa `new` per te.
 
------
+
+<br />
+---
+<br />
+
 
 ### 17\. `this` (Contesto dell'istanza) 👈
 
@@ -2310,7 +2344,11 @@ c2.incrementa(); // Output: 1 (this === c2)
 
 `this` è il ponte che collega lo *stampo* generico (la classe) all'oggetto *concreto* (l'istanza).
 
------
+
+<br />
+---
+<br />
+
 
 ### 18\. Proprietà di Classe (Sintassi Moderna)
 
@@ -2348,7 +2386,11 @@ const player = new Giocatore("Sonic");
 
 Funziona esattamente allo stesso modo, è solo più ordinato.
 
------
+
+<br />
+---
+<br />
+
 
 ### 19\. Metodi (nel `prototype`) 🎒
 
@@ -2366,7 +2408,11 @@ Dove vanno a finire le funzioni (i "metodi") come `saluta()` o `incrementa()`?
 
 Questo meccanismo (la *prototype chain*) è incredibilmente efficiente. Hai un solo manuale di istruzioni (`prototype`) per migliaia di oggetti (istanze).
 
------
+
+<br />
+---
+<br />
+
 
 ### 20\. Pattern: Metodo `claim()` (Disattivazione Oggetti)
 
@@ -2537,23 +2583,10 @@ Questi sono **eventi**, sono i "permessi di lavoro" che dicono al tuo codice: "O
 
 **Regola Pratica:** Usa sempre `<script defer>` nell'`<head>`. Se per qualche motivo non puoi, metti il tuo codice dentro un listener `DOMContentLoaded`. Evita `window.onload` a meno che tu non debba *davvero* aspettare il caricamento delle immagini.
 
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### 22\. DOM Manipulation - Il Ponte con il Browser 🌉
@@ -2842,21 +2875,10 @@ Come per il contenuto, hai due modi: quello diretto (e sporco) e quello pulito (
 
     *Perché usarlo?* Previene che il tuo stile o script "trapeli" in componenti annidati più profondamente. Ti dà un controllo chirurgico sulla selezione.
 
+
 <br />
+---
 <br />
-<br />
-<br />
-<br />
-<br />
-
-
-
-
-
-
-
-
-
 
 
 ### 23\. Eventi - Ascoltare e Reagire ⚡
@@ -3113,18 +3135,10 @@ btn.addEventListener("click", () => {
 
     *Attenzione:* Blocca l'intera interfaccia. Le app moderne evitano `confirm` e usano modali personalizzati (come `<dialog>`) per un'esperienza migliore.
 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
 
-
-
-
-
-
+<br />
+---
+<br />
 
 
 ### 24\. Dialog e Modali 🪟
@@ -3278,13 +3292,124 @@ L'elemento `<dialog>` elimina da solo il 90% del lavoro sporco e dei bug che aff
 
 
 
-## Parte VI - API Canvas e Logica di Gioco 🎮
+## Parte VI - Asincronia e Comunicazione Server 📡
+
+### 25. Il Concetto - Sincrono vs Asincrono ⏳
+
+**Cosa fa**: Definisce *come* il codice viene eseguito nel tempo.
+
+**Il problema**: JavaScript è "single-threaded" (ha una sola mano). Se gli fai fare un calcolo lungo in modo **sincrono**, blocchi tutto il sito finché non finisce.
+
+**Analogia**: Il Tostapane 🍞
+
+* **Sincrono (Blocking)**: Metti il pane, e resti *immobile* a fissare il tostapane per 2 minuti finché non scatta. Non puoi fare altro. (Il sito si blocca).
+* **Asincrono (Non-blocking)**: Metti il pane, premi la leva, e intanto vai a prendere il latte e il caffè. Quando il tostapane fa *TLIN!* (callback/promise), torni a prendere il pane. (Il sito rimane fluido).
+
+### 26. `fetch()` - L'ordine al ristorante 🍽️
+
+**Cosa fa**: Chiede dati a un server esterno (es. meteo, utenti, prodotti).
+
+**Il segreto**: `fetch` è un processo a **due fasi**. Non ricevi subito i dati, ricevi una promessa di riceverli!
+
+```javascript
+fetch('https://api.esempio.com/pizza')
+  .then(res => res.json())       // 1. Apri la scatola (Parsing)
+  .then(data => console.log(data)) // 2. Mangia il contenuto (Uso dati)
+  .catch(err => console.error(err)); // Gestione errori
+
+```
+
+**Analogia**: Il doppio ordine al fast food 🍔
+
+1. **Primo step (La Rete)**: Ordini e ti danno un **cercapersone**. Quando vibra, ti danno il vassoio con una **scatola chiusa** (`res`). Non vedi ancora il panino, sai solo che la scatola è arrivata (o se la cucina è esplosa `404/500`).
+2. **Secondo step (Il Parsing)**: Devi aprire la scatola e scartare il panino. Richiede tempo! Questo è il `res.json()`. Quando hai finito, hai finalmente il cibo vero (`data`).
+
+### 27. `async` / `await` - Il cambio automatico 🚗
+
+**Cosa fa**: È il modo moderno di gestire le attese. Fa sembrare il codice asincrono (complesso) come se fosse codice sincrono (lineare e semplice).
+
+```javascript
+// Prima: Cambio Manuale (.then .then) 😫
+fetch(url).then(res => res.json()).then(data => ...);
+
+// Dopo: Cambio Automatico (async/await) 😎
+async function prendiDati() {
+    // "await" mette in pausa la funzione finché la promessa non si risolve
+    const res = await fetch(url);      // Aspetta la scatola
+    const data = await res.json();     // Aspetta di aprirla
+    console.log(data);                 // Fatto!
+}
+
+```
+
+**Analogia**:
+
+* `.then()` è come guidare col **cambio manuale**: devi gestire ogni marcia, frizione e passaggio di dati. Potente, ma faticoso.
+* `await` è il **cambio automatico**: tu premi l'acceleratore e il motore gestisce le pause e i cambi di stato per te.
+
+### 28. `try...catch` - Il Trapezista 🎪
+
+**Cosa fa**: È la rete di sicurezza universale. Cattura **qualsiasi** errore, sia che venga dalla rete (asincrono), sia che sia un tuo errore di battitura (sincrono).
+
+```javascript
+async function operazione() {
+    try {
+        // Il trapezista salta...
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        // Anche se sbagli tu qui, il catch lo prende!
+        const nome = data.user.toUpperCase(); 
+    } catch (err) {
+        // ...la rete lo prende se cade!
+        console.error("Errore tecnico:", err); // Per te
+        alert("Impossibile caricare i dati");  // Per l'utente
+    }
+}
+
+```
+
+**Analogia**:
+
+* `try { ... }`: È il trapezista che tenta il triplo salto mortale.
+* `catch { ... }`: È la rete sotto. Se il trapezista scivola (fetch fallisce) O se ha un crampo (bug nel codice), cade sicuro nella rete invece di schiantarsi al suolo (crashare l'app).
+
+**Regola d'oro**: Gestisci due livelli di errori!
+
+1. **Console (Sviluppatore)**: La spia del motore 🔧 (`console.error` con i dettagli tecnici).
+2. **UI (Utente)**: La spia sul cruscotto 💡 (Messaggio gentile: "C'è stato un problema, riprova").
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+
+
+
+## Parte VII - API Canvas e Logica di Gioco 🎮
 
 Se il DOM è come un set di **mattoncini LEGO** (elementi rigidi come `<div>`, `<p>`, `<button>` che puoi solo impilare e spostare), l'API **Canvas** è un **foglio di carta bianco immacolato** e un astuccio pieno di colori.
 
 Non ci sono "elementi". C'è solo *tu* e una griglia di pixel. Ti dà un potere immenso (puoi disegnare *qualsiasi cosa*) ma anche più responsabilità (devi *tu* disegnare *tutto*, ad ogni fotogramma). È la tecnologia alla base della maggior parte dei giochi 2D sul web.
 
-### 25\. Canvas (Generale) - Il Tuo Quaderno Digitale
+### 29\. Canvas (Generale) - Il Tuo Quaderno Digitale
 
 L'elemento `<canvas>` in HTML è solo il "quaderno".
 `<canvas id="mio-gioco"></canvas>`
@@ -3375,9 +3500,13 @@ Ci sono due modi per disegnare forme:
     ctx.stroke();          // 3. Ripassa i bordi!
     ```
 
------
 
-### 26\. Dimensioni Canvas (Risoluzione vs. Dimensione)
+<br />
+---
+<br />
+
+
+### 30\. Dimensioni Canvas (Risoluzione vs. Dimensione)
 
 Questo è uno dei concetti più importanti e che crea più confusione. Un canvas ha **DUE dimensioni separate**.
 
@@ -3420,9 +3549,13 @@ canvas.height = window.innerHeight;
 **Attenzione: Il Reset Totale\!**
 C'è un "effetto collaterale" importante: ogni volta che modifichi `canvas.width` o `canvas.height` con JavaScript, il **canvas viene istantaneamente e completamente cancellato**. È come prendere un foglio di carta nuovo di zecca. Per questo motivo, le dimensioni si impostano *all'inizio* (o in un evento `resize`, ridisegnando tutto).
 
------
 
-### 27\. requestAnimationFrame (Il Game Loop) ❤️
+<br />
+---
+<br />
+
+
+### 31\. requestAnimationFrame (Il Game Loop) ❤️
 
 Il tuo gioco deve ridisegnare tutto 60 volte al secondo (60 FPS - Frames Per Second) per creare l'illusione del movimento. Come si fa a creare un "orologio" così preciso?
 
@@ -3476,9 +3609,13 @@ Perché non usare semplicemente `setInterval(gameLoop, 16)`?
 2.  **Efficienza (Pausa Automatica):** Questo è il vantaggio migliore. Se l'utente **cambia tab** nel browser, `requestAnimationFrame` **si mette in pausa automaticamente**. `setInterval` continuerebbe a far girare il tuo gioco a 60 FPS in background, consumando CPU e batteria per niente.
 3.  **Fluidità:** Il browser può ottimizzare `rAF`, raggruppando animazioni e garantendo un risultato visivo più fluido.
 
------
 
-### 28\. Logica di Gioco - Dare un'Anima al Codice 🎮
+<br />
+---
+<br />
+
+
+### 32\. Logica di Gioco - Dare un'Anima al Codice 🎮
 
 Questi sono i pattern logici che trasformano un disegno statico in un *gioco*.
 
@@ -3593,11 +3730,11 @@ In questo modo, l'intero gioco si "restringe" o "ingrandisce" in modo proporzion
 
 
 
-## Parte VII - Pattern e Best Practices 🎯
+## Parte VIII - Pattern e Best Practices 🎯
 
 Scrivere codice che *funziona* è il primo passo. Scrivere codice *buono* è l'obiettivo finale. Un "buon" codice è pulito, leggibile, facile da manutenere e difficile da rompere. Questa sezione raccoglie i "pattern" (modelli) e le "best practice" (abitudini) che trasformano un programmatore in un professionista.
 
-### 29\. Pattern di Sviluppo
+### 33\. Pattern di Sviluppo
 
 #### Pattern di Accumulo
 
@@ -3632,7 +3769,7 @@ for (const num of numeri) {
 // positivi ora è [10, 20]
 ```
 
-Il metodo `.reduce()` (visto nella Parte II) è la versione funzionale e compatta del pattern di accumulo.
+Il metodo `.reduce()` (visto nella Parte I) è la versione funzionale e compatta del pattern di accumulo.
 
 #### Flag Booleane - Gli Interruttori
 
@@ -3759,9 +3896,76 @@ parseJSON('{"nome": "Mario"}'); // Riuscito
 parseJSON('{nome: "Mario"}'); // Fallisce (mancano le virgolette sulla chiave), ma non crasha!
 ```
 
------
 
-### 30\. Best Practice di Stile e Qualità
+### 34\. UX Avanzata: Performance e Adattabilità 🚀
+
+Non trattare tutti gli utenti allo stesso modo. Un utente con l'ultimo iPhone connesso alla Fibra di casa ha superpoteri che un utente su un vecchio Android in galleria non ha. Il tuo codice deve adattarsi.
+
+#### A. `navigator.connection` - Il "Tatto" del Browser 📶
+
+**Cosa fa**: Permette al codice di "sentire" la qualità della connessione dell'utente e decidere quanto pesanti devono essere i dati da scaricare.
+
+**Snippet**:
+
+```javascript
+const connection = navigator.connection;
+
+// Rileviamo se l'utente vuole risparmiare dati o ha una connessione lenta
+const isSlow = connection ? (connection.saveData || connection.effectiveType.includes('2g')) : false;
+
+const itemsToLoad = isSlow ? 5 : 20; // 5 elementi se lento, 20 se veloce
+const imageQuality = isSlow ? 'low' : 'high'; // Immagini sgranate ma veloci vs HD
+
+console.log(`Carico ${itemsToLoad} elementi in qualità ${imageQuality}`);
+
+```
+
+**Analogia**: **Netflix** 📺
+Hai notato che se la rete rallenta, Netflix non si blocca ma abbassa la qualità del video (diventa un po' sfuocato)?
+Ecco, tu stai facendo la stessa cosa: invece di bloccare l'utente, gli dai un'esperienza "leggera" ma funzionante.
+
+#### B. Intersection Observer - Lo "Scroll Infinito" ♾️
+
+**Cosa fa**: Invece di costringere l'utente a cliccare "Carica altri" (frizione), carica automaticamente i nuovi contenuti quando l'utente arriva in fondo alla pagina.
+
+**Come funziona**: Crei una "sentinella" (un elemento invisibile) in fondo alla lista. Quando questa sentinella entra nello schermo, scatta il caricamento.
+
+**Snippet**:
+
+```javascript
+// 1. La sentinella (in fondo all'HTML)
+// <div id="sentinella"></div>
+
+// 2. L'Osservatore
+const observer = new IntersectionObserver((entries) => {
+    // Se la sentinella è visibile...
+    if (entries[0].isIntersecting) {
+        console.log("Siamo in fondo! Carica nuovi post...");
+        fetchMoreData(); // La tua funzione che fa il fetch
+    }
+});
+
+// 3. Inizia a osservare
+const sentinella = document.getElementById('sentinella');
+observer.observe(sentinella);
+
+```
+
+**Analogia**: **The Truman Show** (o un videogioco open world) 🌍
+Il mondo non esiste tutto subito. Il mondo viene "costruito" solo un attimo prima che il protagonista ci posi lo sguardo. Se non guardi, non esiste. Questo risparmia risorse enormi!
+
+**Regola d'oro**:
+
+* **Button "Carica altro"**: Sicuro ma noioso (Frizione alta).
+* **Infinite Scroll**: Moderno e fluido (Frizione zero), ma devi gestire bene la memoria!
+
+
+<br />
+---
+<br />
+
+
+### 35\. Best Practice di Stile e Qualità
 
 #### Best Practices - Naming Convention
 
@@ -3914,9 +4118,13 @@ Questo è un esempio perfetto di Separazione delle Responsabilità.
       * Se un utente scrive `<script>...` e tu lo inserisci con `innerHTML`, **lo script verrà eseguito**. Questo è il buco di sicurezza n. 1 del web (Cross-Site Scripting - XSS).
       * **Regola:** Usa `innerHTML` solo se 1) sei *tu* a scrivere l'HTML o 2) la fonte è 100% sicura e fidata.
 
------
 
-### 31\. Immutabilità e Stile
+<br />
+---
+<br />
+
+
+### 36\. Immutabilità e Stile
 
 #### Immutabilità (Concetto Generale)
 
@@ -4012,9 +4220,13 @@ Come scambiare i valori di due variabili.
 
     Questo è più pulito, conciso e fa la stessa identica cosa.
 
------
 
-### 32\. Evoluzione del Codice
+<br />
+---
+<br />
+
+
+### 37\. Evoluzione del Codice
 
 Il tuo codice non nasce mai perfetto. Evolve. Capire questi passaggi ti aiuta a scrivere codice migliore fin dall'inizio.
 
@@ -4084,9 +4296,9 @@ Il tuo codice non nasce mai perfetto. Evolve. Capire questi passaggi ti aiuta a 
 
 
 
-## Parte VI - Persistenza dei Dati e Storage 💾
+## Parte IX - Persistenza dei Dati e Storage 💾
 
-### 33\. localStorage - La Memoria a Lungo Termine
+### 38\. localStorage - La Memoria a Lungo Termine
 
 Finora, tutte le nostre variabili (`let`, `const`) hanno vissuto nella **RAM** del browser. Sono come appunti scritti su una lavagna bianca: veloci, utili, ma appena l'utente *aggiorna* o *chiude* la pagina (`F5`), la lavagna viene pulita. Tutto svanisce.
 
@@ -4375,9 +4587,9 @@ Il `localStorage` è fantastico, ma non è un database infinito. Ha regole e lim
 
 
 
-## Parte VII - Pattern Avanzati e Algoritmi
+## Parte X - Pattern Avanzati e Algoritmi
 
-### 34\. Regex - Il Linguaggio dei Pattern 🔍
+### 39\. Regex - Il Linguaggio dei Pattern 🔍
 
 Le **Espressioni Regolari (Regex o RegExp)** sono come un **metal detector super sofisticato** per il testo. Mentre un metal detector normale trova solo "metallo", una regex può essere programmata per trovare *qualsiasi pattern* tu possa descrivere: indirizzi email, numeri di telefono, date, codici fiscali, parole duplicate, o anche pattern complessi come "tutte le parole che iniziano con 'A' e finiscono con 'o'".
 
@@ -4722,24 +4934,12 @@ const capitalizza = str => str.replace(/\b\w/g, (lettera) => lettera.toUpperCase
 capitalizza("ciao mondo"); // "Ciao Mondo"
 ```
 
+
 <br />
-<br />
-<br />
-<br />
-<br />
+---
 <br />
 
-
-
-
-
-
-
-
-
-
-
-### 35\. Call Stack e Ricorsione - La Torre di Piatti 📚
+### 40\. Call Stack e Ricorsione - La Torre di Piatti 📚
 
 Il **Call Stack** (o "Pila delle Chiamate") è il **taccuino** di JavaScript. È il suo "cervello" a breve termine, dove tiene traccia di quale funzione sta eseguendo in questo preciso istante e quali sono in "pausa", in attesa di essere completate.
 
@@ -4967,23 +5167,13 @@ console.timeEnd("Veloce");
 
 La ricorsione è un concetto elegante, e la memorizzazione la rende uno strumento pratico e potente.
 
+
 <br />
-<br />
-<br />
-<br />
-<br />
+---
 <br />
 
 
-
-
-
-
-
-
-
-
-### 36\. Algoritmi Pratici - Le Ricette del Codice 🧮
+### 41\. Algoritmi Pratici - Le Ricette del Codice 🧮
 
 Gli algoritmi sono il cuore della programmazione. Non sono codice, sono *idee*. Sono le "ricette" testate e collaudate che i programmatori usano da decenni per risolvere problemi comuni, come ordinare una lista o trovare un dato. Imparare questi pattern è come per uno chef imparare a fare la besciamella o un impasto base: sono i mattoni fondamentali per creare piatti (programmi) complessi.
 
@@ -5216,7 +5406,7 @@ function areAnagramsSort(str1, str2) {
     return cleanSort(str1) === cleanSort(str2);
 }
 
-// Metodo 2: Mappa di Frequenza (vedi Parte II)
+// Metodo 2: Mappa di Frequenza (vedi Parte I)
 function areAnagramsMap(str1, str2) {
     const s1 = str1.toLowerCase().replace(/[^a-z]/g, '');
     const s2 = str2.toLowerCase().replace(/[^a-z]/g, '');
@@ -5345,22 +5535,13 @@ console.log(gcd(48, 18));   // 6
 console.log(lcm(21, 6));    // 42
 ```
 
+
 <br />
-<br />
-<br />
-<br />
-<br />
+---
 <br />
 
 
-
-
-
-
-
-
-
-### 37\. Sanitizzazione e Validazione Input 🛡️
+### 42\. Sanitizzazione e Validazione Input 🛡️
 
 La **Validazione** dell'input è la tua prima linea di difesa contro bug, dati corrotti e vulnerabilità di sicurezza. È come il **controllo di sicurezza all'aeroporto**: non puoi (e non devi) fidarti di ciò che l'utente ti passa. Devi controllare rigorosamente *prima* di far "salire a bordo" i dati nel tuo sistema.
 
@@ -5601,24 +5782,13 @@ console.log(passwordFeedback.errors);
 // ["Deve contenere almeno 8 caratteri", "Deve contenere almeno una lettera maiuscola", ...]
 ```
 
+
 <br />
-<br />
-<br />
-<br />
-<br />
+---
 <br />
 
 
-
-
-
-
-
-
-
-
-
-### 38\. Pattern di Gestione Stato 🎯
+### 43\. Pattern di Gestione Stato 🎯
 
 La **Gestione dello Stato** (State Management) è come **dirigere un'orchestra**. Lo "Stato" è la *partitura musicale* (i dati: chi è loggato, il punteggio, gli articoli nel carrello). Se ogni musicista (componente UI) ha la sua versione leggermente diversa della partitura (dati duplicati o non sincronizzati), il risultato sarà il caos.
 
@@ -5790,7 +5960,7 @@ class TaskManager {
     
     // --- METODI DI SUPPORTO ---
     save() {
-        // Usa i pattern di localStorage (Parte VI)
+        // Usa i pattern di localStorage (Parte IX)
         localStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
     
@@ -5800,7 +5970,7 @@ class TaskManager {
     }
     
     render() {
-        // Logica per aggiornare il DOM (Parte IV)
+        // Logica per aggiornare il DOM (Parte V)
         console.log("Aggiorno l'interfaccia con i nuovi task...", this.tasks);
     }
 }
