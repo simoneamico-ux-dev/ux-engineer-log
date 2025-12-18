@@ -6,62 +6,83 @@ title: 'CSS Real World Vademecum'
 
 # CSS Real World Vademecum
 
-## 1. Importazione font esterni
+## 1. Importing external fonts
 
-### Link Google Fonts
-**Cosa fa**: Importa font professionali gratis da Google nel tuo sito.
+### Google Fonts link
 
-**Snippet nel `<head>` HTML**:
+**What it does**: Imports professional fonts for free from Google into your site.
+
+**Snippet in the HTML `<head>`**:
+
 ```html
-<!-- Font singolo -->
+<!-- Single font -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
 
-<!-- Font multipli -->
+<!-- Multiple fonts -->
 <link href="https://fonts.googleapis.com/css?family=Anton%7CBaskervville%7CRaleway&display=swap" rel="stylesheet">
 ```
 
-**I numeri (400,700,800) significano**:
+**The numbers (400,700,800) mean**:
+
 ```
-400 = normale
-700 = grassetto (bold)
-800 = extra grassetto
+400 = normal
+700 = bold
+800 = extra bold
 ```
 
-**Poi nel CSS**:
+**Then in CSS**:
+
 ```css
 body {
   font-family: 'Open Sans', Arial, sans-serif;
 }
 ```
 
-**Analogia**: È come ordinare penne speciali su Amazon invece di usare solo quelle del supermercato. Arrivano via internet e le usi quando vuoi!
+**Analogy**: It’s like ordering special pens on Amazon instead of using only the ones from the supermarket. They arrive via the internet and you use them whenever you want!
 
-### Link Font Awesome
-**Cosa fa**: Importa migliaia di icone professionali
+### Font Awesome link
 
-**Nel `<head>`**:
+**What it does**: Imports thousands of professional icons
+
+**In the `<head>`**:
+
 ```html
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 ```
 
-**Uso nel HTML**:
+**Usage in HTML**:
+
 ```html
 <i class="fab fa-facebook-f"></i>  <!-- Facebook -->
 <i class="fab fa-twitter"></i>      <!-- Twitter -->
-<i class="fas fa-heart"></i>        <!-- Cuore -->
+<i class="fas fa-heart"></i>        <!-- Heart -->
 ```
 
-**Classi Font Awesome**:
-- `fab` = Font Awesome Brands (loghi aziende)
-- `fas` = Font Awesome Solid (icone piene)
-- `far` = Font Awesome Regular (icone vuote)
+**Font Awesome classes**:
 
-## 2. Selettori fondamentali
+* `fab` = Font Awesome Brands (company logos)
+* `fas` = Font Awesome Solid (filled icons)
+* `far` = Font Awesome Regular (outlined icons)
 
-### Selettore universale `*`
-**Cosa fa**: Seleziona TUTTI gli elementi della pagina. Proprio tutti!
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 2. Fundamental selectors
+
+### Universal selector `*`
+
+**What it does**: Selects ALL the elements on the page. Literally all of them!
 
 **Snippet**:
+
 ```css
 * {
   box-sizing: border-box;
@@ -70,8 +91,9 @@ body {
 }
 ```
 
-### Reset universale completo
-**Cosa fa**: Resetta TUTTO inclusi pseudo-elementi
+### Full universal reset
+
+**What it does**: Resets EVERYTHING including pseudo-elements
 
 ```css
 *,
@@ -83,45 +105,49 @@ body {
 }
 ```
 
-**Analogia**: Come dire "TUTTI in classe, compresi quelli in corridoio e in bagno, sedetevi!"
+**Analogy**: Like saying "EVERYONE in class, including those in the hallway and in the bathroom, sit down!"
 
-### Selettore di tipo (tag)
-**Cosa fa**: Seleziona tutti gli elementi di quel tipo HTML.
+### Type selector (tag)
+
+**What it does**: Selects all HTML elements of that type.
 
 ```css
-/* Tutti i paragrafi */
+/* All paragraphs */
 p {
   line-height: 1.6;
   margin-bottom: 1rem;
 }
 
-/* Specializzazioni */
-p.warning { color: red; }        /* Solo p con classe warning */
-p[lang="en"] { font-style: italic; } /* Solo p in inglese */
+/* Specializations */
+p.warning { color: red; }        /* Only p with class warning */
+p[lang="en"] { font-style: italic; } /* Only p in English */
 ```
 
-### Selettore di classe `.class`
-**Cosa fa**: Seleziona elementi con quella classe, indipendentemente dal tag.
+### Class selector `.class`
+
+**What it does**: Selects elements with that class, regardless of the tag.
 
 ```css
-.importante {
+.important {
   background: yellow;
   font-weight: bold;
 }
 ```
 
-### Selettori multipli (senza spazio)
-**Cosa fa**: Seleziona elementi che hanno TUTTE le classi specificate.
+### Multiple selectors (no space)
+
+**What it does**: Selects elements that have ALL the specified classes.
 
 ```css
-/* Elemento con ENTRAMBE le classi */
+/* Element with BOTH classes */
 .social-icons.active {
   color: blue;
 }
 ```
 
-### Selettori combinati (virgola)
-**Cosa fa**: Applica lo stesso stile a più selettori
+### Combined selectors (comma)
+
+**What it does**: Applies the same style to multiple selectors
 
 ```css
 h1, h2, h3, h4, h5, h6 {
@@ -129,68 +155,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 ```
 
-### Pseudo-classi di stato
+### State pseudo-classes
+
 ```css
-/* Mouse sopra */
+/* Hover */
 button:hover {
   background: #f0f0f0;
   cursor: pointer;
   transform: translateY(-2px);
 }
 
-/* Mentre clicchi */
+/* While clicking */
 button:active {
   transform: scale(0.95);
 }
 
-/* Link già visitato */
+/* Already visited link */
 a:visited {
   color: purple;
 }
 
-/* Elemento con focus (keyboard) */
+/* Element with focus (keyboard) */
 input:focus {
   outline: 2px solid blue;
   background: #f0f8ff;
 }
 ```
 
-### `:not()` pseudo-classe
+### `:not()` pseudo-class
+
 ```css
-/* Tutti i p tranne quelli con classe .no-margin */
+/* All p except those with class .no-margin */
 p:not(.no-margin) {
   margin-bottom: 1rem;
 }
 ```
 
-### Pseudo-selettori di tipo
+### Type pseudo-selectors
+
 ```css
-/* Primo elemento del suo tipo */
+/* First element of its type */
 .line:first-of-type {
   margin-top: 0;
 }
 
-/* Il secondo, terzo, ecc */
+/* The second, third, etc. */
 .line:nth-of-type(2) { transform: rotate(60deg); }
 .line:nth-of-type(3) { transform: rotate(120deg); }
 
-/* Posizioni pari e dispari */
+/* Odd and even positions */
 tr:nth-of-type(odd) { background: #f0f0f0; }
 tr:nth-of-type(even) { background: white; }
 ```
 
-### Pseudo-elementi `::before` e `::after`
+### Pseudo-elements `::before` and `::after`
+
 ```css
-/* Content vuoto per forme/decorazioni */
+/* Empty content for shapes/decorations */
 .penguin-body::before {
-  content: "";  /* OBBLIGATORIO anche se vuoto! */
+  content: "";  /* REQUIRED even if empty! */
   width: 50%;
   height: 45%;
   background-color: gray;
 }
 ```
 
-### `::first-letter` pseudo-elemento
+### `::first-letter` pseudo-element
+
 ```css
 .first-paragraph::first-letter {
   font-size: 6rem;
@@ -200,8 +231,9 @@ tr:nth-of-type(even) { background: white; }
 }
 ```
 
-### `::selection` pseudo-elemento  
-**Cosa fa**: Stilizza il testo quando lo selezioni!
+### `::selection` pseudo-element
+
+**What it does**: Styles text when you select it!
 
 ```css
 ::selection {
@@ -209,140 +241,162 @@ tr:nth-of-type(even) { background: white; }
   color: black;
 }
 
-/* Per Firefox */
+/* For Firefox */
 ::-moz-selection {
   background: gold;
   color: black;
 }
 ```
 
-**Risultato**: Quando selezioni del testo diventa dorato invece che blu!
+**Result**: When you select text it becomes golden instead of blue!
 
-**Analogia**: Come un evidenziatore personalizzato - scegli tu il colore!
+**Analogy**: Like a custom highlighter - you choose the color!
 
-### Pseudo-classi moderne  
+### Modern pseudo-classes
 
-#### `:is()` - Evita ripetizioni
+#### `:is()` - Avoid repetition
+
 ```css
-/* PRIMA (ripetitivo) */
+/* BEFORE (repetitive) */
 article h1:hover,
 article h2:hover,
 article h3:hover {
   color: blue;
 }
 
-/* DOPO (con :is) */
+/* AFTER (with :is) */
 article :is(h1, h2, h3):hover {
   color: blue;
 }
 ```
 
-**Analogia**: Come dire "chiunque di voi tre" invece di chiamare uno per uno!
+**Analogy**: Like saying "any one of you three" instead of calling each one individually!
 
-#### `:where()` - Come `:is()` ma con specificità 0
+#### `:where()` - Like `:is()` but with specificity 0
+
 ```css
-/* Non aumenta la specificità */
+/* Doesn’t increase specificity */
 :where(article, section) p {
   margin: 1rem;
 }
 ```
 
-**Quando usarlo**: Quando vuoi stili facilmente sovrascrivibili
+**When to use it**: When you want styles that are easy to override
 
-#### `:has()` - Il parent selector!   2023
+#### `:has()` - The parent selector!   2023
+
 ```css
-/* Stile al div SE contiene un'immagine */
+/* Style the div IF it contains an image */
 div:has(> img) {
   border: 2px solid blue;
   padding: 1rem;
 }
 
-/* Card che contiene un video */
+/* Card that contains a video */
 .card:has(video) {
   background: black;
 }
 
-/* Form con input invalido */
+/* Form with invalid input */
 form:has(input:invalid) {
   border: 2px solid red;
 }
 ```
 
-**RIVOLUZIONARIO!** Prima non potevi stilizzare un parent basandoti sui figli!
+**REVOLUTIONARY!** Before, you couldn’t style a parent based on its children!
 
-**Analogia**: Come dire "colora di rosso le scatole che contengono mele"!
+**Analogy**: Like saying "color red the boxes that contain apples"!
 
-## 3. Box Model & Spaziatura
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 3. Box Model & Spacing
 
 ### `margin`
-**Cosa fa**: Crea spazio FUORI dall'elemento.
 
-**Shorthand spiegato**:
+**What it does**: Creates space OUTSIDE the element.
+
+**Shorthand explained**:
+
 ```css
-/* Un valore = tutti i lati */
+/* One value = all sides */
 margin: 20px;
 
-/* Due valori = verticale | orizzontale */  
+/* Two values = vertical | horizontal */  
 margin: 10px 20px;
 
-/* Tre valori = top | lati | bottom */
+/* Three values = top | sides | bottom */
 margin: 10px 20px 30px;
 
-/* Quattro = senso orario */
+/* Four = clockwise */
 margin: 5px 10px 15px 20px;
 ```
 
-**Centrare con auto**:
+**Centering with auto**:
+
 ```css
 .container {
   width: 800px;
-  margin: 0 auto; /* Magia! Si centra da solo */
+  margin: 0 auto; /* Magic! It centers itself */
 }
 ```
 
-**Margini negativi**:
+**Negative margins**:
+
 ```css
 .hero-title {
-  margin-top: -20px; /* Si sposta SU di 20px */
+  margin-top: -20px; /* Moves UP by 20px */
 }
 ```
 
 ### `padding`
+
 ```css
 .button {
-  padding: 10px 20px; /* verticale | orizzontale */
+  padding: 10px 20px; /* vertical | horizontal */
 }
 
 .card {
-  padding: 2rem; /* Uguale su tutti i lati */
+  padding: 2rem; /* Same on all sides */
 }
 ```
 
 ### `border`
+
 ```css
-/* Solido classico */
+/* Classic solid */
 .box {
   border: 2px solid black;
 }
 
-/* Stili diversi */
+/* Different styles */
 border: 3px dotted red;    /* • • • • */
 border: 2px dashed blue;   /* - - - - */
 border: 4px double green;  /* ══════ */
 ```
 
-### `border-radius` avanzato
+### Advanced `border-radius`
+
 ```css
-/* Solo angoli specifici */
+/* Specific corners only */
 .key {
   border-radius: 0 0 3px 3px;
-  /* Squadrato sopra, arrotondato sotto */
+  /* Square on top, rounded on the bottom */
 }
 ```
 
 ### `box-sizing`
+
 ```css
-/* Pattern di reset con inherit */
+/* Reset pattern with inherit */
 html {
   box-sizing: border-box;
 }
@@ -352,63 +406,67 @@ html {
 }
 ```
 
-### Dimensioni & unità
+### Sizes & units
 
 ```css
-/* ASSOLUTE */
-width: 200px;      /* Pixel */
+/* ABSOLUTE */
+width: 200px;      /* Pixels */
 
 /* RELATIVE */
-width: 80%;        /* % del genitore */
+width: 80%;        /* % of the parent */
 font-size: 2rem;   /* 2x root */
-height: 50vh;      /* 50% altezza viewport */
-width: 55vw;       /* 55% larghezza viewport */
+height: 50vh;      /* 50% viewport height */
+width: 55vw;       /* 55% viewport width */
 ```
 
-### Funzioni per dimensioni
+### Size functions
 
-#### `calc()` per calcoli
+#### `calc()` for calculations
+
 ```css
-/* Larghezza totale meno margini fissi */
+/* Total width minus fixed margins */
 .container {
   width: calc(100% - 40px);
 }
 
-/* Calcoli complessi */
+/* Complex calculations */
 .column {
   width: calc((100% - 20px * 2) / 3);
 }
 ```
 
-#### `min()` e `max()`  
-**Cosa fanno**: Scelgono il valore minimo o massimo tra opzioni
+#### `min()` and `max()`
+
+**What they do**: Choose the minimum or maximum value among options
 
 ```css
-/* min() - prende il PIÙ PICCOLO */
+/* min() - takes the SMALLEST */
 .sidebar {
   width: min(300px, 100%);
-  /* Se lo schermo è < 300px, usa 100% */
+  /* If the screen is < 300px, it uses 100% */
 }
 
-/* max() - prende il PIÙ GRANDE */
+/* max() - takes the LARGEST */
 .hero {
   height: max(400px, 50vh);
-  /* Mai meno di 400px di altezza */
+  /* Never less than 400px tall */
 }
 ```
 
-**Analogia**: 
-- `min()` = "Dammi il bicchiere più piccolo tra questi"
-- `max()` = "Dammi il bicchiere più grande tra questi"
+**Analogy**:
 
-#### `clamp()` - Il limitatore intelligente  
-**Cosa fa**: Imposta un valore con limiti minimo e massimo
+* `min()` = "Give me the smaller glass among these"
+* `max()` = "Give me the bigger glass among these"
+
+#### `clamp()` - The smart limiter
+
+**What it does**: Sets a value with minimum and maximum limits
 
 ```css
-/* clamp(MIN, PREFERITO, MAX) */
+/* clamp(MIN, PREFERRED, MAX) */
 .title {
   font-size: clamp(1.5rem, 4vw, 3rem);
-  /* Mai < 1.5rem, idealmente 4vw, mai > 3rem */
+  /* Never < 1.5rem, ideally 4vw, never > 3rem */
 }
 
 .container {
@@ -420,125 +478,157 @@ width: 55vw;       /* 55% larghezza viewport */
 }
 ```
 
-**Come funziona**:
+**How it works**:
+
 ```
 Mobile (400px screen):
-4vw = 16px, ma minimo è 1.5rem (24px)
-Risultato: 24px ✓
+4vw = 16px, but the minimum is 1.5rem (24px)
+Result: 24px ✓
 
 Desktop (1200px screen):
-4vw = 48px, ma massimo è 3rem (48px)
-Risultato: 48px ✓
+4vw = 48px, but the maximum is 3rem (48px)
+Result: 48px ✓
 
 Tablet (800px screen):
-4vw = 32px (tra min e max)
-Risultato: 32px ✓
+4vw = 32px (between min and max)
+Result: 32px ✓
 ```
 
-**Analogia**: Come un termostato! Mantiene la temperatura (dimensione) sempre tra un minimo e un massimo, cercando di stare al valore ideale!
+**Analogy**: Like a thermostat! It keeps the temperature (size) always between a minimum and a maximum, trying to stay at the ideal value!
 
-## 4. Tipografia
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 4. Typography
 
 ### `font-family`
+
 ```css
-/* Con font Google */
+/* With Google fonts */
 h1 {
   font-family: 'Anton', sans-serif;
 }
 
-/* Font multipli con fallback */
+/* Multiple fonts with fallback */
 body {
   font-family: 'Baskervville', Georgia, serif;
 }
 ```
 
-### `font-size` con il trucco del 62.5%
+### `font-size` with the 62.5% trick
+
 ```css
 html {
-  font-size: 62.5%; /* Ora 1rem = 10px invece di 16px! */
+  font-size: 62.5%; /* Now 1rem = 10px instead of 16px! */
 }
 
-/* Ora i calcoli sono facilissimi! */
+/* Now calculations are super easy! */
 h1 { font-size: 3.2rem; } /* = 32px */
 h2 { font-size: 2.4rem; } /* = 24px */  
 p  { font-size: 1.6rem; } /* = 16px */
 ```
 
 ### Font shorthand
+
 ```css
-/* Sintassi: style weight size/line-height family */
+/* Syntax: style weight size/line-height family */
 .title {
   font: italic 700 2.4rem/1.2 'Raleway', sans-serif;
 }
 ```
 
 ### `letter-spacing`
+
 ```css
 h1 {
-  letter-spacing: 0.6px;  /* Poco spazio */
+  letter-spacing: 0.6px;  /* A little spacing */
 }
 
 .logo {
-  letter-spacing: 8px;    /* M O L T O   S P A Z I O */
+  letter-spacing: 8px;    /* A L O T   O F   S P A C E */
 }
 ```
 
 ### `line-height`
+
 ```css
 p {
-  line-height: 1.6;      /* 1.6 volte la font-size */
+  line-height: 1.6;      /* 1.6 times the font-size */
 }
 ```
 
-### `text-overflow` - Testo troppo lungo  
-**Cosa fa**: Gestisce il testo che esce dal contenitore
+### `text-overflow` - Text that’s too long
+
+**What it does**: Handles text that overflows its container
 
 ```css
 .title {
-  white-space: nowrap;      /* Non andare a capo */
-  overflow: hidden;         /* Nascondi l'eccesso */
-  text-overflow: ellipsis;  /* Aggiungi ... */
+  white-space: nowrap;      /* Don’t wrap */
+  overflow: hidden;         /* Hide the overflow */
+  text-overflow: ellipsis;  /* Add ... */
   width: 200px;
 }
 ```
 
-**Risultato**: 
+**Result**:
+
 ```
-"Questo è un titolo molto lungo" → "Questo è un titolo..."
+"This is a very long title" → "This is a title..."
 ```
 
-**Analogia**: Come quando WhatsApp taglia i messaggi lunghi nelle notifiche!
+**Analogy**: Like when WhatsApp cuts long messages in notifications!
 
-### Altri stili tipografici
+### Other typographic styles
+
 ```css
 /* text-decoration */
 a {
-  text-decoration: none;      /* Toglie sottolineatura */
+  text-decoration: none;      /* Removes underline */
 }
 
 /* white-space */
 .nowrap {
-  white-space: nowrap;  /* Non va mai a capo */
+  white-space: nowrap;  /* Never wraps */
 }
 
-/* column-width - testo multi-colonna */
+/* column-width - multi-column text */
 .article {
-  column-width: 25rem;  /* Colonne larghe 25rem */
-  column-gap: 3rem;     /* Spazio tra colonne */
+  column-width: 25rem;  /* Columns 25rem wide */
+  column-gap: 3rem;     /* Space between columns */
 }
 
-/* Liste personalizzate */
+/* Custom lists */
 .lists {
-  list-style-type: none;      /* Rimuove i pallini */
-  list-style-position: inside; /* Pallini dentro il box */
+  list-style-type: none;       /* Removes bullets */
+  list-style-position: inside; /* Bullets inside the box */
 }
 ```
 
-## 5. Colori & Sfondi
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 5. Colors & Backgrounds
 
 ### `color`
+
 ```css
-/* Nome */
+/* Name */
 color: red;
 color: orangered;
 
@@ -546,41 +636,44 @@ color: orangered;
 color: #00beef;
 
 /* RGB/RGBA */
-color: rgb(255, 0, 0);              /* Rosso */
-color: rgba(255, 255, 255, 0.5);    /* Bianco 50% trasparente */
+color: rgb(255, 0, 0);              /* Red */
+color: rgba(255, 255, 255, 0.5);    /* White 50% transparent */
 ```
 
 ### `background-color`
+
 ```css
 .warning {
   background-color: #fff3cd;
 }
 
-/* Con trasparenza */
+/* With transparency */
 .overlay {
   background-color: rgba(0, 0, 0, 0.7);
 }
 ```
 
-### Background avanzati
+### Advanced backgrounds
 
-#### Proprietà di controllo sfondo
+#### Background control properties
+
 ```css
 .hero {
   background-image: url("hero.jpg");
-  background-size: cover;           /* Copre tutto */
-  background-position: center;      /* Centra */
-  background-repeat: no-repeat;     /* Non ripetere */
+  background-size: cover;           /* Covers everything */
+  background-position: center;      /* Centers */
+  background-repeat: no-repeat;     /* Don’t repeat */
   background-attachment: fixed;     /* Parallax! */
 }
 ```
 
-### `linear-gradient()` con angoli
+### `linear-gradient()` with angles
+
 ```css
-/* 45 gradi - diagonale */
+/* 45 degrees - diagonal */
 background: linear-gradient(45deg, rgb(118, 201, 255), rgb(247, 255, 222));
 
-/* Multi colore con stop percentuali */
+/* Multi-color with percentage stops */
 background: linear-gradient(
   45deg,
   red 0%,
@@ -589,16 +682,17 @@ background: linear-gradient(
 );
 ```
 
-### `radial-gradient()`  
-**Cosa fa**: Crea sfumature circolari dal centro verso l'esterno
+### `radial-gradient()`
+
+**What it does**: Creates circular gradients from the center outward
 
 ```css
-/* Sfumatura circolare base */
+/* Basic circular gradient */
 .circle {
   background: radial-gradient(circle, yellow, orange, red);
 }
 
-/* Con posizione specifica */
+/* With specific position */
 .sun {
   background: radial-gradient(
     circle at top right,
@@ -608,7 +702,7 @@ background: linear-gradient(
   );
 }
 
-/* Ellittica */
+/* Elliptical */
 .ellipse {
   background: radial-gradient(
     ellipse at center,
@@ -619,19 +713,21 @@ background: linear-gradient(
 ```
 
 **Visual**:
+
 ```
 radial-gradient:
-    ⚪ (centro chiaro)
+    ⚪ (light center)
    🟡
   🟠
- 🔴 (bordi scuri)
+ 🔴 (dark edges)
 ```
 
-### `conic-gradient()`  
-**Cosa fa**: Sfumatura conica (tipo torta a colori!)
+### `conic-gradient()`
+
+**What it does**: Conic gradient (like a color pie!)
 
 ```css
-/* Arcobaleno circolare */
+/* Circular rainbow */
 .rainbow-wheel {
   background: conic-gradient(
     red, yellow, green, cyan, blue, magenta, red
@@ -639,7 +735,7 @@ radial-gradient:
   border-radius: 50%;
 }
 
-/* Grafico a torta */
+/* Pie chart */
 .pie-chart {
   background: conic-gradient(
     red 0deg 90deg,      /* 25% */
@@ -650,189 +746,208 @@ radial-gradient:
 ```
 
 ### `opacity`
+
 ```css
 .faded {
-  opacity: 0.5;    /* 50% trasparente TUTTO l'elemento */
+  opacity: 0.5;    /* 50% transparent ENTIRE element */
 }
 ```
 
-## 6. Layout & Display - Parte 1
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 6. Layout & Display
 
 ### `display`
+
 ```css
-/* Block - nuovo "paragrafo" */
+/* Block - new "paragraph" */
 display: block;
 
-/* Inline - nella riga */
+/* Inline - in the line */
 display: inline;
 
-/* Inline-block - ibrido */
+/* Inline-block - hybrid */
 display: inline-block;
 
-/* Flex - contenitore flessibile */
+/* Flex - flexible container */
 display: flex;
 
-/* Grid - griglia */
+/* Grid - grid */
 display: grid;
 
-/* None - sparisce! */
+/* None - it disappears! */
 display: none;
 ```
 
 ### `position`
+
 ```css
 /* Static (default) */
 position: static;
 
-/* Relative - spostato dalla posizione normale */
+/* Relative - moved from the normal position */
 position: relative;
 top: 10px;
 left: 20px;
 
-/* Absolute - fuori dal flusso */
+/* Absolute - out of the flow */
 position: absolute;
 top: 50%;
 left: 50%;
 
-/* Fixed - fisso nella viewport */
+/* Fixed - fixed in the viewport */
 position: fixed;
 bottom: 0;
 
-/* Sticky - ibrido relative/fixed */
+/* Sticky - relative/fixed hybrid */
 position: sticky;
 top: 0;
 ```
 
 ### `z-index`
+
 ```css
 .front { z-index: 100; }
 .middle { z-index: 10; }
 .behind { z-index: -1; }
 ```
 
-### `float` e clearfix
+### `float` and clearfix
+
 ```css
 /* Float */
 float: left;
 float: right;
 float: none;
 
-/* Clearfix con overflow */
+/* Clearfix with overflow */
 .container {
-  overflow: hidden;  /* Contiene i float! */
+  overflow: hidden;  /* Contains floats! */
 }
 ```
 
-### `aspect-ratio`  
-**Cosa fa**: Mantiene le proporzioni di un elemento
+### `aspect-ratio`
+
+**What it does**: Keeps an element’s proportions
 
 ```css
-/* Video 16:9 */
+/* 16:9 video */
 .video-container {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: black;
 }
 
-/* Quadrato perfetto */
+/* Perfect square */
 .square {
   width: 200px;
-  aspect-ratio: 1;  /* o 1/1 */
+  aspect-ratio: 1;  /* or 1/1 */
 }
 
-/* Card con ratio custom */
+/* Card with custom ratio */
 .card {
   width: 300px;
   aspect-ratio: 3 / 4;
 }
 ```
 
-**Prima di aspect-ratio** (il vecchio trucco):
+**Before aspect-ratio** (the old trick):
+
 ```css
-/* Il vecchio modo con padding */
+/* The old way with padding */
 .video-old {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 */
 }
 ```
 
-**Analogia**: Come dire "questa foto deve sempre essere rettangolare come una TV, non importa quanto la ridimensioni"!
+**Analogy**: Like saying "this photo must always be rectangular like a TV, no matter how you resize it"!
 
----
+### Flexbox
 
-## 6. Layout & Display - Parte 2 (continuazione)
+**What it does**: Creates flexible layouts in one direction (row or column).
 
-### Flexbox completo
-**Cosa fa**: Crea layout flessibili in una direzione (riga o colonna).
+#### Container setup
 
-#### Setup del container
 ```css
 .container {
-  display: flex;              /* Attiva flex */
-  flex-direction: row;        /* → orizzontale (default) */
-  flex-wrap: wrap;           /* A capo se non c'è spazio */
-  gap: 1rem;                 /* Spazio tra elementi */
+  display: flex;              /* Enable flex */
+  flex-direction: row;        /* → horizontal (default) */
+  flex-wrap: wrap;           /* Wrap if there’s no space */
+  gap: 1rem;                 /* Space between items */
 }
 ```
 
-#### Proprietà del container complete
+#### Full container properties
+
 ```css
-/* DIREZIONE */
-flex-direction: row;          /* → */
-flex-direction: column;       /* ↓ */
-flex-direction: row-reverse;  /* ← */
+/* DIRECTION */
+flex-direction: row;           /* → */
+flex-direction: column;        /* ↓ */
+flex-direction: row-reverse;   /* ← */
 flex-direction: column-reverse; /* ↑ */
 
-/* A CAPO */
-flex-wrap: nowrap;   /* Stringe tutto (default) */
-flex-wrap: wrap;     /* Va a capo */
-flex-wrap: wrap-reverse; /* A capo al contrario */
+/* WRAPPING */
+flex-wrap: nowrap;        /* Squeezes everything (default) */
+flex-wrap: wrap;          /* Wraps */
+flex-wrap: wrap-reverse;  /* Wraps reversed */
 
-/* ALLINEAMENTO ASSE PRINCIPALE */
-justify-content: flex-start;   /* |■■■      | */
-justify-content: center;       /* |  ■■■    | */
-justify-content: flex-end;     /* |      ■■■| */
-justify-content: space-between;/* |■   ■   ■| */
-justify-content: space-around; /* | ■  ■  ■ | */
-justify-content: space-evenly; /* | ■  ■  ■ | */
+/* MAIN-AXIS ALIGNMENT */
+justify-content: flex-start;    /* |■■■      | */
+justify-content: center;        /* |  ■■■    | */
+justify-content: flex-end;      /* |      ■■■| */
+justify-content: space-between; /* |■   ■   ■| */
+justify-content: space-around;  /* | ■  ■  ■ | */
+justify-content: space-evenly;  /* | ■  ■  ■ | */
 
-/* ALLINEAMENTO ASSE TRASVERSALE */
-align-items: stretch;     /* Default - riempie */
-align-items: center;      /* Centra verticalmente */
-align-items: flex-start;  /* In alto */
-align-items: flex-end;    /* In basso */
-align-items: baseline;    /* Allinea le baseline del testo */
+/* CROSS-AXIS ALIGNMENT */
+align-items: stretch;      /* Default - stretches */
+align-items: center;       /* Centers vertically */
+align-items: flex-start;   /* Top */
+align-items: flex-end;     /* Bottom */
+align-items: baseline;     /* Aligns text baselines */
 
-/* ALLINEAMENTO RIGHE (con wrap) */
+/* LINE ALIGNMENT (with wrap) */
 align-content: flex-start;
 align-content: center;
 align-content: space-between;
 ```
 
-#### Proprietà dei figli (flex items)
+#### Child properties (flex items)
+
 ```css
 .item {
-  /* Crescita */
-  flex-grow: 1;      /* Può crescere */
+  /* Growth */
+  flex-grow: 1;      /* Can grow */
   
-  /* Riduzione */
-  flex-shrink: 0;    /* Non può ridursi */
+  /* Shrink */
+  flex-shrink: 0;    /* Can’t shrink */
   
-  /* Dimensione base */
-  flex-basis: 200px; /* Dimensione iniziale */
+  /* Base size */
+  flex-basis: 200px; /* Initial size */
   
   /* Shorthand */
   flex: 1 0 200px;   /* grow shrink basis */
   
-  /* Auto-allineamento */
+  /* Self-alignment */
   align-self: center; /* Override align-items */
   
-  /* Ordine */
-  order: -1;         /* Viene prima (default: 0) */
+  /* Order */
+  order: -1;         /* Comes first (default: 0) */
 }
 ```
 
-**Centratura perfetta 2D**:
+**Perfect 2D centering**:
+
 ```css
 .center-perfect {
   display: flex;
@@ -842,83 +957,88 @@ align-content: space-between;
 }
 ```
 
-### Grid - Layout a griglia completo
+### Grid - Complete grid layout
 
-#### Grid base con tutte le proprietà
+#### Basic grid with all properties
+
 ```css
 .grid-container {
   display: grid;
   
-  /* Definizione colonne */
+  /* Column definition */
   grid-template-columns: 200px 1fr 200px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   
-  /* Definizione righe */
+  /* Row definition */
   grid-template-rows: 100px auto 100px;
   
-  /* Spazi */
-  gap: 20px;              /* Entrambi */
-  row-gap: 30px;          /* Solo righe */
-  column-gap: 20px;       /* Solo colonne */
+  /* Spacing */
+  gap: 20px;              /* Both */
+  row-gap: 30px;          /* Rows only */
+  column-gap: 20px;       /* Columns only */
   
-  /* Allineamento */
-  justify-items: center;   /* Orizzontale items */
-  align-items: center;     /* Verticale items */
-  justify-content: center; /* Orizzontale griglia */
-  align-content: center;   /* Verticale griglia */
+  /* Alignment */
+  justify-items: center;   /* Horizontal items */
+  align-items: center;     /* Vertical items */
+  justify-content: center; /* Horizontal grid */
+  align-content: center;   /* Vertical grid */
   
-  /* Shorthand allineamento */
+  /* Alignment shorthand */
   place-items: center;     /* align + justify items */
   place-content: center;   /* align + justify content */
 }
 ```
 
-#### `repeat()` con auto-fit/auto-fill
+#### `repeat()` with auto-fit/auto-fill
+
 ```css
-/* auto-fit - stretcha le colonne */
+/* auto-fit - stretches the columns */
 .gallery {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-/* auto-fill - mantiene la dimensione */
+/* auto-fill - keeps the size */
 .gallery {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 ```
 
-**Differenza visual**:
+**Visual difference**:
+
 ```
 Container 800px, items 200px:
 
-auto-fill: [200px][200px][200px][vuoto]
-auto-fit:  [266px][266px][266px] (stretchati)
+auto-fill: [200px][200px][200px][empty]
+auto-fit:  [266px][266px][266px] (stretched)
 ```
 
 #### `grid-auto-flow`
+
 ```css
 .container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-auto-flow: column;     /* Nuove colonne invece di righe */
-  grid-auto-flow: dense;      /* Riempie i buchi */
-  grid-auto-columns: 1fr;     /* Dimensione colonne auto */
+  grid-auto-flow: column;     /* New columns instead of rows */
+  grid-auto-flow: dense;      /* Fills gaps */
+  grid-auto-columns: 1fr;     /* Auto column size */
 }
 ```
 
-#### Posizionamento avanzato
+#### Advanced positioning
+
 ```css
 .item {
-  /* Colonne */
-  grid-column: 1 / 3;        /* Da linea 1 a 3 */
-  grid-column: 1 / -1;       /* Tutta la larghezza */
-  grid-column: span 2;       /* Occupa 2 colonne */
+  /* Columns */
+  grid-column: 1 / 3;        /* From line 1 to 3 */
+  grid-column: 1 / -1;       /* Full width */
+  grid-column: span 2;       /* Spans 2 columns */
   
-  /* Righe */
+  /* Rows */
   grid-row: 1 / 3;
   
-  /* Area nominata */
-  grid-area: header;         /* Se usi grid-template-areas */
+  /* Named area */
+  grid-area: header;         /* If you use grid-template-areas */
 }
 
 /* Grid template areas */
@@ -936,17 +1056,30 @@ auto-fit:  [266px][266px][266px] (stretchati)
 .footer { grid-area: footer; }
 ```
 
-## 7. CSS Custom Properties (Variabili)
 
-### Definizione e uso completo
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 7. CSS Custom Properties (Variables)
+
+### Full definition and usage
+
 ```css
 :root {
-  /* Colori */
+  /* Colors */
   --primary: #007bff;
   --primary-dark: #0056b3;
   --primary-light: #e7f3ff;
   
-  /* Spacing sistema 8px */
+  /* Spacing 8px system */
   --space-xs: 0.5rem;   /* 8px */
   --space-sm: 1rem;     /* 16px */
   --space-md: 2rem;     /* 32px */
@@ -967,35 +1100,37 @@ auto-fit:  [266px][266px][266px] (stretchati)
   --transition-base: 250ms ease;
   --transition-slow: 350ms ease;
   
-  /* Breakpoints come custom properties */
+  /* Breakpoints as custom properties */
   --screen-sm: 640px;
   --screen-md: 768px;
   --screen-lg: 1024px;
 }
 ```
 
-### Uso avanzato con fallback
+### Advanced usage with fallback
+
 ```css
 .card {
-  /* var() con fallback */
+  /* var() with fallback */
   background: var(--card-bg, white);
   padding: var(--card-padding, 1rem);
   
-  /* Calcoli con variabili */
+  /* Calculations with variables */
   margin: calc(var(--space-md) * 2);
   
-  /* Variabili in media queries */
+  /* Variables in media queries */
   max-width: var(--container-width, 1200px);
 }
 
-/* Override locale */
+/* Local override */
 .dark-theme {
   --primary: #6c757d;
   --card-bg: #2d2d2d;
 }
 ```
 
-### Variabili dinamiche con JavaScript
+### Dynamic variables with JavaScript
+
 ```css
 .dynamic {
   transform: translateX(var(--mouse-x));
@@ -1009,27 +1144,40 @@ element.style.setProperty('--mouse-x', `${x}px`);
 element.style.setProperty('--mouse-y', `${y}px`);
 ```
 
-## 8. Trasformazioni complete
 
-### Transform 2D
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 8. Complete transformations
+
+### 2D Transform
+
 ```css
-/* Rotazione */
+/* Rotation */
 transform: rotate(45deg);
 transform: rotate(-180deg);
-transform: rotate(0.5turn);    /* Mezza rotazione */
+transform: rotate(0.5turn);    /* Half rotation */
 
-/* Scala */
+/* Scale */
 transform: scale(1.5);         /* 150% */
 transform: scale(0.5, 2);      /* X: 50%, Y: 200% */
-transform: scaleX(-1);         /* Specchia orizzontalmente */
-transform: scaleY(0.5);        /* Schiaccia verticalmente */
+transform: scaleX(-1);         /* Mirror horizontally */
+transform: scaleY(0.5);        /* Squash vertically */
 
-/* Traslazione */
+/* Translation */
 transform: translate(50px, 100px);
 transform: translateX(-50%);
 transform: translateY(2rem);
 
-/* Skew (inclinazione) */
+/* Skew (tilt) */
 transform: skew(20deg, 10deg);
 transform: skewX(20deg);
 transform: skewY(-15deg);
@@ -1038,27 +1186,28 @@ transform: skewY(-15deg);
 transform: rotate(45deg) scale(1.2) translateX(50px);
 ```
 
-### Transform 3D  
+### 3D Transform
+
 ```css
-/* Rotazione 3D */
+/* 3D rotation */
 .card {
-  transform: rotateX(180deg);    /* Flip orizzontale */
-  transform: rotateY(180deg);    /* Flip verticale */
-  transform: rotateZ(45deg);     /* Come rotate normale */
-  transform: rotate3d(1, 1, 0, 45deg); /* Su asse custom */
+  transform: rotateX(180deg);    /* Horizontal flip */
+  transform: rotateY(180deg);    /* Vertical flip */
+  transform: rotateZ(45deg);     /* Like normal rotate */
+  transform: rotate3d(1, 1, 0, 45deg); /* On a custom axis */
 }
 
-/* Prospettiva */
+/* Perspective */
 .container {
-  perspective: 1000px;           /* Punto di vista */
+  perspective: 1000px;           /* Viewpoint */
 }
 
 .card {
-  transform-style: preserve-3d;  /* Mantieni 3D per i figli */
-  transform: translateZ(100px);  /* Verso di te */
+  transform-style: preserve-3d;  /* Keep 3D for children */
+  transform: translateZ(100px);  /* Towards you */
 }
 
-/* Card flip completo */
+/* Full card flip */
 .flip-card {
   width: 200px;
   height: 300px;
@@ -1089,18 +1238,19 @@ transform: rotate(45deg) scale(1.2) translateX(50px);
 }
 ```
 
-### `transform-origin` completo
+### Full `transform-origin`
+
 ```css
 /* Keywords */
 transform-origin: center;      /* Default */
 transform-origin: top left;
 transform-origin: bottom right;
 
-/* Percentuali */
+/* Percentages */
 transform-origin: 0% 0%;       /* Top left */
 transform-origin: 100% 100%;   /* Bottom right */
 
-/* Valori misti */
+/* Mixed values */
 transform-origin: left 50%;
 transform-origin: 10px 20px;
 
@@ -1108,9 +1258,22 @@ transform-origin: 10px 20px;
 transform-origin: center center -50px;
 ```
 
-## 9. Animazioni complete
 
-### `@keyframes` avanzati
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 9. Complete animations
+
+### Advanced `@keyframes`
+
 ```css
 /* Multi-step animation */
 @keyframes bounce {
@@ -1124,7 +1287,7 @@ transform-origin: center center -50px;
   }
 }
 
-/* Animazione complessa */
+/* Complex animation */
 @keyframes morphing {
   0% {
     border-radius: 50%;
@@ -1149,20 +1312,21 @@ transform-origin: center center -50px;
 }
 ```
 
-### Proprietà animazione complete
+### Full animation properties
+
 ```css
 .animated {
-  /* Proprietà singole */
+  /* Individual properties */
   animation-name: bounce;
   animation-duration: 2s;
   animation-timing-function: ease-in-out;
   animation-delay: 0.5s;
-  animation-iteration-count: 3;      /* o infinite */
-  animation-direction: alternate;    /* o reverse, alternate-reverse */
-  animation-fill-mode: both;         /* o forwards, backwards */
-  animation-play-state: running;     /* o paused */
+  animation-iteration-count: 3;      /* or infinite */
+  animation-direction: alternate;    /* or reverse, alternate-reverse */
+  animation-fill-mode: both;         /* or forwards, backwards */
+  animation-play-state: running;     /* or paused */
   
-  /* Shorthand completa */
+  /* Full shorthand */
   animation: bounce 2s ease-in-out 0.5s 3 alternate both;
   
   /* Multiple animations */
@@ -1173,73 +1337,276 @@ transform-origin: center center -50px;
 }
 ```
 
-### Animation timing functions complete
+### Full animation timing functions
+
 ```css
-/* Predefinite */
+/* Presets */
 animation-timing-function: linear;
 animation-timing-function: ease;
 animation-timing-function: ease-in;
 animation-timing-function: ease-out;
 animation-timing-function: ease-in-out;
 
-/* Steps (per sprite animations) */
+/* Steps (for sprite animations) */
 animation-timing-function: steps(12);
 animation-timing-function: steps(12, start);
 animation-timing-function: steps(12, end);
 
-/* Cubic bezier personalizzati */
+/* Custom cubic beziers */
 animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce */
 animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic */
 ```
 
-## 10. Transizioni
 
-### Sintassi completa
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 10. Transitions
+
+### Syntax
+
 ```css
 .element {
-  /* Proprietà singole */
-  transition-property: all;           /* o specifiche: transform, opacity */
+  /* Individual properties */
+  transition-property: all;           /* or specific ones: transform, opacity */
   transition-duration: 0.3s;
   transition-timing-function: ease;
   transition-delay: 0s;
-  
-  /* Shorthand */
-  transition: all 0.3s ease;
-  
+
+  /* Shorthand (order: property duration timing-function delay) */
+  transition: all 0.3s ease 0s;
+
   /* Multiple transitions */
-  transition: 
+  transition:
     transform 0.3s ease,
-    opacity 0.2s ease 0.1s,    /* con delay */
-    background 0.5s linear;
+    opacity 0.2s ease 0.1s,    /* with delay */
+    background-color 0.5s linear;
 }
 ```
 
-## 11. Filtri ed Effetti
+### Where to put it (golden rule)
 
-### `filter` completo
 ```css
-/* Singoli filtri */
+/* ❌ Transition ONLY on :hover → on “mouse out” it won’t animate as you expect */
+.button:hover {
+  transition: transform 0.2s ease;
+  transform: translateY(-2px);
+}
+
+/* ✅ Transition on the base state → it animates both on enter and on exit */
+.button {
+  transition: transform 0.2s ease;
+}
+.button:hover {
+  transform: translateY(-2px);
+}
+```
+
+### Avoid `all` (specify what you want to animate)
+
+```css
+/* ❌ */
+.card { transition: all 0.3s ease; }
+
+/* ✅ */
+.card {
+  transition:
+    transform 0.25s ease,
+    opacity 0.2s ease,
+    background-color 0.3s linear;
+}
+```
+
+### “Recommended” properties (smooth)
+
+```css
+/* ✅ Generally smoother and more predictable */
+.modal {
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  transform: translateY(8px);
+  opacity: 0;
+}
+.modal.is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+```
+
+### “Expensive” properties (use with caution)
+
+```css
+/* ⚠️ Often heavier because they affect layout/paint */
+.panel {
+  transition: width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease;
+}
+
+/* ✅ Typical alternatives */
+.panel {
+  transition: transform 0.3s ease;
+}
+.panel.is-open {
+  transform: scaleY(1);
+}
+.panel {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+```
+
+### Most used easing (timing-function)
+
+```css
+.element {
+  transition-timing-function: ease;      /* default “ok” */
+  /* transition-timing-function: linear;   constant */
+  /* transition-timing-function: ease-in;  starts slow */
+  /* transition-timing-function: ease-out; ends slow */
+  /* transition-timing-function: ease-in-out; smooth */
+}
+
+/* ✅ Custom */
+.element {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+```
+
+### Smart delays (delay)
+
+```css
+/* ✅ Delay only on enter */
+.toast {
+  transition: opacity 0.2s ease 0s, transform 0.2s ease 0s;
+  opacity: 0;
+  transform: translateY(6px);
+}
+.toast.is-open {
+  transition-delay: 0.1s; /* enters after */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ✅ Different delays for different properties */
+.toast {
+  transition:
+    opacity 0.2s ease 0s,
+    transform 0.2s ease 0s;
+}
+.toast.is-open {
+  transition:
+    opacity 0.2s ease 0.05s,
+    transform 0.2s ease 0s;
+}
+```
+
+### “Show/Hide” without `display` (which doesn’t animate)
+
+```css
+/* ❌ display is not animatable */
+/* .dropdown { display: none; } .dropdown.open { display: block; } */
+
+/* ✅ Opacity + visibility + pointer-events */
+.dropdown {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0s linear 0.15s; /* wait until the end before hiding */
+}
+
+.dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0s; /* immediately visible */
+}
+```
+
+### Accessibility: respect “reduced motion”
+
+```css
+/* ✅ Reduce or remove transitions for those who request it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+### Full interactive states (hover + focus-visible)
+
+```css
+.button {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+```
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 11. Filters and Effects
+
+### Full `filter`
+
+```css
+/* Single filters */
 .image {
   filter: blur(5px);
   filter: brightness(1.5);        /* 150% */
   filter: contrast(2);            /* 200% */
   filter: grayscale(100%);        /* B&W */
-  filter: hue-rotate(90deg);      /* Ruota colori */
-  filter: invert(100%);           /* Negativo */
-  filter: opacity(50%);           /* Come opacity */
-  filter: saturate(2);            /* 200% saturazione */
-  filter: sepia(100%);            /* Effetto seppia */
+  filter: hue-rotate(90deg);      /* Rotate hues */
+  filter: invert(100%);           /* Negative */
+  filter: opacity(50%);           /* Like opacity */
+  filter: saturate(2);            /* 200% saturation */
+  filter: sepia(100%);            /* Sepia effect */
   filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
   
-  /* Filtri multipli */
+  /* Multiple filters */
   filter: contrast(1.2) brightness(1.1) saturate(1.3);
   
-  /* Blur + grayscale per disabled state */
+  /* Blur + grayscale for disabled state */
   filter: blur(2px) grayscale(100%) opacity(0.7);
 }
 ```
 
-### `backdrop-filter` - Effetto vetro!  
+### `backdrop-filter` - Glass effect!
+
 ```css
 /* Glassmorphism effect */
 .glass {
@@ -1254,7 +1621,7 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
   backdrop-filter: blur(20px) saturate(1.5);
 }
 
-/* Tutti i backdrop filters */
+/* All backdrop filters */
 .effects {
   backdrop-filter: blur(10px);
   backdrop-filter: brightness(0.8);
@@ -1264,7 +1631,8 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
 }
 ```
 
-**Nota**: Non supportato in tutti i browser! Usa `@supports`:
+**Note**: Not supported in all browsers! Use `@supports`:
+
 ```css
 @supports (backdrop-filter: blur(10px)) {
   .glass {
@@ -1273,11 +1641,12 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
 }
 ```
 
-### `clip-path` - Forme personalizzate  
-**Cosa fa**: Ritaglia l'elemento in forme custom!
+### `clip-path` - Custom shapes
+
+**What it does**: Clips the element into custom shapes!
 
 ```css
-/* Forme base */
+/* Basic shapes */
 .circle {
   clip-path: circle(50%);
 }
@@ -1286,7 +1655,7 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
   clip-path: ellipse(130px 140px at 10% 20%);
 }
 
-/* Poligoni */
+/* Polygons */
 .triangle {
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
@@ -1299,7 +1668,7 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
 
-/* Animare clip-path */
+/* Animating clip-path */
 .morph {
   clip-path: circle(50%);
   transition: clip-path 0.5s ease;
@@ -1311,8 +1680,9 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
 ```
 
 **Visual**:
+
 ```
-Normale:    clip-path: circle(50%):    clip-path: triangle:
+Normal:     clip-path: circle(50%):    clip-path: triangle:
 ┌────────┐       ⭕                         🔺
 │        │       
 │  IMG   │  →    IMG                        IMG
@@ -1320,8 +1690,9 @@ Normale:    clip-path: circle(50%):    clip-path: triangle:
 └────────┘       ⭕                         🔻
 ```
 
-### `mix-blend-mode`  
-**Cosa fa**: Mischia i colori come in Photoshop!
+### `mix-blend-mode`
+
+**What it does**: Blends colors like in Photoshop!
 
 ```css
 .overlay-text {
@@ -1333,49 +1704,63 @@ Normale:    clip-path: circle(50%):    clip-path: triangle:
   mix-blend-mode: color-burn;
 }
 
-/* Testo che si adatta allo sfondo */
+/* Text that adapts to the background */
 .adaptive-text {
   color: white;
   mix-blend-mode: difference;
 }
 ```
 
-## 12. Controlli utente
 
-### `cursor` - Tutti i valori
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 12. User controls
+
+### `cursor` - All values
+
 ```css
-cursor: pointer;        /* 👆 Manina */
-cursor: grab;           /* ✋ Mano aperta */
-cursor: grabbing;       /* ✊ Mano chiusa */
-cursor: not-allowed;    /* 🚫 Divieto */
-cursor: wait;           /* ⏳ Attesa */
-cursor: help;           /* ❓ Aiuto */
-cursor: text;           /* 📝 Testo */
-cursor: crosshair;      /* ✚ Mirino */
-cursor: move;           /* ✥ Movimento */
+cursor: pointer;        /* 👆 Hand */
+cursor: grab;           /* ✋ Open hand */
+cursor: grabbing;       /* ✊ Closed hand */
+cursor: not-allowed;    /* 🚫 Not allowed */
+cursor: wait;           /* ⏳ Wait */
+cursor: help;           /* ❓ Help */
+cursor: text;           /* 📝 Text */
+cursor: crosshair;      /* ✚ Crosshair */
+cursor: move;           /* ✥ Move */
 cursor: zoom-in;        /* 🔍+ Zoom in */
 cursor: zoom-out;       /* 🔍- Zoom out */
-cursor: progress;       /* ⏳ In elaborazione */
+cursor: progress;       /* ⏳ In progress */
 
-/* Cursor personalizzato */
+/* Custom cursor */
 cursor: url('cursor.png'), auto;
-cursor: url('cursor.svg') 4 12, auto; /* Con hotspot */
+cursor: url('cursor.svg') 4 12, auto; /* With hotspot */
 ```
 
-### `user-select` - Controllo selezione  
+### `user-select` - Selection control
+
 ```css
-/* Non selezionabile */
+/* Not selectable */
 .no-select {
   user-select: none;
   -webkit-user-select: none; /* Safari */
 }
 
-/* Seleziona tutto al click */
+/* Select everything on click */
 .select-all {
   user-select: all;
 }
 
-/* Solo testo selezionabile */
+/* Only text selectable */
 .text-only {
   user-select: text;
 }
@@ -1386,112 +1771,131 @@ cursor: url('cursor.svg') 4 12, auto; /* Con hotspot */
 }
 ```
 
-**Uso pratico**:
+**Practical use**:
+
 ```css
-/* Bottoni non selezionabili */
+/* Buttons not selectable */
 button {
   user-select: none;
 }
 
-/* Codice che si seleziona tutto */
+/* Code that selects all */
 .code-snippet {
   user-select: all;
 }
 ```
 
-### `pointer-events`  
-**Cosa fa**: Controlla se un elemento può ricevere click
+### `pointer-events`
+
+**What it does**: Controls whether an element can receive clicks
 
 ```css
-/* Non cliccabile */
+/* Not clickable */
 .disabled {
   pointer-events: none;
   opacity: 0.5;
 }
 
-/* Click attraverso l'elemento */
+/* Click through the element */
 .overlay {
   pointer-events: none;
 }
 
-/* Solo alcuni eventi */
+/* Only some events */
 .special {
-  pointer-events: auto;     /* Tutti (default) */
-  pointer-events: visiblePainted; /* Solo parti visibili */
+  pointer-events: auto;     /* All (default) */
+  pointer-events: visiblePainted; /* Only visible parts */
 }
 ```
 
-**Uso pratico**: Overlay che non blocca i click!
+**Practical use**: Overlay that doesn’t block clicks!
+
 ```css
 .watermark {
   position: fixed;
   top: 0;
   left: 0;
-  pointer-events: none; /* Click passano attraverso! */
+  pointer-events: none; /* Clicks go through! */
   opacity: 0.1;
 }
 ```
 
-## 13. Scroll avanzato
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 13. Advanced scrolling
 
 ### `scroll-behavior`
+
 ```css
 html {
-  scroll-behavior: smooth;  /* Scroll animato */
-  scroll-behavior: auto;    /* Scroll normale */
+  scroll-behavior: smooth;  /* Animated scrolling */
+  scroll-behavior: auto;    /* Normal scrolling */
 }
 ```
 
-### Scroll Snap - Scroll magnetico  
-**Cosa fa**: Fa "agganciare" lo scroll a punti specifici
+### Scroll Snap - Magnetic scrolling
+
+**What it does**: Makes scrolling "snap" to specific points
 
 ```css
 /* Container */
 .carousel {
-  scroll-snap-type: x mandatory;  /* Asse X, obbligatorio */
+  scroll-snap-type: x mandatory;  /* X axis, mandatory */
   overflow-x: scroll;
   display: flex;
 }
 
 /* Items */
 .slide {
-  scroll-snap-align: center;      /* Si centra */
+  scroll-snap-align: center;      /* Centers */
   flex: 0 0 100%;
 }
 
-/* Vertical esempio */
+/* Vertical example */
 .vertical-sections {
-  scroll-snap-type: y proximity;  /* Asse Y, suggerito */
+  scroll-snap-type: y proximity;  /* Y axis, suggested */
   overflow-y: scroll;
   height: 100vh;
 }
 
 .section {
-  scroll-snap-align: start;       /* Si allinea all'inizio */
+  scroll-snap-align: start;       /* Aligns to the start */
   height: 100vh;
 }
 ```
 
-**Opzioni scroll-snap-type**:
-- `x` / `y` = asse
-- `mandatory` = sempre aggancia
-- `proximity` = aggancia se vicino
+**scroll-snap-type options**:
 
-**Opzioni scroll-snap-align**:
-- `start` = inizio elemento
-- `center` = centro elemento  
-- `end` = fine elemento
+* `x` / `y` = axis
+* `mandatory` = always snaps
+* `proximity` = snaps if close
 
-### `overscroll-behavior`  
-**Cosa fa**: Controlla cosa succede quando scrolli oltre i limiti
+**scroll-snap-align options**:
+
+* `start` = start of the element
+* `center` = center of the element
+* `end` = end of the element
+
+### `overscroll-behavior`
+
+**What it does**: Controls what happens when you scroll past the limits
 
 ```css
-/* Previene scroll del parent */
+/* Prevents parent scrolling */
 .modal {
   overscroll-behavior: contain;
 }
 
-/* Disabilita pull-to-refresh */
+/* Disables pull-to-refresh */
 body {
   overscroll-behavior-y: none;
 }
@@ -1502,19 +1906,32 @@ body {
 }
 ```
 
-## 14. Responsive Design avanzato
 
-### Container Queries   2023
-**Cosa sono**: Media queries basate sul container, non sul viewport!
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 14. Advanced Responsive Design
+
+### Container Queries
+
+**What they are**: Media queries based on the container, not the viewport!
 
 ```css
-/* Definisci container */
+/* Define a container */
 .card-container {
   container-type: inline-size;
   container-name: card;
 }
 
-/* Query basate sul container */
+/* Container-based queries */
 @container card (min-width: 400px) {
   .card {
     display: flex;
@@ -1529,30 +1946,44 @@ body {
 }
 ```
 
-**Rivoluzionario!** Componenti veramente responsive!
+**Revolutionary!** Truly responsive components!
 
-### Funzioni responsive
+### Responsive functions
+
 ```css
-/* clamp() per tipografia responsive */
+/* clamp() for responsive typography */
 h1 {
   font-size: clamp(1.5rem, 4vw, 3rem);
 }
 
-/* min() per container */
+/* min() for containers */
 .container {
   width: min(90%, 1200px);
 }
 
-/* max() per minimi garantiti */
+/* max() for guaranteed minimums */
 .card {
   width: max(300px, 30%);
 }
 ```
 
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 15. Performance
 
-### `will-change`  
-**Cosa fa**: Avvisa il browser di future animazioni per ottimizzare
+### `will-change`
+
+**What it does**: Warns the browser about upcoming animations to optimize
 
 ```css
 .animated {
@@ -1563,54 +1994,68 @@ h1 {
   will-change: transform, opacity;
 }
 
-/* Importante: rimuovi dopo l'animazione */
+/* Important: remove it after the animation */
 .finished {
   will-change: auto;
 }
 ```
 
-**Quando usarlo**: 
-- Prima di animazioni pesanti
-- Non su troppi elementi
-- Rimuovi quando finito
+**When to use it**:
 
-### `contain`  
-**Cosa fa**: Isola parti della pagina per performance
+* Before heavy animations
+* Not on too many elements
+* Remove it when finished
+
+### `contain`
+
+**What it does**: Isolates parts of the page for performance
 
 ```css
 .widget {
-  contain: layout;    /* Layout isolato */
-  contain: paint;     /* Paint isolato */
-  contain: size;      /* Size isolato */
-  contain: style;     /* Style isolato */
+  contain: layout;    /* Isolated layout */
+  contain: paint;     /* Isolated paint */
+  contain: size;      /* Isolated size */
+  contain: style;     /* Isolated style */
   
-  /* Combinati */
+  /* Combined */
   contain: layout paint;
-  contain: strict;    /* Tutti */
+  contain: strict;    /* All of them */
 }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 16. Feature Detection
 
-### `@supports`  
-**Cosa fa**: Applica CSS solo se supportato
+### `@supports`
+
+**What it does**: Applies CSS only if it’s supported
 
 ```css
-/* Se supporta grid */
+/* If it supports grid */
 @supports (display: grid) {
   .container {
     display: grid;
   }
 }
 
-/* Se NON supporta */
+/* If it does NOT support it */
 @supports not (backdrop-filter: blur(10px)) {
   .glass {
     background: rgba(255,255,255,0.95);
   }
 }
 
-/* Condizioni multiple */
+/* Multiple conditions */
 @supports (display: grid) and (gap: 1rem) {
   .modern-grid {
     display: grid;
@@ -1619,90 +2064,458 @@ h1 {
 }
 ```
 
-## 17. CSS Counters - Numerazione automatica  
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 17. CSS Counters — Automatic numbering
 
 ```css
-/* Reset counter */
+/* Reset counter (starts at 0 → the first increment brings it to 1) */
 .chapters {
   counter-reset: chapter;
 }
 
-/* Incrementa e mostra */
+/* Increment and display */
 .chapter::before {
   counter-increment: chapter;
-  content: "Capitolo " counter(chapter) ": ";
+  content: "Chapter " counter(chapter) ": ";
 }
 
-/* Counter annidati */
+/* Nested counters */
 .book {
   counter-reset: chapter;
 }
 
 .chapter {
-  counter-reset: section;
-  counter-increment: chapter;
+  counter-reset: section;      /* each new chapter resets sections */
+  counter-increment: chapter;  /* increases the chapter when it appears */
 }
 
 .section::before {
-  counter-increment: section;
+  counter-increment: section;  /* increases the section when it appears */
   content: counter(chapter) "." counter(section) " ";
 }
 ```
 
-**Risultato**:
+### How it works (in 3 moves)
+
+```css
+/* 1) counter-reset: creates/resets a counter */
+.wrapper { counter-reset: step; }
+
+/* 2) counter-increment: increases it when the element “passes” */
+.item::before { counter-increment: step; }
+
+/* 3) counter(): prints it inside content */
+.item::before { content: counter(step) ". "; }
 ```
-Capitolo 1: Introduzione
-  1.1 Cos'è CSS
-  1.2 Come funziona
-Capitolo 2: Avanzato
+
+### Where to put it (practical rule)
+
+```css
+/* ✅ reset on the container */
+.list { counter-reset: item; }
+
+/* ✅ increment on the element you want to number */
+.list > li::before {
+  counter-increment: item;
+  content: counter(item) ". ";
+}
+```
+
+### Change numbering style (decimal, roman, alpha…)
+
+```css
+.list { counter-reset: item; }
+
+.list > li::before {
+  counter-increment: item;
+
+  /* decimal | lower-roman | upper-roman | lower-alpha | upper-alpha */
+  content: counter(item, upper-roman) ". ";
+}
+```
+
+### Prefixes, parentheses, separators (formatting)
+
+```css
+.steps { counter-reset: step; }
+
+.step::before {
+  counter-increment: step;
+  content: "Step " counter(step) " → ";
+}
+```
+
+### Nested numbering (1, 1.1, 1.1.1) with `counters()`
+
+```css
+/* ✅ counters(name, separator) prints the whole chain */
+.toc {
+  counter-reset: h2;
+}
+
+.toc .h2 {
+  counter-reset: h3; /* each h2 resets h3 */
+}
+
+.toc .h2::before {
+  counter-increment: h2;
+  content: counter(h2) " ";
+}
+
+.toc .h3::before {
+  counter-increment: h3;
+  content: counter(h2) "." counter(h3) " ";
+}
+
+/* Variant: if you use the same counter-name on multiple levels */
+.outline { counter-reset: item; }
+
+.outline li {
+  counter-increment: item;
+}
+
+.outline li::before {
+  content: counters(item, ".") " ";
+}
+```
+
+### Start from a different number
+
+```css
+/* Starts at 4 because it resets to 3 and then increment → 4 */
+.chapters { counter-reset: chapter 3; }
+
+.chapter::before {
+  counter-increment: chapter;
+  content: "Chapter " counter(chapter) ": ";
+}
+```
+
+### Reverse counting (counting backwards)
+
+```css
+/* ✅ decrements instead of incrementing */
+.countdown { counter-reset: n 5; }
+
+.countdown .item::before {
+  counter-increment: n -1;
+  content: "T-" counter(n) " ";
+}
+```
+
+### Use counters with lists (when you do NOT want `<ol>`)
+
+```css
+/* ❌ if it’s a “real” list, better <ol> */
+.fake-ol { counter-reset: item; }
+
+.fake-ol > li::before {
+  counter-increment: item;
+  content: counter(item) ") ";
+  font-variant-numeric: tabular-nums;
+}
+```
+
+### Show numbers “nicely aligned”
+
+```css
+.list { counter-reset: item; }
+
+.list > li {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.list > li::before {
+  counter-increment: item;
+  content: counter(item) ".";
+  min-width: 2ch;                /* fixed space for 1..99 */
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+```
+
+### Counters and pseudo-elements (important limit)
+
+```css
+/* ✅ counters are almost always printed with ::before / ::after */
+.item::before {
+  counter-increment: n;
+  content: counter(n);
+}
+
+/* ⚠️ without content you “see” nothing */
+.item::before {
+  counter-increment: n;
+  /* content: ...;  ← if missing, the number won’t appear */
+}
+```
+
+### Scope (where a counter “lives”)
+
+```css
+/* ✅ each container with counter-reset creates a “new series” */
+.article { counter-reset: fig; }
+
+.article figure::before {
+  counter-increment: fig;
+  content: "Figure " counter(fig) " — ";
+}
+```
+
+**Result**:
+
+```
+Chapter 1: Introduction
+  1.1 What is CSS
+  1.2 How it works
+Chapter 2: Advanced
   2.1 Flexbox
   2.2 Grid
 ```
 
-## Best Practices finali 🏆
 
-### 1. **Organizzazione CSS**
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## The 10 commandments of CSS
+
+### 1. No `!important` — If you always shout, nobody listens 📣
+
+**Why**: `!important` breaks the cascade and makes CSS hard to maintain. If you use it often, you’re fighting against your own structure.
+
 ```css
-/* 1. Reset/Normalize */
-/* 2. Variabili */
-/* 3. Base styles */
-/* 4. Layout */
-/* 5. Components */
-/* 6. Utilities */
-/* 7. Media queries */
+/* ❌ */
+.button { color: red !important; }
+
+/* ✅ */
+.button { color: red; }
+.page .button { color: red; } /* if you need more context */
 ```
 
-### 2. **Naming conventions**
-```css
-/* BEM */
-.block {}
-.block__element {}
-.block--modifier {}
+**Analogy**: it’s like speaking by shouting in a room. It works… but then you can’t “talk normally” anymore.
 
-/* Utility-first */
-.text-center {}
-.mt-4 {}
-.bg-primary {}
+> Pro note: `!important` can make sense in utility CSS or very targeted overrides, but as an exception, not a way of life.
+
+---
+
+### 2. Style with classes, not IDs — IDs are “too powerful” 🧨
+
+**Why**: IDs have very high specificity and force you to write increasingly complicated selectors to override them.
+
+```css
+/* ❌ */
+#cta { background: black; }
+
+/* ✅ */
+.cta { background: black; }
 ```
 
-### 3. **Performance tips**
-- Usa `transform` invece di `top/left` per animazioni
-- Evita selettori troppo specifici
-- Minimizza reflow/repaint
-- Usa `will-change` con parsimonia
-- Preferisci `class` a selettori complessi
+**Analogy**: an ID is a jackhammer. To drive a nail, a normal hammer (classes) is enough.
 
-### 4. **Accessibilità**
-- Mai `outline: none` senza alternativa
-- Contrasto colori minimo 4.5:1
-- Focus states chiari
-- Rispetta `prefers-reduced-motion`
+---
+
+### 3. Short selectors — Don’t write “novels” to find an element 🔎
+
+**Why**: long, ultra-specific selectors are fragile: change one `div` and everything breaks.
+
+```css
+/* ❌ */
+main .wrapper .content .card .title { font-weight: 700; }
+
+/* ✅ */
+.card__title { font-weight: 700; }
+```
+
+**Analogy**: it’s like giving directions saying “turn right at the bar, then left at the tobacconist, then after the traffic light go into the alley…”. Better a clear address.
+
+---
+
+### 4. Don’t use inline CSS — Separation of concerns (again) 🧩
+
+**Why**: inline style is hard to reuse and maintain. CSS should live in CSS.
+
+```html
+<!-- ❌ -->
+<p style="margin-top: 12px; color: #333;">Text</p>
+
+<!-- ✅ -->
+<p class="text">Text</p>
+```
+
+```css
+.text { margin-top: 12px; color: #333; }
+```
+
+**Analogy**: it’s like copy-pasting the same sentence in 30 places: when you have to fix it, you go crazy. Better one reusable rule.
+
+---
+
+### 5. Mobile-first — Start small, then expand 📱➡️🖥️
+
+**Why**: it’s more natural to build for small screens and then add complexity for larger ones.
+
+```css
+/* ✅ mobile default */
+.card { padding: 12px; }
+
+/* ✅ then “upgrade” */
+@media (min-width: 768px) {
+  .card { padding: 24px; }
+}
+```
+
+**Analogy**: it’s like packing a backpack: you put the essentials (mobile), then add the rest only if you have room (desktop).
+
+---
+
+### 6. Use relative units — The site must “breathe” 📏
+
+**Why**: `rem`, `%`, `vw`, `clamp()` make everything more adaptable. Pixels everywhere often create rigid layouts.
+
+```css
+/* ❌ */
+h1 { font-size: 42px; }
+
+/* ✅ */
+h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+```
+
+**Analogy**: pixels are one-size shoes. Relative units are adjustable shoes.
+
+---
+
+### 7. Modern layouts — Flexbox and Grid, not “hacks” 🧱
+
+**Why**: floats and various tricks are fragile. Flex and Grid are made specifically for layout.
+
+```css
+/* ❌ (old compromises) */
+.col { float: left; width: 50%; }
+
+/* ✅ Flex */
+.row { display: flex; gap: 16px; }
+.col { flex: 1; }
+
+/* ✅ Grid */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+```
+
+**Analogy**: don’t build a house with duct tape. Use the right tools.
+
+---
+
+### 8. `box-sizing: border-box` — Measurements that don’t lie 📦
+
+**Why**: with `border-box`, padding and border are included in the width. You avoid “why is it overflowing??”.
+
+```css
+/* ✅ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+```
+
+**Analogy**: it’s like having a ruler that always measures the same way, with no surprises.
+
+---
+
+### 9. CSS variables — Don’t repeat yourself like a parrot 🦜
+
+**Why**: repeated colors and spacing become a nightmare. Custom properties make everything more consistent and themeable.
+
+```css
+/* ✅ */
+:root {
+  --space-2: 8px;
+  --space-3: 12px;
+  --text: #222;
+  --brand: #2563eb;
+}
+
+.button {
+  padding: var(--space-2) var(--space-3);
+  color: white;
+  background: var(--brand);
+}
+```
+
+**Analogy**: variables are like a playlist: change one song and the whole mood changes.
+
+---
+
+### 10. “Smart” animations — Move with `transform`, not with pain 🕺
+
+**Why**: animating `top/left/width/height` can be heavier. `transform` and `opacity` are usually smoother.
+
+```css
+/* ❌ */
+.modal { position: relative; top: 0; transition: top .2s; }
+.modal.open { top: 20px; }
+
+/* ✅ */
+.modal { transform: translateY(0); transition: transform .2s, opacity .2s; }
+.modal.open { transform: translateY(20px); }
+```
+
+**Analogy**: it’s like moving a piece of furniture by dragging it on the floor (effort), versus putting wheels on it (it slides).
+
+---
+
+## Bonus (highly recommended)
+
+### 11. Visible focus — Don’t remove the keyboard compass 🧭
+
+**Why**: people who navigate with the keyboard need to see where they are. Removing the outline without an alternative is a trap.
+
+```css
+/* ❌ */
+:focus { outline: none; }
+
+/* ✅ */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+```
+
+**Analogy**: it’s like turning off the headlights at night. You might see… others won’t.
+
+---
+
+### 12. Respect “reduced motion” — Not everyone wants a roller coaster 🎢
+
+**Why**: some people suffer from excessive animations. With `prefers-reduced-motion` you make a pro move.
 
 ```css
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
 ```
+
+**Analogy**: it’s like lowering the volume when someone tells you “it bothers me”.

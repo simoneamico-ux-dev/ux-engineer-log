@@ -55,6 +55,16 @@ body {
 - `fab` = Font Awesome Brands (loghi aziende)
 - `fas` = Font Awesome Solid (icone piene)
 - `far` = Font Awesome Regular (icone vuote)
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 
 ## 2. Selettori fondamentali
 
@@ -271,6 +281,16 @@ form:has(input:invalid) {
 **RIVOLUZIONARIO!** Prima non potevi stilizzare un parent basandoti sui figli!
 
 **Analogia**: Come dire "colora di rosso le scatole che contengono mele"!
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 
 ## 3. Box Model & Spaziatura
 
@@ -436,6 +456,16 @@ Risultato: 32px ✓
 ```
 
 **Analogia**: Come un termostato! Mantiene la temperatura (dimensione) sempre tra un minimo e un massimo, cercando di stare al valore ideale!
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 
 ## 4. Tipografia
 
@@ -533,6 +563,16 @@ a {
   list-style-position: inside; /* Pallini dentro il box */
 }
 ```
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 
 ## 5. Colori & Sfondi
 
@@ -655,8 +695,18 @@ radial-gradient:
   opacity: 0.5;    /* 50% trasparente TUTTO l'elemento */
 }
 ```
+<br />
+<br />
+<br />
+<br />
 
-## 6. Layout & Display - Parte 1
+
+
+
+
+
+
+## 6. Layout & Display
 
 ### `display`
 ```css
@@ -758,11 +808,8 @@ float: none;
 
 **Analogia**: Come dire "questa foto deve sempre essere rettangolare come una TV, non importa quanto la ridimensioni"!
 
----
 
-## 6. Layout & Display - Parte 2 (continuazione)
-
-### Flexbox completo
+### Flexbox
 **Cosa fa**: Crea layout flessibili in una direzione (riga o colonna).
 
 #### Setup del container
@@ -936,6 +983,17 @@ auto-fit:  [266px][266px][266px] (stretchati)
 .footer { grid-area: footer; }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 7. CSS Custom Properties (Variabili)
 
 ### Definizione e uso completo
@@ -1008,6 +1066,17 @@ auto-fit:  [266px][266px][266px] (stretchati)
 element.style.setProperty('--mouse-x', `${x}px`);
 element.style.setProperty('--mouse-y', `${y}px`);
 ```
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 
 ## 8. Trasformazioni complete
 
@@ -1108,6 +1177,17 @@ transform-origin: 10px 20px;
 transform-origin: center center -50px;
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 9. Animazioni complete
 
 ### `@keyframes` avanzati
@@ -1192,9 +1272,21 @@ animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce */
 animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic */
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 10. Transizioni
 
-### Sintassi completa
+### Sintassi
+
 ```css
 .element {
   /* Proprietà singole */
@@ -1202,17 +1294,203 @@ animation-timing-function: cubic-bezier(0.87, 0, 0.24, 0.99);      /* Dramatic *
   transition-duration: 0.3s;
   transition-timing-function: ease;
   transition-delay: 0s;
-  
-  /* Shorthand */
-  transition: all 0.3s ease;
-  
+
+  /* Shorthand (ordine: property duration timing-function delay) */
+  transition: all 0.3s ease 0s;
+
   /* Multiple transitions */
-  transition: 
+  transition:
     transform 0.3s ease,
     opacity 0.2s ease 0.1s,    /* con delay */
-    background 0.5s linear;
+    background-color 0.5s linear;
 }
 ```
+
+### Dove metterla (regola d’oro)
+
+```css
+/* ❌ Transizione SOLO su :hover → al “mouse out” non anima come ti aspetti */
+.button:hover {
+  transition: transform 0.2s ease;
+  transform: translateY(-2px);
+}
+
+/* ✅ Transizione sullo stato base → anima sia entrando che uscendo */
+.button {
+  transition: transform 0.2s ease;
+}
+.button:hover {
+  transform: translateY(-2px);
+}
+```
+
+### Evita `all` (specifica cosa vuoi animare)
+
+```css
+/* ❌ */
+.card { transition: all 0.3s ease; }
+
+/* ✅ */
+.card {
+  transition:
+    transform 0.25s ease,
+    opacity 0.2s ease,
+    background-color 0.3s linear;
+}
+```
+
+### Proprietà “consigliate” (fluide)
+
+```css
+/* ✅ In genere più fluide e prevedibili */
+.modal {
+  transition: transform 0.25s ease, opacity 0.2s ease;
+  transform: translateY(8px);
+  opacity: 0;
+}
+.modal.is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+```
+
+### Proprietà “costose” (da usare con cautela)
+
+```css
+/* ⚠️ Spesso più pesanti perché impattano layout/paint */
+.panel {
+  transition: width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease;
+}
+
+/* ✅ Alternative tipiche */
+.panel {
+  transition: transform 0.3s ease;
+}
+.panel.is-open {
+  transform: scaleY(1);
+}
+.panel {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+```
+
+### Easing (timing-function) più usati
+
+```css
+.element {
+  transition-timing-function: ease;      /* default “ok” */
+  /* transition-timing-function: linear;   costante */
+  /* transition-timing-function: ease-in;  parte lento */
+  /* transition-timing-function: ease-out; arriva lento */
+  /* transition-timing-function: ease-in-out; morbido */
+}
+
+/* ✅ Custom */
+.element {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+```
+
+### Ritardi (delay) intelligenti
+
+```css
+/* ✅ Delay solo in entrata */
+.toast {
+  transition: opacity 0.2s ease 0s, transform 0.2s ease 0s;
+  opacity: 0;
+  transform: translateY(6px);
+}
+.toast.is-open {
+  transition-delay: 0.1s; /* entra dopo */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ✅ Delay diverso per proprietà diverse */
+.toast {
+  transition:
+    opacity 0.2s ease 0s,
+    transform 0.2s ease 0s;
+}
+.toast.is-open {
+  transition:
+    opacity 0.2s ease 0.05s,
+    transform 0.2s ease 0s;
+}
+```
+
+### “Mostra/Nascondi” senza `display` (che non si anima)
+
+```css
+/* ❌ display non è animabile */
+/* .dropdown { display: none; } .dropdown.open { display: block; } */
+
+/* ✅ Opacity + visibility + pointer-events */
+.dropdown {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0s linear 0.15s; /* aspetta la fine prima di nascondere */
+}
+
+.dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    visibility 0s; /* subito visibile */
+}
+```
+
+### Accessibilità: rispetta “reduced motion”
+
+```css
+/* ✅ Riduci o elimina transizioni per chi lo richiede */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+### Stati interattivi completi (hover + focus-visible)
+
+```css
+.button {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+```
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 
 ## 11. Filtri ed Effetti
 
@@ -1340,6 +1618,17 @@ Normale:    clip-path: circle(50%):    clip-path: triangle:
 }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 12. Controlli utente
 
 ### `cursor` - Tutti i valori
@@ -1432,6 +1721,17 @@ button {
 }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 13. Scroll avanzato
 
 ### `scroll-behavior`
@@ -1502,9 +1802,20 @@ body {
 }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 14. Responsive Design avanzato
 
-### Container Queries   2023
+### Container Queries
 **Cosa sono**: Media queries basate sul container, non sul viewport!
 
 ```css
@@ -1549,6 +1860,17 @@ h1 {
 }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 15. Performance
 
 ### `will-change`  
@@ -1590,6 +1912,17 @@ h1 {
 }
 ```
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 16. Feature Detection
 
 ### `@supports`  
@@ -1619,10 +1952,21 @@ h1 {
 }
 ```
 
-## 17. CSS Counters - Numerazione automatica  
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## 17. CSS Counters — Numerazione automatica
 
 ```css
-/* Reset counter */
+/* Reset counter (parte da 0 → il primo increment lo porta a 1) */
 .chapters {
   counter-reset: chapter;
 }
@@ -1639,17 +1983,186 @@ h1 {
 }
 
 .chapter {
-  counter-reset: section;
-  counter-increment: chapter;
+  counter-reset: section;      /* ogni nuovo capitolo azzera le sezioni */
+  counter-increment: chapter;  /* aumenta il capitolo quando appare */
 }
 
 .section::before {
-  counter-increment: section;
+  counter-increment: section;  /* aumenta la sezione quando appare */
   content: counter(chapter) "." counter(section) " ";
 }
 ```
 
+### Come funziona (in 3 mosse)
+
+```css
+/* 1) counter-reset: crea/azzera un contatore */
+.wrapper { counter-reset: step; }
+
+/* 2) counter-increment: lo aumenta quando l’elemento “passa” */
+.item::before { counter-increment: step; }
+
+/* 3) counter(): lo stampa dentro content */
+.item::before { content: counter(step) ". "; }
+```
+
+### Dove metterlo (regola pratica)
+
+```css
+/* ✅ reset sul contenitore */
+.list { counter-reset: item; }
+
+/* ✅ increment sull’elemento che vuoi numerare */
+.list > li::before {
+  counter-increment: item;
+  content: counter(item) ". ";
+}
+```
+
+### Cambiare stile di numerazione (decimal, roman, alpha…)
+
+```css
+.list { counter-reset: item; }
+
+.list > li::before {
+  counter-increment: item;
+
+  /* decimal | lower-roman | upper-roman | lower-alpha | upper-alpha */
+  content: counter(item, upper-roman) ". ";
+}
+```
+
+### Prefissi, parentesi, separatori (formattazione)
+
+```css
+.steps { counter-reset: step; }
+
+.step::before {
+  counter-increment: step;
+  content: "Step " counter(step) " → ";
+}
+```
+
+### Numerazione annidata (1, 1.1, 1.1.1) con `counters()`
+
+```css
+/* ✅ counters(name, separator) stampa tutta la catena */
+.toc {
+  counter-reset: h2;
+}
+
+.toc .h2 {
+  counter-reset: h3; /* ogni h2 azzera h3 */
+}
+
+.toc .h2::before {
+  counter-increment: h2;
+  content: counter(h2) " ";
+}
+
+.toc .h3::before {
+  counter-increment: h3;
+  content: counter(h2) "." counter(h3) " ";
+}
+
+/* Variante: se usi lo stesso counter-name su più livelli */
+.outline { counter-reset: item; }
+
+.outline li {
+  counter-increment: item;
+}
+
+.outline li::before {
+  content: counters(item, ".") " ";
+}
+```
+
+### Partire da un numero diverso
+
+```css
+/* Parte da 4 perché resetta a 3 e poi increment → 4 */
+.chapters { counter-reset: chapter 3; }
+
+.chapter::before {
+  counter-increment: chapter;
+  content: "Capitolo " counter(chapter) ": ";
+}
+```
+
+### Reverse counting (contare al contrario)
+
+```css
+/* ✅ decrementa invece di incrementare */
+.countdown { counter-reset: n 5; }
+
+.countdown .item::before {
+  counter-increment: n -1;
+  content: "T-" counter(n) " ";
+}
+```
+
+### Usare i counter con liste (quando NON vuoi `<ol>`)
+
+```css
+/* ❌ se è una lista “vera”, meglio <ol> */
+.fake-ol { counter-reset: item; }
+
+.fake-ol > li::before {
+  counter-increment: item;
+  content: counter(item) ") ";
+  font-variant-numeric: tabular-nums;
+}
+```
+
+### Mostrare numeri “allineati bene”
+
+```css
+.list { counter-reset: item; }
+
+.list > li {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.list > li::before {
+  counter-increment: item;
+  content: counter(item) ".";
+  min-width: 2ch;                /* spazio fisso per 1..99 */
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+```
+
+### Counters e pseudo-elementi (limite importante)
+
+```css
+/* ✅ i counter si stampano quasi sempre con ::before / ::after */
+.item::before {
+  counter-increment: n;
+  content: counter(n);
+}
+
+/* ⚠️ senza content non “vedi” nulla */
+.item::before {
+  counter-increment: n;
+  /* content: ...;  ← se manca, il numero non appare */
+}
+```
+
+### Scope (dove “vive” un counter)
+
+```css
+/* ✅ ogni contenitore con counter-reset crea una “nuova serie” */
+.article { counter-reset: fig; }
+
+.article figure::before {
+  counter-increment: fig;
+  content: "Figura " counter(fig) " — ";
+}
+```
+
 **Risultato**:
+
 ```
 Capitolo 1: Introduzione
   1.1 Cos'è CSS
@@ -1659,50 +2172,237 @@ Capitolo 2: Avanzato
   2.2 Grid
 ```
 
-## Best Practices finali 🏆
 
-### 1. **Organizzazione CSS**
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+## I 10 comandamenti del CSS
+
+### 1. Niente `!important` — Se urli sempre, nessuno ti ascolta 📣
+
+**Perché**: `!important` rompe la cascata e rende il CSS difficile da mantenere. Se lo usi spesso, stai combattendo contro la tua stessa struttura.
+
 ```css
-/* 1. Reset/Normalize */
-/* 2. Variabili */
-/* 3. Base styles */
-/* 4. Layout */
-/* 5. Components */
-/* 6. Utilities */
-/* 7. Media queries */
+/* ❌ */
+.button { color: red !important; }
+
+/* ✅ */
+.button { color: red; }
+.page .button { color: red; } /* se serve più contesto */
 ```
 
-### 2. **Naming conventions**
-```css
-/* BEM */
-.block {}
-.block__element {}
-.block--modifier {}
+**Analogia**: è come parlare urlando in una stanza. Funziona… ma poi non riesci più a “parlare normale”.
 
-/* Utility-first */
-.text-center {}
-.mt-4 {}
-.bg-primary {}
+> Nota pro: `!important` può avere senso in utility CSS o override molto mirati, ma come eccezione, non come stile di vita.
+
+---
+
+### 2. Stila con le classi, non con gli ID — Gli ID sono “troppo potenti” 🧨
+
+**Perché**: gli ID hanno specificità altissima e ti costringono a scrivere selettori sempre più complicati per sovrascriverli.
+
+```css
+/* ❌ */
+#cta { background: black; }
+
+/* ✅ */
+.cta { background: black; }
 ```
 
-### 3. **Performance tips**
-- Usa `transform` invece di `top/left` per animazioni
-- Evita selettori troppo specifici
-- Minimizza reflow/repaint
-- Usa `will-change` con parsimonia
-- Preferisci `class` a selettori complessi
+**Analogia**: un ID è un martello pneumatico. Per piantare un chiodo, basta un martello normale (le classi).
 
-### 4. **Accessibilità**
-- Mai `outline: none` senza alternativa
-- Contrasto colori minimo 4.5:1
-- Focus states chiari
-- Rispetta `prefers-reduced-motion`
+---
+
+### 3. Selettori corti — Non scrivere “romanzi” per trovare un elemento 🔎
+
+**Perché**: selettori lunghi e super specifici sono fragili: basta cambiare una `div` e si rompe tutto.
+
+```css
+/* ❌ */
+main .wrapper .content .card .title { font-weight: 700; }
+
+/* ✅ */
+.card__title { font-weight: 700; }
+```
+
+**Analogia**: è come dare indicazioni dicendo gira a destra al bar, poi a sinistra al tabaccaio, poi dopo il semaforo entra nel vicolo…”. Meglio un indirizzo chiaro.
+
+---
+
+### 4. Non usare CSS inline — Separazione dei compiti (di nuovo) 🧩
+
+**Perché**: lo stile inline è difficile da riutilizzare e da mantenere. Il CSS deve vivere nel CSS.
+
+```html
+<!-- ❌ -->
+<p style="margin-top: 12px; color: #333;">Testo</p>
+
+<!-- ✅ -->
+<p class="text">Testo</p>
+```
+
+```css
+.text { margin-top: 12px; color: #333; }
+```
+
+**Analogia**: è come copiare-incollare la stessa frase in 30 punti: quando devi correggerla, impazzisci. Meglio una sola regola riutilizzabile.
+
+---
+
+### 5. Mobile-first — Parti piccolo, poi espandi 📱➡️🖥️
+
+**Perché**: è più naturale costruire per schermi piccoli e poi aggiungere complessità per quelli grandi.
+
+```css
+/* ✅ mobile default */
+.card { padding: 12px; }
+
+/* ✅ poi “upgrade” */
+@media (min-width: 768px) {
+  .card { padding: 24px; }
+}
+```
+
+**Analogia**: è come preparare uno zaino: metti l’essenziale (mobile), poi aggiungi il resto solo se hai spazio (desktop).
+
+---
+
+### 6. Usa unità relative — Il sito deve “respirare” 📏
+
+**Perché**: `rem`, `%`, `vw`, `clamp()` rendono tutto più adattabile. I pixel ovunque spesso creano layout rigidi.
+
+```css
+/* ❌ */
+h1 { font-size: 42px; }
+
+/* ✅ */
+h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+```
+
+**Analogia**: i pixel sono scarpe di una misura sola. Le unità relative sono scarpe regolabili.
+
+---
+
+### 7. Layout moderni — Flexbox e Grid, non “hack” 🧱
+
+**Perché**: float e trucchi vari sono fragili. Flex e Grid sono fatti apposta per layout.
+
+```css
+/* ❌ (vecchi compromessi) */
+.col { float: left; width: 50%; }
+
+/* ✅ Flex */
+.row { display: flex; gap: 16px; }
+.col { flex: 1; }
+
+/* ✅ Grid */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+```
+
+**Analogia**: non costruire una casa con lo scotch. Usa gli attrezzi giusti.
+
+---
+
+### 8. `box-sizing: border-box` — Misure che non mentono 📦
+
+**Perché**: con `border-box` padding e bordo sono inclusi nella larghezza. Eviti “perché sta sforando??”.
+
+```css
+/* ✅ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+```
+
+**Analogia**: è come avere un righello che misura sempre allo stesso modo, senza sorprese.
+
+---
+
+### 9. Variabili CSS — Non ripeterti come un pappagallo 🦜
+
+**Perché**: colori e spaziature ripetute diventano un incubo. Le custom properties rendono tutto più consistente e tematizzabile.
+
+```css
+/* ✅ */
+:root {
+  --space-2: 8px;
+  --space-3: 12px;
+  --text: #222;
+  --brand: #2563eb;
+}
+
+.button {
+  padding: var(--space-2) var(--space-3);
+  color: white;
+  background: var(--brand);
+}
+```
+
+**Analogia**: le variabili sono come una playlist: cambi una canzone e cambia tutta l’atmosfera.
+
+---
+
+### 10. Animazioni “furbe” — Muovi con `transform`, non con dolore 🕺
+
+**Perché**: animare `top/left/width/height` può essere più pesante. `transform` e `opacity` di solito sono più fluidi.
+
+```css
+/* ❌ */
+.modal { position: relative; top: 0; transition: top .2s; }
+.modal.open { top: 20px; }
+
+/* ✅ */
+.modal { transform: translateY(0); transition: transform .2s, opacity .2s; }
+.modal.open { transform: translateY(20px); }
+```
+
+**Analogia**: è come spostare un mobile trascinandolo sul pavimento (fatica), rispetto a mettergli le ruote (scorre).
+
+---
+
+## Bonus (super consigliati)
+
+### 11. Focus visibile — Non togliere la bussola da tastiera 🧭
+
+**Perché**: chi naviga con tastiera deve vedere dove si trova. Togliere l’outline senza alternativa è una trappola.
+
+```css
+/* ❌ */
+:focus { outline: none; }
+
+/* ✅ */
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+```
+
+**Analogia**: è come spegnere i fari di notte. Tu magari vedi… altri no.
+
+---
+
+### 12. Rispetta “reduced motion” — Non tutti vogliono montagne russe 🎢
+
+**Perché**: alcune persone soffrono animazioni eccessive. Con `prefers-reduced-motion` fai un gesto da pro.
 
 ```css
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
 ```
+
+**Analogia**: è come abbassare il volume quando qualcuno ti dice “mi dà fastidio”.

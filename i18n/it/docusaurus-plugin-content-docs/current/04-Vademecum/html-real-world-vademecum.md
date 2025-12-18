@@ -204,6 +204,16 @@ title: 'HTML Real World Vademecum'
 
 **Analogia**: L'evidenziatore del testo - marca una parola senza interrompere!
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 ## 2. Elementi di testo
 
 ### I titoli - La gerarchia
@@ -290,6 +300,16 @@ title: 'HTML Real World Vademecum'
 2. Apri il browser
 3. Inizia a programmare!
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 ## 3. I Link - Le porte del web
 
 ### `<a>` - L'ancora
@@ -336,6 +356,16 @@ title: 'HTML Real World Vademecum'
 ```
 
 **Analogia**: Come entrare in un negozio senza dire chi ti ha consigliato!
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
 
 ## 4. Media
 
@@ -392,6 +422,17 @@ title: 'HTML Real World Vademecum'
 
 **Analogia**: Come avere una TV nella TV - mostra un altro canale dentro il tuo!
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 5. Form - L'interazione
 
 ### La struttura base
@@ -401,6 +442,23 @@ title: 'HTML Real World Vademecum'
     <button type="submit">Invia</button>
 </form>
 ```
+
+### I Button - Tipi e trappole
+**Cosa fa**: Definisce cosa succede esattamente quando clicchi un pulsante.
+
+**Il tranello**: Se scrivi solo `<button>`, il browser pensa che sia `submit`. Clicchi → la pagina si ricarica! 😱
+
+```html
+<button type="submit">Invia Ordine</button>
+<button type="button">Aggiungi Voce</button>
+<button type="reset">Cancella</button>
+```
+**Analogia**:
+
+* `submit` = Imbucare la lettera 📮 (parte e non ce l'hai più)
+* `button` = Tasto della calcolatrice 🧮 (fai il calcolo ma resti lì)
+* `reset` = Cancellino della lavagna ✨
+
 
 ### `<label>` e `<input>` - La coppia perfetta
 ```html
@@ -490,6 +548,48 @@ title: 'HTML Real World Vademecum'
 <input type="text" name="username">
 ```
 
+#### `inputmode`
+**Cosa fa**: Dice al browser quale tastiera mostrare su mobile per facilitare la vita all'utente.
+
+```html
+<!-- Text: Default, tastiera normale -->
+<input type="text" inputmode="text">
+
+<!-- Numeric: Tastiera numerica (0-9) -->
+<input type="text" inputmode="numeric">
+
+<!-- Decimal: Tastiera numerica con punto decimale -->
+<input type="text" inputmode="decimal">
+
+<!-- Tel: Tastierino telefonico -->
+<input type="text" inputmode="tel">
+
+<!-- Email: Tastiera ottimizzata con "@" e "." -->
+<input type="text" inputmode="email">
+
+<!-- Url: Tastiera ottimizzata con "/" e "." -->
+<input type="text" inputmode="url">
+
+<!-- Search: Tasto invio diventa "Cerca" 🔍 -->
+<input type="search" inputmode="search">
+
+```
+
+**Nota bene**: Questi attributi `inputmode` sono UX pura! Non validano i dati (per quello serve il type), ma rendono l'inserimento molto più veloce su smartphone.
+
+**Analogia**: Come passare al meccanico direttamente la chiave inglese giusta invece di fargli cercare nella cassetta attrezzi! 🔧
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 6. Accessibilità - Per tutti! ♿
 
 ### Attributi ARIA base
@@ -518,6 +618,17 @@ title: 'HTML Real World Vademecum'
 
 **Analogia**: Come i sottotitoli per non udenti - non li vedi ma ci sono per chi ne ha bisogno!
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
 ## 7. Attributi globali - Utilizzabili ovunque
 
 ### `id` - L'identificativo unico
@@ -544,6 +655,16 @@ title: 'HTML Real World Vademecum'
 ```
 **Passa il mouse sopra → appare la spiegazione!**
 
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
 ## 8. Librerie esterne - Superpoteri! 🦸‍♂️
 
 ### Font Awesome - Icone bellissime
@@ -566,36 +687,240 @@ title: 'HTML Real World Vademecum'
 
 **Analogia**: Come avere migliaia di emoji professionali gratis! 
 
-## Best Practices - I comandamenti dell'HTML 📜
+<br />
+<br />
+<br />
+<br />
 
-1. **Sempre l'alt nelle immagini**
-   ```html
-   ❌ <img src="foto.jpg">
-   ✅ <img src="foto.jpg" alt="Descrizione foto">
-   ```
 
-2. **Chiudi sempre i tag**
-   ```html
-   ❌ <p>Testo senza chiusura
-   ✅ <p>Testo con chiusura</p>
-   ```
 
-3. **Usa tag semantici**
-   ```html
-   ❌ <div class="header">
-   ✅ <header>
-   ```
 
-4. **Un solo h1 per pagina**
-   ```html
-   ✅ <h1>Titolo principale</h1>
-       <h2>Sottotitolo</h2>
-       <h2>Altro sottotitolo</h2>
-   ```
 
-5. **Form sempre con label**
-   ```html
-   ❌ <input type="text">
-   ✅ <label for="nome">Nome:</label>
-      <input type="text" id="nome">
-   ```
+
+
+## I 10 comandamenti dell'HTML
+
+### 1. Alt Text — La voce dell’immagine 🗣️
+
+**Perché**: se l’immagine non carica (o l’utente usa uno screen reader), l’`alt` è ciò che “rimane”. Aiuta anche SEO e accessibilità.
+
+```html
+<!-- ❌ -->
+<img src="torta.jpg">
+
+<!-- ✅ -->
+<img src="torta.jpg" alt="Torta al cioccolato con panna montata">
+```
+
+**Analogia**: è come descrivere una foto al telefono: non dici “immagine.jpg”, dici cosa si vede davvero.
+
+> Nota pro: se l’immagine è *solo decorativa*, usa `alt=""` (alt vuoto), così lo screen reader la salta.
+
+---
+
+### 2. Chiudi i tag — Il principio del panino 🥪
+
+**Perché**: se apri un tag e non lo chiudi, il browser “indovina” e rischi di rompere il layout di tutto ciò che segue.
+
+```html
+<!-- ❌ -->
+<p>Questo paragrafo mangia tutto il resto...
+  <header>Ops, sono finito dentro il paragrafo!</header>
+
+<!-- ✅ -->
+<p>Questo paragrafo finisce qui.</p>
+<header>Io sono salvo!</header>
+```
+
+**Analogia**: come un panino. Se metti la fetta sotto (`<p>`) e dimentichi quella sopra (`</p>`), il ripieno finisce ovunque.
+
+> Nota pro: alcuni tag sono *void* (non si chiudono), tipo `<img>`, `<input>`, `<br>`.
+
+---
+
+### 3. Semantica — Le etichette giuste 🏷️
+
+**Perché**: un codice pieno di `<div>` è un labirinto. I tag semantici dicono *che cosa* c’è dentro, non solo *come* appare.
+
+```html
+<!-- ❌ -->
+<div class="header">...</div>
+<div class="footer">...</div>
+
+<!-- ✅ -->
+<header>...</header>
+<footer>...</footer>
+```
+
+**Analogia**: scatole del trasloco 📦. Se scrivi “ROBA” su tutto (`div`), impazzisci. Se scrivi “CUCINA”, “BAGNO”, sai subito dove mettere le mani.
+
+> Nota pro: pensa anche a `<main>`, `<nav>`, `<article>`, `<section>`, `<aside>`.
+
+---
+
+### 4. Il Re H1 — Uno (quasi sempre) 👑
+
+**Perché**: l’`<h1>` è il titolo principale della pagina. Metterne tanti rende più difficile capire qual è l’argomento centrale (per persone e motori di ricerca).
+
+```html
+<!-- ❌ -->
+<h1>Benvenuti</h1>
+...
+<h1>I nostri servizi</h1>
+
+<!-- ✅ -->
+<h1>Benvenuti nel sito</h1>
+...
+<h2>I nostri servizi</h2>
+```
+
+**Analogia**: la prima pagina di un giornale 📰. C’è un solo TITOLONE. Il resto sono sottotitoli. Se tutto è titolone, niente è importante.
+
+> Nota pro: la gerarchia H è una *mappa* del contenuto (struttura), non un modo per scegliere la dimensione del font.
+
+---
+
+### 5. Label e Input — La coppia indivisibile 🎯
+
+**Perché**: senza `label` collegata con `for`/`id`, l’utente deve cliccare *precisissimo* nel campo. Con la label, clicchi anche sul testo: più comodo (soprattutto da mobile) e più accessibile.
+
+```html
+<!-- ❌ -->
+Nome: <input type="text">
+
+<!-- ✅ -->
+<label for="nome">Nome:</label>
+<input type="text" id="nome" name="nome">
+```
+
+**Analogia**: l’interruttore della luce 💡. L’input è il meccanismo interno (piccolo). La label è la placca grande: rende facile “accendere” il campo.
+
+---
+
+### 6. Non saltare i gradini — Gerarchia H 🪜
+
+**Perché**: non passare da `h2` a `h4` solo perché “ti piace di più grande/piccolo”. La gerarchia serve a dare struttura, lo stile lo fai con CSS.
+
+```html
+<!-- ❌ -->
+<h2>Il prodotto</h2>
+<h4>Caratteristiche</h4>
+
+<!-- ✅ -->
+<h2>Il prodotto</h2>
+<h3>Caratteristiche</h3>
+```
+
+**Analogia**: una scala. Se salti i gradini, chi legge inciampa (e anche Google).
+
+---
+
+### 7. Niente link misteriosi — Dì dove porti 🔗
+
+**Perché**: “clicca qui” non dice nulla fuori contesto (screen reader, scansione veloce, SEO). Il testo del link deve avere significato da solo.
+
+```html
+<!-- ❌ -->
+<a href="menu.pdf">Clicca qui</a>
+
+<!-- ✅ -->
+<a href="menu.pdf">Scarica il menù (PDF)</a>
+```
+
+**Analogia**: un cartello stradale con scritto “Vai là”. Meglio “Stazione Centrale”. 🚏
+
+---
+
+### 8. No CSS inline — Separazione dei compiti 👕
+
+**Perché**: lo stile dentro l’HTML diventa ingestibile. Con classi CSS cambi una volta e aggiorni tutto, senza “caccia al tesoro” tra i tag.
+
+```html
+<!-- ❌ -->
+<p style="color: red; font-size: 20px;">Attenzione</p>
+
+<!-- ✅ -->
+<p class="alert">Attenzione</p>
+```
+
+**Analogia**: lo stile inline è un tatuaggio: difficile da cambiare. Le classi sono vestiti: li cambi quando vuoi.
+
+---
+
+### 9. Regola della valigia — Annidamento sensato 🧳
+
+**Perché**: alcuni elementi non possono stare dentro altri (es. un `<div>` dentro un `<p>` è markup invalido). Risultato: HTML confuso e rendering imprevedibile.
+
+```html
+<!-- ❌ -->
+<p>Ecco il mio <div>BOX</div> testo</p>
+
+<!-- ✅ -->
+<p>Ecco il mio testo.</p>
+<div class="box">BOX</div>
+```
+
+**Analogia**: non puoi mettere una valigia in un portafoglio. Ma puoi mettere un portafoglio in una valigia.
+
+---
+
+### 10. Virgolette sempre — Attributi puliti 👟
+
+**Perché**: a volte “funziona lo stesso”, finché non smette. Le virgolette evitano ambiguità e rendono il codice più leggibile e robusto.
+
+```html
+<!-- ❌ -->
+<input type=text class=big>
+
+<!-- ✅ -->
+<input type="text" class="big">
+```
+
+**Analogia**: come allacciarsi le scarpe. Puoi camminare con i lacci sciolti… finché non voli.
+
+---
+
+## Bonus (super consigliati)
+
+### 11. Form “onesto” — Type giusto + `required` + `autocomplete` ✅
+
+**Perché**: aiuti l’utente (soprattutto da mobile), riduci errori e migliori accessibilità.
+
+```html
+<!-- ❌ -->
+<input type="text" placeholder="Email">
+
+<!-- ✅ -->
+<label for="email">Email</label>
+<input
+  id="email"
+  name="email"
+  type="email"
+  autocomplete="email"
+  required
+>
+```
+
+**Analogia**: è come compilare un modulo con qualcuno che ti guida (“qui serve un’email vera”), invece di lasciarti nel caos.
+
+---
+
+### 12. Bottoni e link non sono intercambiabili 🔘🔗
+
+**Perché**: un link (`<a>`) serve a **navigare**, un bottone (`<button>`) serve a **fare un’azione**. Se li scambi, rovini UX, accessibilità e comportamento da tastiera.
+
+```html
+<!-- ❌: azione mascherata da link -->
+<a href="#" onclick="salva()">Salva</a>
+
+<!-- ✅ -->
+<button type="button" onclick="salva()">Salva</button>
+
+<!-- ❌: navigazione mascherata da bottone -->
+<button onclick="location.href='/prezzi'">Prezzi</button>
+
+<!-- ✅ -->
+<a href="/prezzi">Prezzi</a>
+```
+
+**Analogia**: un link è una porta (ti porta altrove), un bottone è un interruttore (fa succedere qualcosa).
