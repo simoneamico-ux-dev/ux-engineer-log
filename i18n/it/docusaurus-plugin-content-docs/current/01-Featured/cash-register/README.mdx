@@ -1746,79 +1746,29 @@ Il primo è stato un semplice sito web. Ho deciso di non seguire altre tracce, b
   <strong>Versione Desktop</strong>
   <br />
   <br />
-  <img src="https://github.com/user-attachments/assets/29dde0dd-9a3a-4608-9ac3-aab15c09e46c" alt="Maintenance App Desktop Website" />
+  ![Maintenance App Desktop Website](./assets/maintenance-website-1.webp)
   <br />
   <br />
   <br />
   <strong>Versione Mobile</strong>
   <br />
   <br />
-  <img src="https://github.com/user-attachments/assets/9edebfac-d712-433a-8058-f73367094345" alt="Maintenance App Mobile Website" />
+  <img 
+    src={require('./assets/maintenance-website-2.webp').default} 
+    alt="Maintenance App Mobile Website" 
+    style={{width: '60%'}}
+  />
 </details>
 
 ### Mosaic: Il Progetto del Cuore
 
-Ma ora veniamo al progetto dove ho lasciato il cuore: **Mosaic**.<br />
-È stato facile capire le esigenze avendo due psicologhe in famiglia.
-Trovi il prototipo Figma qui sotto, così puoi esplorare l'intera esperienza:
-<table>
-<tr>
-<td width="50%">
-  <img 
-    src={require('./assets/cash-register-3.webp').default} 
-    alt="Anteprima Mosaic Project (Pagina Principale)" 
-    style={{width: '100%'}}
-  />
-</td>
-<td width="50%">
-  <h3>Prototipo Interattivo</h3>
-  <p>Esplora tutte le schermate e i flussi dell'app nel prototipo Figma completo.</p>
-  <br />
-  <a href="https://www.figma.com/proto/HDYGy1YlsayxweWqN7sBJE/Mosaic?node-id=1-27&p=f&t=wfrcP529dntLd1bU-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A27">
-    <b>→ Apri il prototipo Figma</b>
-  </a>
-</td>
-</tr>
-</table>
-<br />
+<div className="alert alert--info" style={{marginBottom: '1rem', paddingBottom: 1}}>
 
-Ci tengo davvero molto a sottolineare che questo non è uno strumento pensato per sostituire il processo di ascolto attivo del terapeuta. L’obiettivo, al contrario, è integrarsi nel workflow attuale. Il processo ideale prevede che il terapeuta prenda i consueti appunti, su carta o su dispositivo, e poi "vomiti" a Mosaic nel modo più spontaneo possibile quanto avvenuto in seduta: sarà l’AI a occuparsi della strutturazione e della stesura in modo chiaro. Questo garantirebbe una notevole organizzazione e permetterebbe di risparmiare tempo a casa nel ricomporre i vari pezzi, perché a farlo è Mosaic. Inoltre, aiuta a ottimizzare il tempo tra una seduta e l’altra: invece di ritrovarsi con poche parole sparse sul taccuino e dover ricostruire più tardi, o peggio ancora a casa, il filo degli eventi, è possibile fissare subito ciò che è avvenuto e poi, mentre ci si prepara per il paziente successivo, dare un’occhiata alla sua overview per rinfrescare rapidamente la memoria. Questo può diventare un vero e proprio nuovo modo di lavorare, più fluido e sostenibile.
+Il terzo progetto per la certificazione è stato il più significativo: **Mosaic**, un tool AI per psicoterapeuti.
+Considerata la profondità del visual design (analisi del Liquid Glass, Accessibilità) e la filosofia Open Source, l'ho trattato come un UI Design Concept a sé stante.
 
-Mosaic non fornisce alcun consiglio, nemmeno nella Full Analysis. La scelta della direzione terapeutica rimarrà sempre e soltanto nelle mani del terapeuta. Non appoggio affatto gli strumenti sostitutivi, come tool che ascoltano le riunioni o simili e fungono da “secondo cervello”. Dobbiamo continuare a fidarci delle nostre capacità, altrimenti rischiamo che si atrofizzino in cambio di un iniziale guadagno immediato.
-
-**Il Liquid Glass Leggero e l'Accessibilità:**<br />
-Ho utilizzato un effetto Liquid Glass molto leggero. Per quanto io sia tra le persone a cui piace esteticamente, ritengo che faccia importanti compromessi con l'accessibilità visiva.<br />
-
-Ecco come Apple ha utilizzato la tab bar nell'app Musica, ci tengo a precisare che nella maggior parte delle applicazioni iOS l'effetto non è tono su tono come in questo esempio:<br />
-<br />
-<img 
-    src={require('./assets/cash-register-6.webp').default} 
-    alt="Apple Music tab bar" 
-    style={{width: '40%'}}
-/>
-<br />
-<br />
-E come ho deciso di utilizzarlo in modo molto leggero in Mosaic:<br />
-<br />
-<img 
-    src={require('./assets/cash-register-7.webp').default} 
-    alt="Mosaic tab bar" 
-    style={{width: '40%'}}
-/>
-
-Apple permette comunque da iOS 26.1 di disattivarlo nelle impostazioni e quindi ritornare al solo effetto blur. Purtroppo, come appreso nel corso Google, questa non è la strada migliore: adeguarsi agli standard di accessibilità non aiuta solo alcuni, ma porta benefici a tutti. Trovo corretto renderlo opzionale, ma già questo dettaglio lascia intuire che qualcosa non funziona.
-<br />
-
-**La Filosofia: Rovesciare le Aspettative:**<br />
-Per quanto riguarda il lato open source, ho voluto giocare con aspettative e grafica attesa. Se si chiede a qualcuno di immaginarsi un'app open source del genere, si immaginerà una grafica poco "Apple", complessità e conseguente difficoltà d'uso.<br />
-Se invece chiedessimo di immaginare un'app che ha come modello di business l'abbonamento da oltre 30 euro al mese, AI integrata e tutte queste feature premium, ci si aspetterebbe esattamente la grafica di Mosaic.<br />
-Quindi ho optato per uno stile iOS, seppur reinterpretato in alcuni aspetti, con semplicità assoluta come priorità principale. Il tutto, però, completamente Open Source.
-È incredibile come un progetto come questo è realmente fattibile già al giorno d'oggi, usando modelli che girano in locale come Microsoft Phi-4 mini. <br />
-Mi spiego meglio:
-Premetto che non essendo un backend developer potrei sbagliarmi ma a seguito di svariate ricerche ho scoperto che Phi-4 mini sarebbe il candidato ideale per questo tipo di compito.
-Offre output eccellenti e velocemente, l'unico neo rimane il peso: oltre 7GB, ma per un terapeuta attento alla privacy questo non è un problema.
-Per telefoni con hardware inferiore ad iPhone 15 Pro si potrebbe optare per modelli più leggeri come Phi-3 mini o Llama 3.2 3B che tra l'altro pesano circa 2 GB.
-Per il modello di trascrizione per fortuna c'è OpenAI Whisper Base, pesa circa 140 MB, open source e garantisce trascrizioni eccellenti!
+**[Vai al Concept di Mosaic](../mosaic-ui-concept/README.mdx)**
+</div>
 
 ### Cosa Ho Imparato
 

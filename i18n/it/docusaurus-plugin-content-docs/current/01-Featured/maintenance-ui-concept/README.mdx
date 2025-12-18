@@ -4,4 +4,127 @@ sidebar_label: 'Maintenance'
 title: 'Maintenance'
 ---
 
+
 # Maintenance
+
+### Due Settimane di Pausa Strategica
+
+Sono passate quasi 2 settimane dall'ultimo progetto, questo perché ho voluto completare il corso 5 di Google UX, fare il prototipo high fidelity, risistemare tutti gli appunti aggiungendo il tutto al Vademecum UI & UX e infine prepararmi adeguatamente per una Pitching Session relativa a un esame universitario.
+
+Quest'ultima è andata alla grande! Nonostante sia una professoressa esigente che raramente si sbilancia e richiede frequentemente modifiche ai progetti, nel nostro caso ha detto di pensare di farci una startup. Si è trattato di un progetto atto a ridurre lo spreco alimentare grazie alla tecnologia. Nella prossima sessione dovremo presentare il concept definitivo, mentre in questa prima fase abbiamo presentato la ricerca blue sky (un tipo di ricerca che mira a rompere i pattern di design abituali e pensare fuori dagli schemi), mandala, personas, user journey, casi studio, mind map e sistema prodotto, costruendo così la base per arrivare alla How Might We (HMW) question.
+
+---
+
+### Il Fallimento dell'Usability Test
+
+In merito invece al corso Google ho cercato di somministrare l'usability test del prototipo low fidelity a 5 miei colleghi, ma senza successo.
+
+Ho inviato un messaggio dettagliato via WhatsApp che includeva:
+- Spiegazione del progetto industriale
+- 7 punti di istruzioni dettagliate
+- Una storia di simulazione industriale
+- 3 situazioni diverse da testare con registrazione schermo
+- Domande finali
+
+**Il risultato?** Un disastro completo. Ho ricevuto:
+- Non-risposta da qualcuno
+- "Non sono in quel reparto" da qualcun altro
+- "Lo leggo più tardi" senza seguito
+- "Messaggio troppo lungo, non ho voglia"
+
+### L'Analisi degli Errori
+
+Accusare queste persone di antipatia o mancanza di voglia non era la strada corretta. Poteva esserlo se avessi ricevuto 4 sì ed 1 no, ma un risultato così schiacciante significava che **il problema ero io**.
+Ci ho riflettuto ed ecco cos'ho capito:
+
+<div style={{
+  borderLeft: '4px solid #ff4b4bff',
+  backgroundColor: 'rgba(140, 28, 28, 0.08)',
+  padding: '1.2rem',
+  marginBottom: '2rem',
+  borderRadius: '4px'
+}}>
+<h4 style={{color: '#ff4b4bff', margin: '0 0 10px 0'}}>I miei 4 Errori Critici</h4>
+
+**Errore 1 - Messaggio Troppo Lungo:**
+Ho scritto un messaggio veramente lungo ed il formato degli smartphone con cui è stato letto non aiuta affatto. La lettura su dispositivo mobile non è paragonabile a quella su computer: lo schermo ridotto costringe a continui scroll e l'attenzione cala drasticamente. Inoltre i messaggi WhatsApp occupano solo una porzione centrale ancora più stretta della larghezza dello schermo, amplificando ulteriormente il problema. Era una ricetta perfetta per il fallimento.
+
+**Errore 2 - Complicazione Inutile:**
+Ho reso il compito più complicato di quel che è. D'altronde si tratta solo di: registrare lo schermo, aprire un link, cercare di fare quello che è stato chiesto e rispondere a qualche domanda, tutto questo per sole 3 volte.
+
+**Errore 3 - Mancanza di Incentivo Chiaro:**
+Non ho detto qual'era il regalo. Avevo in mente di dare un **buono Amazon da 20€**, avrei dovuto dirlo fin da subito perché non si sarebbero mai aspettati una ricompensa simile.
+
+**Errore 4 - Formato Sbagliato:**
+Al posto di un solo messaggio testuale, avrei dovuto mandare precedentemente un messaggio vocale. Sarebbe stato percepito in modo molto più personale, quindi difficilmente non avrebbe ricevuto risposta e non avrei dovuto spiegare il compito nel dettaglio fin da subito.
+</div>
+
+> **"Se Lo Capisco Io, Lo Capiscono Tutti"**
+>
+> Non ho voluto insistere, perché facendolo sarebbe stato quasi impossibile fargli capire che il problema era mio di come avevo scritto il messaggio e non la loro inadeguatezza nel comprenderlo.
+> Come avevo letto in "Don't Make Me Think" gli utenti tendono ad attribuire le cause dei propri errori in una UI a se stessi piuttosto che al progettista, quando invece il problema è sempre del progettista. Questo è un principio fondamentale che non mi limito a citare: l'ho visto con i miei occhi in azione.
+
+---
+
+### Il Primo Test di Usabilità Ufficiale
+
+Dopo aver rinunciato ad insistere con i colleghi ho fatto il mio primissimo **test di usabilità moderato** (vis-à-vis) con un mio amico che inizierà realmente a lavorare in fabbrica a breve. Non si è trattato quindi di una semplice simulazione, ma di un test con una persona che metterà davvero piede in quell'ambiente per la prima volta.
+Avevo già fatto test di usabilità per altri progetti di applicazioni al lavoro, progetti di cui parlerò in qualche README futuro, ma mai ero arrivato ad una profondità simile. Ho cercato di evitare qualsiasi bias e per la seconda volta ero caduto nella trappola del **"se lo capisco io lo capiscono tutti"**.
+
+**Risultato del test:** Solo 1 dei 3 task è fallito.
+
+### Da Material a Metro Design
+
+Dopo questo test ho subito cercato di risolvere i problemi. Per fortuna era solo uno dei 3 task a fallire. Ho letteralmente stravolto la UI, sono passato da un Material a un **Metro Design**.
+Ho scelto quest'ultimo perché ho notato che nelle fabbriche, compresa la mia, **Windows** è il sistema operativo più usato, ciò avrebbe garantito la comfort zone per molte più persone.
+Mi sono armato del mio primo telefono, un **Nokia Lumia 520** e ne ho preso ispirazione per la progettazione.
+
+<br />
+
+**Prima (Material Design)**
+<img 
+  src={require('./assets/low-fidelity-maintenance-app.webp').default} 
+  alt="Interfaccia Low Fidelity Material Design"
+  style={{borderRadius: '8px', width: '100%', marginBottom: '30px', border: '1px solid var(--ifm-color-emphasis-200)'}} 
+/>
+
+**Dopo (Metro Design / Stile Windows)**
+<img 
+  src={require('./assets/high-fidelity-maintenance-app.webp').default} 
+  alt="Interfaccia High Fidelity Metro Design"
+  style={{borderRadius: '8px', width: '100%', border: '1px solid var(--ifm-color-emphasis-200)'}} 
+/>
+
+### Il Secondo Test: Stessa Sorpresa
+
+Ho rieffettuato il test ed era di nuovo lo stesso task a fallire. Sorprendente vero?
+Ebbene **era l'organizzazione dell'ordine degli scenari che sbagliavo, ma anche l'indicatore temporale risultava ambiguo**.
+
+Come emerso dalle testuali parole dell'intervistato: non si capiva se l'intervento era previsto tra tot tempo, era in corso da tot tempo oppure si sarebbe svolto tra tot tempo. Avrei dovuto mettere per primo la creazione di una nuova segnalazione, perché si trattava di un'emergenza. L'utente non avrebbe mai dovuto perdere tempo nel cercare se qualcun altro aveva già segnalato, bensì: ho un'emergenza, segnalo subito, poi controllo come è stato risolto o se qualcun altro aveva già segnalato.
+
+Oltre a ciò, il primo task (controllare se qualcun altro aveva già segnalato) era troppo semplice da completare: l'informazione era presente nella prima schermata appena si apriva l'app. L'utente si sarebbe aspettato di dover cercare la schermata giusta, non che si sarebbe trovata immediatamente davanti ai propri occhi. Dopo avergli mostrato dov'era, si è anche sentito stupido per non averla vista subito.
+
+### La Lezione Finale
+
+Ho l'high fidelity pronto che somministrerò appena tornerò a lavoro, dopo l'operazione, ai colleghi. Mi aspetto che vada tutto liscio ma ho capito che **in questo campo non si può dare nulla di scontato**.
+O si perde completamente personalità e quindi si copia spudoratamente ciò che già funziona, oppure bisogna scontrarsi con tutte le variabili e l'essere umano ne è colmo.
+
+---
+
+### UI Bonus: Il Sito Web
+
+Mentre l'App è in fase di testing, ho sviluppato il **Sito Web di vendita** per il servizio come parte dei requisiti del Google Certificate.
+
+<details>
+  <summary><strong>Vedi Anteprima Sito</strong></summary>
+
+  **Versione Desktop**
+  <br />
+  <img src={require('./assets/maintenance-website-1.webp').default} alt="Maintenance App Desktop" style={{borderRadius: '8px'}} />
+  <br />
+  <br />
+  
+  **Versione Mobile**
+  <br />
+  <img src={require('./assets/maintenance-website-2.webp').default} alt="Maintenance App Mobile" style={{width: '50%', borderRadius: '8px'}} />
+</details>
