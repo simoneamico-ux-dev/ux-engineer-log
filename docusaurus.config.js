@@ -102,13 +102,6 @@ i18n: {
         */
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
-            position: 'left',
-            label: 'Documentation',
-          },
-          {to: '/about', label: 'About', position: 'left'},
-          {
             href: 'https://github.com/simoneamico-ux-dev/ux-engineer-system',
             label: 'GitHub',
             position: 'right',
