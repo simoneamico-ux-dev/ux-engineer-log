@@ -1,8 +1,6 @@
 {
   "label": "HTML & CSS",
   "position": 2,
-  "link": {
-    "type": "generated-index",
-    "description": "Projects focused on layouts, design systems, and responsive web design."
-  }
+  "collapsible": true,
+  "collapsed": true
 }

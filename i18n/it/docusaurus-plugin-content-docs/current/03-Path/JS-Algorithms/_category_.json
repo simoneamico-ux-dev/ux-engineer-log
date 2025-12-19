@@ -1,8 +1,6 @@
 {
-  "label": "Algoritmi JavaScript",
-  "position": 1,
-  "link": {
-    "type": "generated-index",
-    "description": "Una raccolta di algoritmi e strutture dati per affinare il pensiero logico."
-  }
+  "label": "JavaScript Algorithms",
+  "position": 3,
+  "collapsible": true,
+  "collapsed": true
 }

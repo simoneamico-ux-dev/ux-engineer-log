@@ -448,3 +448,18 @@ I fixed it by applying a very high z-index (99999)
   src: local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma");
   font-display: swap;
 }
+
+
+/* SIDEBAR LEVEL 2 COLOR FIX */
+/*
+I noticed that after disabling the "generated-index" link, these sub-categories
+defaulted to a stark white color (active state).
+I forced the standard neutral menu color here to ensure visual consistency
+across the entire navigation tree.
+*/
+.theme-doc-sidebar-item-category-level-2 > div > .menu__link,
+.theme-doc-sidebar-item-category-level-2 > div > .menu__link--active {
+    color: var(--ifm-menu-color) !important;
+    background-color: transparent !important;
+    font-weight: 600;
+}
