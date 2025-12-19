@@ -158,8 +158,15 @@ La differenza filosofica è profonda: `null` è il vuoto buddhista - un vuoto pi
 
 
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
 
 
 ### 2\. Tipi di Dati - Le Forme dell'Informazione 🎭
@@ -482,9 +489,17 @@ L'oggetto `Math` è come avere una calcolatrice scientifica sempre a disposizion
     ```
 
 
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
 
 
 ### 3\. Date - Il Calendario e l'Orologio 📅
@@ -531,8 +546,15 @@ console.log(`Operazione durata: ${end - start}ms`);
 
 
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
 
 
 ### 4\. Booleani (Boolean) - Il Sistema Binario della Logica ✅❌
@@ -570,8 +592,15 @@ if (!username) { // !username è true
 
 
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
 
 
 ### 5\. Array (Array) - Le Liste Ordinate 🗂️
@@ -747,9 +776,19 @@ Questi metodi sono "gentili": creano un **nuovo array** senza toccare l'original
     ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 6\. Oggetti (Object) - I Contenitori Strutturati 📇
@@ -917,9 +956,19 @@ voti.forEach(voto => {
 ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 7\. Operatori Logici e Sintassi ⚙️
@@ -1288,9 +1337,19 @@ let count = 0;  // Contatore tentativi falliti (max 3 prima del blocco account)
 Un buon commento è come una nota a margine su un libro difficile: non ripete il testo, ma ti dà la chiave di lettura per capirlo.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 9\. Controllo del Flusso - Le Decisioni del Programma 🚦
@@ -1478,9 +1537,19 @@ Questo stile è immensamente superiore perché:
   * Gestisce tutti i casi limite all'inizio, come un buttafuori che filtra la coda.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 10\. Cicli - Le Ripetizioni Automatizzate 🔄
@@ -1992,9 +2061,19 @@ const indici = arr.map((_elemento, indice) => {
 ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 12\. Scope - La Visibilità delle Variabili 👁️
@@ -2200,9 +2279,19 @@ const luigi = new Giocatore();
 ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 14\. Zucchero Sintattico (vs Funzioni Costruttore) 👻
@@ -2248,9 +2337,19 @@ mario.saluta();
 I due esempi sopra fanno *esattamente la stessa identica cosa*. La parola `class` è solo un "travestimento" più pulito e leggibile per creare una funzione costruttore e assegnare metodi al suo `prototype`.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 15\. `constructor()` e Parametri 🛠️
@@ -2286,9 +2385,19 @@ const piattaforma2 = new Piattaforma(250, 400);
 Se non devi impostare nulla, puoi omettere il `constructor` (JavaScript ne userà uno vuoto di default).
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 16\. `new` (I 4 Passaggi) ✨
@@ -2303,9 +2412,19 @@ Cosa fa *davvero* la parola chiave `new`? È un processo magico che avviene in q
 Non sei tu che fai `return this` nel costruttore, lo fa `new` per te.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 17\. `this` (Contesto dell'istanza) 👈
@@ -2345,9 +2464,19 @@ c2.incrementa(); // Output: 1 (this === c2)
 `this` è il ponte che collega lo *stampo* generico (la classe) all'oggetto *concreto* (l'istanza).
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 18\. Proprietà di Classe (Sintassi Moderna)
@@ -2387,9 +2516,19 @@ const player = new Giocatore("Sonic");
 Funziona esattamente allo stesso modo, è solo più ordinato.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 19\. Metodi (nel `prototype`) 🎒
@@ -2409,9 +2548,19 @@ Dove vanno a finire le funzioni (i "metodi") come `saluta()` o `incrementa()`?
 Questo meccanismo (la *prototype chain*) è incredibilmente efficiente. Hai un solo manuale di istruzioni (`prototype`) per migliaia di oggetti (istanze).
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 20\. Pattern: Metodo `claim()` (Disattivazione Oggetti)
@@ -2584,9 +2733,19 @@ Questi sono **eventi**, sono i "permessi di lavoro" che dicono al tuo codice: "O
 **Regola Pratica:** Usa sempre `<script defer>` nell'`<head>`. Se per qualche motivo non puoi, metti il tuo codice dentro un listener `DOMContentLoaded`. Evita `window.onload` a meno che tu non debba *davvero* aspettare il caricamento delle immagini.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 22\. DOM Manipulation - Il Ponte con il Browser 🌉
@@ -2876,9 +3035,19 @@ Come per il contenuto, hai due modi: quello diretto (e sporco) e quello pulito (
     *Perché usarlo?* Previene che il tuo stile o script "trapeli" in componenti annidati più profondamente. Ti dà un controllo chirurgico sulla selezione.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 23\. Eventi - Ascoltare e Reagire ⚡
@@ -3136,9 +3305,19 @@ btn.addEventListener("click", () => {
     *Attenzione:* Blocca l'intera interfaccia. Le app moderne evitano `confirm` e usano modali personalizzati (come `<dialog>`) per un'esperienza migliore.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 24\. Dialog e Modali 🪟
@@ -3501,9 +3680,19 @@ Ci sono due modi per disegnare forme:
     ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 30\. Dimensioni Canvas (Risoluzione vs. Dimensione)
@@ -3550,9 +3739,19 @@ canvas.height = window.innerHeight;
 C'è un "effetto collaterale" importante: ogni volta che modifichi `canvas.width` o `canvas.height` con JavaScript, il **canvas viene istantaneamente e completamente cancellato**. È come prendere un foglio di carta nuovo di zecca. Per questo motivo, le dimensioni si impostano *all'inizio* (o in un evento `resize`, ridisegnando tutto).
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 31\. requestAnimationFrame (Il Game Loop) ❤️
@@ -3610,9 +3809,19 @@ Perché non usare semplicemente `setInterval(gameLoop, 16)`?
 3.  **Fluidità:** Il browser può ottimizzare `rAF`, raggruppando animazioni e garantendo un risultato visivo più fluido.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 32\. Logica di Gioco - Dare un'Anima al Codice 🎮
@@ -3960,9 +4169,19 @@ Il mondo non esiste tutto subito. Il mondo viene "costruito" solo un attimo prim
 * **Infinite Scroll**: Moderno e fluido (Frizione zero), ma devi gestire bene la memoria!
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 35\. Best Practice di Stile e Qualità
@@ -4119,9 +4338,19 @@ Questo è un esempio perfetto di Separazione delle Responsabilità.
       * **Regola:** Usa `innerHTML` solo se 1) sei *tu* a scrivere l'HTML o 2) la fonte è 100% sicura e fidata.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 36\. Immutabilità e Stile
@@ -4221,9 +4450,19 @@ Come scambiare i valori di due variabili.
     Questo è più pulito, conciso e fa la stessa identica cosa.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 37\. Evoluzione del Codice
@@ -4935,9 +5174,19 @@ capitalizza("ciao mondo"); // "Ciao Mondo"
 ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 ### 40\. Call Stack e Ricorsione - La Torre di Piatti 📚
 
@@ -5168,9 +5417,19 @@ console.timeEnd("Veloce");
 La ricorsione è un concetto elegante, e la memorizzazione la rende uno strumento pratico e potente.
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 41\. Algoritmi Pratici - Le Ricette del Codice 🧮
@@ -5536,9 +5795,19 @@ console.log(lcm(21, 6));    // 42
 ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 42\. Sanitizzazione e Validazione Input 🛡️
@@ -5783,9 +6052,19 @@ console.log(passwordFeedback.errors);
 ```
 
 
+
+
 <br />
----
 <br />
+<br />
+<br />
+
+
+
+
+
+
+
 
 
 ### 43\. Pattern di Gestione Stato 🎯

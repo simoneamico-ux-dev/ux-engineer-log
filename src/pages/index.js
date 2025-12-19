@@ -1,7 +1,11 @@
 import React from 'react';
-import { Redirect } from '@docusaurus/router';
+import {Redirect} from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 export default function Home() {
-  // Redirect immediato alla documentazione (Progetto Principale)
-  return <Redirect to="/docs/Featured/rpg-creature-search-app" />;
+  const {i18n} = useDocusaurusContext();
+  if (i18n.currentLocale === 'it') {
+    return <Redirect to="/it/docs/Featured/ux-engineer-log" />;
+  }
+  return <Redirect to="/docs/Featured/ux-engineer-log" />;
 }
