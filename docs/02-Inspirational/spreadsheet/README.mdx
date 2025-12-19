@@ -9,36 +9,44 @@ import TabItem from '@theme/TabItem';
 
 # Spreadsheet
 
-<table>
-  <tr>
-    <td>
-      ![Time Analysis Simulation English Version](./assets/spreadsheet-1-en.webp)
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <i>Practical example of the Spreadsheet analyzing usability test data.</i>
-    </td>
-  </tr>
-</table>
+<div style={{ textAlign: 'center', marginBottom: '20px' }}>
+  <img
+    src={require('./assets/spreadsheet-1-en.webp').default}
+    alt="Time Analysis Simulation English Version"
+    width="100%"
+    loading="lazy"
+    decoding="async"
+    style={{
+      borderRadius: '10px',
+      border: '1px solid var(--ifm-table-border-color)'
+    }}
+  />
+  <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
+    <em>Practical example of the Spreadsheet analyzing usability test data.</em>
+  </p>
+</div>
 The data entered simulate completion times (in seconds) and errors made by 5 users testing a new feature (for example, a checkout process).
 The Mean (93s) and Median (90s) of completion times are very close. This is an excellent signal, because it indicates a consistent and predictable user experience, without extreme outliers that would distort the average. <br />
 Total Errors (5) are analyzed together with times, revealing a key insight: the user with the longest time (110s) was also the one who made the most errors (3).
 In a real context, this result provides a clear next step: the UX team should immediately review the session recording of that specific user (User 3) to identify the design flaw that caused both the delay and the errors, leading to targeted optimization.
 
 <br />
-<table>
-  <tr>
-    <td align="center">
-      ![Test A:B Simulation English version](./assets/spreadsheet-2-en.webp)
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <i>Practical example of the Spreadsheet used to quickly analyze A/B Test results.</i> 
-    </td>
-  </tr>
-</table>
+<div style={{ textAlign: 'center', marginBottom: '20px' }}>
+  <img
+    src={require('./assets/spreadsheet-2-en.webp').default}
+    alt="Test A:B Simulation English version"
+    width="100%"
+    loading="lazy"
+    decoding="async"
+    style={{
+      borderRadius: '10px',
+      border: '1px solid var(--ifm-table-border-color)'
+    }}
+  />
+  <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
+    <em>Practical example of the Spreadsheet used to quickly analyze A/B Test results.</em>
+  </p>
+</div>
 
 This simulation compares two designs: "Design A" (the original Control) and "Design B" (the New version), to see which of the two has a better Conversion Rate for the "Request Demo" button.
 The spreadsheet calculates the Conversion Rate for both, showing Design A at 12.4% and Design B at 15.4%. This metric is crucial because it measures the persuasive strength of each design.<br />

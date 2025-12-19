@@ -13,25 +13,36 @@ slug: /Featured/mosaic-ui-concept
 Let's get to the project where I left my heart: **Mosaic**.<br />
 It was easy to understand the needs having two psychologists in the family.
 You can find the Figma prototype below, so you can explore the entire experience:
-<table>
-<tr>
-<td width="50%">
-  <img 
-    src={require('./assets/mosaic-1.webp').default} 
-    alt="Mosaic Project Preview (Home Screen)" 
-    style={{width: '100%'}}
-  />
-</td>
-<td width="50%">
-  <h3>Interactive Prototype</h3>
-  <p>Explore all screens and flows of the app in the complete Figma prototype.</p>
-  <br />
-  <a href="https://www.figma.com/proto/HDYGy1YlsayxweWqN7sBJE/Mosaic?node-id=1-27&p=f&t=wfrcP529dntLd1bU-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A27">
-    <b>→ Open Figma Prototype</b>
-  </a>
-</td>
-</tr>
-</table>
+<div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '30px', alignItems: 'center', marginBottom: '30px' }}>
+  
+  <div style={{ flex: '1 1 300px' }}> 
+    <img 
+      src={require('./assets/mosaic-1.webp').default} 
+      alt="Mosaic Project Preview (Home Screen)" 
+      width="100%"
+      loading="lazy"
+      decoding="async"
+      style={{
+        borderRadius: '10px',
+        display: 'block'
+      }}
+    />
+  </div>
+
+  <div style={{ flex: '1 1 300px' }}>
+    <h3 style={{ marginTop: 0 }}>Interactive Prototype</h3>
+    <p>Explore all screens and flows of the app in the complete Figma prototype.</p>
+    
+    <a 
+      href="https://www.figma.com/proto/HDYGy1YlsayxweWqN7sBJE/Mosaic?node-id=1-27&p=f&t=wfrcP529dntLd1bU-1&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A27" 
+      target="_blank"
+      style={{ fontWeight: 'bold', textDecoration: 'none' }}
+    >
+      → Open Figma Prototype
+    </a>
+  </div>
+
+</div>
 <br />
 I really want to emphasize that this is not a tool designed to replace the therapist's active listening process. The goal, on the contrary, is to integrate into the current workflow. The ideal process involves the therapist taking their usual notes, on paper or device, and then "dumping" to Mosaic as spontaneously as possible what happened during the session: the AI will take care of structuring and writing it clearly. This would ensure considerable organization and save time at home recomposing the various pieces, because Mosaic does it for you. Additionally, it helps optimize the time between sessions: instead of finding yourself with a few scattered words in a notebook and having to reconstruct the thread of events later, or even worse at home, you can immediately capture what happened and then, while preparing for the next patient, take a quick look at their overview to rapidly refresh your memory. This can become a true new way of working, more fluid and sustainable.
 
@@ -44,21 +55,27 @@ Here's how Apple used the tab bar in the Music app. I want to clarify that in mo
 <img 
     src={require('./assets/mosaic-2.webp').default} 
     alt="Apple Music tab bar" 
-    style={{width: '40%'}}
+    style={{
+      width: '40%',
+      borderRadius: '6px'}}
 />
 <br />
 <br />
 <img 
     src={require('./assets/mosaic-3.webp').default} 
     alt="Apple Music tab bar" 
-    style={{width: '40%'}}
+    style={{
+      width: '40%',
+      borderRadius: '6px'}}
 />
 <br />
 <br />
 <img 
     src={require('./assets/mosaic-4.webp').default} 
     alt="Apple Music tab bar" 
-    style={{width: '40%'}}
+    style={{
+      width: '40%',
+      borderRadius: '6px'}}
 />
 <br />
 <br />
@@ -66,11 +83,15 @@ And how I decided to use it very lightly in Mosaic:
 <img 
     src={require('./assets/mosaic-5.webp').default} 
     alt="Mosaic tab bar" 
-    style={{width: '40%'}}
+    style={{
+      width: '40%',
+      borderRadius: '6px'}}
 />
 <br />
 <br />
 Starting with iOS 26.1, Apple still allows users to disable it in the settings and return to the standard blur effect. Unfortunately, as we learned in the Google course, this isn’t the best approach: complying with accessibility standards doesn’t just help a few it benefits everyone. I find it reasonable to make it optional, but even this detail already suggests that something isn’t quite right.
+
+
 
 **The Philosophy: Reversing Expectations:**<br />
 Regarding the open source side, I wanted to play with expectations and expected graphics. If you ask someone to imagine an open source app of this kind, they'll imagine un-"Apple" graphics, complexity, and consequent difficulty of use.<br />
