@@ -1,0 +1,146 @@
+---
+sidebar_position: 1
+title: UX Engineer Log
+description: "Il diario di bordo evoluto in un sistema di ingegneria UX. Dagli appunti al codice, dal Jailbreak all'architettura React."
+slug: /Featured/ux-engineer-log
+---
+
+# UX Engineer Log
+
+### Dagli Appunti al Codice
+Questo progetto rappresenta il punto di svolta del mio percorso. Se **zero-to-ux-engineer-logs** era il mio diario di bordo statico (GitHub usato come se fosse Google Drive), **UX Engineer Log** è il momento in cui il diario ha preso vita.
+Ho migrato tutto da una struttura statica a un'architettura **Docusaurus (React)**, trasformando la documentazione in un vero prodotto software con Design System, localizzazione e performance da produzione.
+
+### Le Origini: Il "Jailbreak" Mentale
+**Tutto nasce da un iPod Touch 4G che mi ha rapito quando avevo 9 anni.**
+Apple offriva un'esperienza perfetta ma chiusa.
+Mettendo l'iPod in **DFU Mode** e installando **Cydia**, ho imparato la mia prima lezione fondamentale: l'User Experience è malleabile.
+Si può modificare, si può migliorare, ma si può anche rompere. <br />
+Non era solo cambiare uno sfondo. Era installare **WinterBoard** per ridisegnare la UI, usare **Barrel** per sentire l'effetto cubo 3D sotto le dita, o configurare **SBSettings** per correggere una UX fallata di Apple che ancora non permetteva toggle rapidi per il Wi-Fi.
+Ogni tweak comportava il rischio reale di "brikkare" il dispositivo (o di finire in un *Boot Loop* infinito), e ogni ripristino d'emergenza era una lezione su come funzionano i file di sistema sotto il cofano.
+
+A quell'età andavo in biblioteca solo per avere la mia ora giornaliera di utilizzo dell'iMac con Mac OS X Lion. Anni dopo, creare il progetto **RPG Creature Search App** è stata un'emozione incredibile: replicare quella UI Aqua, simulare apertura, chiusura e minimizzazione delle finestre, ma sempre in chiave personale, è stata una delle esperienze più belle della mia vita.
+Quella curiosità infantile di guardare oltre l'interfaccia standard è la stessa che oggi mi spinge a non accontentarmi di un "funziona", ma a voler capire il perché.
+
+### L'Esperienza in Trincea (La Fabbrica)
+Prima ancora di definirmi UX Engineer, lo sono diventato per necessità in una fabbrica alimentare.
+Mentre i software gestionali ufficiali venivano ignorati perché complessi e distanti dalla realtà, io vedevo i miei colleghi stressati.
+Dopo appena 4 giorni nel reparto, ho capito che la pianificazione della produzione giornaliera era il collo di bottiglia. Da lì è nata l'idea di sviluppare una Web App per gestire i consumi orari e prevedere le quantità da produrre.
+Ne ero ossessionato. Ci lavoravo durante le pause, in bagno, nei turni di notte, tra una serie e l'altra in palestra, arrivando a raffreddarmi i muscoli perché la mente era persa nel creare lo strumento che avrebbero usato tutti.
+**Così è stato.** L'app ha raggiunto un'adozione organica del 100%, utilizzata da tutto il reparto su tutti e 3 i turni. Non perché fosse graficamente perfetta, ma perché risolveva un problema reale. Lì ho capito che l'empatia è la skill tecnica più potente che esista.
+Ben presto, colleghi di altri reparti hanno iniziato a chiedermi soluzioni simili. È stato in quel momento che ho fatto UX senza conoscere la UX: facevo usability test e interviste agli utenti senza conoscere il metodo formale, ma applicandone l'essenza.
+
+### Un Tributo Visivo: Cydia
+Tornando a UX Engineer Log, per l'aspetto visivo ho voluto omaggiare le mie origini.
+Mi sono armato del mio tablet, ho schizzato un wireframe, l'ho riportato in High Fidelity su Figma e mi sono addentrato in Docusaurus.
+I temi scelti, **Coffee & Sand** (Light Mode) e **Warm Night** (Dark Mode), non sono colori casuali. Riprendono le tonalità dell'icona originale di **Cydia**.
+La parte alta (chiara) è diventata la mia Light Mode, la parte bassa (scura) la mia Dark Mode. Un cerchio che si chiude.
+
+### La Filosofia del "Mac Silenzioso"
+**La velocità è una forma di rispetto.**
+Possedendo un MacBook Intel, ho notato che molti siti moderni fanno decollare le ventole con effetti pesanti, non ottimizzati ed eccessivi. Io ho scelto una strada diversa:
+* **Asset Colocation:** Tutto in locale, convertito in WebP e WebM. Nessun hotlink esterno.
+Grazie a questo progetto ho aggiunto alla mia cartella "Tool" sul desktop strumenti come **CloudConvert** (per le GIF) e **Squoosh**, imparando a regolare manualmente la percentuale di dettaglio per ogni singola immagine. L'obiettivo era trovare il compromesso matematico migliore tra peso ridotto e qualità immutata, senza sacrificare nemmeno un pixel visibile.
+* **GPU Efficiency:** Ho ricreato gli effetti visivi con CSS calcolato e tinte piatte invece di pesanti sfocature live (Backdrop Filter).
+* **Risultato:** Sul mio Mac Intel, il sito mantiene la temperatura tra i 36°C e i 40°C. La stessa temperatura di quando sono sul desktop a riposo. Le ventole rimangono al minimo regime assoluto (~1800 rpm). Silenzio assoluto.
+
+Per me, uno strumento di documentazione deve poter rimanere sempre aperto in background, come un'estensione silenziosa del sistema, senza mai consumare risorse (CPU o batteria) necessarie al lavoro principale.
+
+### Il mio "Secondo Cervello"
+Più andavo avanti, più capivo che non potevo ricordare tutto.
+La **Search Bar** e i **Vademecum** integrati in questo sito non sono esercizi di stile, ma il mio secondo cervello.
+Sono manuali pratici che ho costruito perché non potevo farne a meno. Analizzando la cronologia della repository (**zero-to-ux-engineer-logs**), si può vedere come appuntavo i concetti nuovi man mano che li incontravo nei progetti, per poi integrarli successivamente nei Vademecum. Come spiegherò in alcuni README specifici, queste note sono state vitali per completare le sfide più complesse.
+
+### Manuale di Manutenzione
+Prima di questo progetto non avevo mai usato seriamente il terminale. Credevo rallentasse il processo, invece ha migliorato drasticamente la qualità del mio lavoro, portandomi a ragionare a compartimenti stagni, o meglio, "a commit".
+Mi sono appuntato i comandi essenziali in un file .txt sul desktop; riporto qui quelli che, alla prova dei fatti, si sono rivelati indispensabili.
+
+#### Git Workflow
+Comandi essenziali per il version control.
+
+```bash
+# Vedere lo stato attuale (quali file sono cambiati)
+git status
+
+# Vedere le modifiche nel dettaglio (codice riga per riga) - Premi Q per uscire
+git diff
+
+# Preparare tutti i file per il salvataggio
+git add .
+
+# Creare il "pacchetto" (Commit) con un messaggio
+git commit -m "tipo(scope): descrizione delle modifiche"
+
+# Spedire tutto online (GitHub/Netlify)
+git push
+```
+
+#### Docusaurus Operations
+
+Comandi per la gestione dell'ambiente React/Docusaurus.
+
+```bash
+# Avviare il sito in locale (Development Mode)
+npm run start
+# oppure
+npm run serve
+
+# Creare la build di produzione (Output statico)
+npm run build
+
+# Pulire la cache (se le modifiche non appaiono)
+npm run clear
+```
+
+#### Mobile Testing
+
+Procedura per testare la UX su dispositivi reali (iPhone/Android) nella rete locale.
+
+1. **Avviare il server esposto:**
+```bash
+npm run start -- --host 0.0.0.0
+```
+
+
+2. **Trovare l'indirizzo IP locale del Mac:**
+```bash
+ipconfig getifaddr en0
+```
+
+
+3. **Sul dispositivo mobile:**
+Aprire il browser e navigare su: `IP_TROVATO:3000` (es. `192.168.1.5:3000`).
+
+#### Utility
+
+* **Mappa file:** Generare una mappa della struttura (esclusi node_modules e file nascosti):
+```bash
+find . -not -path '*/.*' -not -path './node_modules*' > mappa.txt
+```
+
+
+* **Ottimizzazione:** CloudConvert (GIF to WebM) e Squoosh (WebP).
+
+### Cosa ho imparato
+
+**Architettura & React:**
+
+* **Docusaurus & MDX:** Trasformare markdown statico in componenti interattivi
+* **Component Swizzling:** Personalizzare i componenti interni del framework
+* **i18n Routing:** Gestire un sito bilingue (IT/EN) mantenendo il codice pulito
+
+**Performance Engineering:**
+
+* **Asset Optimization:** WebP (Quality 90) e WebM per ridurre il peso del 90%
+* **Lazy Loading & Async Decoding:** Strategie di caricamento immagini
+* **Thermal Management:** Ottimizzare il CSS per non stressare la GPU/CPU
+
+**Metodologia:**
+
+* **Git Storytelling:** Usare i commit (feat, fix, style) per raccontare la storia del progetto
+* **Design System Consistency:** Standardizzare bordi, ombre e spaziature su centinaia di pagine
+* **Utility-First CSS:** Abbandonare il CSS monolitico per classi riutilizzabili
+
+---
+
+**Prossimi Step**: Continuare a riempire questo sistema con nuovi design ed algoritmi, ma soprattutto augurarti il benvenuto in **UX Engineer Log**!
