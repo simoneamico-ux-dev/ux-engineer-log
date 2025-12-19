@@ -92,7 +92,7 @@ const config = {
               },
               {
                 label: 'Inspirational',
-                to: '/docs/Inspirational/factory-legacy-app',
+                to: '/docs/Inspirational/city-skyline',
               },
               {
                 label: 'Path',
