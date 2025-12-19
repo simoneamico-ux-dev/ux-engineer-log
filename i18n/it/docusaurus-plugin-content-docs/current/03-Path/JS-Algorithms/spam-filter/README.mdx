@@ -9,8 +9,27 @@ import TabItem from '@theme/TabItem';
 
 # Spam Filter
 
-![Anteprima del progetto Spam Filter – screenshot che mostra un messaggio correttamente identificato come spam](./assets/spam-filter-1.webp)
-![Anteprima del progetto Spam Filter – screenshot che mostra un messaggio correttamente identificato come non spam](./assets/spam-filter-2.webp)
+<img
+  src={require('./assets/spam-filter-1.webp').default}
+  alt="Anteprima del progetto Spam Filter – screenshot che mostra un messaggio correttamente identificato come spam"
+  width="100%"
+  loading="lazy"
+  decoding="async"
+  style={{
+    borderRadius: '10px'
+  }}
+/>
+
+<img
+  src={require('./assets/spam-filter-2.webp').default}
+  alt="Anteprima del progetto Spam Filter – screenshot che mostra un messaggio correttamente identificato come non spam"
+  width="100%"
+  loading="lazy"
+  decoding="async"
+  style={{
+    borderRadius: '10px'
+  }}
+/>
 
 ### Il Progetto
 Spam filter sviluppato con Regular Expressions (Regex), validazione di messaggi in tempo reale e pattern matching avanzato. Un'applicazione che identifica messaggi spam attraverso una deny list di pattern regex specifici.

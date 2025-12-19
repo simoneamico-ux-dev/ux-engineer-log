@@ -9,17 +9,33 @@ import TabItem from '@theme/TabItem';
 
 # Magazine
 
-<img 
+<div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-end', gap: '20px', flexWrap: 'wrap', marginBottom: '20px' }}>
+  
+  <img 
     src={require('./assets/magazine-1.webp').default} 
     alt="Magazine Project Desktop Version Preview" 
-    style={{width: '60%'}}
-/>
+    loading="lazy"
+    decoding="async"
+    style={{
+      borderRadius: '10px',
+      width: '55%',       
+      minWidth: '300px'
+    }}
+  />
 
-<img 
+  <img 
     src={require('./assets/magazine-2.webp').default} 
     alt="Magazine Project Mobile Version Preview" 
-    style={{width: '40%'}}
-/>
+    loading="lazy"
+    decoding="async"
+    style={{
+      borderRadius: '10px',
+      width: '35%',       
+      minWidth: '150px'
+    }}
+  />
+
+</div>
 
 ### The Project
 Digital magazine developed with CSS Grid, replicating the typical layout of a magazine with columns, sections, and complex graphic elements. A return to the origins of editorial design applied to the web.

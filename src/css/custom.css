@@ -43,6 +43,7 @@
 
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(15, 33, 41, 0.14);
+    --ifm-toc-border-color: var(--sidebar-separator);
     --ifm-menu-color: #574c45;       /* Inactive links (contrast fix) */
     --ifm-toc-link-color: #574c45;   /* TOC Inactive links */
     
@@ -87,6 +88,7 @@
     
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(90, 124, 155, 0.35);
+    --ifm-toc-border-color: var(--sidebar-separator);
     --ifm-menu-color: #b9a193;
     --ifm-toc-link-color: #b9a193;
 
