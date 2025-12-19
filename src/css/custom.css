@@ -404,18 +404,47 @@ I fixed it by applying a very high z-index (99999)
     display: none !important;
   }
 
-    
     /* Here we make code blocks smaller on mobile to get a better overall view */
-
-
     .theme-code-block pre,
     .theme-code-block code,
     .prism-code {
     font-size: 0.75rem !important; 
-    
     line-height: 1.4 !important; /* We also slightly reduce line height to make the layout more vertically compact */
-    
     -webkit-text-size-adjust: 100%; /* We disable iOS automatic text zooming */
 }
 
+}
+
+
+/* FOOTER CONTRAST FIX (Goal: 100/100 A11y) */
+/* The default grey links on dark background fail WCAG contrast ratio. */
+.footer__link-item {
+    color: #e0e0e0 !important; /* Almost white (High Contrast) */
+    opacity: 1 !important;     /* Remove opacity that kills contrast */
+    transition: color 0.2s ease;
+}
+
+.footer__link-item:hover {
+    color: var(--ifm-color-primary) !important;
+    text-decoration: underline;
+}
+
+.footer__title {
+    color: #ffffff !important; /* Pure white for headers */
+    opacity: 1 !important;
+}
+
+.footer__copyright {
+    color: #dcdcdc !important; /* Light grey for text */
+    opacity: 1 !important;
+}
+
+/* PERFORMANCE FIX (Goal: FCP < 1.0s) */
+/* Forces system fonts to load immediately without waiting */
+@font-face {
+  font-family: 'system-ui';
+  font-style: normal;
+  font-weight: 400;
+  src: local(".SFNS-Regular"), local(".SFNSText-Regular"), local(".HelveticaNeueDeskInterface-Regular"), local(".LucidaGrandeUI"), local("Segoe UI"), local("Ubuntu"), local("Roboto-Regular"), local("DroidSans"), local("Tahoma");
+  font-display: swap;
 }
