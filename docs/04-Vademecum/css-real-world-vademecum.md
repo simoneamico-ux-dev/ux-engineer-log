@@ -12,8 +12,6 @@ title: 'CSS Real World Vademecum'
 
 **What it does**: Imports professional fonts for free from Google into your site.
 
-**Snippet in the HTML `<head>`**:
-
 ```html
 <!-- Single font -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
@@ -80,8 +78,6 @@ body {
 ### Universal selector `*`
 
 **What it does**: Selects ALL the elements on the page. Literally all of them!
-
-**Snippet**:
 
 ```css
 * {

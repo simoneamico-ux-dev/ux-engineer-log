@@ -12,8 +12,6 @@ title: 'HTML Real World Vademecum'
 
 **What it does**: Tells the browser "Hey, this is a modern HTML document!"
 
-**Base snippet**:
-
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -409,8 +407,6 @@ title: 'HTML Real World Vademecum'
 ### `<img>` - Images
 
 **What it does**: Displays an image
-
-**Full snippet**:
 
 ```html
 <img 

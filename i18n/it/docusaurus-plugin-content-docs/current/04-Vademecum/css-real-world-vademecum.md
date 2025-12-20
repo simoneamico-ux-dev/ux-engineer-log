@@ -11,7 +11,6 @@ title: 'CSS Real World Vademecum'
 ### Link Google Fonts
 **Cosa fa**: Importa font professionali gratis da Google nel tuo sito.
 
-**Snippet nel `<head>` HTML**:
 ```html
 <!-- Font singolo -->
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
@@ -71,7 +70,6 @@ body {
 ### Selettore universale `*`
 **Cosa fa**: Seleziona TUTTI gli elementi della pagina. Proprio tutti!
 
-**Snippet**:
 ```css
 * {
   box-sizing: border-box;

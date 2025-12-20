@@ -4102,8 +4102,6 @@ Don’t treat all users the same. A user with the latest iPhone connected to hom
 
 **What it does**: Lets your code “feel” the quality of the user’s connection and decide how heavy the data to download should be.
 
-**Snippet**:
-
 ```javascript
 const connection = navigator.connection;
 
@@ -4126,8 +4124,6 @@ Here, you’re doing the same thing: instead of blocking the user, you give them
 **What it does**: Instead of forcing the user to click “Load more” (friction), it automatically loads new content when the user reaches the bottom of the page.
 
 **How it works**: You create a “sentinel” (an invisible element) at the end of the list. When this sentinel enters the viewport, loading triggers.
-
-**Snippet**:
 
 ```javascript
 // 1. The sentinel (at the bottom of the HTML)

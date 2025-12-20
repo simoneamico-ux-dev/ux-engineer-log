@@ -4114,8 +4114,6 @@ Non trattare tutti gli utenti allo stesso modo. Un utente con l'ultimo iPhone co
 
 **Cosa fa**: Permette al codice di "sentire" la qualità della connessione dell'utente e decidere quanto pesanti devono essere i dati da scaricare.
 
-**Snippet**:
-
 ```javascript
 const connection = navigator.connection;
 
@@ -4138,8 +4136,6 @@ Ecco, tu stai facendo la stessa cosa: invece di bloccare l'utente, gli dai un'es
 **Cosa fa**: Invece di costringere l'utente a cliccare "Carica altri" (frizione), carica automaticamente i nuovi contenuti quando l'utente arriva in fondo alla pagina.
 
 **Come funziona**: Crei una "sentinella" (un elemento invisibile) in fondo alla lista. Quando questa sentinella entra nello schermo, scatta il caricamento.
-
-**Snippet**:
 
 ```javascript
 // 1. La sentinella (in fondo all'HTML)

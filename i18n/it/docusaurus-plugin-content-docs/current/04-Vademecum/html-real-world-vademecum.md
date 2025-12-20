@@ -11,7 +11,6 @@ title: 'HTML Real World Vademecum'
 ### Il documento HTML
 **Cosa fa**: Dice al browser "Ehi, questo è un documento HTML moderno!"
 
-**Snippet base**:
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -372,7 +371,6 @@ title: 'HTML Real World Vademecum'
 ### `<img>` - Le immagini
 **Cosa fa**: Mostra un'immagine
 
-**Snippet completo**:
 ```html
 <img 
     src="gatto.jpg" 
