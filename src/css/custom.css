@@ -36,10 +36,12 @@
     /* Layout Backgrounds & Borders */
     --frame-background: #9B795A;
     --ifm-background-color: #E4D6C9;
-    --card-border-color: #433e3a;
+    --card-border-color: #6b6053;
     --ifm-color-content: #000000;
     --ifm-navbar-background-color: #E4D6C9;
     --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.18) !important;
+    --button-border-color: #322d26;
+    --button-border-color-hover: #ae9a83;
 
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(15, 33, 41, 0.14);
@@ -82,9 +84,12 @@
     --frame-background: #140A07;
     --ifm-background-color: #322620;
     --card-border-color: #574C43;
+    --card-border-color-hover: #998874;
     --ifm-color-content: #FFFFFF;
     --ifm-navbar-background-color: #322620;
     --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.35) !important; /* Dark Mode adjustment (the black shadow is less visible, so the opacity has been increased) */
+    --button-border-color: #a7805a;
+    --button-border-color-hover: #716454;
     
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(90, 124, 155, 0.35);
@@ -160,6 +165,13 @@ html, body {
     border-top: none;
 }
 
+.pagination-nav__link {
+    border: 1px solid var(--button-border-color) !important;
+}
+
+.pagination-nav__link:hover {
+    border-color: var(--button-border-color-hover) !important;
+}
 
 /* COMPONENTS: Search Bar */
 
