@@ -1420,7 +1420,16 @@ Qualche giorno fa ero in macchina che attendevo una persona e nell'attesa mi son
 
 Non ho avuto bisogno di ispirazioni esterne questa volta, perché mi sono ispirato alla mia prima app creata con Figma. Era un compito del corso di Breccia che feci, nella quale usai alcune foto di Lucy, la mia cagnolina, metto due schermate qui sotto.
 
-![La mia prima App](./assets/palindrome-checker-3.webp)
+<img
+  src={require('./assets/palindrome-checker-3.webp').default}
+  alt="La mia prima App"
+  width="100%"
+  loading="lazy"
+  decoding="async"
+  style={{
+    borderRadius: '10px'
+  }}
+/>
 
 Da esso ho preso la scelta dei colori che ho poi adattato agli sfondi di ogni cosa, dalla card ai bottoni, ognuno estratto da ogni "situazione" creata in Figma, avendo prima prototipato lì, come sempre.
 A dire il vero devo ancora informarmi in merito ma suppongo che il dare background-image diversi ad ogni elemento che cambiano sempre rispetto alla schermata successiva e precedente non sia una best practice.
