@@ -588,7 +588,7 @@ title: 'HTML Real World Vademecum'
 
 
 
-## 6. Accessibilità - Per tutti! ♿
+## 6. Accessibilità - Per tutti!
 
 ### Attributi ARIA base
 
@@ -663,7 +663,7 @@ title: 'HTML Real World Vademecum'
 
 
 
-## 8. Librerie esterne - Superpoteri! 🦸‍♂️
+## 8. Librerie esterne - Superpoteri!
 
 ### Font Awesome - Icone bellissime
 **Nel `<head>`**:
@@ -698,7 +698,7 @@ title: 'HTML Real World Vademecum'
 
 ## I 10 comandamenti dell'HTML
 
-### 1. Alt Text — La voce dell’immagine 🗣️
+### 1. Alt Text — La voce dell’immagine
 
 **Perché**: se l’immagine non carica (o l’utente usa uno screen reader), l’`alt` è ciò che “rimane”. Aiuta anche SEO e accessibilità.
 
@@ -716,7 +716,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 2. Chiudi i tag — Il principio del panino 🥪
+### 2. Chiudi i tag — Il principio del panino
 
 **Perché**: se apri un tag e non lo chiudi, il browser “indovina” e rischi di rompere il layout di tutto ciò che segue.
 
@@ -736,7 +736,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 3. Semantica — Le etichette giuste 🏷️
+### 3. Semantica — Le etichette giuste
 
 **Perché**: un codice pieno di `<div>` è un labirinto. I tag semantici dicono *che cosa* c’è dentro, non solo *come* appare.
 
@@ -756,7 +756,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 4. Il Re H1 — Uno (quasi sempre) 👑
+### 4. Il Re H1 — Uno (quasi sempre)
 
 **Perché**: l’`<h1>` è il titolo principale della pagina. Metterne tanti rende più difficile capire qual è l’argomento centrale (per persone e motori di ricerca).
 
@@ -778,7 +778,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 5. Label e Input — La coppia indivisibile 🎯
+### 5. Label e Input — La coppia indivisibile
 
 **Perché**: senza `label` collegata con `for`/`id`, l’utente deve cliccare *precisissimo* nel campo. Con la label, clicchi anche sul testo: più comodo (soprattutto da mobile) e più accessibile.
 
@@ -795,7 +795,7 @@ Nome: <input type="text">
 
 ---
 
-### 6. Non saltare i gradini — Gerarchia H 🪜
+### 6. Non saltare i gradini — Gerarchia H
 
 **Perché**: non passare da `h2` a `h4` solo perché “ti piace di più grande/piccolo”. La gerarchia serve a dare struttura, lo stile lo fai con CSS.
 
@@ -813,7 +813,7 @@ Nome: <input type="text">
 
 ---
 
-### 7. Niente link misteriosi — Dì dove porti 🔗
+### 7. Niente link misteriosi — Dì dove porti
 
 **Perché**: “clicca qui” non dice nulla fuori contesto (screen reader, scansione veloce, SEO). Il testo del link deve avere significato da solo.
 
@@ -829,7 +829,7 @@ Nome: <input type="text">
 
 ---
 
-### 8. No CSS inline — Separazione dei compiti 👕
+### 8. No CSS inline — Separazione dei compiti
 
 **Perché**: lo stile dentro l’HTML diventa ingestibile. Con classi CSS cambi una volta e aggiorni tutto, senza “caccia al tesoro” tra i tag.
 
@@ -845,7 +845,7 @@ Nome: <input type="text">
 
 ---
 
-### 9. Regola della valigia — Annidamento sensato 🧳
+### 9. Regola della valigia — Annidamento sensato
 
 **Perché**: alcuni elementi non possono stare dentro altri (es. un `<div>` dentro un `<p>` è markup invalido). Risultato: HTML confuso e rendering imprevedibile.
 
@@ -862,7 +862,7 @@ Nome: <input type="text">
 
 ---
 
-### 10. Virgolette sempre — Attributi puliti 👟
+### 10. Virgolette sempre — Attributi puliti
 
 **Perché**: a volte “funziona lo stesso”, finché non smette. Le virgolette evitano ambiguità e rendono il codice più leggibile e robusto.
 
@@ -880,7 +880,7 @@ Nome: <input type="text">
 
 ## Bonus (super consigliati)
 
-### 11. Form “onesto” — Type giusto + `required` + `autocomplete` ✅
+### 11. Form “onesto” — Type giusto + `required` + `autocomplete`
 
 **Perché**: aiuti l’utente (soprattutto da mobile), riduci errori e migliori accessibilità.
 
@@ -903,7 +903,7 @@ Nome: <input type="text">
 
 ---
 
-### 12. Bottoni e link non sono intercambiabili 🔘🔗
+### 12. Bottoni e link non sono intercambiabili
 
 **Perché**: un link (`<a>`) serve a **navigare**, un bottone (`<button>`) serve a **fare un’azione**. Se li scambi, rovini UX, accessibilità e comportamento da tastiera.
 

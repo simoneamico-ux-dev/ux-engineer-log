@@ -645,7 +645,7 @@ title: 'HTML Real World Vademecum'
 
 
 
-## 6. Accessibility - For everyone! ♿
+## 6. Accessibility - For everyone!
 
 ### Basic ARIA attributes
 
@@ -736,7 +736,7 @@ title: 'HTML Real World Vademecum'
 
 
 
-## 8. External libraries - Superpowers! 🦸‍♂️
+## 8. External libraries - Superpowers!
 
 ### Font Awesome - Beautiful icons
 
@@ -775,7 +775,7 @@ title: 'HTML Real World Vademecum'
 
 ## The 10 commandments of HTML
 
-### 1. Alt Text — The voice of the image 🗣️
+### 1. Alt Text — The voice of the image
 
 **Why**: if the image doesn’t load (or the user uses a screen reader), the `alt` is what “remains”. It also helps SEO and accessibility.
 
@@ -793,7 +793,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 2. Close your tags — The sandwich principle 🥪
+### 2. Close your tags — The sandwich principle
 
 **Why**: if you open a tag and don’t close it, the browser “guesses” and you risk breaking the layout of everything that follows.
 
@@ -813,7 +813,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 3. Semantics — The right labels 🏷️
+### 3. Semantics — The right labels
 
 **Why**: code full of `<div>` is a maze. Semantic tags tell *what* is inside, not just *how* it looks.
 
@@ -833,7 +833,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 4. King H1 — One (almost always) 👑
+### 4. King H1 — One (almost always)
 
 **Why**: `<h1>` is the main title of the page. Having many makes it harder to understand the central topic (for people and search engines).
 
@@ -855,7 +855,7 @@ title: 'HTML Real World Vademecum'
 
 ---
 
-### 5. Label and Input — The inseparable pair 🎯
+### 5. Label and Input — The inseparable pair
 
 **Why**: without a `label` connected with `for`/`id`, the user has to click *precisely* in the field. With the label, you can also click the text: more convenient (especially on mobile) and more accessible.
 
@@ -872,7 +872,7 @@ Name: <input type="text">
 
 ---
 
-### 6. Don’t skip steps — H hierarchy 🪜
+### 6. Don’t skip steps — H hierarchy
 
 **Why**: don’t jump from `h2` to `h4` just because you “like it bigger/smaller”. Hierarchy is for structure; styling is done with CSS.
 
@@ -890,7 +890,7 @@ Name: <input type="text">
 
 ---
 
-### 7. No mysterious links — Say where you’re going 🔗
+### 7. No mysterious links — Say where you’re going
 
 **Why**: “click here” says nothing out of context (screen readers, quick scanning, SEO). Link text must make sense on its own.
 
@@ -906,7 +906,7 @@ Name: <input type="text">
 
 ---
 
-### 8. No inline CSS — Separation of concerns 👕
+### 8. No inline CSS — Separation of concerns
 
 **Why**: styling inside HTML becomes unmanageable. With CSS classes you change once and update everything, without a “treasure hunt” through tags.
 
@@ -922,7 +922,7 @@ Name: <input type="text">
 
 ---
 
-### 9. The suitcase rule — Sensible nesting 🧳
+### 9. The suitcase rule — Sensible nesting
 
 **Why**: some elements can’t go inside others (e.g., a `<div>` inside a `<p>` is invalid markup). Result: confusing HTML and unpredictable rendering.
 
@@ -939,7 +939,7 @@ Name: <input type="text">
 
 ---
 
-### 10. Always use quotes — Clean attributes 👟
+### 10. Always use quotes — Clean attributes
 
 **Why**: sometimes it “still works”, until it doesn’t. Quotes avoid ambiguity and make code more readable and robust.
 
@@ -957,7 +957,7 @@ Name: <input type="text">
 
 ## Bonus (highly recommended)
 
-### 11. “Honest” forms — Right type + `required` + `autocomplete` ✅
+### 11. “Honest” forms — Right type + `required` + `autocomplete`
 
 **Why**: you help the user (especially on mobile), reduce errors, and improve accessibility.
 
@@ -980,7 +980,7 @@ Name: <input type="text">
 
 ---
 
-### 12. Buttons and links are not interchangeable 🔘🔗
+### 12. Buttons and links are not interchangeable
 
 **Why**: a link (`<a>`) is for **navigation**, a button (`<button>`) is for **an action**. If you swap them, you ruin UX, accessibility, and keyboard behavior.
 

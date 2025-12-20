@@ -2295,7 +2295,7 @@ Chapter 2: Advanced
 
 ## The 10 commandments of CSS
 
-### 1. No `!important` — If you always shout, nobody listens 📣
+### 1. No `!important` — If you always shout, nobody listens
 
 **Why**: `!important` breaks the cascade and makes CSS hard to maintain. If you use it often, you’re fighting against your own structure.
 
@@ -2314,7 +2314,7 @@ Chapter 2: Advanced
 
 ---
 
-### 2. Style with classes, not IDs — IDs are “too powerful” 🧨
+### 2. Style with classes, not IDs — IDs are “too powerful”
 
 **Why**: IDs have very high specificity and force you to write increasingly complicated selectors to override them.
 
@@ -2330,7 +2330,7 @@ Chapter 2: Advanced
 
 ---
 
-### 3. Short selectors — Don’t write “novels” to find an element 🔎
+### 3. Short selectors — Don’t write “novels” to find an element
 
 **Why**: long, ultra-specific selectors are fragile: change one `div` and everything breaks.
 
@@ -2346,7 +2346,7 @@ main .wrapper .content .card .title { font-weight: 700; }
 
 ---
 
-### 4. Don’t use inline CSS — Separation of concerns (again) 🧩
+### 4. Don’t use inline CSS — Separation of concerns (again)
 
 **Why**: inline style is hard to reuse and maintain. CSS should live in CSS.
 
@@ -2366,7 +2366,7 @@ main .wrapper .content .card .title { font-weight: 700; }
 
 ---
 
-### 5. Mobile-first — Start small, then expand 📱➡️🖥️
+### 5. Mobile-first — Start small, then expand
 
 **Why**: it’s more natural to build for small screens and then add complexity for larger ones.
 
@@ -2384,7 +2384,7 @@ main .wrapper .content .card .title { font-weight: 700; }
 
 ---
 
-### 6. Use relative units — The site must “breathe” 📏
+### 6. Use relative units — The site must “breathe”
 
 **Why**: `rem`, `%`, `vw`, `clamp()` make everything more adaptable. Pixels everywhere often create rigid layouts.
 
@@ -2400,7 +2400,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 7. Modern layouts — Flexbox and Grid, not “hacks” 🧱
+### 7. Modern layouts — Flexbox and Grid, not “hacks”
 
 **Why**: floats and various tricks are fragile. Flex and Grid are made specifically for layout.
 
@@ -2420,7 +2420,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 8. `box-sizing: border-box` — Measurements that don’t lie 📦
+### 8. `box-sizing: border-box` — Measurements that don’t lie
 
 **Why**: with `border-box`, padding and border are included in the width. You avoid “why is it overflowing??”.
 
@@ -2437,7 +2437,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 9. CSS variables — Don’t repeat yourself like a parrot 🦜
+### 9. CSS variables — Don’t repeat yourself like a parrot
 
 **Why**: repeated colors and spacing become a nightmare. Custom properties make everything more consistent and themeable.
 
@@ -2461,7 +2461,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 10. “Smart” animations — Move with `transform`, not with pain 🕺
+### 10. “Smart” animations — Move with `transform`, not with pain
 
 **Why**: animating `top/left/width/height` can be heavier. `transform` and `opacity` are usually smoother.
 
@@ -2481,7 +2481,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ## Bonus (highly recommended)
 
-### 11. Visible focus — Don’t remove the keyboard compass 🧭
+### 11. Visible focus — Don’t remove the keyboard compass
 
 **Why**: people who navigate with the keyboard need to see where they are. Removing the outline without an alternative is a trap.
 
@@ -2500,7 +2500,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 12. Respect “reduced motion” — Not everyone wants a roller coaster 🎢
+### 12. Respect “reduced motion” — Not everyone wants a roller coaster
 
 **Why**: some people suffer from excessive animations. With `prefers-reduced-motion` you make a pro move.
 

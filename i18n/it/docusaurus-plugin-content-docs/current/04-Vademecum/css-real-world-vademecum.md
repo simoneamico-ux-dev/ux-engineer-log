@@ -2184,7 +2184,7 @@ Capitolo 2: Avanzato
 
 ## I 10 comandamenti del CSS
 
-### 1. Niente `!important` — Se urli sempre, nessuno ti ascolta 📣
+### 1. Niente `!important` — Se urli sempre, nessuno ti ascolta
 
 **Perché**: `!important` rompe la cascata e rende il CSS difficile da mantenere. Se lo usi spesso, stai combattendo contro la tua stessa struttura.
 
@@ -2203,7 +2203,7 @@ Capitolo 2: Avanzato
 
 ---
 
-### 2. Stila con le classi, non con gli ID — Gli ID sono “troppo potenti” 🧨
+### 2. Stila con le classi, non con gli ID — Gli ID sono “troppo potenti”
 
 **Perché**: gli ID hanno specificità altissima e ti costringono a scrivere selettori sempre più complicati per sovrascriverli.
 
@@ -2219,7 +2219,7 @@ Capitolo 2: Avanzato
 
 ---
 
-### 3. Selettori corti — Non scrivere “romanzi” per trovare un elemento 🔎
+### 3. Selettori corti — Non scrivere “romanzi” per trovare un elemento
 
 **Perché**: selettori lunghi e super specifici sono fragili: basta cambiare una `div` e si rompe tutto.
 
@@ -2235,7 +2235,7 @@ main .wrapper .content .card .title { font-weight: 700; }
 
 ---
 
-### 4. Non usare CSS inline — Separazione dei compiti (di nuovo) 🧩
+### 4. Non usare CSS inline — Separazione dei compiti (di nuovo)
 
 **Perché**: lo stile inline è difficile da riutilizzare e da mantenere. Il CSS deve vivere nel CSS.
 
@@ -2255,7 +2255,7 @@ main .wrapper .content .card .title { font-weight: 700; }
 
 ---
 
-### 5. Mobile-first — Parti piccolo, poi espandi 📱➡️🖥️
+### 5. Mobile-first — Parti piccolo, poi espandi
 
 **Perché**: è più naturale costruire per schermi piccoli e poi aggiungere complessità per quelli grandi.
 
@@ -2273,7 +2273,7 @@ main .wrapper .content .card .title { font-weight: 700; }
 
 ---
 
-### 6. Usa unità relative — Il sito deve “respirare” 📏
+### 6. Usa unità relative — Il sito deve “respirare”
 
 **Perché**: `rem`, `%`, `vw`, `clamp()` rendono tutto più adattabile. I pixel ovunque spesso creano layout rigidi.
 
@@ -2289,7 +2289,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 7. Layout moderni — Flexbox e Grid, non “hack” 🧱
+### 7. Layout moderni — Flexbox e Grid, non “hack”
 
 **Perché**: float e trucchi vari sono fragili. Flex e Grid sono fatti apposta per layout.
 
@@ -2309,7 +2309,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 8. `box-sizing: border-box` — Misure che non mentono 📦
+### 8. `box-sizing: border-box` — Misure che non mentono
 
 **Perché**: con `border-box` padding e bordo sono inclusi nella larghezza. Eviti “perché sta sforando??”.
 
@@ -2326,7 +2326,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 9. Variabili CSS — Non ripeterti come un pappagallo 🦜
+### 9. Variabili CSS — Non ripeterti come un pappagallo
 
 **Perché**: colori e spaziature ripetute diventano un incubo. Le custom properties rendono tutto più consistente e tematizzabile.
 
@@ -2350,7 +2350,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 10. Animazioni “furbe” — Muovi con `transform`, non con dolore 🕺
+### 10. Animazioni “furbe” — Muovi con `transform`, non con dolore
 
 **Perché**: animare `top/left/width/height` può essere più pesante. `transform` e `opacity` di solito sono più fluidi.
 
@@ -2370,7 +2370,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ## Bonus (super consigliati)
 
-### 11. Focus visibile — Non togliere la bussola da tastiera 🧭
+### 11. Focus visibile — Non togliere la bussola da tastiera
 
 **Perché**: chi naviga con tastiera deve vedere dove si trova. Togliere l’outline senza alternativa è una trappola.
 
@@ -2389,7 +2389,7 @@ h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); }
 
 ---
 
-### 12. Rispetta “reduced motion” — Non tutti vogliono montagne russe 🎢
+### 12. Rispetta “reduced motion” — Non tutti vogliono montagne russe
 
 **Perché**: alcune persone soffrono animazioni eccessive. Con `prefers-reduced-motion` fai un gesto da pro.
 

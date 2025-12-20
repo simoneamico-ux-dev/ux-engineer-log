@@ -1,0 +1,252 @@
+---
+sidebar_position: 6
+title: Cheat Sheet (Quick Ref)
+description: A complete quick reference table for JavaScript syntax and methods.
+---
+
+# JavaScript Complete Cheat Sheet
+
+A comprehensive quick reference guide containing all the syntax, methods, and patterns covered in the previous chapters.
+
+---
+
+| Category | Tool/Concept | Analogy/Purpose | Example/Syntax |
+| --- | --- | --- | --- |
+| **FOUNDATIONS - VARIABLES** |  |  |  |
+|  | `let` | The Whiteboard: mutable value | `let counter = 0;`<br />`counter = 1;` |
+|  | `const` | The Safe: immutable reference | `const USER_ID = 123;`<br />`const user = &#123;name: 'Mario'&#125;; user.name = 'Luigi';` (OK) |
+|  | `var` | The Old Way (avoid!) | Has `function scope` and problematic `hoisting` |
+|  | `null` vs `undefined` | Intentional empty vs. Accidental empty | `let x = null;` (chosen by you)<br />`let y;` (value of `y` is `undefined`) |
+| **FOUNDATIONS - DATA TYPES** |  |  |  |
+|  | String | Text with methods | `const s = "Hello";` |
+|  | Template Literals (` ) | Strings with "holes" for variables | ` `Hello $&#123;name&#125;` `` `Total: $&#123;price * 1.22&#125;` \`` |
+|  | Escape chars | Special characters | `\n` (newline)<br />`\t` (tab)<br />`"` (quote)<br />`\` (backslash) |
+|  | `.split()` | String Slicer | `"a-b-c".split('-')` → `['a', 'b', 'c']`<br />`"hi".split('')` → `['h', 'i']` |
+|  | `.charCodeAt()` | Character → Number (Old) | `"A".charCodeAt(0)` → `65` (breaks with emoji "🎉") |
+|  | `.codePointAt()` | Character → Number (Modern) | `"🎉".codePointAt(0)` → `127881` (correct) |
+|  | `String.fromCharCode()` | Number → Character (Old) | `String.fromCharCode(65)` → `"A"` (doesn't handle emoji) |
+|  | `String.fromCodePoint()` | Number → Character (Modern) | `String.fromCodePoint(127881)` → `"🎉"` |
+|  | `.startsWith()` | Start Check (Intent) | `file.startsWith("doc")` → `true`<br />`"Hello".startsWith("H")` → `true` |
+|  | Number | IEEE 754, integers and decimals | `const n = 3.14;` |
+|  | Special Values | Non-numbers and infinities | `Infinity`, `-Infinity`<br />`NaN` (not equal to itself) |
+|  | `isNaN()` | Confused Customs Officer: "Is it... NaN?" | `isNaN("hi")` → `true` (converts first)<br />`isNaN(null)` → `false` (because `Number(null)` is 0) |
+|  | `Number.isNaN()` | Strict Customs Officer: "Is it *already* NaN?" | `Number.isNaN("hi")` → `false`<br />`Number.isNaN(NaN)` → `true` |
+|  | `Number()` | "All or nothing" conversion (strict) | `Number("42px")` → `NaN`<br />`Number("123")` → `123` |
+|  | `parseInt()` | Integer Extractor (tolerant) | `parseInt("42.5px", 10)` → `42`<br />`parseInt("1010", 2)` → `10` (binary) |
+| | <code>parseFloat()</code> | Decimal Extractor (tolerant) | <code>parseFloat("42.5px")</code> → <code>42.5</code><br /><code>parseFloat("3.14.15")</code> → <code>3.14</code> |
+|  | `Math` | Built-in scientific calculator | Static object, e.g., `Math.PI` |
+|  | `Math.floor()` | Rounds down to floor | `Math.floor(4.9)` → `4` |
+|  | `Math.ceil()` | Rounds up to ceiling | `Math.ceil(4.1)` → `5`<br />`Math.ceil(0.1)` → `1` |
+|  | `Math.round()` | Rounds to nearest | `Math.round(4.5)` → `5`<br />`Math.round(4.4)` → `4` |
+|  | `Math.random()` | Randomness Generator (0 - 0.99...) | `Math.random()`<br />`Math.floor(Math.random() * 10) + 1` (from 1 to 10) |
+|  | `Math.pow()` vs `**` | Exponentiation | `Math.pow(2, 3)` → `8`<br />`2 ** 3` → `8` (modern) |
+|  | `Math.sqrt()` | Square root (Readability) | `Math.sqrt(9)` → `3` (better than `9 ** 0.5`) |
+|  | Problem (IEEE-754) | "Wrong" decimal calculations | `0.1 + 0.2` → `0.30000000000000004` |
+|  | `.toFixed()` | Solution to *display* (string!) | `(0.1 + 0.2).toFixed(2)` → `"0.30"` |
+|  | `parseFloat()` (with `toFixed`) | Solution to *calculate* (number) | `parseFloat((0.1 + 0.2).toFixed(2))` → `0.30` |
+|  | `new Date()` | Creates a date object | `new Date()` (now)<br />`new Date("2025-01-15")` |
+|  | Tricky Methods (Date) | Watch out for bugs! | `getMonth()` → `0-11` (January is 0!)<br />`getDay()` → `0-6` (Sunday is 0!) |
+|  | `Date.now()` | Timestamp (milliseconds) | `Date.now()` (to measure performance or unique IDs) |
+|  | Boolean | True or False | `true` / `false` |
+|  | Truthy/Falsy | The "gray area" of truth | 6 falsy: `false, 0, "", null, undefined, NaN`<br />Everything else is truthy (even `[]` and `&#123;&#125;`) |
+|  | Creation `[]` vs `Array()` | Empty egg carton | `Array(5)` → `[ <5 empty items> ]` (not `[5]`) |
+|  | `.length` | How many items (property) | `arr[arr.length - 1]` (last item)<br />`arr.length = 0` (empties array) |
+|  | `Set` and `.size` | Collection of *unique* items | `new Set([1,1,2]).size` → `2`<br />`[...new Set([1,1,2])]` → `[1, 2]` |
+|  | `.push()` / `.pop()` | Modifies the *end* (Destructive) | `arr.push(3)` (adds)<br />`arr.pop()` (removes) |
+|  | `.unshift()` / `.shift()` | Modifies the *start* (Destructive) | `arr.unshift(1)` (adds)<br />`arr.shift()` (removes) |
+|  | `.splice()` | Swiss Army Knife (Destructive) | `arr.splice(1, 2, 'X')` (from index 1, remove 2, add 'X') |
+|  | `.sort()` | Sorts (Destructive!) | `arr.sort()` (alphabetical!)<br />`arr.sort((a, b) => a - b)` (numeric) |
+|  | `.filter()` | Sieve/Filter (Creates new array) | `arr.filter(n => n > 2)`<br />`arr.filter(u => u.active)` |
+|  | `.find()` | Detective (Finds the first) | `arr.find(n => n > 2)` → `3` (or `undefined`) |
+|  | `.findIndex()` | Detective (Finds the index) | `arr.findIndex(n => n > 2)` → `2` (or `-1`) |
+|  | `.includes()` | Checker (Is it there?) | `arr.includes(3)` → `true` |
+|  | `.indexOf()` | Locator (Where is it?) | `arr.indexOf(3)` → `2` (or `-1`) |
+|  | `.join()` | Gluer (Array → String) | `['a','b'].join('-')` → `"a-b"`<br />`['h','e','y'].join('')` → `"hey"` |
+|  | `.slice()` | Photocopier (Creates new array) | `arr.slice()` (copy)<br />`arr.slice(1, 3)` (from index 1 to 3 excluded) |
+|  | `.map()` | Transformation Factory | `arr.map(n => n * 2)`<br />`arr.map(u => u.name)` |
+|  | `.reduce()` | Boiler/Reducer (Array → Single Value) | `arr.reduce((acc, n) => acc + n, 0)` (sum)<br /><code>arr.reduce((obj, k) => (&#123;...obj, [k]: true&#125;), &#123;&#125;)</code> |
+|  | `.some()` | At least one? (true/false) | `arr.some(n => n > 2)` → `true` |
+|  | `.every()` | Everyone? (true/false) | `arr.every(n => n > 0)` → `true` |
+|  | `.fill()` | Bridge for `.map()` on `Array(N)` | `Array(3).fill(0)` → `[0, 0, 0]`<br />`Array(3).fill().map((*, i) => i)` → `[0, 1, 2]` |
+|  | Pattern: Create Range | Combines `Array(N)`, `.fill`, `.map` | `Array(5).fill().map((*, i) => i + 1)` → `[1, 2, 3, 4, 5]` |
+|  | Logic: Median | Find the center (requires sort) | Handle `length % 2 === 0` (even) vs `else` (odd) |
+|  | Object Creation `&#123;&#125;` | Container `key: value` | `const user = &#123; name: "Mario" &#125;` |
+|  | Nested Objects | Objects inside objects (Organization) | `user.address = &#123; city: "Rome" &#125;`<br />`user.keys = &#123; right: false &#125;` |
+|  | Access `.` vs `[]` vs `?.` | Dot (static) vs Brackets (dynamic) vs Safe | `obj.name` vs `obj[myVar]`<br />`obj.job?.salary` (safe) |
+|  | Shorthand Properties | ES6 Shortcut | `const user = &#123; name, age &#125;` (if `name` and `age` exist) |
+|  | Destructuring | "Unpacking" objects | `const &#123; name, age &#125; = user;`<br />`const &#123; name: userName &#125; = user;` |
+|  | `Object.keys()` | Array of keys only | `Object.keys(user)` → `['name', 'age']` |
+|  | `Object.values()` | Array of values only | `Object.values(user)` → `['Mario', 30]` |
+|  | `Object.entries()` | Array of `[k, v]` pairs | `Object.entries(user).forEach(([key, val]) => ...)` |
+|  | `hasOwnProperty()` | Property check (Old) | `user.hasOwnProperty('name')` → `true` |
+|  | `Object.hasOwn()` | Property check (Modern) | `Object.hasOwn(user, 'name')` → `true` |
+|  | Pattern: Frequency Map | Count occurrences | `counts[item] = (counts[item] |
+| FOUNDATIONS - OPERATORS |  |  |  |
+|  | ` |  | ` (OR) |
+|  | `!` (NOT) and "Toggle" | Boolean Inverter | `isMenuOpen = !isMenuOpen;`<br />`if (!user) &#123; ... &#125;` |
+|  | `...` (Spread) | "Empty the box" (Array/Objects) | `const copy = [...arr];`<br />`const o2 = &#123;...o1, b: 2&#125;;` |
+|  | `**` (Exponentiation) | Power calculation (Modern) | `2 ** 3` → `8`<br />`9 ** 0.5` → `3` |
+|  | Chained Assignment | Multiple initialization (risky) | `a = b = c = 10;` (Avoid if possible) |
+| **CONTROL - OUTPUT AND COMMENTS** |  |  |  |
+|  | `console` | Cockpit (Debug) | `console.log(variable)`<br />`console.error("Error!")` |
+|  | `console.table()` | Visualize arrays/objects | `console.table(arrayOfObjects)` |
+|  | Comments `//` `/* */` | Notes (Why, not What) | `// Failed attempts counter` |
+|  | JSDoc `/** */` | Formal documentation | `/** @param &#123;string&#125; name ... */` |
+|  | Tags `TODO` `FIXME` `NOTE` | Work organization | `// FIXME: Doesn't handle negative numbers` |
+| **CONTROL - FLOW** |  |  |  |
+|  | `if/else if/else` | Decision Fork | `if (x > 10) &#123; ... &#125; else &#123; ... &#125;` |
+|  | Ternary Operator | Compact `if/else` (for assignment) | `const status = age >= 18 ? "Adult" : "Minor"`<br />`el.style.display = isVisible ? "block" : "none"` |
+|  | `switch` | Switchboard (for static values) | `switch (action) &#123; case 'save': ... break; default: ... &#125;` |
+|  | Return Early (Guard Clauses) | Bouncer (Validate and exit immediately) | `function f(user) &#123; if (!user) return; ... &#125;` |
+| **CONTROL - LOOPS** |  |  |  |
+|  | `for` | Industrial Robot (knows # of laps) | `for (let i = 0; i < 10; i++) &#123; ... &#125;` |
+|  | `while` | Night Watchman (condition) | `while (x < 10) &#123; x++; &#125;` |
+|  | `do...while` | Act first, ask later (at least 1 lap) | `do &#123; ... &#125; while (cond);` (for menus) |
+|  | `for...of` | Elegant Explorer (for *values*) | `for (const el of array) &#123; ... &#125;`<br />`for (const char of "hello") &#123; ... &#125;` |
+|  | `forEach` | Foreman (only for Arrays) | `arr.forEach((el, i) => console.log(i, el))` |
+|  | `break` | Emergency Stop (Exit the loop) | `if (x === 5) break;` |
+|  | `continue` | Skip to next lap | `if (x % 2 === 0) continue;` |
+| **FUNCTIONS AND SCOPE** |  |  |  |
+|  | Declaration vs Arrow `=>` | `function` (has `this`) vs `=>` (inherits `this`) | `function f() &#123;&#125;` vs `const f = () => &#123;&#125;` |
+|  | Implicit Return (Arrow) | One-liner (without `&#123;&#125;`) | `n => n * 2` |
+|  | Return Object (Arrow) | Requires `()` around `&#123;&#125;` | `() => (&#123; name: "Mario" &#125;)` (NOT `() => &#123; name: "Mario" &#125;`) |
+|  | Default Parameters | Fallback values | `function f(n = 10) &#123; ... &#125;` |
+|  | Destructuring (Params) | "Unpack" arguments | `function f(&#123; id, name &#125;) &#123; ... &#125;`<br />`function g([first, second]) &#123; ... &#125;` |
+|  | Callback | Recipe passed as argument | `arr.map(n => n * 2)` (`n => n*2` is the callback)<br />`btn.addEventListener('click', () => ...)` |
+|  | Currying | Function factory | `const add = a => b => a + b;`<br />`const add10 = add(10); add10(5);` → `15` |
+|  | Underscore Convention `_` | Ignored parameter | `arr.map((_el, index) => index)`<br />`btn.addEventListener('click', _ => console.log('click'))` |
+|  | Global Scope | Public Square (visible to all) | Variable outside everything |
+|  | Local/Function Scope | Private Living Room (visible only in `function`) | `function f() &#123; let x = 5; &#125;` |
+|  | Block Scope | Closet/Storage (visible only in `&#123;&#125;`) | `let` and `const` in `if`, `for`, `while` |
+|  | Scope Chain | Key Search (Pocket → Room → House) | Searches from inside to outside |
+| **CLASSES (OOP)** |  |  |  |
+|  | `class` | Cookie Cutter (Blueprint) | `class Player &#123; ... &#125;` |
+|  | Syntactic Sugar | Modern Mask for `prototype` | `typeof Player` → `"function"` |
+|  | `constructor()` | Assembly Department (called by `new`) | `constructor(x, y) &#123; this.x = x; &#125;` |
+|  | `new` | "Create" Command (The 4 steps) | `const p = new Player(10, 20)` |
+|  | `this` | Context ("this specific cookie") | `this.lives = 3;` |
+|  | Class Properties | Factory settings | `class P &#123; lives = 3; &#125;` (outside constructor) |
+|  | Methods (in `prototype`) | Shared Backpack (Abilities) | `jump() &#123; this.y -= 10; &#125;` |
+|  | Pattern: `claim()` | Method to "deactivate" an instance | `this.width = 0; this.y = Infinity; this.claimed = true;` |
+| **DOM - LOADING** |  |  |  |
+|  | `<script>` Placement | `head` vs `body` | `<script>` before `</body>` (old but safe) |
+|  | `defer` (Best Practice) | Download in parallel, execute after | `<script src="..." defer></script>` (in `head`) |
+|  | `window.onload` | Waits for *everything* (images included) | Slow, avoid if not needed |
+|  | `DOMContentLoaded` | Waits only for HTML/DOM (Fast) | `window.addEventListener('DOMContentLoaded', () => ...)` |
+| **DOM - MANIPULATION** |  |  |  |
+|  | `querySelector` / `All` | Modern GPS (Uses CSS selectors) | `document.querySelector(".btn-primary")`<br />`document.querySelectorAll("ul > li")` |
+|  | `getElementById` | Fast for IDs | `document.getElementById("main-header")` |
+|  | `getElementsByClassName` | Old Way (Returns *live* `HTMLCollection`) | `document.getElementsByClassName("note")` |
+|  | Converting `NodeList`/`Coll.` | Transforms into real Array | `[...nodelist]`<br />`Array.from(nodelist)` |
+|  | Properties vs Methods | Nouns (data) vs Verbs (actions) | `el.id = "..."` (Prop) vs `el.remove()` (Method) |
+|  | HTML Attributes vs DOM Props | Blueprint vs Real House | `input.value` (reality) vs `input.getAttribute('value')` (blueprint) |
+|  | `document.createElement()` | Factory (Creates in memory) | `const p = document.createElement("p")` |
+|  | `container.appendChild()` | Installation (Add to page) | `container.appendChild(p)` |
+|  | `textContent` (Safe) | Marker (Only text, no HTML) | `el.textContent = "Hi <strong>"` → `Hi <strong>` |
+|  | `innerHTML` (Dangerous) | Magic Pen (Interprets HTML) | `el.innerHTML = "<strong>Hi</strong>"` → **Hi** (XSS Risk) |
+|  | `style.property` | Inline style (dirty) | `el.style.backgroundColor = "red"` (use camelCase) |
+|  | `classList` (Best Practice) | Label (JS state, CSS look) | `el.classList.add('is-hidden')`<br />`el.classList.toggle('active')` |
+|  | `disabled` | Boolean Attribute (On/Off) | `btn.disabled = true;` (unclickable)<br />`btn.disabled = false;` (re-enable) |
+|  | `disabled` vs `readonly` | Barred Door vs Locked Glass | `readonly` is visible and sent with the form |
+|  | Child Combinator `>` | "Direct Child" Selector | `div > p` (only children, not grandchildren) |
+| **DOM - EVENTS** |  |  |  |
+|  | `onclick` vs `addEventListener` | Single Line vs Switchboard | `addEventListener` (modern, multiple listeners) |
+|  | Reference (`fn`) vs Execution (`fn()`) | Manual vs Cake (Pass the manual!) | `el.addEventListener('click', myFunction)` ✅<br />`el.addEventListener('click', myFunction())` ❌ |
+|  | `event` Object | Detailed Report | `e.target` (who triggered it)<br />`e.key` (key pressed) |
+|  | `e.preventDefault()` | Emergency Brake (Stop default action) | `form.addEventListener('submit', e => e.preventDefault())` (stop refresh) |
+|  | Event Delegation | Bouncer (1 listener on parent) | `ul.addEventListener('click', e => &#123; if(e.target.tagName === 'LI') ... &#125;)` |
+|  | Problem: `this` and listeners | `this` becomes the button, not class | `btn.addEventListener('click', this.method)` ❌ |
+|  | Solution: `.bind(this)` | Glue `this` with superglue | `btn.addEventListener('click', this.method.bind(this))` ✅ |
+|  | Solution: Arrow Function | Inherits `this` (Modern) | `btn.addEventListener('click', () => this.method())` ✅ |
+|  | `keydown` vs `keyup` | Key Down vs Key Up (Use these) | `e.key === "ArrowUp"` |
+|  | `keypress` (Deprecated) | Character typed (Ignores arrows, etc) | Do not use |
+|  | `change` vs `input` | "Finished" (blur) vs "Real Time" (every key) | `input` for reactive UX (e.g., live search)<br />`change` for final validation |
+|  | `submit` | `<form>` event | Use `e.preventDefault()` |
+|  | `confirm()` | Blocking dialog (Old) | `const yes = confirm("Sure?")` (Avoid if possible) |
+| **DOM - DIALOG AND MODALS** |  |  |  |
+|  | `<dialog>` | Portable Stage (Native HTML) | `<dialog id="modal">...</dialog>` |
+|  | `showModal()` | Spotlight (Blocks page, backdrop, Esc) | `dialog.showModal()` (What you want 99%) |
+|  | `show()` | Info Panel (Non-modal) | `dialog.show()` (Page still active) |
+|  | `close()` | Exit Stage | `dialog.close("value")`<br />`dialog.addEventListener('close', () => ...)` |
+| **API CANVAS AND GAMES** |  |  |  |
+|  | `getContext("2d")` | Open the pencil case (Pens, markers) | `const ctx = canvas.getContext("2d")` |
+|  | Coordinates (0,0) | Top Left | `Y` increases going down (`ctx.fillRect(0, 10, ...)` is 10px *from top*) |
+|  | `fill` vs `stroke` | Marker (solid) vs Pen (outline) | `ctx.fillStyle = "red"`<br />`ctx.strokeStyle = "blue"` |
+|  | Shapes (Rectangles, Paths) | Shortcuts (`fillRect`) vs Recipe (`beginPath`) | `ctx.fillRect(10, 10, 50, 50)`<br />`ctx.beginPath(); ctx.arc(...); ctx.fill();` |
+|  | Resolution vs Size | Pixels (JS) vs Dimensions (CSS) | `canvas.width = 1920` vs `canvas.style.width = "100%"` |
+|  | Problem: Blurry Effect | 300x150 resolution "stretched" | If JS `width` doesn't match CSS `width` |
+|  | Solution: Synchronization | Set JS `width` equal to `innerWidth` | `canvas.width = window.innerWidth` (clears canvas!) |
+|  | `requestAnimationFrame` | Game Engine (60 FPS Loop) | `function loop() &#123; ...; requestAnimationFrame(loop); &#125;` |
+|  | Advantages vs `setInterval` | Synced, Auto-pause, Fluid | `rAF` is the king of animations (saves battery in background) |
+|  | Logic: Gravity | Accel. modifies Velocity, Velocity modifies Position | `velY += grav; posY += velY;` |
+|  | Logic: Flag Debouncing | Turnstile (Avoid 60 triggers/sec) | `if (coll && !isHit) &#123; isHit = true; ... &#125;` |
+|  | Logic: Responsive | Auto-zoom (Adapts to viewport) | `player.width = proportionalSize(100)` |
+| **PATTERNS AND BEST PRACTICES** |  |  |  |
+|  | Accumulator Pattern | Filling the bucket (loop) | `let total = 0; arr.forEach(n => total += n)`<br />`let html = ""; arr.forEach(s => html += `<li>$&#123;s&#125;</li>`)` |
+|  | Boolean Flags | State Switches (On/Off) | `let isLoading = true;``let hasError = false;` |
+|  | State Variables | Traffic Light (Multiple states) | `let formState = "submitting"` (vs `"editing"`, `"error"`) |
+|  | Configuration Objects | Control Panel (No "magic numbers") | `const CONFIG = &#123; MAX_RETRIES: 3 &#125;` |
+|  | `try-catch` | Safety Net (Error handling) | `try &#123; JSON.parse(str) &#125; catch (e) &#123; ... &#125;``async function f() &#123; try &#123; await fetch(...) &#125; catch(e) &#123; ... &#125; &#125;` |
+|  | Naming Convention | Speaking Names (Readable code) | `isVisible` (bool)`fetchUsers` (func)`users` (array) |
+|  | Incremental Testing | Tasting the sauce (Debug with `console.log`) | Write-test-write-test |
+|  | Separation of Concerns | One function = one task (SoC) | Logic (JS) vs Presentation (CSS) |
+|  | `style.display` vs `classList` | Hand painting (dirty) vs Labeling (clean) | Use `classList` (JS state, CSS look)`el.classList.toggle("is-hidden")` |
+|  | `innerHTML =` vs `+=` | Replace (OK) vs Recreate (SLOW!) | `+=` destroys and recreates entire DOM (use `appendChild`!) |
+|  | `.className` vs `.classList` | Whole string vs Surgical Kit | Use `classList` (`.add`, `.remove`) |
+|  | `.textContent` vs `innerHTML` | Marker (Safe) vs Magic Pen (Dangerous) | Use `textContent` for user data (prevents XSS) |
+|  | Immutability | Making photocopies, not modifying originals | `const copy = [...arr, 4]` (Avoid "Side Effects") |
+|  | `.sort()` vs `.toSorted()` | Destructive (mutates) vs Immutable (copies) | `.toSorted()` (modern, doesn't modify original)`.slice().sort()` (classic) |
+|  | Style: Readability vs Concise | Telling a story vs Being clever | Readability > Concise (for debug)`const doubles = arr.map(n => n * 2)` (concise ok) |
+|  | Swap Algorithm | Carousel (`temp`) vs Magic (Destructuring) | `[a, b] = [b, a]` (modern)`let temp = a; a = b; b = temp;` (classic) |
+|  | Code Evolution | From Hardcoded to DRY to Event-Driven | `DRY` = Don't Repeat Yourself (use functions) |
+| **STORAGE (localStorage)** |  |  |  |
+|  | localStorage | Drawer (Long-term memory) | `localStorage.setItem('key', 'value')``localStorage.getItem('key')` |
+|  | Problem: The String Wall | The Fax (Saves only strings) | `localStorage.setItem('user', &#123;name: 'a'&#125;)` → `"[object Object]"` |
+|  | `JSON.stringify()` | Disassembler (Object → String) | `localStorage.setItem('user', JSON.stringify(user))` |
+|  | `JSON.parse()` | Reassembler (String → Object) | `const user = JSON.parse(localStorage.getItem('user'))` |
+|  | Handling First Run | Fallback (Plan B) | `const data = JSON.parse(localStorage.getItem('k')) |
+|  | Inspecting (DevTools) | X-Ray Vision (Application Tab) | Debug, edit, delete |
+|  | Limits | 5MB, Synchronous (slow), Insecure (sticky note) | Do not save passwords! |
+|  | Advanced Patterns | Versioning, Expiry, Namespace | `const k = "myApp_user"` (namespace)`setWithExpiry(key, val, ttl)` |
+|  | Commandments | The 10 rules of localStorage | "Thou shall save only strings", "Thou shall never trust", ... |
+| **ALGORITHMS - REGEX** |  |  |  |
+|  | `/pattern/flags` | Text Metal Detector | `/hi/gi` (global, case-insensitive) |
+|  | `.` `^` `$`       ` | ` | Wildcard, Start, End, OR |
+|  | `[]` (Character Class) | Club (One of these) | `[aeiou]` (vowels)<br />`[a-z0-9]` (range) |
+|  | `\d` `\w` `\s` `\b` | Shortcuts (Digit, Word, Space, Boundary) | `/\bcat\b/` (whole word "cat") |
+|  | `?` `+` `*` `&#123;n,m&#125;` | Quantifiers (How many?) | `\d+` (one or more digits)<br />`colou?r` (optional) |
+|  | `` (Escape) | Special Power Deactivator | `.` (literal dot)<br />`\` (literal backslash) |
+|  | `()` vs `(?:...)` | Bus (Group) vs Photo (Capture) | `(?:http |
+| | Lookahead `(?=...)` | "Followed by..." (doesn't consume) | `\d+(?=€)` (number before €)<br />`\d+(?![a-z])` (number not followed by letter) |
+|  | Lookbehind `(?<=...)` | "Preceded by..." (doesn't consume) | `(?<=€)\d+` (number after €) |
+|  | Real Patterns | Email, URL, Password | `emailRegex.test(email)` |
+| **ALGORITHMS - RECURSION** |  |  |  |
+|  | Call Stack (LIFO) | Stack of plates (Last In, First Out) | Manages function execution order |
+|  | Stack Overflow | Too many plates, stack collapses | Infinite recursion |
+|  | Recursion | Matryoshka dolls (Function calls itself) | `return n * factorial(n - 1)` |
+|  | Base Case | Solid doll (Stop condition) | `if (n <= 1) return 1;` |
+|  | Memoization | Sticky note (Cache for results) | Avoids recalculations (e.g., Fibonacci)<br />`if (cache[n]) return cache[n];` |
+| **ALGORITHMS - TIMING** |  |  |  |
+|  | `setTimeout(fn, ms)` | Alarm Clock (Execute *after* ms) | `const t = setTimeout(() => ..., 1000)` |
+|  | `setInterval(fn, ms)` | Metronome (Execute *every* ms) | `const i = setInterval(() => ..., 1000)` |
+|  | `clearTimeout/Interval` | Cancel timer | `clearTimeout(t)`<br />`clearInterval(i)` |
+|  | `setTimeout` vs `setInterval` | Dumb Clock (can overlap) | Recursive `setTimeout` is safer for animations |
+|  | Debounce | "Execute *after* user has finished" | `onkeyup` in a search bar |
+|  | Throttle | "Execute *at most* every X ms" | `onscroll` to prevent overload |
+| **ALGORITHMS - PRACTICAL** |  |  |  |
+|  | Decimal → Binary | Divide by 2, read remainders | `binary = (num % 2) + binary; num = Math.floor(num / 2);` |
+|  | Bubble Sort | Bubbles (Simple but slow) | `if (arr[j] > arr[j+1]) [arr[j], arr[j+1]] = [arr[j+1], arr[j]]` |
+|  | Quick Sort | Divide and Conquer (Fast) | Choose `pivot`, divide into `left`/`right`, recursion |
+|  | Binary Search | Dictionary Search (Requires sort) | Cut search in half each loop (`mid = floor((l+r)/2)`) |
+|  | Palindrome | `str === str.reverse()` | `const c = str.toLowerCase().replace(...)`<br />`return c === c.split('').reverse().join('')` |
+|  | Anagrams | Same letters | `const c1 = str1.split('').sort().join('')`<br />`return c1 === c2;` |
+|  | Prime Numbers (Test) | Check divisors up to `sqrt(n)` | `for (let i = 2; i * i <= n; i++) ...` |
+|  | Fibonacci (Iterative) | Sum of previous two | `[prev, curr] = [curr, prev + curr]` |
+|  | GCD (Euclidean) | Greatest Common Divisor | `gcd(a, b) = gcd(b, a % b)` |
+| **PATTERNS - VALIDATION AND STATE** |  |  |  |
+|  | Guard Clauses | Bouncer (Return early) | `if (!data) return;`<br />`if (num < 0) return;` (cleans code) |
+|  | Sanitization | Cleaning (Remove/Escape) | `str.replace(/[^a-z0-9]/g, '')`<br />`el.textContent = str` (sanitizes for HTML) |
+|  | Validation | Check (Accept/Reject) | `emailRegex.test(email)` |
+|  | Single Source of Truth (SSOT) | Master Ledger (Single central state) | Prevents out-of-sync data (e.g., `const state = &#123; ... &#125;`) |
+|  | CRUD | Create, Read, Update, Delete | Pattern to manage lists (e.g., TaskManager) |
+|  | Reset Pattern | State Factory | `state = createInitialState()` (avoids manual reset) |
