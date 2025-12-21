@@ -13,40 +13,51 @@ import TabItem from '@theme/TabItem';
   <img
     src={require('./assets/spreadsheet-1-it.webp').default}
     alt="Time Analysis Simulation Italian Version"
-    width="100%"
+    width="1350"
+    height="612"
     loading="lazy"
     decoding="async"
     style={{
+      width: '100%',
+      height: 'auto',
       borderRadius: '10px',
-      border: '1px solid var(--ifm-table-border-color)'
+      border: '1px solid var(--ifm-table-border-color)',
+      aspectRatio: '1350 / 612'
     }}
   />
   <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
     <em>Esempio pratico dello Spreadsheet mentre analizza i dati di un test di usabilità.</em>
   </p>
 </div>
+
 I dati inseriti simulano i tempi di completamento (in secondi) e gli errori commessi da 5 utenti che testano una nuova funzionalità (ad esempio, un processo di checkout).
 La Media (93s) e la Mediana (90s) dei tempi di completamento sono molto vicine. Questo è un segnale eccellente, perché indica un'esperienza utente consistente e prevedibile, senza valori anomali estremi che distorcerebbero la media. <br />
 Gli Errori Totali (5) vengono analizzati insieme ai tempi, rivelando un insight chiave: l'utente con il tempo più lungo (110s) è stato anche quello che ha commesso più errori (3).
 In un contesto reale, questo risultato fornisce un chiaro passo successivo: il team UX dovrebbe immediatamente rivedere la registrazione della sessione di quello specifico utente (Utente 3) per identificare il difetto di design che ha causato sia il ritardo sia gli errori, portando a un'ottimizzazione mirata.
 
 <br />
+
 <div style={{ textAlign: 'center', marginBottom: '20px' }}>
   <img
     src={require('./assets/spreadsheet-2-it.webp').default}
     alt="Test A:B Simulazione Italian version"
-    width="100%"
+    width="1350"
+    height="722"
     loading="lazy"
     decoding="async"
     style={{
+      width: '100%',
+      height: 'auto',
       borderRadius: '10px',
-      border: '1px solid var(--ifm-table-border-color)'
+      border: '1px solid var(--ifm-table-border-color)',
+      aspectRatio: '1350 / 722'
     }}
   />
   <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
     <em>Esempio pratico dello Spreadsheet utilizzato per analizzare rapidamente i risultati di un A/B Test.</em>
   </p>
 </div>
+
 Questa simulazione confronta due design: "Design A" (il Controllo originale) e "Design B" (la Nuova versione), per vedere quale dei due ha un Tasso di Conversione migliore per il pulsante "Richiedi Demo".
 Il foglio di calcolo calcola il Tasso di Conversione per entrambi, mostrando il Design A al 12.4% e il Design B al 15.4%. Questa metrica è cruciale perché misura la forza persuasiva di ciascun design.<br />
 La metrica chiave "Lift (Miglioramento)" mostra che il Design B ha una performance di ~3 punti percentuali superiore all'originale.
