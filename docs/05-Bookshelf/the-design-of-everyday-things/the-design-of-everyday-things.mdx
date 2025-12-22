@@ -1,0 +1,731 @@
+---
+sidebar_position: 1
+sidebar_label: 'The Design of Everyday Things'
+title: 'The Design of Everyday Things'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# The Design of Everyday Things
+
+## The Book
+
+This was absolutely the first UX book I read, and I still consider it the fundamental operating manual for understanding the psychology behind human-computer interaction. Norman dismantles the belief that errors are the user's fault, demonstrating how every slip is actually the result of poor design. Through concepts like Affordance, Mapping, and Feedback, the book transforms design from a purely aesthetic exercise into a behavioral science. It was pivotal for me because I believe a UX Engineer shouldn't just decorate interfaces, but design mental paths where the user never has to ask how to use an object or a component.
+
+## Practical Example: "The State Machine Button"
+
+To demonstrate Norman's principles in a purely software context, I designed and developed a "conscious" Button component. Too often, in websites and apps (less within the Apple ecosystem thanks to the standards enforced by the Human Interface Guidelines), buttons are static rectangles that only change color upon clicking, violating the principle of continuous Feedback. I created a component that respects the complete action cycle described by Norman. Affordance is guaranteed by visual elevation provided by the shadow suggesting clickability, while Feedback is immediate and traverses five distinct stages: rest, intention, action, waiting, and confirmation. This ensures that the space between the user's action and the understanding of the result is reduced to zero.
+
+<div style={{
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '20px',
+  alignItems: 'flex-start',
+  width: '100%',
+  margin: '2rem 0'
+}}>
+
+  <div style={{ flex: '0.647 1 0px', minWidth: '200px' }}>
+    <img 
+      src={require('./assets/the-design-of-everyday-things-en.webp').default} 
+      alt="Norman Button Visual Artifact"
+      loading="lazy"
+      width="1744"
+      height="2693"
+      style={{
+        borderRadius: '10px',
+        width: '100%',
+        height: 'auto',
+        display: 'block'
+      }}
+    />
+    <p style={{textAlign: 'center', opacity: 0.7, fontSize: '0.9rem', marginTop: '10px'}}>
+      Figma Prototype
+    </p>
+  </div>
+
+  <div style={{ flex: '1.593 1 0px', minWidth: '400px' }}>
+    <video 
+      src={require('./assets/the-design-of-everyday-things.webm').default} 
+      autoPlay 
+      loop 
+      muted 
+      playsInline
+      style={{
+        borderRadius: '10px',
+        width: '100%',
+        height: 'auto',
+        display: 'block'
+      }}
+    />
+    <p style={{textAlign: 'center', opacity: 0.7, fontSize: '0.9rem', marginTop: '10px'}}>
+      Live Implementation (Code) • 0.5x Speed
+    </p>
+  </div>
+
+</div>
+
+## Source Code
+
+Regarding the implementation, I used semantic HTML, modern CSS with Custom Properties for state management, and Vanilla JavaScript with Arrow Functions for interaction logic.
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!-- 
+   DESIGN
+   ------
+   * Semantic structure and accessibility first:
+   * - Semantic tag: I chose <button> over <div> to gain native keyboard 
+   *   focus and screen reader support (Affordance)
+   * - ARIA integration: aria-live="polite" is critical here. It ensures 
+   *   that the feedback (loading/success) is announced to non-visual users
+   * - State readiness: The .loader is present in the DOM but hidden,
+   *   ready to appear without causing layout shifts.
+-->
+
+<div class="button-container">
+    <button id="action-btn" class="norman-btn" aria-live="polite">
+        <span class="btn-text">Confirm action</span>
+        <span class="loader"></span>
+    </button>
+</div>
+
+<link rel="stylesheet" href="styles.css">
+<script src="script.js"></script>
+```
+
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+/* DESIGN 
+   ------
+   * Physics metaphor and state management.
+   * - Token-based depth: Shadows represent the Z-axis (elevation)
+   *   I defined them in :root to maintain consistent "physical laws"
+   *   across the application
+   * - Interaction physics: The transition is tuned to mimic a mechanical
+   *   spring (ease), providing realistic tactile feedback
+   * - Constraint styling: The 'loading' state enforces the constraint
+   *   visually (opacity) and functionally (pointer-events: none)
+   * - Layout stability: I use CSS Grid Stack technique here. Instead of
+   *   absolute positioning, I place both text and loader in the same 
+   *   Grid cell (1x1). This guarantees mathematical centering.
+*/
+
+/* * Here I manage the "Button physics".
+   * The shadow is not decorative but functional, as it suggests
+   * elevation (Affordance)
+   * When pressed (:active), the shadow decreases and the element goes down,
+   * simulating real mechanical resistance (Tactile feedback).
+*/
+
+:root {
+    /* Colors */
+    --primary-color: #ffd500;
+    --hover-color: #d5bb3b;
+    --bg-body: #524236;
+    --btn-text: #000000;
+    
+    /* Shapes and typography */
+    --btn-radius: 14px;
+    --btn-weight: 550;
+    
+    /* Physics */
+    --shadow-rest: 0 8px 10px -1px rgba(0, 0, 0, 0.4);
+    --shadow-active: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: var(--bg-body);
+
+    /* Viewport Centering */
+    margin: 0;
+    height: 100vh; /* Full viewport height */
+    display: grid;
+    place-items: center; /* Perfect centering */
+}
+
+.norman-btn {
+    /* GRID STACKING TECHNIQUE: Perfect centering without magic numbers */
+    display: inline-grid;
+    place-items: center;
+    grid-template-areas: "stack";
+
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    min-width: 160px; /* Prevents width collapse during state change */
+    border: none;
+    border-radius: var(--btn-radius);
+    background-color: var(--primary-color);
+    color: var(--btn-text);
+    font-weight: var(--btn-weight);
+    box-shadow: var(--shadow-rest); /* Affordance: elevation */
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+/* Stacking both elements in the same grid cell */
+.btn-text, .loader {
+    grid-area: stack;
+    transition: opacity 0.2s ease;
+}
+
+.norman-btn:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-1px); /* Intention: it moves closer to the finger/cursor */
+}
+
+.norman-btn:active {
+    transform: translateY(2px); /* Action: it sinks under pressure */
+    box-shadow: var(--shadow-active);
+}
+
+
+/* STATE MANAGEMENT: LOADING */
+
+.norman-btn.loading {
+    cursor: wait;
+    opacity: 0.8;
+    pointer-events: none; /* Constraint: prevents double clicks */
+    
+    /* UX physics: the button stays "pressed" during work */
+    box-shadow: none;           /* Removes elevation (flat against surface) */
+    transform: translateY(2px); /* Keeps the pressed position */
+    background-color: var(--hover-color); /* Maintains the active/pressed color */
+}
+
+.loader {
+    /* Visibility handled by opacity for smooth transition */
+    visibility: hidden;
+    opacity: 0;
+    width: 1rem;
+    height: 1rem;
+    
+    /* Loader color inherits from text color token for consistency */
+    border: 2px solid var(--btn-text); 
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    animation: rotation 1s linear infinite;
+}
+
+.norman-btn.loading .btn-text { 
+    visibility: hidden;
+    opacity: 0;
+}
+
+.norman-btn.loading .loader { 
+    visibility: visible;
+    opacity: 1;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+```
+
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```javascript
+/* DESIGN 
+   ------
+   * State logic and async simulation.
+   * - Event-driven architecture: The logic reacts to user intent immediately
+   * - Constraint enforcement: The guard clause prevents "Rage clicks" or 
+   *   double submissions by checking the current state
+   * - Feedback loop: Simulates network latency providing visual 
+   *   feedback throughout the entire lifecycle.
+*/
+
+/*
+   I use arrow functions to manage the logic. On click, the button enters
+   a "Loading" state (constraint) preventing further accidental clicks,
+   then provides final feedback (success).
+*/
+
+const btn = document.getElementById('action-btn');
+
+const handleClick = () => {
+    // Constraint: prevent multiple clicks
+    if (btn.classList.contains('loading')) return;
+
+    // Feedback: enter the waiting state
+    btn.classList.add('loading');
+    
+    // Simulation of an asynchronous call (e.g., API)
+    setTimeout(() => {
+        // Feedback: end operation and return to resting state
+        btn.classList.remove('loading');
+        alert("Action completed!");
+    }, 2000);
+};
+
+btn.addEventListener('click', handleClick);
+```
+
+</TabItem>
+
+<TabItem value="commented" label="explained">
+
+```html
+<!DOCTYPE html>
+<!-- 🎯 HTML5 DECLARATION: "Welcome to interactive button design!" -->
+<!-- This document follows modern semantic HTML principles for accessibility and interaction! 🖱️ -->
+
+<html lang="en">
+<!-- 🌍 LANGUAGE SETTING: English as the document language -->
+<!-- Proper language declaration helps screen readers use correct pronunciation -->
+
+<head>
+    <!-- 🧠 THE COMMAND CENTER: Where we prepare our interactive button -->
+    <!-- Like the blueprint room where we design the perfect button mechanics! -->
+    
+    <title>Interactive Button with Loading State</title>
+    <!-- 📑 PAGE TITLE: Describes what this component demonstrates -->
+    
+    <meta charset="UTF-8">
+    <!-- 📝 CHARACTER ENCODING: Ensures proper text rendering -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 📱 RESPONSIVE DESIGN: Proper scaling on all devices -->
+    <!-- This ensures our button looks perfect on everything from phones to desktops -->
+    
+    <style> 
+      /* 🎨 ===== CSS STYLES: The Button's Appearance and Behavior ===== */
+      
+      /* 🏗️ ===== DESIGN SYSTEM: The "Physical Laws" of Our UI ===== */
+      
+      :root {
+          /* 🎨 COLORS: The palette of our interactive element */
+          --primary-color: #ffd500;
+          /* 🟡 YELLOW PRIMARY: Bright, attention-grabbing button color */
+          /* Yellow suggests caution or attention - perfect for confirmation actions */
+          
+          --hover-color: #d5bb3b;
+          /* 🟨 DARKER YELLOW: Shows interactive state on hover */
+          /* Slightly darker to provide clear visual feedback when cursor hovers */
+          
+          --bg-body: #524236;
+          /* 🟤 BROWN BACKGROUND: Creates contrast with the yellow button */
+          /* Rich earth tone that makes the bright button stand out dramatically */
+          
+          --btn-text: #000000;
+          /* ⚫ BLACK TEXT: Maximum readability on yellow background */
+          /* High contrast ratio ensures text is legible for all users */
+          
+          /* 📐 SHAPES AND TYPOGRAPHY: Defining the button's form */
+          --btn-radius: 14px;
+          /* 🔄 ROUNDED CORNERS: Soft appearance, 14px radius */
+          /* Not too round, not too square - a balanced, modern look */
+          
+          --btn-weight: 550;
+          /* 🔤 SEMI-BOLD FONT: Custom weight for perfect visibility */
+          /* 550 is between regular (400) and bold (700) - distinctive without shouting */
+          
+          /* 📦 PHYSICS: Shadow properties create a sense of depth */
+          --shadow-rest: 0 8px 10px -1px rgba(0, 0, 0, 0.4);
+          /* 🕳️ RESTING SHADOW: Deeper shadow when button is not pressed */
+          /* 8px vertical offset creates a floating effect above the surface */
+          
+          --shadow-active: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+          /* 🕳️ ACTIVE SHADOW: Minimal shadow when button is pressed */
+          /* 1px vertical offset mimics the button being pressed against the surface */
+      }
+      
+      /* 📄 ===== BODY STYLING: Canvas for Our Button ===== */
+      
+      body {
+          background-color: var(--bg-body);
+          /* 🟤 BACKGROUND: Brown color from our design system */
+          
+          /* 📏 PERFECT CENTERING SETUP: Places button in middle of viewport */
+          margin: 0;
+          /* 🚫 NO MARGINS: Removes default spacing */
+          
+          height: 100vh;
+          /* 📏 FULL HEIGHT: Uses entire viewport height */
+          /* vh = viewport height, 100vh = 100% of visible screen height */
+          
+          display: grid;
+          /* 📊 GRID DISPLAY: Modern layout system */
+          /* Grid provides the simplest way to center content perfectly */
+          
+          place-items: center;
+          /* ⚖️ PERFECT CENTERING: Centers content horizontally and vertically */
+          /* This is the modern approach to centering - much cleaner than old methods */
+      }
+      
+      /* 🔘 ===== BUTTON BASE: The Foundation of Our Interactive Element ===== */
+      
+      .norman-btn {
+          /* 📊 GRID STACKING TECHNIQUE: For perfect alignment of text and loader */
+          display: inline-grid;
+          /* 📊 INLINE-GRID: Behaves like inline element but with grid powers */
+          /* Allows us to stack text and loader precisely in the same space */
+          
+          place-items: center;
+          /* ⚖️ CENTER ALIGNMENT: Centers stacked items perfectly */
+          /* Both horizontally and vertically within the button */
+          
+          grid-template-areas: "stack";
+          /* 📍 NAMED GRID AREA: Creates a single cell named "stack" */
+          /* This single area will hold both text and loader elements */
+          
+          position: relative;
+          /* 📍 POSITIONING CONTEXT: Establishes positioning for child elements */
+          
+          padding: 0.75rem 1.5rem;
+          /* 📏 INTERNAL SPACING: Comfortable space around the text */
+          /* 0.75rem (12px) top/bottom, 1.5rem (24px) left/right */
+          
+          min-width: 160px;
+          /* 📏 MINIMUM WIDTH: Ensures button doesn't collapse when text is hidden */
+          /* Prevents jarring layout shifts during state changes */
+          
+          border: none;
+          /* 🚫 NO BORDER: Clean, modern appearance */
+          
+          border-radius: var(--btn-radius);
+          /* 🔄 ROUNDED CORNERS: Using design system variable */
+          
+          background-color: var(--primary-color);
+          /* 🟡 YELLOW FILL: Primary color from design system */
+          
+          color: var(--btn-text);
+          /* ⚫ TEXT COLOR: Black from design system */
+          
+          font-weight: var(--btn-weight);
+          /* 🔤 FONT WEIGHT: Semi-bold from design system */
+          
+          box-shadow: var(--shadow-rest);
+          /* 🕳️ SHADOW EFFECT: Creates illusion of elevation */
+          /* Shadows aren't just decorative - they help communicate how the element behaves */
+          
+          cursor: pointer;
+          /* 👆 HAND CURSOR: Visual cue that element is clickable */
+          
+          transition: all 0.1s ease;
+          /* 🎭 SMOOTH CHANGES: Animates all property changes */
+          /* 0.1s is fast enough to feel responsive but still show the transition */
+          /* "ease" timing function mimics natural movement physics */
+      }
+      
+      /* 📚 ===== STACKED ELEMENTS: Positioning Text and Loader ===== */
+      
+      .btn-text, .loader {
+          grid-area: stack;
+          /* 📍 SHARED GRID AREA: Both elements occupy the same space */
+          /* This mathematical approach ensures perfect centering without absolute positioning */
+          
+          transition: opacity 0.2s ease;
+          /* ✨ FADE EFFECT: Smooth transition between visible and hidden states */
+          /* 0.2s provides a noticeable but quick fade effect */
+      }
+      
+      /* 👆 ===== HOVER STATE: Button Appearance When Cursor Hovers ===== */
+      
+      .norman-btn:hover {
+          background-color: var(--hover-color);
+          /* 🟨 DARKER COLOR: Changes to hover color on mouseover */
+          
+          transform: translateY(-1px);
+          /* ⬆️ SLIGHT LIFT: Button rises slightly toward cursor */
+          /* This subtle movement creates a sense that the button is responding to presence */
+          /* Like a physical button slightly lifting in anticipation of being pressed */
+      }
+      
+      /* 👇 ===== ACTIVE STATE: Button Appearance When Being Clicked ===== */
+      
+      .norman-btn:active {
+          transform: translateY(2px);
+          /* ⬇️ PRESS DOWN: Button moves down when clicked */
+          /* 2px of movement creates the illusion of physical depression */
+          
+          box-shadow: var(--shadow-active);
+          /* 🕳️ SMALLER SHADOW: Shadow reduces as button "moves closer" to surface */
+          /* This completes the physical metaphor of a button being pressed */
+      }
+      
+      
+      /* ⏳ ===== LOADING STATE: Button Appearance During Processing ===== */
+      
+      .norman-btn.loading {
+          cursor: wait;
+          /* ⏳ WAIT CURSOR: Changes cursor to indicate processing */
+          
+          opacity: 0.8;
+          /* 🔍 SLIGHT TRANSPARENCY: Visual feedback that button is in a special state */
+          
+          pointer-events: none;
+          /* 🚫 DISABLE INTERACTIONS: Prevents additional clicks during processing */
+          /* This constraint prevents users from "rage clicking" or double-submitting */
+          
+          /* ⬇️ VISUAL PERSISTENCE OF PRESSED STATE PHYSICS: */
+          box-shadow: none;
+          /* 🚫 NO SHADOW: Completely pressed against surface */
+          
+          transform: translateY(2px);
+          /* ⬇️ PRESSED POSITION: Stays in the "down" position */
+          
+          background-color: var(--hover-color);
+          /* 🟨 DARKER COLOR: Maintains the active color state */
+          /* All these properties combine to show the button is "working" */
+      }
+      
+      /* 🔄 ===== LOADER ANIMATION: The Spinning Indicator ===== */
+      
+      .loader {
+          /* 👁️ VISIBILITY MANAGEMENT: Initially hidden but ready to appear */
+          visibility: hidden;
+          /* 🚫 HIDDEN INITIALLY: Not visible but still in DOM */
+          
+          opacity: 0;
+          /* 🔍 FULLY TRANSPARENT: For smooth fade-in transition */
+          
+          width: 1rem;
+          height: 1rem;
+          /* 📏 LOADER SIZE: 16px square (1rem = 16px typically) */
+          
+          /* 💫 SPINNER DESIGN: Creates a circular loading indicator */
+          border: 2px solid var(--btn-text);
+          /* 🔘 CIRCLE OUTLINE: 2px border using text color for consistency */
+          
+          border-bottom-color: transparent;
+          /* 🔍 TRANSPARENT SEGMENT: Creates the "incomplete circle" effect */
+          /* This visual break in the circle is what creates the spinning illusion */
+          
+          border-radius: 50%;
+          /* 🔄 PERFECT CIRCLE: 50% radius creates a circle from a square */
+          
+          animation: rotation 1s linear infinite;
+          /* 🔄 SPINNING ANIMATION: Continuous rotation */
+          /* 1s per revolution, linear timing (constant speed), never stops */
+      }
+      
+      /* 🔀 ===== STATE TRANSITIONS: Showing/Hiding Elements Based on State ===== */
+      
+      .norman-btn.loading .btn-text { 
+          visibility: hidden;
+          /* 🚫 HIDE TEXT: Makes text invisible during loading */
+          
+          opacity: 0;
+          /* 🔍 FULLY TRANSPARENT: For smooth fade-out transition */
+      }
+      
+      .norman-btn.loading .loader { 
+          visibility: visible;
+          /* 👁️ SHOW LOADER: Makes loader visible during loading */
+          
+          opacity: 1;
+          /* 🔍 FULLY OPAQUE: For smooth fade-in transition */
+      }
+      
+      /* 🔄 ===== KEYFRAME ANIMATION: Defines the Rotation Effect ===== */
+      
+      @keyframes rotation {
+          0% { transform: rotate(0deg); }
+          /* 🔄 START POSITION: Beginning of rotation cycle at 0 degrees */
+          
+          100% { transform: rotate(360deg); }
+          /* 🔄 END POSITION: Complete 360-degree revolution */
+          /* Animation then repeats due to the "infinite" setting */
+      }
+    </style>
+</head>
+
+<body>
+    <!-- 📦 ===== THE BODY: Where Our Interactive Button Lives! ===== -->
+    
+    <div class="button-container">
+        <!-- 📦 BUTTON CONTAINER: Wrapper for positioning and potential styling -->
+        <!-- This container could be used for additional positioning or decorations -->
+        
+        <button id="action-btn" class="norman-btn" aria-live="polite">
+            <!-- 🔘 THE BUTTON ELEMENT: Our interactive component -->
+            <!-- Using <button> instead of <div> gives us free accessibility benefits: -->
+            <!-- - Keyboard focus with Tab key -->
+            <!-- - Activation with Enter key -->
+            <!-- - Screen reader recognition as a button -->
+            
+            <!-- 📢 ACCESSIBILITY ATTRIBUTE: -->
+            <!-- aria-live="polite" tells screen readers to announce state changes -->
+            <!-- "polite" means it will wait until the user finishes what they're doing -->
+            
+            <span class="btn-text">Confirm action</span>
+            <!-- 📝 BUTTON TEXT: The primary button label -->
+            <!-- This text will fade out during loading state -->
+            
+            <span class="loader"></span>
+            <!-- 🔄 LOADING SPINNER: Appears during the loading state -->
+            <!-- Initially invisible, this element is ready to animate when needed -->
+            <!-- Using an empty span with CSS styling creates a compact, efficient spinner -->
+        </button>
+    </div>
+
+    <script>
+      /* 🧠 ===== JAVASCRIPT: The Button's Interactive Behavior ===== */
+      
+      const btn = document.getElementById('action-btn');
+      /* 🔘 BUTTON REFERENCE: Gets a handle to the button element */
+      /* document.getElementById finds an element with the specific ID */
+      /* We'll use this reference to modify the button's state */
+      
+      const handleClick = () => {
+          /* 🎯 CLICK HANDLER: Arrow function defines what happens when button is clicked */
+          /* Arrow functions (=>) are a modern, concise way to write functions */
+          
+          // Constraint: prevent multiple clicks
+          if (btn.classList.contains('loading')) return;
+          /* 🛡️ GUARD CLAUSE: Prevents function from continuing if already loading */
+          /* This is a critical protection against multiple submissions */
+          /* If the button is already in loading state, we immediately exit the function */
+          
+          // Feedback: enter the waiting state
+          btn.classList.add('loading');
+          /* ⏳ ACTIVATE LOADING STATE: Adds the CSS class that triggers visual changes */
+          /* This single line activates our waiting spinner and disables further clicks */
+          
+          // Simulation of an asynchronous call (e.g., API)
+          setTimeout(() => {
+              /* ⏱️ DELAYED EXECUTION: setTimeout runs code after a specified delay */
+              /* This simulates a network request or processing time */
+              /* In a real app, this would be an API call, database operation, etc. */
+              
+              // Feedback: end operation and return to resting state
+              btn.classList.remove('loading');
+              /* ✅ DEACTIVATE LOADING: Removes the loading class */
+              /* This returns the button to its original appearance */
+              
+              alert("Action completed!");
+              /* 📢 SUCCESS MESSAGE: Shows a popup with completion message */
+              /* In a real application, you might use a more sophisticated notification */
+          }, 2000);
+          /* ⏱️ TIMEOUT DURATION: 2000 milliseconds (2 seconds) */
+          /* This controls how long the button stays in loading state */
+      };
+      
+      btn.addEventListener('click', handleClick);
+      /* 🖱️ EVENT CONNECTION: Connects the click event to our handler function */
+      /* When the button is clicked, the browser will call our handleClick function */
+      /* addEventListener is the modern way to attach events without cluttering HTML */
+    </script>
+</body>
+
+</html>
+
+<!-- 🎯 ===== INTERACTIVE BUTTON SUMMARY ===== -->
+<!-- 
+🔘 COMPONENT ARCHITECTURE:
+│
+├── 🧠 DESIGN SYSTEM (CSS Variables)
+│   ├── 🎨 Color tokens (primary, hover, background, text)
+│   ├── 📐 Shape tokens (border-radius, font weight)
+│   └── 📦 Physics tokens (shadow effects for elevation)
+│
+├── 📄 LAYOUT FOUNDATION
+│   └── 📊 Viewport-centered grid for perfect positioning
+│
+├── 🔘 BUTTON DESIGN
+│   ├── 📊 Grid stacking technique for content alignment
+│   ├── 📏 Comfortable padding and minimum width
+│   └── 🕳️ Elevation effects using shadows
+│
+├── 🔄 STATE SYSTEM
+│   ├── 👆 Hover state (color change, slight lift)
+│   ├── 👇 Active state (press down, shadow change)
+│   └── ⏳ Loading state (persistent press, spinner)
+│
+└── 🧠 INTERACTION LOGIC
+    ├── 🛡️ Guard clause to prevent multiple submissions
+    ├── ⏱️ Asynchronous operation simulation
+    └── 📢 Success feedback
+    
+🎯 KEY DESIGN FEATURES:
+├── 🎭 Physical metaphor through elevation and movement
+├── 👁️ Clear state communication through multiple visual cues
+├── 📱 Responsive sizing and centered layout
+├── 📢 Accessibility support (semantic HTML, ARIA attributes)
+└── 🚫 Double submission prevention (both visual and functional)
+
+This button demonstrates how thoughtful design creates intuitive user experiences
+by mimicking physical objects and providing clear feedback at every step! 🔘✨
+-->
+```
+
+</TabItem>
+
+</Tabs>
+
+## Micro-Patterns
+
+I isolated other key concepts from my notes and tried to translate them into development patterns.
+
+### Constraints and Error Prevention
+
+Norman teaches that it is better to prevent errors at the source rather than curing them later. Instead of showing annoying error messages like "Invalid Date" after the user has already clicked, I will use native HTML5 constraints. For example, by setting `min`, `max`, and `required` attributes directly on the input, I guide the user toward the correct action invisibly, leveraging logical constraints to make entering incorrect data impossible.
+
+### Slips vs. Mistakes
+
+Norman makes a truly interesting distinction between Slips and Mistakes (cognitive errors). <br />
+A Slip is an execution error: I wanted to click 'Edit' but my mouse "slipped" onto 'Delete' due to distraction. <br />
+A Mistake, on the other hand, is a planning error: I performed the correct action, but my mental model was wrong (I thought that button did something else). <br />
+I realized that, especially for Slips, the solution is not to punish the user by blocking the flow with annoying 'Are you sure?' modals, but to offer them an elegant way out. <br />
+From now on, wherever possible, I will replace preventive confirmation with a non-intrusive Undo system.
+Here is how I imagine this 'recovery' logic managed via code:
+
+```javascript
+// "Undo" Pattern I will use instead of confirmation modals
+const deleteItem = (itemId) => {
+    // Remove item from view immediately (Instant Feedback)
+    removeItemFromDOM(itemId);
+    
+    // Show Toast (temporary non-intrusive notification) with Undo option
+    showToast({
+        message: "Item deleted",
+        actionText: "Undo",
+        onAction: () => restoreItem(itemId) // Arrow function for restoration
+    });
+};
+```
+
+### The Leitz Projector Test
+
+The case of the Leitz projector cited by Norman, where a single button handled too many functions causing disasters, is also interesting. Thanks to it, I will apply a rule I would define as “one action = one distinct control.”. I will avoid creating ambiguous icons that change function based on context in unclear ways; if an action is different, it must have a visually distinct control.
+
+## The Revelation
+
+Thanks to Don Norman, I understood that the approach to CSS shouldn't be focused on pure decoration; a shadow doesn't serve to make the design more modern or simply pleasing to look at. I grasped that every pixel has a communicative weight and simulated physics serves to tell the user's reptilian brain "this object can be pressed". I have indeed stopped seeing micro-interactions as stylistic quirks and started viewing them as necessary dialogues, because if the system doesn't respond within 100 milliseconds with a state change, the user inevitably loses trust in the interface. And, as we've seen, it's never the user's fault: if they make a mistake, it means I failed in the design.
+
+## What I Learned
+
+* **Affordance is not beauty:** A beautiful button that doesn't look like a button is useless; the function must be visible in the form.
+* **Asynchronous Feedback:** The user must always know if the system is working, which is why Loading States are not optional.
+* **Reversibility (Undo > Confirm):** Allowing errors to be remedied is infinitely better than terrorizing the user with continuous confirmation modals.
+* **Spatial Mapping:** Controls must be close to the objects they modify, logically grouped to reduce cognitive load.
+
+## Reflection
+
+If I had to summarize the book in one sentence, I'd say that invisible design is the best design. If a user notices my button because it's aesthetically pleasing, I've done a graphic job, but if they click it without even thinking, knowing exactly what will happen, I've done an engineering job.
+My task isn't to amaze the eye, but to free the mind from useless cognitive loads. Every time a user has to stop and think if an element is clickable, I have failed.
+In other words, my code must be the answer to that question before it's even formulated.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
