@@ -17,11 +17,8 @@
   "link.item.label.Vademecum": {
     "message": "Vademecum"
   },
-  "link.item.label.GitHub (Archive)": {
-    "message": "GitHub (Archivio)"
-  },
-  "link.item.label.About Me": {
-    "message": "Chi Sono"
+  "link.item.label.Origin Story": {
+    "message": "Le Origini"
   },
   "copyright": {
     "message": "Copyright © 2025 Simone Amico. Costruito con Docusaurus."

@@ -108,8 +108,8 @@ const config = {
             title: 'Connect',
             items: [
               {
-                label: 'GitHub (Archive)',
-                href: 'https://github.com/simoneamico-ux-dev/zero-to-ux-engineer-logs',
+                label: 'Origin Story',
+                href: 'https://github.com/simoneamico-ux-dev/from-factory-to-ux-engineer',
               },
               {
                 label: 'LinkedIn',
