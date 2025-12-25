@@ -122,7 +122,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Simone Amico. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Simone Amico.</br>Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

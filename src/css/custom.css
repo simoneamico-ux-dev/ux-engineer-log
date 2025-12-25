@@ -1,19 +1,28 @@
 /* DESIGN
    ------------------------------------------
    * This configuration overrides the default Infima/Docusaurus theme
-   * to achieve a "UX Engineer System" aesthetic.
+   * to achieve a "UX Engineer System" aesthetic
 
    * The architecture follows a "Theme-Driven Variables" system:
-   * - :root contains the Light mode (default) and structural variables.
-   * - [data-theme='dark'] contains only the necessary overrides for Dark mode.
+   * - :root contains the Light mode (default) and structural variables
+   * - [data-theme='dark'] contains only the necessary overrides for Dark mode
    * - Layout logic focuses on Gestalt principles (spacing, grouping)
-   *   and WCAG Accessibility (contrast ratios).
+   * and WCAG Accessibility (contrast ratios).
+
+   * Architectural decision: Why I skipped @layer (for now)
+   * I evaluated using CSS Cascade Layers to modernize the architecture
+   * However, Docusaurus currently relies on unlayered styles. Since the CSS
+   * Specification dictates that unlayered styles always beat layered ones,
+   * using them would have forced me into a "specificity war" fought with
+   * `!important`
+   * I chose a pragmatic path: standard unlayered CSS. It simply loads last
+   * and overrides the defaults naturally.
 
    * Key Technical choices:
-   * - "Surgical Gradient": Used instead of borders for the sidebar separator
-   *   to respect internal padding without layout shifts.
+   * - "Surgical gradient": Used instead of borders for the sidebar separator
+   *    to respect internal padding without layout shifts.
    * - "Token overrides": Specific targeting of PrismJS syntax tokens
-   *   to ensure code readability across both color schemes.
+   *    to ensure code readability across both color schemes.
 */
 
 
@@ -32,14 +41,14 @@
     /* Base UI & Fonts */
     --ifm-font-family-base: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     --ifm-global-radius: 20px;
-    
+
     /* Layout Backgrounds & Borders */
     --frame-background: #9B795A;
     --ifm-background-color: #E4D6C9;
     --card-border-color: #6b6053;
     --ifm-color-content: #000000;
     --ifm-navbar-background-color: #E4D6C9;
-    --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.18) !important;
+    --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.18);
     --button-border-color: #322d26;
     --button-border-color-hover: #ae9a83;
 
@@ -48,7 +57,7 @@
     --ifm-toc-border-color: var(--sidebar-separator);
     --ifm-menu-color: #574c45;       /* Inactive links (contrast fix) */
     --ifm-toc-link-color: #574c45;   /* TOC Inactive links */
-    
+
     /* Data Tables */
     --ifm-table-border-color: #a1907b; 
     --ifm-table-stripe-background: rgba(0, 0, 0, 0.05);
@@ -62,6 +71,7 @@
     --search-text: #423223;
     --search-border-color: rgba(97, 74, 51, 0.3);
     --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23614a33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
+    
     /* Syntax Highlighting (Light Mode specific tokens) */
     --code-token-cyan-fix: #005a75; /* Dark Petrol (replaces unreadable Cyan) */
     --code-token-doctype: #393a34;  /* Dark Grey (fixes Italic Doctype) */
@@ -87,10 +97,10 @@
     --card-border-color-hover: #998874;
     --ifm-color-content: #FFFFFF;
     --ifm-navbar-background-color: #322620;
-    --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.35) !important; /* Dark Mode adjustment (the black shadow is less visible, so the opacity has been increased) */
+    --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.35); /* Dark Mode adjustment (the black shadow is less visible, so the opacity has been increased) */
     --button-border-color: #a7805a;
     --button-border-color-hover: #716454;
-    
+
     /* Sidebar & Navigation */
     --sidebar-separator: rgba(90, 124, 155, 0.35);
     --ifm-toc-border-color: var(--sidebar-separator);
@@ -106,6 +116,7 @@
     --search-text: #ffeac1;
     --search-border-color: rgba(222, 203, 164, 0.2);
     --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23decba4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
+    
     /* Syntax Highlighting (Dark Mode specific tokens) */
     --code-token-keyword-fix: #d4aaff; /* Light Lavender (for contrast) */
 }
@@ -135,8 +146,7 @@ html, body {
     width: auto;
 
     /* NAVBAR 3D ELEVATION FIX */
-    /* 
-    I added a very soft and diffused shadow to give a subtle sense of floating.
+    /* I added a very soft and diffused shadow to give a subtle sense of floating.
     I focused on lightness, as in the rest of the CSS, in order to avoid putting
     unnecessary load on the GPU.
     The effect is intentionally almost imperceptible on the main screen, but becomes
@@ -166,11 +176,11 @@ html, body {
 }
 
 .pagination-nav__link {
-    border: 1px solid var(--button-border-color) !important;
+    border: 1px solid var(--button-border-color);
 }
 
 .pagination-nav__link:hover {
-    border-color: var(--button-border-color-hover) !important;
+    border-color: var(--button-border-color-hover);
 }
 
 /* COMPONENTS: Search Bar */
@@ -254,7 +264,7 @@ html, body {
 /* Sidebar Separator (The Surgical Gradient) */
 /* I used a gradient instead of a border to respect top padding without layout shift */
 aside[class^='theme-doc-sidebar-container'] {
-    border-right: none !important;
+    border-right: none;
 
     background-image: linear-gradient(
         to bottom,
@@ -287,7 +297,7 @@ aside[class^='theme-doc-sidebar-container'] {
 
 .table-of-contents__link--active {
     font-weight: 750;
-    color: var(--ifm-color-primary) !important;
+    color: var(--ifm-color-primary);
 }
 
 /* Code Block Highlighting */
@@ -368,8 +378,10 @@ html[data-theme='dark'] code span.token.variable {
  is being added through an animation.”
 */
 @media screen and (max-width: 411px) {
-    
+
     .navbar__title {
+        font-size: 1.2rem;
+        line-height: 2; /* I set line-height to 2 because visual testing showed this matches the hamburger menu height perfectly, ensuring vertical centering */
         transition: opacity 0.3s ease, max-width 0.3s ease, margin 0.3s ease;
         opacity: 1;
         max-width: 200px;
@@ -399,7 +411,7 @@ I fixed it by applying a very high z-index (99999)
     position: fixed !important;
     inset: 0 !important;
     z-index: 99999 !important;
-    height: 100dvh !important; /* optional, but helps on iOS */
+    height: 100dvh !important;
   }
 
   .DocSearch-Modal {
@@ -431,24 +443,24 @@ I fixed it by applying a very high z-index (99999)
 /* FOOTER CONTRAST FIX (Goal: 100/100 A11y) */
 /* The default grey links on dark background fail WCAG contrast ratio. */
 .footer__link-item {
-    color: #e0e0e0 !important; /* Almost white (High Contrast) */
-    opacity: 1 !important;     /* Remove opacity that kills contrast */
+    color: #e0e0e0; /* Almost white (High Contrast) */
+    opacity: 1;     /* Remove opacity that kills contrast */
     transition: color 0.2s ease;
 }
 
 .footer__link-item:hover {
-    color: var(--ifm-color-primary) !important;
+    color: var(--ifm-color-primary);
     text-decoration: underline;
 }
 
 .footer__title {
-    color: #ffffff !important; /* Pure white for headers */
-    opacity: 1 !important;
+    color: #ffffff; /* Pure white for headers */
+    opacity: 1;
 }
 
 .footer__copyright {
-    color: #dcdcdc !important; /* Light grey for text */
-    opacity: 1 !important;
+    color: #dcdcdc; /* Light grey for text */
+    opacity: 1;
 }
 
 /* PERFORMANCE FIX (Goal: FCP < 1.0s) */
@@ -465,7 +477,7 @@ I fixed it by applying a very high z-index (99999)
 /* SIDEBAR LEVEL 2 COLOR FIX */
 /*
 I noticed that after disabling the "generated-index" link, these sub-categories
-defaulted to a stark white color (active state).
+defaulted to a stark white color (active state)
 I forced the standard neutral menu color here to ensure visual consistency
 across the entire navigation tree.
 */
@@ -474,4 +486,87 @@ across the entire navigation tree.
     color: var(--ifm-menu-color) !important;
     background-color: transparent !important;
     font-weight: 600;
+}
+
+
+/* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Enhanced TOC) */
+/*
+   * Strategy: "Card deconstruction" & "Native app feel"
+   * I opted for the same solution adopted in the "Telephone Number Validator" project.
+   * Recent user testing revealed that the "card" container felt awkward and
+   * anti-aesthetic on mobile, even if it didn't consume much width
+   * The goal is to eliminate the card metaphor to achieve a layout similar
+   * to a native app:
+   * 1. Immersive layout: Maximizing screen real estate by removing borders/margins
+   * 2. Reader mode: Reducing vertical noise by hiding breadcrumbs
+   * 3. Enhanced TOC (Table Of Contents): Visually separating the navigation from the
+   * body text.
+*/
+@media screen and (max-width: 996px) {
+    
+    /* Reset wrapper: Removing the box container to prevent overflow & remove the gap */
+    .main-wrapper {
+        margin: 0 !important;
+        padding-top: 0 !important; /* Set to 0 since breadcrumbs are removed */
+        border: none !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        max-width: 100vw !important; 
+        overflow-x: hidden !important; 
+    }
+
+    /* Reset navbar: Allowing it to touch the physical edges of the screen */
+    .navbar {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-top: none !important;
+    }
+    
+    /* Safety: Restoring internal padding so the text doesn't hit the bezel */
+    /* Chosen 6px here to maximize the reading width */
+    .container {
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+        max-width: 100% !important;
+    }
+    
+    /* Fix for the row negative margins creating side scroll */
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* Hiding breadcrumbs to save vertical space */
+    .breadcrumbs {
+        display: none !important;
+    }
+    
+    /* TOC ENHANCEMENTS (Accordion) */
+    .theme-doc-toc-mobile {
+        /* Width trick: Using negative margins to pull the element to the screen edges
+           With -12px creating a visual breakout relative to the container padding */
+        margin-left: -12px !important;
+        margin-right: -12px !important;
+        width: calc(100% + 24px) !important; 
+        margin-bottom: 2rem !important; /* Space required before content starts */
+    }
+
+}
+
+
+/* LANDSCAPE OPTIMIZATION */
+/*
+   * When rotating the device to landscape, vertical height becomes scarce
+   * The standard navbar consumes too much viewport, so I forcing a compact
+   * height specifically for this orientation.
+*/
+@media screen and (max-width: 996px) and (orientation: landscape) {
+    
+    :root {
+        /* Reducing navbar height here (Default is 60px) */
+        --ifm-navbar-height: 50px;
+    }
+
 }
