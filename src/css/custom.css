@@ -422,10 +422,10 @@ I fixed it by applying a very high z-index (99999)
     box-shadow: none !important;
     -webkit-overflow-scrolling: touch !important; /* This allows internal scrolling on iOS */
   }
-
-  /* If the navbar still overlaps, hide it when search is open */
+  
   body.DocSearch--active .navbar {
-    display: none !important;
+    opacity: 0 !important;          /* Makes it invisible */
+    pointer-events: none !important; /* It also makes it touchless (clicks pass through) */
   }
 
     /* Here we make code blocks smaller on mobile to get a better overall view */
@@ -489,19 +489,18 @@ across the entire navigation tree.
 }
 
 
-/* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Interaction Hardening) */
+/* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Enhanced TOC) */
 /*
    * Strategy: "Card deconstruction" & "Native app feel"
-   * I opted for the same solution adopted in the "Telephone Number Validator" project
-   * Recent user testing revealed that the "card" container felt awkward and anti-aesthetic
-   * on mobile, even if it didn't consume much width.
-   *
+   * I opted for the same solution adopted in the "Telephone Number Validator" project.
+   * Recent user testing revealed that the "card" container felt awkward and
+   * anti-aesthetic on mobile, even if it didn't consume much width
    * The goal is to eliminate the card metaphor to achieve a layout similar
    * to a native app:
    * 1. Immersive layout: Maximizing screen real estate by removing borders/margins
    * 2. Reader mode: Reducing vertical noise by hiding breadcrumbs
-   * 3. Enhanced TOC (Table Of Contents): Visually separating the navigation from the body text
-   * 4. Interaction Hardening: Fixing the iOS "Ghost Click" bug on search results.
+   * 3. Enhanced TOC (Table Of Contents): Visually separating the navigation from the
+   * body text.
 */
 @media screen and (max-width: 996px) {
 
@@ -513,8 +512,6 @@ across the entire navigation tree.
         --ifm-navbar-shadow: none;
     }
     
-    /* Immersive layout */
-
     /* Reset wrapper: Removing the box container to prevent overflow & remove the gap */
     .main-wrapper {
         margin: 0 !important;
@@ -536,8 +533,8 @@ across the entire navigation tree.
         border-bottom: 1.7px solid var(--card-border-color) !important; /* I increased the border to make the separation clearer since I removed the shadow in this mobile version */
     }
     
-    /* Safety: Restoring internal padding so the text doesn't hit the bezel
-       Chosen 6px here to maximize the reading width */
+    /* Safety: Restoring internal padding so the text doesn't hit the bezel */
+    /* Chosen 6px here to maximize the reading width */
     .container {
         padding-left: 6px !important;
         padding-right: 6px !important;
@@ -550,14 +547,12 @@ across the entire navigation tree.
         margin-right: 0 !important;
     }
 
-    /* Navigation and TOC */
-
     /* Hiding breadcrumbs to save vertical space */
     .breadcrumbs {
         display: none !important;
     }
     
-    /* TOC enhancements (Accordion) */
+    /* TOC ENHANCEMENTS (Accordion) */
     .theme-doc-toc-mobile {
         /* Width trick: Using negative margins to pull the element to the screen edges
            With -12px creating a visual breakout relative to the container padding */
@@ -565,47 +560,6 @@ across the entire navigation tree.
         margin-right: -12px !important;
         width: calc(100% + 24px) !important; 
         margin-bottom: 2rem !important; /* Space required before content starts */
-    }
-
-    /* Search interaction fix (iOS Hardening) */
-    /*
-       I noticed a frustrating behavior on iOS, tapping a search result often
-       triggers the keyboard closure (blur) before the click registers
-       I implemented this hardening strategy to force immediate interaction.
-    */
-
-    /* I force the search container above the navbar and stabilize coordinates */
-    .DocSearch-Container {
-        position: fixed !important;
-        z-index: 99999 !important;
-        height: 100dvh !important;
-        top: 0 !important;
-        left: 0 !important;
-    }
-
-    .DocSearch-Modal {
-        margin: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        -webkit-overflow-scrolling: touch !important; 
-    }
-
-    /* Interaction hardening: I simplify touch events to prioritize the click */
-    .DocSearch-Hit a {
-        cursor: pointer !important;
-        display: block !important; /* I ensure the hit area is solid */
-        -webkit-tap-highlight-color: rgba(0,0,0,0) !important; /* Removed tap flash */
-    }
-
-    /* I reduced code block font size on mobile to preserve the layout structure */
-    .theme-code-block pre,
-    .theme-code-block code,
-    .prism-code {
-        font-size: 0.75rem !important; 
-        line-height: 1.4 !important; 
-        -webkit-text-size-adjust: 100%; 
     }
 
 }
