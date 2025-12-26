@@ -422,11 +422,6 @@ I fixed it by applying a very high z-index (99999)
     box-shadow: none !important;
     -webkit-overflow-scrolling: touch !important; /* This allows internal scrolling on iOS */
   }
-  
-  body.DocSearch--active .navbar {
-    opacity: 0 !important;          /* Makes it invisible */
-    pointer-events: none !important; /* It also makes it touchless (clicks pass through) */
-  }
 
     /* Here we make code blocks smaller on mobile to get a better overall view */
     .theme-code-block pre,
