@@ -188,16 +188,20 @@ html, body {
 .navbar__search-input {
     background-color: var(--search-background) !important;
     color: var(--search-text) !important;
-    border: 2.5px solid var(--search-border-color) !important;
+    border: 1.75px solid var(--search-border-color) !important;
     border-radius: var(--ifm-global-radius) !important;
-    transition: all 0.2s ease;
+    transition: border-color 0.25s ease;
     background-image: var(--search-icon-url) !important; 
+}
+
+.navbar__search-input:focus {
+    border-color: var(--ifm-color-primary) !important;
 }
 
 /* Placeholder styling */
 .navbar__search-input::placeholder {
     color: var(--search-text) !important;
-    opacity: 0.6;
+    opacity: 0.7;
 }
 
 
