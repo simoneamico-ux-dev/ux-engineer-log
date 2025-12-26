@@ -29,6 +29,9 @@
 /* UNIVERSAL & LIGHT MODE (Default Variables) */
 
 :root {
+
+    color-scheme: light; /* After testing on Samsung Internet as well, I added this line to prevent Samsung from applying strange filters, because it was turning the background into a dark red (wine color) */
+
     /* Color Palette (Coffee & Sand) */
     --ifm-color-primary: #614a33;
     --ifm-color-primary-dark: #7d5f40;
@@ -81,6 +84,9 @@
 /* DARK MODE (Overrides) */
 
 [data-theme='dark'] {
+
+    color-scheme: dark;
+
     /* Color Palette (Warm Night) */
     --ifm-color-primary: #D4A373;
     --ifm-color-primary-dark: #be8e5e;
@@ -124,8 +130,14 @@
 
 /* GLOBAL LAYOUT RESET */
 
-html, body {
-    background-color: var(--frame-background);
+html {
+    background-color: var(--frame-background) !important; /* Fix for Safari: The !important forces the browser to immediately apply the color, preventing the wrong-colored rectangle on the first load */
+    height: 100%;
+    -webkit-text-size-adjust: 100%; /* I added it to prevent unwanted zooming during rotation because I happened to experience this bug */
+}
+
+body {
+    background-color: var(--frame-background); /* I keep the color here as well, just to be safe */
     height: 100%;
 }
 
