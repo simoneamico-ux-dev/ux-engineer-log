@@ -1,0 +1,81 @@
+---
+sidebar_position: 2
+title: Tipografia e Immagini
+description: Gestire testo, immagini e colori come un ingegnere.
+---
+
+# UX & UI Real World Vademecum
+
+# Parte II: La Fisica del Testo e delle Immagini
+
+Il contenuto è il re, ma se il re è vestito di stracci nessuno lo ascolta. In questa sezione trattiamo il testo e le immagini non come decorazioni, ma come componenti meccanici che devono funzionare perfettamente insieme.
+
+---
+
+## Tipografia Ingegneristica
+
+### 8. Tipografia: Gerarchia Senza Dimensioni
+
+**Il Volume vs. La Frequenza**
+
+**Cosa fa:** Crea ordine visivo senza dover usare caratteri giganti che rubano spazio prezioso.
+
+**L'Analogia:** Immagina un mixer audio. Per far sentire meglio uno strumento, non alzi solo il volume (font-size). A volte regoli i bassi (font-weight) o cambi il colore del suono (colore del testo).
+
+**L'Approccio:** Invece di avere 10 dimensioni diverse (h1, h2, h3...), usa **3 dimensioni** e gioca con il **peso**. Un testo piccolo ma in **Grassetto Scuro** (Bold Dark) cattura l'occhio più di un testo medio ma Sottile e Grigio.
+* *Primario:* Nero, Bold.
+* *Secondario:* Grigio Scuro, Regular.
+* *Terziario:* Grigio Chiaro, Small.
+Hai appena creato gerarchia senza cambiare la dimensione del font nemmeno di un pixel.
+
+### 9. Interlinea (Line Height)
+
+**Il Distanziamento Sociale delle Lettere**
+
+**Cosa fa:** Rende il testo leggibile permettendo all'occhio di tornare a capo senza perdere il segno.
+
+**L'Analogia:** Leggere un testo con interlinea stretta è come cercare di camminare in una folla dove tutti ti stanno appiccicati: soffocante. Leggere con interlinea troppo larga è come saltare tra le pietre di un fiume: devi fare troppa fatica per arrivare all'altra sponda.
+
+**La Formula Matematica:**
+* **Titoli (Headings):** Stretti. Moltiplica la dimensione per **1.1** o **1.2**. Essendo grandi e corti, devono stare vicini per sembrare un blocco unico.
+* **Corpo del Testo (Body):** Larghi. Moltiplica per **1.5** o **1.6**. L'occhio deve correre veloce e rilassato.
+Più il testo è piccolo, più "aria" serve attorno.
+
+### 10. Lunghezza della Riga
+
+**La Fatica del Collo**
+
+**Cosa fa:** Previene l'affaticamento oculare limitando il numero di caratteri per riga.
+
+**L'Analogia:** Hai mai provato a leggere un sito su un monitor 27 pollici a schermo intero dove il testo va da sinistra a destra senza margini? È come guardare una partita di tennis dagli spalti: il collo va avanti e indietro. Dopo 5 minuti hai mal di testa.
+
+**Il Limite Aereo:** I giornali e i libri usano colonne strette per un motivo. Il limite ideale è tra **45 e 75 caratteri** per riga. Se la tua riga è più lunga, l'occhio fa fatica a trovare l'inizio della riga successiva quando torna indietro. Non aver paura di lasciare ampi margini bianchi ai lati: è spazio di respiro, non spazio sprecato.
+
+---
+
+## Asset Visivi
+
+### 11. Immagini e Percezione
+
+**Le Gomme della Ferrari**
+
+**Cosa fa:** Determina la percezione immediata della qualità del prodotto software.
+
+**L'Analogia:** Puoi avere il codice più pulito del mondo (il motore Ferrari) e una struttura UX perfetta (il telaio in carbonio). Ma se usi immagini sgranate, stock photo palesemente finte o asset non ottimizzati, è come mettere le gomme di una panda sulla Ferrari. L'utente percepirà tutto il sito come "economico" e "lento".
+
+**La Regola della Realtà:** Evita le foto di "uomini in giacca che si stringono la mano sorridendo". Il cervello le filtra come spam visivo. Usa foto reali del prodotto, screenshot dell'app, o illustrazioni astratte coerenti. E ricorda la lezione del "Mac Silenzioso": converti tutto in WebP, ridimensiona al pixel esatto necessario. Un'immagine da 4000px visualizzata in un box da 400px è un crimine contro la performance.
+
+### 12. Colore Funzionale
+
+**Non Dipingere, Segnala**
+
+**Cosa fa:** Usa il colore per indicare stato, azione e importanza, non solo per "fare brand".
+
+**L'Analogia:** Pensa ai semafori o alla segnaletica stradale. Il rosso non è lì perché sta bene col paesaggio, è lì perché il nostro cervello è cablato per vederlo come "STOP" o "PERICOLO".
+
+**Il Sistema 60-30-10:**
+* **60% Neutro:** (Bianco, Grigi, Sfondi). È la tela.
+* **30% Secondario:** (Brand Color). Identità visiva.
+* **10% Accento:** (Call to Action, Errori, Successi). È il laser che guida l'occhio.
+
+**La Trappola del Brand:** Se il colore del brand è Rosso, non usare il Rosso per i bottoni di conferma "OK". Confonderai l'utente facendogli credere che sta per cancellare tutto. In quel caso, il brand fa un passo indietro rispetto alla funzione.

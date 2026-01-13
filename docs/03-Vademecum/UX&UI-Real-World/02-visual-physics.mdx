@@ -1,0 +1,81 @@
+---
+sidebar_position: 2
+title: Visual Physics
+description: Managing text, images, and colors like an engineer.
+---
+
+# UX & UI Real World Vademecum
+
+# Part II: The Physics of Text and Images
+
+Content is king, but if the king is dressed in rags, no one listens. In this section, we treat text and images not as decoration, but as mechanical components that must function perfectly together.
+
+---
+
+## Engineering Typography
+
+### 8. Typography: Hierarchy Without Size
+
+**Volume vs. Frequency**
+
+**What it does:** Creates visual order without having to use giant characters that steal precious space.
+
+**The Analogy:** Imagine an audio mixer. To make an instrument heard better, you don't just turn up the volume (font-size). Sometimes you adjust the bass (font-weight) or change the tone color (text color).
+
+**The Approach:** Instead of having 10 different sizes (h1, h2, h3...), use **3 sizes** and play with **weight**. A small text in **Dark Bold** captures the eye more than a medium text that is Thin and Gray.
+* *Primary:* Black, Bold.
+* *Secondary:* Dark Gray, Regular.
+* *Tertiary:* Light Gray, Small.
+You've just created hierarchy without changing the font size by even a pixel.
+
+### 9. Line Height
+
+**Social Distancing for Letters**
+
+**What it does:** Makes text readable by allowing the eye to return to the start of the next line without losing its place.
+
+**The Analogy:** Reading text with tight line height is like trying to walk in a crowd where everyone is glued to you: suffocating. Reading with line height too wide is like jumping between stones in a river: too much effort to get to the other side.
+
+**The Mathematical Formula:**
+* **Headings:** Tight. Multiply the size by **1.1** or **1.2**. Being large and short, they must sit close to look like a single block.
+* **Body Text:** Loose. Multiply by **1.5** or **1.6**. The eye needs to run fast and relaxed.
+The smaller the text, the more "air" it needs around it.
+
+### 10. Line Length
+
+**Neck Fatigue**
+
+**What it does:** Prevents eye strain by limiting the number of characters per line.
+
+**The Analogy:** Have you ever tried reading a site on a 27-inch monitor full-screen where the text goes from left to right without margins? It’s like watching a tennis match from the stands: your neck goes back and forth. After 5 minutes, you have a headache.
+
+**The Aviation Limit:** Newspapers and books use narrow columns for a reason. The ideal limit is between **45 and 75 characters** per line. If your line is longer, the eye struggles to find the start of the next line when tracking back. Don't be afraid to leave wide white margins on the sides: it's breathing room, not wasted space.
+
+---
+
+## Visual Assets
+
+### 11. Images and Perception
+
+**Ferrari Tires**
+
+**What it does:** Determines the immediate perception of the software product quality.
+
+**The Analogy:** You can have the cleanest code in the world (the Ferrari engine) and a perfect UX structure (the carbon chassis). But if you use pixelated images, obviously fake stock photos, or unoptimized assets, it’s like putting Fiat Panda tires on the Ferrari. The user will perceive the entire site as "cheap" and "slow."
+
+**The Reality Rule:** Avoid photos of "men in suits shaking hands while smiling." The brain filters them as visual spam. Use real product photos, app screenshots, or coherent abstract illustrations. And remember the "Silent Mac" lesson: convert everything to WebP, resize to the exact pixel needed. A 4000px image displayed in a 400px box is a crime against performance.
+
+### 12. Functional Color
+
+**Don't Paint, Signal**
+
+**What it does:** Uses color to indicate status, action, and importance, not just for "branding."
+
+**The Analogy:** Think of traffic lights or road signs. Red isn't there because it looks good with the landscape; it’s there because our brain is wired to see it as "STOP" or "DANGER."
+
+**The 60-30-10 System:**
+* **60% Neutral:** (White, Grays, Backgrounds). It's the canvas.
+* **30% Secondary:** (Brand Color). Visual identity.
+* **10% Accent:** (Call to Action, Errors, Success). It's the laser that guides the eye.
+
+**The Brand Trap:** If the brand color is Red, do not use Red for "OK" confirmation buttons. You will confuse the user into thinking they are about to delete everything. In that case, the brand takes a step back for function.

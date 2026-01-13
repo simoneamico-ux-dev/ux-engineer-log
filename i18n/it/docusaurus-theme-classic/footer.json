@@ -8,14 +8,14 @@
   "link.item.label.Featured": {
     "message": "In Evidenza"
   },
-  "link.item.label.Inspirational": {
-    "message": "D'ispirazione"
-  },
   "link.item.label.Path": {
     "message": "Percorso"
   },
   "link.item.label.Vademecum": {
     "message": "Vademecum"
+  },
+  "link.item.label.Bookshelf": {
+    "message": "Libreria"
   },
   "link.item.label.Origin Story": {
     "message": "Le Origini"

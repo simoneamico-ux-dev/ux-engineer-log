@@ -1,0 +1,86 @@
+---
+sidebar_position: 3
+title: Processo Scientifico
+description: Empatia, Personas, User Journey e Checklist di Validazione.
+---
+
+# UX & UI Real World Vademecum
+
+# Parte III: Il Processo Scientifico
+
+Il design non è arte, è problem solving. Non aspettiamo l'ispirazione divina, usiamo un metodo scientifico per estrarre la soluzione dai dati.
+
+---
+
+## Ricerca e Empatia
+
+### 13. Empatia come Data Mining
+
+**Non è solo "Essere Gentili"**
+
+**Cosa fa:** Raccoglie dati qualitativi grezzi per capire il vero problema da risolvere.
+
+**L'Analogia:** In fabbrica, se un macchinario si rompe, non inizi a svitare bulloni a caso. Prima chiedi all'operatore: "Cosa stavi facendo? Che rumore ha fatto? Quando succede?". Questa è la fase di Empatia. Non stai cercando di farti piacere l'operatore, stai cercando di **diagnosticare il guasto**.
+
+**Il Bias dell'Ingegnere:** Noi tendiamo a voler subito la soluzione ("Ah, serve un database!"). L'empatia ti costringe a rimanere nel problema ("Aspetta, forse non serve un database, serve solo che il tasto sia più grosso perché usano i guanti").
+
+### 14. Indagine Contestuale (Sherlock Holmes in Fabbrica)
+
+**L'Intervista in Sala Bianca è una Bugia**
+
+**Cosa fa:** Raccoglie la verità osservando l'utente nel suo habitat naturale, non quello che l'utente *dice* di fare.
+
+**L'Analogia:** Se chiedi a una persona "Come usi questo macchinario?", ti darà la versione da manuale. Se la osservi mentre lavora, vedrai che ha attaccato un post-it sullo schermo con la password perché se la dimentica, e che prende a calci la macchina per farla partire.
+
+**Il Metodo Colombo:** Non fare l'esperto. Fai l'Apprendista. Fatti insegnare il lavoro dall'utente (il Maestro). E fai domande "ingenue" come il Tenente Colombo: "Mi scusi, un'ultima cosa... perché ha scritto quel numero sulla mano?". Lì scoprirai i veri problemi di design che nessun questionario ti rivelerà mai.
+
+---
+
+## Modellazione dell'Utente
+
+### 15. Personas: Il Bisturi
+
+**La Scheda del Personaggio RPG**
+
+**Cosa fa:** Crea un archetipo utente basato sui dati per evitare di progettare per se stessi (o per nessuno).
+
+**L'Analogia:** Il coltellino svizzero fa tutto (forbici, coltello, cavatappi), ma lo fa male. Un bisturi fa una cosa sola, ma la fa perfettamente. Una Persona è il tuo bersaglio.
+* *Nome:* Mario l'Operatore.
+* *Skill:* Alta manualità, bassa alfabetizzazione informatica.
+* *Debolezza:* Va di fretta, odia leggere testi lunghi.
+
+**L'Utente Elastico:** Senza una Persona definita, il team di sviluppo userà l'utente elastico. Quando fa comodo, l'utente è "esperto" (quindi niente istruzioni). Quando fa comodo, è "stupido" (quindi togliamo funzionalità).
+**L'Anti-Persona:** Definisci anche per chi *non* stai progettando (es. il criminale informatico o il burlone). Ti serve per creare vincoli di sicurezza senza rovinare l'esperienza di Mario.
+
+### 16. User Journey Map
+
+**La Sceneggiatura del Film**
+
+**Cosa fa:** Mappa l'intera esperienza, non solo i click sullo schermo, per trovare i punti di dolore esterni.
+
+**L'Analogia:** Google Maps ti mostra la strada, ma non ti dice se piove, se c'è traffico o se sarai stressato perché sei in ritardo. La User Journey è il racconto emotivo del viaggio.
+
+**Oltre lo Schermo:** La Journey non inizia quando l'utente apre l'app.
+* *Prima:* L'utente è frustrato perché ha perso un documento cartaceo.
+* *Durante:* Apre la tua app per risolvere il problema.
+* *Dopo:* Si sente sollevato o ancora più arrabbiato?
+Spesso i problemi di UX non sono nel software, ma nel contesto (es. l'app richiede internet, ma in magazzino non c'è campo). Solo la User Journey ti mostra questi "buchi di trama".
+
+---
+
+## Validazione e Controllo Qualità
+
+### 17. Le 10 Euristiche di Nielsen
+
+**La Checklist del Pilota**
+
+**Cosa fa:** È una lista di controllo universale per trovare buchi nell'usabilità senza dover intervistare 100 persone.
+
+**L'Analogia:** Prima di decollare, il pilota non va a "sensazione". Ha una checklist: "Flap? Ok. Carburante? Ok.". Le euristiche sono la tua checklist pre-volo. Non servono a creare, servono a *non schiantarsi*.
+
+**Le 3 Euristiche Salvavita (su 10):**
+1.  **Visibilità dello Stato:** Il sistema deve sempre dirti cosa sta facendo (Spinner, Barre di progresso, Breadcrumbs). Se l'utente chiede "Si è bloccato?", hai fallito.
+2.  **Corrispondenza tra Sistema e Mondo Reale:** Usa il linguaggio dell'utente, non quello della macchina. (Es. "Cestino" invece di "Directory /dev/null").
+3.  **Prevenzione dell'Errore:** È meglio un design che impedisce di sbagliare (es. input data che accetta solo numeri) piuttosto che un messaggio di errore simpatico.
+
+**Uso Pratico:** Prima di consegnare il design, scorri la lista. Se violi un'euristica, devi avere un motivo dannatamente buono.

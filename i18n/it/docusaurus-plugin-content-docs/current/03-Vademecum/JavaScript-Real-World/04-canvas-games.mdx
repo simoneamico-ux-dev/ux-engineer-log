@@ -1,0 +1,350 @@
+---
+sidebar_position: 4
+title: Canvas e Logica di Gioco
+description: HTML5 Canvas, requestAnimationFrame e Game Loop.
+---
+
+# JavaScript Real World Vademecum
+
+# Parte IV: Canvas e Logica di Gioco
+
+Oltre all'interfaccia standard, il browser è un potente motore grafico. Questa sezione esplora l'API HTML5 Canvas per il disegno, le animazioni e la creazione di logiche basate su loop, tipiche dei videogiochi.
+
+---
+
+## API Canvas e Logica di Gioco
+
+Se il DOM è come un set di **mattoncini LEGO** (elementi rigidi come `<div>`, `<p>`, `<button>` che puoi solo impilare e spostare), l'API **Canvas** è un **foglio di carta bianco immacolato** e un astuccio pieno di colori.
+
+Non ci sono "elementi". C'è solo *tu* e una griglia di pixel. Ti dà un potere immenso (puoi disegnare *qualsiasi cosa*) ma anche più responsabilità (devi *tu* disegnare *tutto*, ad ogni fotogramma). È la tecnologia alla base della maggior parte dei giochi 2D sul web.
+
+### 30. Canvas (Generale) - Il Tuo Quaderno Digitale
+
+L'elemento `<canvas>` in HTML è solo il "quaderno".
+`<canvas id="mio-gioco"></canvas>`
+
+Da solo, è inutile. Per disegnarci sopra, devi prima "afferrare" i suoi strumenti di disegno (il "contesto") con JavaScript.
+
+#### `getContext("2d")` - Ottenere gli Strumenti
+
+Pensa al `<canvas>` come al quaderno e al `getContext("2d")` come all'azione di **aprire l'astuccio** e prendere pennarelli, penne e la gomma.
+
+```javascript
+const canvas = document.querySelector("#mio-gioco");
+// Apri l'astuccio per disegnare in 2D
+const ctx = canvas.getContext("2d"); 
+// 'ctx' (abbreviazione di "context") è ora il tuo oggetto magico
+// con tutti i metodi per disegnare: ctx.fillRect(), ctx.beginPath()...
+```
+
+#### Coordinate (0,0 in alto a sinistra) - La Mappa Rovesciata
+
+Questo è il primo "muro" concettuale da superare. A differenza della matematica scolastica dove (0,0) è in *basso a sinistra*, nel Canvas (e in quasi tutta la computer grafica):
+
+  * **`(0, 0)` è l'angolo IN ALTO A SINISTRA.**
+  * L'asse **X** aumenta andando verso **destra** (come sempre).
+  * L'asse **Y** aumenta **SCENDENDO** verso il basso.
+
+Quindi, `(x: 10, y: 50)` significa "10 pixel da sinistra, 50 pixel *dall'alto*".
+
+#### Stili (`fill` vs `stroke`) - Pennarello vs Penna
+
+Hai due modi principali per disegnare:
+
+1.  **`fill` (Riempimento):** È il tuo **pennarello**. Crea forme piene e solide. Il suo colore si controlla con `ctx.fillStyle`.
+2.  **`stroke` (Contorno):** È la tua **penna a china**. Disegna solo i bordi. Il suo colore si controlla con `ctx.strokeStyle`.
+
+**Concetto Chiave: Sono "Stati"**
+Pensa a `fillStyle` e `strokeStyle` come a **tenere in mano un pennarello**.
+
+```javascript
+ctx.fillStyle = "red";
+// Da questo momento, *tutto* ciò che disegni con fill()
+// sarà rosso...
+ctx.fillRect(10, 10, 50, 50); // Un quadrato rosso
+
+ctx.fillStyle = "blue";
+// ...finché non cambi pennarello.
+ctx.fillRect(70, 10, 50, 50); // Un quadrato blu
+```
+
+Non devi specificare il colore per ogni forma. Lo imposti una volta e rimane "attivo".
+
+#### Forme (Rettangoli, Percorsi) - Gli Elementi di Base
+
+Ci sono due modi per disegnare forme:
+
+  * **1. Rettangoli (I Facili)**
+    I rettangoli sono così comuni che hanno i loro metodi "scorciatoia". Non devi fare altro.
+
+    ```javascript
+    // ctx.fillRect(x, y, larghezza, altezza);
+    ctx.fillStyle = "green";
+    ctx.fillRect(20, 20, 100, 50); // Disegna un rettangolo verde pieno
+
+    // ctx.strokeRect(x, y, larghezza, altezza);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(150, 20, 100, 50); // Disegna un bordo di rettangolo nero
+
+    // ctx.clearRect(x, y, larghezza, altezza);
+    ctx.clearRect(30, 30, 30, 30); // È una *gomma*! Cancella un pezzo
+    ```
+
+  * **2. Percorsi (Tutto il Resto)**
+    Per *qualsiasi altra cosa* (linee, triangoli, cerchi, forme strane), devi usare una "ricetta" in 3 fasi. Pensa a questo come a disegnare con un pennino:
+
+    1.  **`beginPath()`:** "Alzo la penna dal foglio e inizio un nuovo disegno da zero." (Questo è *fondamentale*\! Se lo dimentichi, ricollegherai il tuo nuovo disegno a quello vecchio).
+    2.  **(Definizione):** "Sposto la penna e traccio le linee." (Usi metodi come `moveTo(x, y)`, `lineTo(x, y)`, `arc(x, y, raggio, ...)`).
+    3.  **`fill()` o `stroke()`:** "Ho finito il percorso. Ora, riempilo col pennarello (`fill`) o ripassa i bordi con la penna (`stroke`)."
+
+    
+
+    ```javascript
+    // Esempio: Disegnare un triangolo
+    ctx.beginPath();       // 1. Alzo la penna
+    ctx.moveTo(75, 50);    // 2. Sposto la penna (senza disegnare) a (75, 50)
+    ctx.lineTo(100, 75);   //    Traccio una linea fino a (100, 75)
+    ctx.lineTo(100, 25);   //    Traccio una linea fino a (100, 25)
+    ctx.lineTo(75, 50);    //    Traccio una linea per chiudere
+    ctx.stroke();          // 3. Ripassa i bordi!
+    ```
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 31. Dimensioni Canvas (Risoluzione vs. Dimensione)
+
+Questo è uno dei concetti più importanti e che crea più confusione. Un canvas ha **DUE dimensioni separate**.
+
+*Analogo: Il Monitor Sgranato 🖥️*
+Pensa al tuo canvas come a un monitor per PC. Il monitor ha:
+
+1.  Una **Dimensione Fisica** (misurata in cm, es. "un monitor da 24 pollici").
+2.  Una **Risoluzione** (misurata in pixel, es. "1920x1080").
+
+Nel Canvas:
+
+1.  La **Dimensione Visiva (CSS)** è la "dimensione fisica" (es. `style="width: 800px"`).
+2.  La **Risoluzione (JS)** è il "numero di pixel" (es. `canvas.width = 800`).
+
+#### Il Problema dell'Effetto Sfocato
+
+**Di default, un canvas ha una risoluzione di 300x150 pixel.**
+
+Cosa succede se prendi un `<canvas>` e gli dici (con il CSS) di essere largo 800px?
+`  <canvas id="gioco" style="width: 800px; height: 600px;"></canvas> `
+
+Il browser prenderà la tua griglia di 300x150 pixel e la **stiracchierà** per riempire 800x600 pixel. Il risultato? Tutto apparirà **sfocato, sgranato e distorto**. È come prendere un francobollo e ingrandirlo per farci un poster.
+
+#### Soluzione (`canvas.width = innerWidth`) - La Sincronizzazione Perfetta
+
+Per risolvere questo, devi *sempre* far coincidere la Risoluzione (JS) con la Dimensione Visiva (CSS). Per un gioco a schermo intero, la soluzione è:
+
+```javascript
+const canvas = document.querySelector("#gioco");
+const ctx = canvas.getContext("2d");
+
+// Sincronizza la RISOLUZIONE con la dimensione della finestra
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Ora, se lo schermo è 1920x1080, il canvas avrà
+// 1920x1080 pixel reali. Niente più sfocatura!
+```
+
+**Attenzione: Il Reset Totale\!**
+C'è un "effetto collaterale" importante: ogni volta che modifichi `canvas.width` o `canvas.height` con JavaScript, il **canvas viene istantaneamente e completamente cancellato**. È come prendere un foglio di carta nuovo di zecca. Per questo motivo, le dimensioni si impostano *all'inizio* (o in un evento `resize`, ridisegnando tutto).
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 32. requestAnimationFrame (Il Game Loop)
+
+Il tuo gioco deve ridisegnare tutto 60 volte al secondo (60 FPS - Frames Per Second) per creare l'illusione del movimento. Come si fa a creare un "orologio" così preciso?
+
+Non si usa `setInterval`. Si usa `requestAnimationFrame` (o `rAF`).
+
+#### Concetto e Loop Infinito - La Staffetta Ricorsiva
+
+`requestAnimationFrame` (rAF) è un metodo speciale del browser. È come dire al browser: "Ehi, *appena prima* che tu ridisegni lo schermo (il prossimo "frame"), potresti per favore eseguire questa mia funzione?"
+
+Per creare un loop infinito ("Game Loop"), la funzione deve semplicemente... **richiedere se stessa**.
+
+*Analogo: La Staffetta Ricorsiva 🏃*
+
+1.  Tu chiami `gameLoop()` per la prima volta (la partenza).
+2.  `gameLoop()` fa tutto il suo lavoro (aggiorna, disegna...).
+3.  Come ultima cosa, dice: `requestAnimationFrame(gameLoop)`. È come se *passasse il testimone* al browser.
+4.  Il browser tiene il testimone per 16.67 millisecondi (per 60 FPS).
+5.  Quando è pronto per il prossimo frame, *restituisce il testimone* chiamando `gameLoop()` di nuovo.
+6.  Il ciclo ricomincia, all'infinito.
+
+
+
+```javascript
+function gameLoop() {
+    // 1. Pulisci lo schermo (fondamentale!)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 2. Aggiorna la logica (muovi il giocatore, gravità, collisioni)
+    aggiornaPosizioni();
+    
+    // 3. Disegna tutto nella nuova posizione
+    disegnaGiocatore();
+    disegnaPiattaforme();
+    
+    // 4. Chiedi di essere richiamato per il prossimo frame
+    requestAnimationFrame(gameLoop); 
+}
+
+// Avvia il motore per la prima volta!
+requestAnimationFrame(gameLoop);
+```
+
+**Nota:** Stai passando `gameLoop` (il *riferimento* alla funzione, la "ricetta") non `gameLoop()` (l'*esecuzione* immediata, la "torta").
+
+#### Vantaggi vs. `setInterval` - Il Motore Intelligente
+
+Perché non usare semplicemente `setInterval(gameLoop, 16)`?
+`setInterval` è un "orologio stupido". `requestAnimationFrame` è un "motore intelligente".
+
+1.  **Sincronizzazione Perfetta:** `rAF` si sincronizza *perfettamente* con il ciclo di refresh del monitor. `setInterval` è "stupido": spara ogni 16ms, anche se il browser è occupato a fare altro. Questo causa *stuttering* (animazione a scatti) perché potresti disegnare *mentre* il browser sta già inviando l'immagine allo schermo.
+2.  **Efficienza (Pausa Automatica):** Questo è il vantaggio migliore. Se l'utente **cambia tab** nel browser, `requestAnimationFrame` **si mette in pausa automaticamente**. `setInterval` continuerebbe a far girare il tuo gioco a 60 FPS in background, consumando CPU e batteria per niente.
+3.  **Fluidità:** Il browser può ottimizzare `rAF`, raggruppando animazioni e garantendo un risultato visivo più fluido.
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 33. Logica di Gioco - Dare un'Anima al Codice
+
+Questi sono i pattern logici che trasformano un disegno statico in un *gioco*.
+
+#### Logica di Gioco: Gravità (Accelerazione vs Velocità)
+
+Questo è un concetto di fisica cruciale. Nei giochi, non sposti semplicemente gli oggetti; applichi loro delle *forze*.
+
+  * La **Posizione** è *dove* sei (es. `player.y`).
+  * La **Velocità** è *quanto velocemente* cambia la tua posizione (es. `player.velocityY`).
+  * La **Gravità** (Accelerazione) è *quanto velocemente* cambia la tua *velocità* (es. `const gravity = 0.5`).
+
+*Analogo: La Palla di Neve ❄️*
+La gravità (`gravity`) è la pendenza della collina.
+La palla di neve (`player`) ha una `velocità`.
+La pendenza (`gravity`) non sposta *direttamente* la palla, ma la fa *accelerare* (aumenta la sua `velocità`). È la `velocità` (ora più alta) che sposta la palla.
+
+**La Catena (ad ogni frame):**
+
+```javascript
+// 1. Applica la gravità alla velocità
+player.velocityY += gravity; // La velocità aumenta (es. da 0 a 0.5, poi a 1.0, poi 1.5...)
+
+// 2. Applica la velocità alla posizione
+player.y += player.velocityY; // L'oggetto si sposta verso il basso, sempre più velocemente
+```
+
+**Esempio Salto:** Per saltare, dai al giocatore una `velocityY` *negativa* (es. -15) per farlo andare *su*. La gravità (0.5) "mangerà" quel valore ad ogni frame (-14.5, -14, ...), fino a farlo diventare `0` (l'apice del salto) e poi positivo (iniziando la caduta).
+
+#### Logica di Gioco: Flag Booleani (Collision Debouncing)
+
+*Analogo: Il Tornello della Metropolitana 🚇*
+
+  * **Il Problema:** Il tuo giocatore tocca un checkpoint. Il gioco gira a 60 FPS. Il giocatore rimane fisicamente sul checkpoint per, diciamo, 10 frame (1/6 di secondo). Risultato: il suono di "checkpoint\!" suona 10 volte e il punteggio aumenta di 1000. Un disastro.
+  * **La Soluzione (Flag):** Una variabile "interruttore" (un flag booleano).
+
+
+
+```javascript
+let isCheckpointCollisionActive = true;
+
+// ...nel game loop...
+if (collisioneConCheckpoint && isCheckpointCollisionActive) {
+    
+    // 1. DISATTIVA L'INTERRUTTORE!
+    // Sei appena passato dal tornello. Non puoi ripassare subito.
+    isCheckpointCollisionActive = false;
+    
+    // 2. Fai la tua azione UNA SOLA VOLTA
+    salvaPunteggio();
+    suonaSuono();
+    
+    // 3. (Opzionale) Riattiva l'interruttore dopo un po',
+    // o (meglio) quando il giocatore si allontana dal checkpoint
+    setTimeout(() => {
+        isCheckpointCollisionActive = true; // Il tornello si resetta
+    }, 1000); // 1 secondo di immunità
+}
+```
+
+Questo pattern si chiama **Debouncing** (o Throttling, a seconda del contesto) e previene che un singolo evento venga "spammat" migliaia di volte.
+
+#### Logica di Gioco: Responsive (Funzioni Proporzionali)
+
+*Analogo: Lo Zoom Automatico 🔍*
+
+  * **Il Problema:** Progetti il tuo gioco sul tuo monitor gigante da 2000 pixel. Decidi che il giocatore deve avere una `larghezza = 100`. Un utente apre il gioco sul suo telefono, che è largo solo 400 pixel. Il tuo giocatore ora occupa 1/4 dell'intero schermo\!
+  * **La Soluzione:** Non usare valori *assoluti* (100px), ma valori *proporzionali* alla dimensione della finestra.
+
+Crea una "funzione traduttore" che converte la tua "dimensione di sviluppo" nella dimensione attuale.
+
+```javascript
+// La dimensione "standard" su cui stai progettando
+const larghezzaStandard = 1920; 
+
+function proportionalSize(size) {
+    // 1. Calcola la proporzione dell'oggetto rispetto allo standard
+    // es: 100px / 1920px = 0.052 (il giocatore è il 5.2% dello schermo)
+    const proporzione = size / larghezzaStandard; 
+    
+    // 2. Applica quella proporzione alla finestra *attuale*
+    // es: 0.052 * 400px (telefono) = 20.8px
+    const risultato = window.innerWidth * proporzione;
+    
+    // Evita che gli oggetti spariscano (es. 0.5px)
+    return Math.ceil(risultato); 
+}
+
+// Uso nel tuo gioco:
+player.width = proportionalSize(100); // Sarà 100 sul tuo PC, 21 sul telefono
+player.x = proportionalSize(800); // Sarà 800 sul tuo PC, 333 sul telefono
+```
+
+In questo modo, l'intero gioco si "restringe" o "ingrandisce" in modo proporzionale, mantenendo la stessa *sensazione* e giocabilità su tutti i dispositivi.

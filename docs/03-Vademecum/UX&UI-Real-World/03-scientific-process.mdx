@@ -1,0 +1,86 @@
+---
+sidebar_position: 3
+title: Scientific Process
+description: Empathy, Personas, User Journey, and Validation Checklists.
+---
+
+# UX & UI Real World Vademecum
+
+# Part III: The Scientific Process
+
+Design is not art, it is problem solving. We don't wait for divine inspiration; we use a scientific method to extract the solution from data.
+
+---
+
+## Research and Empathy
+
+### 13. Empathy as Data Mining
+
+**It's Not Just "Being Nice"**
+
+**What it does:** Gathers raw qualitative data to understand the real problem to solve.
+
+**The Analogy:** In a factory, if a machine breaks, you don't start unscrewing bolts at random. First, you ask the operator: "What were you doing? What noise did it make? When does it happen?". This is the Empathy phase. You aren't trying to make the operator like you; you are trying to **diagnose the failure**.
+
+**The Engineer's Bias:** We tend to want the solution immediately ("Ah, we need a database!"). Empathy forces you to stay in the problem ("Wait, maybe a database isn't needed, maybe the button just needs to be bigger because they wear gloves").
+
+### 14. Contextual Inquiry (Sherlock Holmes in the Factory)
+
+**The Clean Room Interview is a Lie**
+
+**What it does:** Gathers the truth by observing the user in their natural habitat, not what the user *says* they do.
+
+**The Analogy:** If you ask a person "How do you use this machine?", they will give you the manual version. If you observe them working, you'll see they stuck a post-it on the screen with the password because they forget it, and they kick the machine to make it start.
+
+**The Columbo Method:** Don't be the expert. Be the Apprentice. Let the user (the Master) teach you the job. And ask "naïve" questions like Lieutenant Columbo: "Excuse me, one last thing... why did you write that number on your hand?". That is where you discover the real design problems that no questionnaire will ever reveal.
+
+---
+
+## User Modeling
+
+### 15. Personas: The Scalpel
+
+**The RPG Character Sheet**
+
+**What it does:** Creates a user archetype based on data to avoid designing for yourself (or for no one).
+
+**The Analogy:** The Swiss Army knife does everything (scissors, knife, corkscrew), but it does it poorly. A scalpel does only one thing, but it does it perfectly. A Persona is your target.
+* *Name:* Mario the Operator.
+* *Skill:* High manual dexterity, low computer literacy.
+* *Weakness:* In a rush, hates reading long texts.
+
+**The Elastic User:** Without a defined Persona, the development team will use the elastic user. When convenient, the user is an "expert" (so no instructions). When convenient, they are "stupid" (so we remove features).
+**The Anti-Persona:** Define who you are *not* designing for (e.g., the hacker or the prankster). You need this to create security constraints without ruining Mario's experience.
+
+### 16. User Journey Map
+
+**The Movie Script**
+
+**What it does:** Maps the entire experience, not just clicks on the screen, to find external pain points.
+
+**The Analogy:** Google Maps shows you the road, but it doesn't tell you if it's raining, if there's traffic, or if you'll be stressed because you're late. The User Journey is the emotional story of the trip.
+
+**Beyond the Screen:** The Journey doesn't start when the user opens the app.
+* *Before:* The user is frustrated because they lost a paper document.
+* *During:* Opens your app to solve the problem.
+* *After:* Do they feel relieved or even angrier?
+Often UX problems are not in the software, but in the context (e.g., the app requires internet, but there is no signal in the warehouse). Only the User Journey reveals these "plot holes."
+
+---
+
+## Validation and QA
+
+### 17. Nielsen's 10 Heuristics
+
+**The Pilot's Checklist**
+
+**What it does:** It is a universal checklist to find usability holes without having to interview 100 people.
+
+**The Analogy:** Before taking off, a pilot doesn't go by "gut feeling." They have a checklist: "Flaps? Check. Fuel? Check." Heuristics are your pre-flight checklist. They aren't for creating; they are for *not crashing*.
+
+**The 3 Lifesaving Heuristics (out of 10):**
+1.  **Visibility of System Status:** The system must always tell you what it is doing (Spinners, Progress Bars, Breadcrumbs). If the user asks "Is it stuck?", you failed.
+2.  **Match Between System and Real World:** Use the user's language, not the machine's. (e.g., "Trash" instead of "Directory /dev/null").
+3.  **Error Prevention:** A design that prevents mistakes (e.g., a date input that only accepts numbers) is better than a funny error message.
+
+**Practical Use:** Before handing over the design, run through the list. If you violate a heuristic, you must have a damn good reason.

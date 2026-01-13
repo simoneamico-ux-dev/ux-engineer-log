@@ -1,0 +1,341 @@
+---
+sidebar_position: 4
+title: Canvas & Game Logic
+description: HTML5 Canvas, requestAnimationFrame, and Game Loop.
+---
+
+# JavaScript Real World Vademecum
+
+# Part IV: Canvas & Game Logic
+
+Beyond standard UI, the browser is a powerful graphics engine. This section explores the HTML5 Canvas API for drawing, animation, and creating loop-based logic typical of video games.
+
+---
+
+## Canvas API and Game Logic
+
+If the DOM is like a set of **LEGO bricks** (rigid elements like `<div>`, `<p>`, `<button>` that you can only stack and move), the **Canvas** API is a **pristine blank sheet of paper** and a pencil case full of colors.
+
+There are no "elements". There’s only *you* and a grid of pixels. It gives you immense power (you can draw *anything*) but also more responsibility (you must draw *everything* yourself, every frame). It’s the technology behind most 2D games on the web.
+
+### 30. Canvas (General) - Your Digital Notebook
+
+The `<canvas>` element in HTML is just the "notebook".
+`<canvas id="my-game"></canvas>`
+
+By itself, it’s useless. To draw on it, you first have to "grab" its drawing tools (the "context") with JavaScript.
+
+#### `getContext("2d")` - Getting the Tools
+
+Think of the `<canvas>` as the notebook and `getContext("2d")` as the action of **opening the pencil case** and taking out markers, pens, and the eraser.
+
+```javascript
+const canvas = document.querySelector("#my-game");
+// Open the pencil case to draw in 2D
+const ctx = canvas.getContext("2d"); 
+// 'ctx' (short for "context") is now your magic object
+// with all the drawing methods: ctx.fillRect(), ctx.beginPath()...
+```
+
+#### Coordinates (0,0 at the top-left) - The Flipped Map
+
+This is the first conceptual "wall" to get past. Unlike school math where (0,0) is at the *bottom-left*, in Canvas (and in almost all computer graphics):
+
+* **`(0, 0)` is the TOP-LEFT corner.**
+* The **X** axis increases to the **right** (as always).
+* The **Y** axis increases **DOWNWARD**.
+
+So, `(x: 10, y: 50)` means "10 pixels from the left, 50 pixels *from the top*".
+
+#### Styles (`fill` vs `stroke`) - Marker vs Pen
+
+You have two main ways to draw:
+
+1. **`fill` (Fill):** It’s your **marker**. It creates solid filled shapes. Its color is controlled with `ctx.fillStyle`.
+2. **`stroke` (Outline):** It’s your **ink pen**. It draws only the edges. Its color is controlled with `ctx.strokeStyle`.
+
+**Key Concept: They are "States"**
+Think of `fillStyle` and `strokeStyle` like **holding a marker in your hand**.
+
+```javascript
+ctx.fillStyle = "red";
+// From this moment on, *everything* you draw with fill()
+// will be red...
+ctx.fillRect(10, 10, 50, 50); // A red square
+
+ctx.fillStyle = "blue";
+// ...until you change marker.
+ctx.fillRect(70, 10, 50, 50); // A blue square
+```
+
+You don’t need to specify the color for each shape. You set it once and it stays "active".
+
+#### Shapes (Rectangles, Paths) - The Building Blocks
+
+There are two ways to draw shapes:
+
+* **1. Rectangles (The Easy Ones)**
+  Rectangles are so common that they have their own "shortcut" methods. You don’t have to do anything else.
+
+  ```javascript
+  // ctx.fillRect(x, y, width, height);
+  ctx.fillStyle = "green";
+  ctx.fillRect(20, 20, 100, 50); // Draws a solid green rectangle
+
+  // ctx.strokeRect(x, y, width, height);
+  ctx.strokeStyle = "black";
+  ctx.strokeRect(150, 20, 100, 50); // Draws a black rectangle outline
+
+  // ctx.clearRect(x, y, width, height);
+  ctx.clearRect(30, 30, 30, 30); // It’s an *eraser*! Clears a chunk
+  ```
+
+* **2. Paths (Everything Else)**
+  For *anything else* (lines, triangles, circles, weird shapes), you must use a 3-step "recipe". Think of this like drawing with a nib pen:
+
+  1. **`beginPath()`:** "I lift the pen off the paper and start a new drawing from scratch." (This is *crucial*! If you forget it, you’ll connect your new drawing to the old one).
+  2. **(Definition):** "I move the pen and trace the lines." (You use methods like `moveTo(x, y)`, `lineTo(x, y)`, `arc(x, y, radius, ...)`).
+  3. **`fill()` or `stroke()`:** "I’m done with the path. Now fill it with the marker (`fill`) or trace the edges with the pen (`stroke`)."
+
+  
+
+  ```javascript
+  // Example: Drawing a triangle
+  ctx.beginPath();       // 1. Lift the pen
+  ctx.moveTo(75, 50);    // 2. Move the pen (without drawing) to (75, 50)
+  ctx.lineTo(100, 75);   //    Draw a line to (100, 75)
+  ctx.lineTo(100, 25);   //    Draw a line to (100, 25)
+  ctx.lineTo(75, 50);    //    Draw a line to close it
+  ctx.stroke();          // 3. Trace the edges!
+  ```
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+### 31. Canvas Dimensions (Resolution vs. Size)
+
+This is one of the most important concepts and the one that creates the most confusion. A canvas has **TWO separate dimensions**.
+
+*Analogy: The Pixelated Monitor 🖥️*
+Think of your canvas like a PC monitor. The monitor has:
+
+1. A **Physical Size** (measured in inches/cm, e.g., "a 24-inch monitor").
+2. A **Resolution** (measured in pixels, e.g., "1920x1080").
+
+In Canvas:
+
+1. The **Visual Size (CSS)** is the "physical size" (e.g., `style="width: 800px"`).
+2. The **Resolution (JS)** is the "number of pixels" (e.g., `canvas.width = 800`).
+
+#### The Blurry Effect Problem
+
+**By default, a canvas has a resolution of 300x150 pixels.**
+
+What happens if you take a `<canvas>` and tell it (with CSS) to be 800px wide?
+` <canvas id="game" style="width: 800px; height: 600px;"></canvas>`
+
+The browser will take your 300x150 pixel grid and **stretch it** to fill 800x600 pixels. The result? Everything will look **blurry, pixelated, and distorted**. It’s like taking a postage stamp and enlarging it into a poster.
+
+#### Solution (`canvas.width = innerWidth`) - Perfect Synchronization
+
+To fix this, you must *always* match the Resolution (JS) to the Visual Size (CSS). For a full-screen game, the solution is:
+
+```javascript
+const canvas = document.querySelector("#game");
+const ctx = canvas.getContext("2d");
+
+// Sync the RESOLUTION with the window size
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Now, if the screen is 1920x1080, the canvas will have
+// 1920x1080 real pixels. No more blur!
+```
+
+**Warning: Total Reset!**
+There’s an important "side effect": every time you change `canvas.width` or `canvas.height` with JavaScript, the **canvas is instantly and completely cleared**. It’s like grabbing a brand-new sheet of paper. For this reason, you set the dimensions *at the beginning* (or in a `resize` event, redrawing everything).
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+### 32. requestAnimationFrame (The Game Loop)
+
+Your game must redraw everything 60 times per second (60 FPS - Frames Per Second) to create the illusion of movement. How do you create such a precise "clock"?
+
+You don’t use `setInterval`. You use `requestAnimationFrame` (or `rAF`).
+
+#### Concept and Infinite Loop - The Recursive Relay
+
+`requestAnimationFrame` (rAF) is a special browser method. It’s like telling the browser: "Hey, *right before* you redraw the screen (the next "frame"), could you please run this function of mine?"
+
+To create an infinite loop ("Game Loop"), the function simply has to... **request itself**.
+
+*Analogy: The Recursive Relay 🏃*
+
+1. You call `gameLoop()` for the first time (the start).
+2. `gameLoop()` does all its work (update, draw...).
+3. As the last thing, it says: `requestAnimationFrame(gameLoop)`. It’s like *passing the baton* to the browser.
+4. The browser holds the baton for 16.67 milliseconds (for 60 FPS).
+5. When it’s ready for the next frame, it *hands the baton back* by calling `gameLoop()` again.
+6. The cycle restarts, forever.
+
+
+
+```javascript
+function gameLoop() {
+    // 1. Clear the screen (crucial!)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 2. Update the logic (move the player, gravity, collisions)
+    updatePositions();
+    
+    // 3. Draw everything in the new position
+    drawPlayer();
+    drawPlatforms();
+    
+    // 4. Ask to be called again for the next frame
+    requestAnimationFrame(gameLoop); 
+}
+
+// Start the engine for the first time!
+requestAnimationFrame(gameLoop);
+```
+
+**Note:** You’re passing `gameLoop` (the *reference* to the function, the "recipe") not `gameLoop()` (the *immediate execution*, the "cake").
+
+#### Advantages vs. `setInterval` - The Smart Engine
+
+Why not simply use `setInterval(gameLoop, 16)`?
+`setInterval` is a "dumb clock". `requestAnimationFrame` is a "smart engine".
+
+1. **Perfect Synchronization:** `rAF` syncs *perfectly* with the monitor’s refresh cycle. `setInterval` is "dumb": it fires every 16ms even if the browser is busy doing other things. This causes *stuttering* (choppy animation) because you might draw *while* the browser is already sending the image to the screen.
+2. **Efficiency (Automatic Pause):** This is the best advantage. If the user **switches tabs** in the browser, `requestAnimationFrame` **pauses automatically**. `setInterval` would keep running your game at 60 FPS in the background, wasting CPU and battery for no reason.
+3. **Smoothness:** The browser can optimize `rAF`, batching animations and ensuring a smoother visual result.
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+### 33. Game Logic - Giving a Soul to the Code
+
+These are the logic patterns that turn a static drawing into a *game*.
+
+#### Game Logic: Gravity (Acceleration vs Speed)
+
+This is a crucial physics concept. In games, you don’t simply move objects; you apply *forces* to them.
+
+* **Position** is *where* you are (e.g., `player.y`).
+* **Speed** is *how fast* your position changes (e.g., `player.velocityY`).
+* **Gravity** (Acceleration) is *how fast* your *speed* changes (e.g., `const gravity = 0.5`).
+
+*Analogy: The Snowball ❄️*
+Gravity (`gravity`) is the slope of the hill.
+The snowball (`player`) has a `speed`.
+The slope (`gravity`) doesn’t move the snowball *directly*, but it makes it *accelerate* (it increases its `speed`). It’s the `speed` (now higher) that moves the snowball.
+
+**The Chain (every frame):**
+
+```javascript
+// 1. Apply gravity to speed
+player.velocityY += gravity; // Speed increases (e.g., from 0 to 0.5, then to 1.0, then 1.5...)
+
+// 2. Apply speed to position
+player.y += player.velocityY; // The object moves downward, faster and faster
+```
+
+**Jump example:** To jump, you give the player a *negative* `velocityY` (e.g., -15) to make them go *up*. Gravity (0.5) will "eat" that value every frame (-14.5, -14, ...), until it becomes `0` (the top of the jump) and then positive (starting the fall).
+
+#### Game Logic: Boolean Flags (Collision Debouncing)
+
+*Analogy: The Subway Turnstile 🚇*
+
+* **The Problem:** Your player touches a checkpoint. The game runs at 60 FPS. The player physically stays on the checkpoint for, say, 10 frames (1/6 of a second). Result: the "checkpoint!" sound plays 10 times and the score increases by 1000. A disaster.
+* **The Solution (Flag):** A "switch" variable (a boolean flag).
+
+
+
+```javascript
+let isCheckpointCollisionActive = true;
+
+// ...in the game loop...
+if (checkpointCollision && isCheckpointCollisionActive) {
+    
+    // 1. TURN OFF THE SWITCH!
+    // You just went through the turnstile. You can’t go through again immediately.
+    isCheckpointCollisionActive = false;
+    
+    // 2. Do your action ONLY ONCE
+    saveScore();
+    playSound();
+    
+    // 3. (Optional) Turn the switch back on after a while,
+    // or (better) when the player moves away from the checkpoint
+    setTimeout(() => {
+        isCheckpointCollisionActive = true; // The turnstile resets
+    }, 1000); // 1 second of immunity
+}
+```
+
+This pattern is called **Debouncing** (or Throttling, depending on the context) and prevents a single event from being "spammed" thousands of times.
+
+#### Game Logic: Responsive (Proportional Functions)
+
+*Analogy: Auto Zoom 🔍*
+
+* **The Problem:** You design your game on your giant 2000-pixel-wide monitor. You decide the player should have a `width = 100`. A user opens the game on their phone, which is only 400 pixels wide. Your player now takes up 1/4 of the whole screen!
+* **The Solution:** Don’t use *absolute* values (100px), but values *proportional* to the window size.
+
+Create a "translator function" that converts your "development size" into the current size.
+
+```javascript
+// The "standard" size you’re designing for
+const standardWidth = 1920; 
+
+function proportionalSize(size) {
+    // 1. Calculate the object’s proportion relative to the standard
+    // e.g.: 100px / 1920px = 0.052 (the player is 5.2% of the screen)
+    const proportion = size / standardWidth; 
+    
+    // 2. Apply that proportion to the *current* window
+    // e.g.: 0.052 * 400px (phone) = 20.8px
+    const result = window.innerWidth * proportion;
+    
+    // Prevent objects from disappearing (e.g., 0.5px)
+    return Math.ceil(result); 
+}
+
+// Use in your game:
+player.width = proportionalSize(100); // Will be 100 on your PC, 21 on the phone
+player.x = proportionalSize(800);     // Will be 800 on your PC, 333 on the phone
+```
+
+This way, the whole game "shrinks" or "grows" proportionally, keeping the same *feel* and playability across all devices.

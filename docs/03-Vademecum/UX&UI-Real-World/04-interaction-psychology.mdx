@@ -1,0 +1,104 @@
+---
+sidebar_position: 4
+title: Psychology of Interaction
+description: Mental Models, Errors, and Lessons from Don Norman.
+---
+
+# UX & UI Real World Vademecum
+
+# Part IV: Psychology of Interaction
+
+The user isn't logical; they are psychological. In this section, we explore how the human brain interacts with objects, and why it is never the user's fault.
+
+---
+
+## Mind vs. Machine
+
+### 18. Mental Models vs. Reality
+
+**The Lying Thermostat**
+
+**What it does:** Aligns software behavior with how the user *thinks* it works.
+
+**The Analogy:** When it's cold, people set the thermostat to 30°C thinking the house will heat up *faster*. This is false (the boiler runs at the same speed), but it is their **mental model**.
+
+**The Strategy:** If the user's mental model is wrong, you have two paths:
+1.  **Educate:** Show visual feedback saying "Estimated time for 20°C: 15 minutes" (so they understand that setting 30°C is useless).
+2.  **Adapt:** Ensure the system doesn't break if they use it "wrong."
+Don't fight the user's mental model: it's a losing battle. Leverage it or guide it gently.
+
+### 19. Natural Mapping
+
+**The Stoves and the Switches**
+
+**What it does:** Creates an obvious spatial relationship between the control and the controlled object.
+
+**The Analogy:**
+* **Crappy Kitchen:** 4 burners in a square, 4 knobs in a row. Which turns on which? You have to read labels (or guess).
+* **Genius Kitchen:** 4 burners in a square, 4 knobs arranged in the same square. Zero doubt.
+
+**In Software:** If you have a list of items and a "Delete" button, that button must be *next to* or *inside* the item row, not at the bottom right of the page. Proximity is the best instruction manual.
+
+### 20. Auditory Feedback
+
+**The Eye Doesn't See Everything**
+
+**What it does:** Uses sound to inform the user when their visual attention is elsewhere.
+
+**The Analogy:** (Bill Gaver). You know water is boiling by the sound, not because you are staring at it. You know the car has a problem by the sound of the engine.
+
+**The Application:** A "success" sound (`ding!`) or "error" sound (`buzz!`) communicates system status without forcing the user to read a message. It is vital in industrial or distracted environments. Warning: it must be natural, not annoying like an alarm clock.
+
+---
+
+## Error Management
+
+### 21. Slips vs. Mistakes
+
+**The Slip and the Error**
+
+**What it does:** Distinguishes between "I wanted to do it but missed the button" and "I didn't understand what I had to do."
+
+**The Analogy:**
+* **Slip:** You want to put sugar in your coffee but distractedly put salt in. You knew what to do, but execution failed. *Solution:* Spaced buttons, Undo.
+* **Mistake (Cognitive Error):** You cook chicken at 50°C because you think it's enough. Execution is perfect, but the plan is wrong (and you'll get salmonella). *Solution:* Clear warnings, constraints preventing dangerous choices.
+
+**Defensive Design:** Your software must be a "parachute." Anticipate that the user will be distracted, tired, or interrupted by a barking dog.
+
+### 22. The Error is the Designer's
+
+**Korean Air 007**
+
+**What it does:** Shifts blame from the user to the system.
+
+**The Analogy:** In 1983, a plane was shot down because pilots misprogrammed the INS (navigation). It had happened 3 times that year. The airline wanted to punish the pilots. Norman says: NO. If the error repeats, the problem is the INS, not the pilots.
+
+**The Mantra:** If a user makes a mistake, they aren't stupid. If *two* users make the same mistake, your design is wrong. Don't write "User Error," write "Design Flaw to Fix."
+
+### 23. The Aesthetic Paradox
+
+**The Nobel Prize for Uselessness**
+
+**What it does:** Explains why the most beautiful things often work the worst.
+
+**The Analogy:** Remember the Federal Aviation Administration offices case? The LA architect won prestigious awards for a beautiful but unlivable building. The Seattle architect won nothing, but talked to employees, and productivity went up 7%.
+
+**The "Design Bible" Rule:** If your design wins an award on Dribbble but the factory worker has to ask "how do I go back?", you failed. Elegance must never cannibalize usability. Better "ugly but functional" than "beautiful and useless."
+
+---
+
+## Psychology of Engagement
+
+### 24. Gamification and Retention
+
+**The Ethical Slot Machine**
+
+**What it does:** Uses game mechanics to transform a boring task into a pleasant habit.
+
+**The Analogy:**
+* **Duolingo (Fear of Loss):** You don't study Spanish because you like grammar. You study because you have a 50-day "Streak" and are terrified of seeing it reset to zero. This is *Loss Aversion*.
+* **Netflix (The Cocktail Party Effect):** Netflix doesn't show you the same homepage as your neighbor. It says "Since you liked Breaking Bad, here is Narcos." It makes you feel heard and understood.
+
+**The Engineer's Rule:** Gamification isn't "adding random badges and points." It is providing a sense of *visible progress*.
+* **Progress Bar:** Humans hate incomplete things (Zeigarnik Effect). If you show "Profile 90% complete," the user will do anything to reach 100%.
+* **Positive Feedback:** When the user finishes a boring task, reward them with a satisfying animation (Confetti, Sound, Giant Green Check). The brain releases dopamine and associates your software with pleasure.

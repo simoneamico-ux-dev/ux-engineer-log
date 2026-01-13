@@ -1,0 +1,104 @@
+---
+sidebar_position: 4
+title: Psicologia dell'Interazione
+description: Modelli Mentali, Errori e Lezioni da Don Norman.
+---
+
+# UX & UI Real World Vademecum
+
+# Parte IV: Psicologia dell'Interazione
+
+L'utente non è logico, è psicologico. In questa sezione esploriamo come il cervello umano interagisce con gli oggetti, e perché la colpa non è mai dell'utente.
+
+---
+
+## Mente vs Macchina
+
+### 18. Modelli Mentali vs. Realtà
+
+**Il Termostato Bugiardo**
+
+**Cosa fa:** Allinea il funzionamento del software a come l'utente *pensa* che funzioni.
+
+**L'Analogia:** Quando fa freddo, la gente imposta il termostato a 30°C pensando che la casa si scalderà *più velocemente*. È falso (la caldaia va sempre alla stessa velocità), ma è il loro **modello mentale**.
+
+**La Strategia:** Se il modello mentale dell'utente è sbagliato, hai due strade:
+1.  **Educare:** Mostra un feedback visivo che dice "Tempo stimato per 20°C: 15 minuti" (così capiscono che mettere 30°C non serve).
+2.  **Adattarsi:** Fai in modo che il sistema non si rompa se lo usano "male".
+Non combattere il modello mentale dell'utente: è una battaglia persa. Sfruttalo o guidalo gentilmente.
+
+### 19. Il Mapping Naturale
+
+**I Fornelli e l'Interruttore**
+
+**Cosa fa:** Crea una relazione spaziale ovvia tra il comando e l'oggetto comandato.
+
+**L'Analogia:**
+* **Cucina del Cazzo:** 4 fornelli in quadrato, 4 manopole in fila. Quale accende quale? Devi leggere le etichette (o provare a caso).
+* **Cucina Geniale:** 4 fornelli in quadrato, 4 manopole disposte nello stesso quadrato. Zero dubbi.
+
+**Nel Software:** Se hai una lista di oggetti e un tasto "Elimina", quel tasto deve stare *vicino* o *dentro* la riga dell'oggetto, non in fondo alla pagina a destra. La vicinanza è il miglior manuale di istruzioni.
+
+### 20. Feedback Sonoro
+
+**L'Occhio non vede tutto**
+
+**Cosa fa:** Usa il suono per informare l'utente quando la sua attenzione visiva è altrove.
+
+**L'Analogia:** (Bill Gaver). Sai che l'acqua bolle dal rumore, non perché la fissi. Sai che la macchina ha un problema dal suono del motore.
+
+**L'Applicazione:** Un suono di "successo" (`ding!`) o di "errore" (`buzz!`) comunica lo stato del sistema senza costringere l'utente a leggere un messaggio. È vitale in ambienti industriali o distratti. Attenzione: deve essere naturale, non fastidioso come una sveglia.
+
+---
+
+## Gestione dell'Errore
+
+### 21. Slips vs. Mistakes
+
+**Lo Scivolone e l'Errore**
+
+**Cosa fa:** Distingue tra "volevo farlo ma ho sbagliato tasto" e "non ho capito cosa dovevo fare".
+
+**L'Analogia:**
+* **Slip (Scivolone):** Vuoi mettere lo zucchero nel caffè ma per distrazione ci metti il sale. Sapevi cosa fare, ma l'esecuzione è fallita. *Soluzione:* Tasti distanziati, Undo (Annulla).
+* **Mistake (Errore Cognitivo):** Cucini il pollo a 50°C perché pensi che basti. L'esecuzione è perfetta, ma il piano è sbagliato (e ti verrà la salmonella). *Soluzione:* Avvisi chiari, vincoli che impediscono scelte pericolose.
+
+**Design Difensivo:** Il tuo software deve essere un "paracadute". Prevedi che l'utente sarà distratto, stanco o interrotto dal cane che abbaia.
+
+### 22. L'Errore è del Designer
+
+**La Korean Air 007**
+
+**Cosa fa:** Sposta la colpa dall'utente al sistema.
+
+**L'Analogia:** Nel 1983 un aereo fu abbattuto perché i piloti programmarono male l'INS (navigatore). Era successo 3 volte quell'anno. La compagnia voleva punire i piloti. Norman dice: NO. Se l'errore si ripete, il problema è dell'INS, non dei piloti.
+
+**Il Mantra:** Se un utente sbaglia, non è stupido. Se *due* utenti sbagliano la stessa cosa, il tuo design è sbagliato. Non scrivere "Errore Utente", scrivi "Difetto di Progettazione da correggere".
+
+### 23. Il Paradosso dell'Estetica
+
+**Il Premio Nobel per l'Inutilità**
+
+**Cosa fa:** Spiega perché le cose più belle spesso funzionano peggio.
+
+**L'Analogia:** Hai presente il caso degli uffici della Federal Aviation Administration? L'architetto di Los Angeles vinse premi prestigiosi per un edificio bellissimo ma invivibile. L'architetto di Seattle non vinse nulla, ma parlò con i dipendenti e la produttività salì del 7%.
+
+**Il "Design Bible" Rule:** Se il tuo design vince un premio su Dribbble ma l'operaio in fabbrica deve chiedere "come si torna indietro?", hai fallito. L'eleganza non deve mai cannibalizzare l'usabilità. Preferisci essere "brutto ma funzionale" piuttosto che "bellissimo e inutile".
+
+---
+
+## Psicologia dell'Engagement
+
+### 24. Gamification e Retention
+
+**La Slot Machine Etica**
+
+**Cosa fa:** Usa meccanismi di gioco per trasformare un compito noioso in un'abitudine piacevole.
+
+**L'Analogia:**
+* **Duolingo (La Paura di Perdere):** Non studi spagnolo perché ti piace la grammatica. Studi perché hai una "Streak" (Serie) di 50 giorni e hai il terrore di vederla tornare a zero. Si chiama *Loss Aversion*.
+* **Netflix (L'Effetto Cocktail Party):** Netflix non ti mostra la stessa home page del tuo vicino. Ti dice "Visto che ti è piaciuto Breaking Bad, ecco Narcos". Ti fa sentire ascoltato e capito.
+
+**La Regola dell'Ingegnere:** La gamification non è "mettere badge e punti a caso". È fornire un senso di *progresso visibile*.
+* **Progress Bar:** L'uomo odia le cose incomplete (Effetto Zeigarnik). Se mostri "Profilo completato al 90%", l'utente farà di tutto per arrivare al 100%.
+* **Feedback Positivo:** Quando l'utente finisce un task noioso, premialo con un'animazione soddisfacente (Confetti, Suono, Check verde gigante). Il cervello rilascia dopamina e assocerà il tuo software al piacere.

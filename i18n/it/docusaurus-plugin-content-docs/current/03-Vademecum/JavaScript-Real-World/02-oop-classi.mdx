@@ -1,0 +1,366 @@
+---
+sidebar_position: 2
+title: OOP e Classi
+description: Programmazione a Oggetti, Costruttori e 'this'.
+---
+
+# JavaScript Real World Vademecum
+
+# Parte II: OOP e Classi
+
+Il JavaScript moderno si basa pesantemente su Oggetti e Classi per strutturare il codice. In questa sezione passiamo dal semplice scripting all'ingegnerizzazione di software scalabile usando il paradigma a Oggetti.
+
+---
+
+## Classi (Programmazione a Oggetti)
+
+Le classi sono il tuo ingresso nella **Programmazione Orientata agli Oggetti (OOP)**. Se finora hai costruito capanne con funzioni e variabili sparse (programmazione procedurale), le classi sono come ottenere il **progetto per costruire un grattacielo**. Ti permettono di creare "tipi" di cose riutilizzabili, organizzate e potenti (come `Giocatore`, `Nemico`, `Piattaforma`), ognuna con i propri dati (proprietà) e le proprie abilità (metodi).
+
+### 13. Concetto Base (Lo Stampo)
+
+Una `class` è un **progetto**, una **ricetta**, o uno **stampo per biscotti**.
+Non è *il* biscotto. È il *disegno* che ti dice come fare un biscotto (che avrà una forma, un tipo di cioccolato, ecc.).
+
+  * La **Classe** (es. `class Giocatore`) è lo stampo.
+  * L'**Oggetto** (o **Istanza**) (es. `const mario = new Giocatore()`) è il biscotto che hai creato usando lo stampo.
+
+Puoi usare *un solo* stampo (Classe) per creare *infiniti* biscotti (Istanze), e ogni biscotto è un'entità separata e indipendente.
+
+```javascript
+// 1. DEFINIZIONE DELLO STAMPO (La Classe)
+class Giocatore {
+    // Qui definiremo come è fatto un giocatore
+}
+
+// 2. CREAZIONE DEI "BISCOTTI" (Le Istanze)
+const mario = new Giocatore();
+const luigi = new Giocatore();
+
+// mario e luigi sono due oggetti diversi,
+// ma sono stati entrambi creati dallo stesso "stampo" Giocatore.
+```
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 14. Zucchero Sintattico (vs Funzioni Costruttore)
+
+Questo è il "segreto" più importante delle classi in JavaScript: **le classi sono un'illusione**.
+
+JavaScript, nel suo cuore, è un linguaggio basato sui **prototipi**, non sulle classi. Prima di ES6, per creare "stampi" si usava una cosa chiamata "Funzione Costruttore". Era goffa ma potente:
+
+```javascript
+// IL VECCHIO MODO (pre-ES6)
+function PersonaVecchia(nome) {
+    this.nome = nome;
+}
+
+PersonaVecchia.prototype.saluta = function() {
+    console.log("Ciao, sono " + this.nome);
+}
+
+const marioVecchio = new PersonaVecchia("Mario");
+marioVecchio.saluta();
+```
+
+Questo `prototype` confondeva tutti, specialmente chi veniva da linguaggi come Python, Java o C\# che usavano la parola `class`.
+
+Così, ES6 ha introdotto la sintassi `class`. Ma non è un nuovo sistema\! È solo **"zucchero sintattico"** (syntactic sugar). È come mettere una carrozzeria sportiva e moderna sopra il vecchio motore a prototipi.
+
+```javascript
+// IL NUOVO MODO (Moderno, "zucchero")
+class Persona {
+    constructor(nome) {
+        this.nome = nome;
+    }
+
+    saluta() {
+        console.log(`Ciao, sono ${this.nome}`);
+    }
+}
+
+const mario = new Persona("Mario");
+mario.saluta();
+```
+
+I due esempi sopra fanno *esattamente la stessa identica cosa*. La parola `class` è solo un "travestimento" più pulito e leggibile per creare una funzione costruttore e assegnare metodi al suo `prototype`.
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 15. `constructor()` e Parametri
+
+Il `constructor()` è un **metodo speciale** e unico. È il "reparto assemblaggio" della tua fabbrica.
+
+  * Viene chiamato **automaticamente** e *una sola volta* nel momento esatto in cui usi la parola chiave `new`.
+  * Il suo lavoro è **impostare lo stato iniziale** dell'istanza (il biscotto). È qui che dici "questo biscotto avrà gocce di cioccolato" e "quest'altro avrà la marmellata".
+
+I **Parametri** sono gli "ingredienti personalizzati" che passi alla fabbrica per creare un'istanza specifica.
+
+```javascript
+class Piattaforma {
+    // Il costruttore accetta 'x' e 'y' come ingredienti
+    constructor(x, y) {
+        console.log("Sto costruendo una piattaforma...");
+        
+        // 'this' si riferisce all'oggetto che stiamo creando
+        this.posizione = { x: x, y: y };
+        this.larghezza = 100;
+        this.altezza = 20;
+    }
+}
+
+// Passiamo gli ingredienti (i parametri) quando usiamo 'new'
+const piattaforma1 = new Piattaforma(50, 300);
+const piattaforma2 = new Piattaforma(250, 400);
+
+// piattaforma1 avrà { posizione: {x: 50, y: 300}, ... }
+// piattaforma2 avrà { posizione: {x: 250, y: 400}, ... }
+```
+
+Se non devi impostare nulla, puoi omettere il `constructor` (JavaScript ne userà uno vuoto di default).
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 16. `new` (I 4 Passaggi)
+
+Cosa fa *davvero* la parola chiave `new`? È un processo magico che avviene in quattro passaggi automatici:
+
+1.  **Crea un Oggetto Vuoto:** JavaScript crea un nuovo oggetto vuoto: `{}`.
+2.  **Lega il Prototype:** "Lega" questo oggetto vuoto allo "zaino condiviso" (il `prototype`) della classe. (Ora sa dove trovare il metodo `saluta()`).
+3.  **Esegue il Costruttore:** Esegue la funzione `constructor`, e imposta la parola chiave `this` perché punti all'oggetto vuoto creato al punto 1. Il costruttore "riempie" l'oggetto con le proprietà (`this.nome = ...`).
+4.  **Restituisce `this`:** Restituisce *automaticamente* l'oggetto (il `this`), ormai "pieno" e pronto all'uso.
+
+Non sei tu che fai `return this` nel costruttore, lo fa `new` per te.
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 17. `this` (Contesto dell'istanza)
+
+Questo è il concetto più importante e più confuso dell'OOP.
+
+`this` è una parola chiave dinamica. Pensa a `this` come alla parola **"io"** o **"me stesso"**.
+
+  * Se *io* dico "la mia maglietta è blu", "mia" si riferisce a me.
+  * Se *tu* dici "la mia maglietta è rossa", "mia" si riferisce a te.
+
+All'interno di una classe, `this` significa "**questa specifica istanza**", "questo biscotto che sto creando ORA" o "questo biscotto su cui stai chiamando il metodo".
+
+```javascript
+class Contatore {
+    constructor() {
+        this.valore = 0;
+    }
+
+    incrementa() {
+        // 'this' qui significa "il contatore specifico
+        // su cui hai chiamato .incrementa()"
+        this.valore++;
+        console.log(this.valore);
+    }
+}
+
+const c1 = new Contatore();
+const c2 = new Contatore();
+
+c1.incrementa(); // Output: 1 (this === c1)
+c1.incrementa(); // Output: 2 (this === c1)
+
+c2.incrementa(); // Output: 1 (this === c2)
+```
+
+`this` è il ponte che collega lo *stampo* generico (la classe) all'oggetto *concreto* (l'istanza).
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 18. Proprietà di Classe (Sintassi Moderna)
+
+Questa è una scorciatoia moderna (chiamata *Class Fields*) per rendere il `constructor` più pulito. Invece di definire tutte le proprietà "di base" dentro il costruttore...
+
+```javascript
+// Modo Classico
+class GiocatoreVecchio {
+    constructor(nome) {
+        this.nome = nome;
+        this.vite = 3;
+        this.punteggio = 0;
+    }
+}
+```
+
+...puoi dichiararle *direttamente* nel corpo della classe. Pensa a queste come alle "impostazioni di fabbrica" dello stampo.
+
+```javascript
+// Modo Moderno (più pulito)
+class Giocatore {
+    // Impostazioni di fabbrica
+    vite = 3;
+    punteggio = 0;
+    
+    // Il costruttore imposta solo le cose personalizzate
+    constructor(nome) {
+        this.nome = nome;
+    }
+}
+
+const player = new Giocatore("Sonic");
+// player avrà { vite: 3, punteggio: 0, nome: "Sonic" }
+```
+
+Funziona esattamente allo stesso modo, è solo più ordinato.
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 19. Metodi (nel `prototype`)
+
+Dove vanno a finire le funzioni (i "metodi") come `saluta()` o `incrementa()`?
+
+**Errore comune:** pensare che *ogni* istanza (ogni biscotto) ottenga una *copia* della funzione. Se avessi 1000 giocatori, avresti 1000 copie del metodo `saluta()`. Questo sprecherebbe tonnellate di memoria\!
+
+**La Realtà:** C'è *una sola* copia di `saluta()`. Vive in un posto speciale e condiviso chiamato **`prototype`** (lo "zaino condiviso" della classe).
+
+  * Quando definisci un metodo (`saluta() { ... }`) dentro una `class`, JavaScript lo attacca *automaticamente* a `Persona.prototype`.
+  * Quando chiami `mario.saluta()`, JavaScript controlla: "Mario ha un metodo `saluta` *su di sé*?"
+  * "No."
+  * "Ok, allora controllo nello 'zaino' (il `prototype`) da cui è stato creato."
+  * "Ah, eccolo\! Lo eseguo e imposto `this` perché sia `mario`."
+
+Questo meccanismo (la *prototype chain*) è incredibilmente efficiente. Hai un solo manuale di istruzioni (`prototype`) per migliaia di oggetti (istanze).
+
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+
+
+### 20. Pattern: Metodo `claim()` (Disattivazione Oggetti)
+
+Questo è un esempio pratico che unisce tutto. Invece di cancellare un oggetto da un array (che può essere complicato), spesso è più facile "disattivarlo".
+
+È un metodo (una funzione nello "zaino" `prototype`) che modifica le *proprietà* (`this.width`, `this.position`) dell'istanza *specifica* (`this`).
+
+*Analogia:* È come un pulsante di "autodistruzione" che ogni oggetto eredita. Quando `checkpoint1.claim()` viene chiamato, solo *quel* checkpoint si disattiva, modificando sé stesso.
+
+```javascript
+class Checkpoint {
+    constructor(x, y) {
+        this.position = { x, y };
+        this.width = 50;
+        this.height = 70;
+        this.claimed = false; // Flag booleano
+    }
+    
+    // Metodo per "disattivare" questo specifico checkpoint
+    claim() {
+        console.log("Checkpoint preso!");
+        
+        // Modifica le proprietà di *questa* istanza
+        this.width = 0; // Diventa invisibile
+        this.height = 0;
+        this.position.y = Infinity; // Sparisce dal mondo di gioco
+        this.claimed = true; // Segna come "usato"
+    }
+}
+
+// Nel tuo gioco:
+const checkpoint1 = new Checkpoint(100, 200);
+
+// ...quando il giocatore lo tocca...
+checkpoint1.claim(); 
+// checkpoint1 ora è { width: 0, height: 0, position: {y: Infinity}, claimed: true }
+// checkpoint2 (un'altra istanza) è ancora intatto.
+```
+
+Questo si chiama **Incapsulamento**: la logica per "come si disattiva un checkpoint" è contenuta *all'interno* della classe `Checkpoint` stessa, invece di essere sparsa in giro per il codice.

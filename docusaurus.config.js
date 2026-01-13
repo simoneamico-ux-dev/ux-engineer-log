@@ -91,16 +91,16 @@ const config = {
                 to: '/docs/Featured/ux-engineer-log',
               },
               {
-                label: 'Inspirational',
-                to: '/docs/Inspirational/city-skyline',
-              },
-              {
                 label: 'Path',
                 to: '/docs/Path/HTML-CSS/cat-photo-app',
               },
               {
                 label: 'Vademecum',
                 to: '/docs/Vademecum/html-real-world-vademecum',
+              },
+              {
+                label: 'Bookshelf',
+                to: '/docs/Bookshelf/the-design-of-everyday-things',
               },
             ],
           },
