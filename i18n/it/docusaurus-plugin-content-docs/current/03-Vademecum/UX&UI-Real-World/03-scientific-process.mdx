@@ -49,7 +49,7 @@ Il design non è arte, è problem solving. Non aspettiamo l'ispirazione divina, 
 * *Skill:* Alta manualità, bassa alfabetizzazione informatica.
 * *Debolezza:* Va di fretta, odia leggere testi lunghi.
 
-**L'Utente Elastico:** Senza una Persona definita, il team di sviluppo userà l'utente elastico. Quando fa comodo, l'utente è "esperto" (quindi niente istruzioni). Quando fa comodo, è "stupido" (quindi togliamo funzionalità).
+**L'Utente Elastico:** Senza una Persona definita, il team di sviluppo userà l'utente elastico. Quando fa comodo, l'utente è "esperto" (quindi niente istruzioni). Quando fa comodo, è "stupido" (quindi togliamo funzionalità). <br />
 **L'Anti-Persona:** Definisci anche per chi *non* stai progettando (es. il criminale informatico o il burlone). Ti serve per creare vincoli di sicurezza senza rovinare l'esperienza di Mario.
 
 ### 16. User Journey Map
@@ -74,13 +74,67 @@ Spesso i problemi di UX non sono nel software, ma nel contesto (es. l'app richie
 
 **La Checklist del Pilota**
 
-**Cosa fa:** È una lista di controllo universale per trovare buchi nell'usabilità senza dover intervistare 100 persone.
+**Cosa fa:** È una lista di controllo universale per trovare buchi nell'usabilità.
 
-**L'Analogia:** Prima di decollare, il pilota non va a "sensazione". Ha una checklist: "Flap? Ok. Carburante? Ok.". Le euristiche sono la tua checklist pre-volo. Non servono a creare, servono a *non schiantarsi*.
+**L'Analogia:** Prima di decollare, il pilota non va a "sensazione". Ha una checklist: "Flap? Ok. Carburante? Ok.". Le euristiche sono la tua checklist pre-volo. Non servono a creare, servono a *non schiantarsi*. Scorri questa lista prima di ogni rilascio.
 
-**Le 3 Euristiche Salvavita (su 10):**
-1.  **Visibilità dello Stato:** Il sistema deve sempre dirti cosa sta facendo (Spinner, Barre di progresso, Breadcrumbs). Se l'utente chiede "Si è bloccato?", hai fallito.
-2.  **Corrispondenza tra Sistema e Mondo Reale:** Usa il linguaggio dell'utente, non quello della macchina. (Es. "Cestino" invece di "Directory /dev/null").
-3.  **Prevenzione dell'Errore:** È meglio un design che impedisce di sbagliare (es. input data che accetta solo numeri) piuttosto che un messaggio di errore simpatico.
+1. **Visibilità dello Stato del Sistema**
+* *Il principio:* Il sistema non deve mai tenerti all'oscuro.
+* *L'Analogia:* Se premi l'ascensore e il bottone non si illumina, lo premi altre 10 volte con rabbia.
+* *Pratica:* Spinner, barre di progresso, breadcrumbs. Se l'utente chiede "Si è bloccato?", hai fallito.
+
+
+2. **Corrispondenza tra Sistema e Mondo Reale**
+* *Il principio:* Parla la lingua dell'utente, non quella del database.
+* *L'Analogia:* Non dire "Errore di scrittura su /dev/null", dì "Il cestino è pieno".
+* *Pratica:* Usa icone e termini familiari (Cartelle, Scrivania, Carrello) invece di termini tecnici (Directory, Root, Query).
+
+
+3. **Controllo e Libertà dell'Utente**
+* *Il principio:* L'utente clicca per sbaglio. Dagli una via d'uscita.
+* *L'Analogia:* L'Uscita di Emergenza con il maniglione antipanico. Non importa come sei entrato, devi poter uscire subito.
+* *Pratica:* Il tasto "Annulla" (Undo) è sacro. Non intrappolare mai l'utente in un modale senza una "X" per chiudere.
+
+
+4. **Consistenza e Standard**
+* *Il principio:* Non essere creativo sulle convenzioni.
+* *L'Analogia:* Immagina un'auto dove il freno è a destra e l'acceleratore a sinistra. Caos.
+* *Pratica:* Se il rosso significa "Stop" ovunque, non usarlo per "Vai". Segui la Legge di Jakob: l'utente si aspetta che il tuo sito funzioni come tutti gli altri.
+
+
+5. **Prevenzione dell'Errore**
+* *Il principio:* Un buon design impedisce il problema alla radice.
+* *L'Analogia:* La presa USB-C (o la spina elettrica polarizzata). Non *puoi* inserirla al contrario.
+* *Pratica:* Invece di dare errore "Formato data errato", usa un calendario che permette di cliccare solo date valide. Disabilita il bottone "Invia" se il form è vuoto.
+
+
+6. **Riconoscimento anziché Ricordo**
+* *Il principio:* Minimizza il carico cognitivo. La RAM umana è limitata.
+* *L'Analogia:* Un esame a crocette (Riconoscimento) è più facile di un esame a risposta aperta (Ricordo).
+* *Pratica:* Mostra la cronologia recente invece di far ridigitare la ricerca. Mostra le voci di menu visibili, non nasconderle dietro comandi da terminale.
+
+
+7. **Flessibilità ed Efficienza d'Uso**
+* *Il principio:* Accogli i novizi, ma velocizza gli esperti.
+* *L'Analogia:* La città ha le strade normali per i turisti, ma i tassisti conoscono le scorciatoie.
+* *Pratica:* Scorciatoie da tastiera (`Ctrl+C`, `Ctrl+V`), macro, personalizzazione della dashboard per utenti "Power User".
+
+
+8. **Design Estetico e Minimalista**
+* *Il principio:* Ogni unità di informazione extra compete con le unità rilevanti.
+* *L'Analogia:* Il rapporto Segnale/Rumore. Se urli 10 cose insieme, nessuno ne capisce una.
+* *Pratica:* Non è solo "fare spazio bianco". È togliere tutto ciò che non serve all'obiettivo corrente dell'utente. Se non serve, è rumore.
+
+
+9. **Aiutare gli Utenti a Riconoscere e Recuperare dagli Errori**
+* *Il principio:* I messaggi di errore devono essere scritti in linguaggio umano e suggerire una soluzione.
+* *L'Analogia:* Un medico che dice "Codice 404" è inutile. Un medico che dice "Hai la febbre (Problema), prendi questo (Soluzione)" è utile.
+* *Pratica:* Mai "Unknown Error". Sempre: "La connessione è caduta (Cosa), Riprova tra poco (Come risolvere)".
+
+
+10. **Aiuto e Documentazione**
+* *Il principio:* Il sistema dovrebbe usarsi senza istruzioni, ma se servono, devono essere facili da trovare.
+* *L'Analogia:* La scialuppa di salvataggio. Speri di non usarla mai, ma se la nave affonda, deve essere lì e pronta all'uso.
+* *Pratica:* FAQ contestuali, search bar nell'help center, e soprattutto: non scrivere manuali giganti, scrivi guide focalizzate sul compito ("Come fare X").
 
 **Uso Pratico:** Prima di consegnare il design, scorri la lista. Se violi un'euristica, devi avere un motivo dannatamente buono.

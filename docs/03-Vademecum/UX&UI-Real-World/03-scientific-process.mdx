@@ -49,7 +49,7 @@ Design is not art, it is problem solving. We don't wait for divine inspiration; 
 * *Skill:* High manual dexterity, low computer literacy.
 * *Weakness:* In a rush, hates reading long texts.
 
-**The Elastic User:** Without a defined Persona, the development team will use the elastic user. When convenient, the user is an "expert" (so no instructions). When convenient, they are "stupid" (so we remove features).
+**The Elastic User:** Without a defined Persona, the development team will use the elastic user. When convenient, the user is an "expert" (so no instructions). When convenient, they are "stupid" (so we remove features). <br />
 **The Anti-Persona:** Define who you are *not* designing for (e.g., the hacker or the prankster). You need this to create security constraints without ruining Mario's experience.
 
 ### 16. User Journey Map
@@ -74,13 +74,69 @@ Often UX problems are not in the software, but in the context (e.g., the app req
 
 **The Pilot's Checklist**
 
-**What it does:** It is a universal checklist to find usability holes without having to interview 100 people.
+**What it does:** It is a universal checklist to find usability holes.
 
-**The Analogy:** Before taking off, a pilot doesn't go by "gut feeling." They have a checklist: "Flaps? Check. Fuel? Check." Heuristics are your pre-flight checklist. They aren't for creating; they are for *not crashing*.
+**The Analogy:** Before taking off, a pilot doesn't go by "gut feeling." They have a checklist: "Flaps? Check. Fuel? Check." Heuristics are your pre-flight checklist. They aren't for creating; they are for *not crashing*. Run through this list before every release.
 
-**The 3 Lifesaving Heuristics (out of 10):**
-1.  **Visibility of System Status:** The system must always tell you what it is doing (Spinners, Progress Bars, Breadcrumbs). If the user asks "Is it stuck?", you failed.
-2.  **Match Between System and Real World:** Use the user's language, not the machine's. (e.g., "Trash" instead of "Directory /dev/null").
-3.  **Error Prevention:** A design that prevents mistakes (e.g., a date input that only accepts numbers) is better than a funny error message.
+1. **Visibility of System Status**
+* *The Principle:* The system must never keep you in the dark.
+* *The Analogy:* If you press the elevator button and it doesn't light up, you press it 10 more times in anger.
+* *Practice:* Spinners, progress bars, breadcrumbs. If the user asks "Is it stuck?", you failed.
+
+
+2. **Match Between System and Real World**
+* *The Principle:* Speak the user's language, not the database's.
+* *The Analogy:* Don't say "Write error on /dev/null", say "Trash is full."
+* *Practice:* Use familiar icons and terms (Folders, Desktop, Cart) instead of technical terms (Directory, Root, Query).
+
+
+3. **User Control and Freedom**
+* *The Principle:* The user clicks by mistake. Give them a way out.
+* *The Analogy:* The Emergency Exit with the panic bar. It doesn't matter how you got in, you must be able to get out immediately.
+* *Practice:* The "Undo" button is sacred. Never trap the user in a modal without an "X" to close it.
+
+
+4. **Consistency and Standards**
+* *The Principle:* Don't get creative with conventions.
+* *The Analogy:* Imagine a car where the brake is on the right and the accelerator is on the left. Chaos.
+* *Practice:* If red means "Stop" everywhere, don't use it for "Go." Follow Jakob's Law: the user expects your site to work like everyone else's.
+
+
+5. **Error Prevention**
+* *The Principle:* Good design stops the problem at the source.
+* *The Analogy:* The USB-C port (or the polarized plug). You *cannot* plug it in the wrong way.
+* *Practice:* Instead of giving a "Wrong date format" error, use a calendar that only lets you click valid dates. Disable the "Submit" button if the form is empty.
+
+
+6. **Recognition Rather Than Recall**
+* *The Principle:* Minimize cognitive load. Human RAM is limited.
+* *The Analogy:* A multiple-choice exam (Recognition) is easier than an open-ended essay exam (Recall).
+* *Practice:* Show recent history instead of making them retype the search. Show visible menu items, don't hide them behind terminal commands.
+
+
+7. **Flexibility and Efficiency of Use**
+* *The Principle:* Welcome novices, but speed up experts.
+* *The Analogy:* The city has standard roads for tourists, but taxi drivers know the shortcuts.
+* *Practice:* Keyboard shortcuts (`Ctrl+C`, `Ctrl+V`), macros, dashboard customization for "Power Users."
+
+
+8. **Aesthetic and Minimalist Design**
+* *The Principle:* Every extra unit of information competes with the relevant units.
+* *The Analogy:* The Signal-to-Noise ratio. If you shout 10 things at once, no one understands any of them.
+* *Practice:* It's not just "making white space." It's removing everything that doesn't serve the user's current goal. If it’s not needed, it’s noise.
+
+
+9. **Help Users Recognize, Diagnose, and Recover from Errors**
+* *The Principle:* Error messages must be written in human language and suggest a solution.
+* *The Analogy:* A doctor saying "Code 404" is useless. A doctor saying "You have a fever (Problem), take this (Solution)" is useful.
+* *Practice:* Never "Unknown Error." Always: "Connection lost (What), Try again shortly (How to fix)."
+
+
+10. **Help and Documentation**
+* *The Principle:* The system should be usable without instructions, but if they are needed, they must be easy to find.
+* *The Analogy:* The lifeboat. You hope never to use it, but if the ship sinks, it must be there and ready to use.
+* *Practice:* Contextual FAQs, search bar in the help center, and above all: don't write giant manuals, write task-focused guides ("How to do X").
+
+
 
 **Practical Use:** Before handing over the design, run through the list. If you violate a heuristic, you must have a damn good reason.
