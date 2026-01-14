@@ -2176,10 +2176,10 @@ Inizialmente pensavo a una soluzione che credevo elegante: un **Timer** che calc
 Il problema? Mi sarei scontrato con la gestione di iOS e Android che **congelano i browser in background** per risparmiare batteria. Il timer si sarebbe fermato. <br />
 Ho optato per una soluzione veramente semplice e banale: un **Interval di 60 secondi**. Ogni 60 secondi JavaScript controlla, per dirla semplice, se `oggi != ieri` (oggi è diverso da ieri).
 
-Mi premava l'impatto sulla batteria e ho scoperto essere **bassissimo**. Questo perché la CPU si sveglia per un micro-istante, controlla un numero, vede che non è cambiato nulla e torna "a dormire". È molto più costoso per la batteria gestire il rendering grafico o la connessione alla rete. <br />
+Mi premeva l'impatto sulla batteria, che ho scoperto essere **bassissimo**. Questo perché la CPU si sveglia per un micro-istante, controlla un numero, vede che non è cambiato nulla e torna "a dormire". È molto più costoso per la batteria gestire il rendering grafico o la connessione alla rete. <br />
 L'idea del "Timer preciso alla mezzanotte" avrebbe quindi rischiato di creare bug in cui l'app non si aggiorna se il telefono va in standby, mentre il risparmio energetico sarebbe talmente piccolo da non essere misurabile.
 
-Ebbene, in **2 ore avevo l'app funzionante**. Ho dedicato altre **2 ore il giorno successivo** per rifinire i dettagli e disegnare l'esperienza desktop e landscape negli smartphone.
+Ebbene, in **2 ore avevo l'app funzionante**. Ho dedicato altre **3 ore il giorno successivo** per rifinire i dettagli e disegnare l'esperienza desktop e landscape negli smartphone.
 
 ### Layout Responsive: Da Mobile a Dashboard
 
@@ -2189,7 +2189,7 @@ L'esperienza landscape trasforma l'app in una **dashboard**: i turni vengono dis
 ### Riflessioni: Empatia, Processo e Controllo
 
 Non sono cinico, altrimenti non mirerei a fare questo lavoro, ma credo che alle persone non interessi sentire che sai fare questo o quell'altro, bensì sapere **cosa sai fare nel concreto** e, per essere ancora più specifici, **cosa sai fare di concreto da cui loro possano trarre vantaggio**. <br />
-Credo sia il medesimo tema del public speaking. Carlo Loiudice diceva (non ricordo se in uno dei suoi corsi che avevo fatto oppure nei suoi podcast) che il pubblico è egoista: non gli interessa chi sei, cosa hai fatto e perché sei lì a parlare, bensì **cosa si porta a casa** di quello che dici. <br />
+Credo sia il medesimo tema del public speaking. Carlo Loiudice diceva (non ricordo se in uno dei suoi corsi oppure nei suoi podcast) che il pubblico è egoista: non gli interessa chi sei, cosa hai fatto e perché sei lì a parlare, bensì **cosa si porta a casa** di quello che dici. <br />
 Proprio per questo motivo sostengo che sia di vitale importanza che quello che fai ti piaccia **non solo per i risultati che ottieni e i feedback altrui, bensì per il processo stesso**. <br />
 
 La sensazione più bella infatti non è stata da parte dei colleghi che mi hanno fatto i complimenti e hanno aggiunto l'app alla home, bensì la sensazione che **seppur usando l'AI molto più del solito, sapevo esattamente cosa stavamo facendo e perché**. <br />
