@@ -1,0 +1,353 @@
+---
+sidebar_position: 1
+sidebar_label: 'Navbar'
+title: 'Navbar'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Navbar
+
+<img
+  src={require('./assets/navbar.webp').default}
+  alt="Anteprima Reusable Mega Navbar - Dropdown Menu Apps Aperto con le voci Calendar, Chat, Email"
+  loading="lazy"
+  decoding="async"
+  width="980"
+  height="442"
+  style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+/>
+
+### Il Progetto
+
+**Navbar** è il mio primo progetto React, un componente di navigazione riutilizzabile che segna il passaggio da JavaScript vanilla a una libreria orientata ai componenti.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="js" label="index.jsx" default>
+
+```js
+export const Navbar = () => {
+  return (
+    <nav className="navbar">
+      <ul>
+        <li className="nav-item">
+          <a href='#'>Dashboard</a>
+        </li>
+        <li className="nav-item">
+          <a href="#">Widgets</a>
+        </li>
+        <li className="nav-item">
+          <button aria-expanded="false">Apps</button>
+          <ul className="sub-menu" aria-label="Apps">
+            <li>
+              <a href="#">Calendar</a>
+            </li>
+            <li>
+              <a href="#">Chat</a>
+            </li>
+            <li>
+              <a href="#">Email</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --white: #fff;
+  --light-grey: #e1e0e0;
+  --dark-purple: #7c0e7c;
+  --black: #000;
+}
+
+body {
+  background-color: var(--light-grey);
+}
+
+.navbar {
+  background-color: var(--white);
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: space-around;
+}
+
+.navbar ul li {
+  list-style: none;
+  border-radius: 4px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  color: var(--black);
+  padding: 10px;
+  display: inline-block;
+  width: 100%;
+}
+
+button {
+  background: transparent;
+  border: none;
+  font-family: 'Times New Roman', Times, serif;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.navbar ul .nav-item a:hover {
+  background-color: var(--dark-purple);
+  color: var(--white);
+}
+
+button:hover {
+  background-color: var(--dark-purple);
+  color: var(--white);
+}
+
+.navbar ul .nav-item .sub-menu {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  right: 5%;
+  transition: opacity 0.5s ease;
+  display: block;
+  background-color: var(--white);
+}
+
+@media (min-width: 768px) {
+  .navbar ul .nav-item .sub-menu {
+    right: 15%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navbar ul .nav-item .sub-menu {
+    right: 13%;
+  }
+}
+
+.navbar ul .nav-item:hover .sub-menu,
+.navbar ul .nav-item:focus-within .sub-menu {
+  visibility: visible;
+  opacity: 1;
+}
+```
+</TabItem>
+
+<TabItem value="html" label="index.html">
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reusable Navbar</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.3/babel.min.js"></script>
+    <script
+      data-plugins="transform-modules-umd"
+      type="text/babel"
+      src="index.jsx"
+    ></script>
+     <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      data-plugins="transform-modules-umd"
+      type="text/babel"
+      data-presets="react"
+      data-type="module"
+    >
+      import { Navbar } from './index.jsx';
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        <Navbar />
+      );
+    </script>
+  </body>
+</html>
+```
+
+</TabItem> 
+
+</Tabs>
+
+### Un Nuovo Approccio: freeCodeCamp Cambia Metodo
+
+Nella nuova serie di corsi freeCodeCamp (compreso questo) è stata abbandonata la mentalità del "solo esercizio" in favore di quiz, parti teoriche con domande a risposta multipla e una maggiore enfasi sulla teoria. Gli esercizi guidati ora si chiamano **Workshop**, i certification project sono diventati **Labs**, e permangono alcuni definiti sempre "Certification Project".
+
+Non mi sta convincendo come metodo. Lo trovo troppo accademico.  
+Ho dovuto farmi fare esercizi pratici dall'AI nell'arco della teoria, perché era necessario per capire appieno i vari concetti. Sostengo che la pratica resta primaria in un campo come questo, soprattutto quando si tratta di comprendere concetti astratti come il Virtual DOM o la riconciliazione.
+
+Ciononostante è stata veramente utile, ho infatti estratto parecchie nozioni, ed una è stata incredibile: il concetto di **SPA (Single Page Application)** che ho visto nelle prime lezioni teoriche era esattamente ciò che avevo costruito in **Calcola Turno** qualche giorno fa in Vanilla JS, senza conoscere formalmente il pattern!
+
+**Calcola Turno era una SPA Vanilla "fatta a mano”, aveva infatti:**
+- Un solo `index.html`, routing simulato con classi `.hidden` per mostrare/nascondere le viste
+- State management rudimentale con variabili globali (`selectedGroup`, `selectedDate`, `currentMonth`) salvate in `localStorage`
+- Funzioni pure come `calculateShift(group, date)` che accettano dati e restituiscono risultati senza toccare il DOM
+- Una funzione `renderCalendar()` che legge lo stato e genera l'HTML dinamicamente
+
+**Avevo applicato i principi di React senza saperlo:**  
+Logica separata dalla UI, render function che reagisce ai cambi di stato, event listeners che aggiornano lo stato e retriggano il render. L'unica differenza è che dovevo fare tutto manualmente: `document.createElement`, loop `for`, `appendChild`, e ricordarmi di chiamare `renderCalendar()` ogni volta che cambiava lo stato.
+
+Se ho compreso i concetti di React così efficacemente è stato proprio grazie a quella pratica precedente. Mi rendo quindi conto che React automatizza esattamente quello che con JavaScript Vanilla si è obbligati a fare a mano.
+
+Ho tratto moltissimo aiuto dall’analizzare "dal vivo" file e concetti come `package.json` e `node_modules` direttamente da questo sito stesso, che ha come architettura Docusaurus (quindi React-based). Mi è servito per dare sostanza alle poche frasi del corso che spiegavano il tutto.
+
+### Il Progetto: Tre Macro-Tempi
+
+Mi sono fermato in tre macro-tempi, analizzando ciò che avevo appreso fino a quel punto. Ecco cosa ho appreso in ogni fase.
+
+**Primo Tempo: Componenti e Naming Convention**
+
+Ho capito perché React obbliga la **maiuscola** nei nomi dei componenti (`<Navbar />` e non `<navbar />`).  
+Si tratta di sintassi obbligatoria, non di uno stile particolare. Quando il transpiler (Babel/Vite), ovvero il traduttore che converte JSX in JavaScript vanilla, legge il JSX, deve decidere cosa farne:
+- `<div>` (minuscolo) → React pensa "tag HTML standard" e genera `React.createElement('div')`
+- `<Navbar>` (maiuscolo) → React pensa "funzione custom" e genera `React.createElement(Navbar)` passando il riferimento alla funzione, non una stringa
+
+Il Code Tutor l'ha spiegato usando questa analogia: è come una lista degli invitati in discoteca. I nomi in minuscolo (`div`, `span`, `p`) sono la "plebe" che entra dall'ingresso standard HTML. I nomi in maiuscolo (`Navbar`, `Header`) sono i VIP: React capisce che sono componenti e li tratta con un processo diverso, eseguendo la funzione.
+
+Ho anche capito la differenza tra **Named Export** (`export function Navbar`) e **Default Export** (`export default Navbar`):
+- Default Export: è come chiedere "chi abita in questa casa?". C’è una sola risposta. Quando importi puoi chiamarlo come vuoi (`import X from './Navbar'`), flessibile però rischioso…
+- Named Export: è invece il citofono di un palazzo. Devi cercare specificamente il cognome giusto con le graffe: `import { Navbar } from './Navbar'`. Decisamente più preciso.
+
+Ho scoperto che i Named Export sono preferiti nel mondo professionale per componenti riutilizzabili perché l'IDE (come VS Code) suggerisce il nome esatto (autocomplete), se sbagli a scrivere, magari scrivendo `{ Navbr }` l'app smetterà di funzionare fin da subito con un errore chiaro, invece di importare undefined e farti scoprire il bug solo quando provi a usare effettivamente il componente. Inoltre i Named Export aiutano il tree shaking, ovvero i tool di build eliminano il codice non usato, proprio perché questi export espliciti permettono ai bundler di vedere esattamente cosa viene importato e cosa no. Se esporto 10 componenti ma ne importo solo 2, il bundler elimina gli altri 8 dal bundle finale. Se invece li raggruppo in un oggetto (`export default { Navbar, Footer, Card }`), il bundler li include tutti, perché vede un unico blocco inscatolato e non riesce a capire quali pezzi uso davvero.
+
+
+**Secondo Tempo: JSX e le Sue Stranezze**
+
+Ho capito perché si usa `className` invece di `class`.
+Il motivo ufficiale è "perché `class` è una parola riservata a JavaScript” (serve per definire Classi in programmazione a oggetti). Ma c'è un motivo più profondo e interessante.
+Quando JavaScript manipola il DOM, il browser non usa la parola `class`. Se apri la console e scrivi `document.getElementById('mioDiv').class`, ottieni `undefined`. Questo perché l'API nativa del browser chiama quella proprietà `className`, non `class`.
+React ha quindi scelto di seguire l'API JavaScript del DOM invece di imitare la sintassi HTML. Quindi quando scrivi `<div className="card">`, React sta traducendo direttamente in `element.className = "card"`, che è esattamente quello che faresti in JavaScript vanilla. 
+In sostanza: JSX imita HTML nell'aspetto, ma segue le regole di JavaScript. Preferisce essere fedele al linguaggio che esegue il codice piuttosto che al markup che imita.
+
+Ho anche scoperto perché le **parentesi tonde** dopo il return sono essenziali quando il JSX va a capo. 
+JavaScript ha l'**Automatic Semicolon Insertion (ASI)**: vale a dire che se vede un `return` e poi una riga a capo, pensa “L’utente ha dimenticato il punto e virgola. Ce lo metto io!".
+
+```javascript
+return
+  <nav>...</nav>
+```
+
+Diventa:
+
+```javascript
+return;
+  <nav>...</nav>  // codice irraggiungibile
+```
+
+Le parentesi tonde è come se dicessero a JavaScript: "Fermo! Non ho finito. Il valore di ritorno inizia qui `(` e finisce laggiù `)`. Tratta tutto come un unico pacchetto".  
+Un’analogia che inserirò nel Real World Vademecum React per far capire al volo il concetto è che è come tenere insieme una pila di fogli con una graffetta: senza graffetta, i fogli si disperdono. Le parentesi sono la graffetta che tiene il blocco JSX unito.
+
+**Terzo Tempo: WET Code e Promesse di Dinamicità**
+
+Guardando il codice finale, ho sentito la "puzza" di ripetizione (WET vs DRY):
+
+```jsx
+<li><a href="#">Calendar</a></li>
+<li><a href="#">Chat</a></li>
+<li><a href="#">Email</a></li>
+```
+
+In HTML ero obbligato a farlo. Se avevo 100 voci, dovevo fare copia-incolla 100 volte.
+
+Il Code Tutor mi ha rassicurato che presto non scriverò mai più liste a mano grazie a `.map()`, come in Vanilla JavaScript,
+
+Ho anche notato che `aria-expanded="false"` è, in questo momento, una bugia. È statico. Anche se il menu si aprisse (via CSS hover), quel valore rimarrebbe `false`, confondendo uno screen reader.
+
+In React reale non scriverò mai `"false"` a mano. Scriverò una variabile di stato tipo `aria-expanded={isOpen}`. Se `isOpen` è vero, React cambierà l'attributo HTML automaticamente.
+
+### Cosa Ho Imparato
+
+**Library vs Framework (Inversion of Control):**
+- Compreso che React è una libreria, non un framework: tu chiami React quando serve (per disegnare la UI), non viceversa. È come andare all'IKEA e decidere tutto tu, invece di comprare una casa modello con layout predefinito.
+- React si occupa solo della Vista, non di routing, gestione dati o autenticazione. Questa libertà è potente ma ti carica della responsabilità di architettare il progetto.
+
+**Single Page Application (SPA):**
+- Riconosciuto che Calcola Turno (Vanilla JS) applicava esattamente questo pattern: una SPA che intercetta i click, impedisce il ricaricamento del browser e sostituisce chirurgicamente solo i pezzi di contenuto che cambiano.
+- L'illusione del "teatro che non crolla mai": un solo `index.html` reale, il resto è switching di visibilità gestito da JavaScript.
+
+**Virtual DOM e Riconciliazione:**
+- Capito perché React usa un Virtual DOM: il DOM reale del browser è pesante, ogni modifica costa Reflow e Repaint. Il Virtual DOM è come un progetto CAD: modifichi la carta (istantaneo), poi React fa il Diffing (confronto) e aggiorna solo i pixel cambiati nel DOM reale.
+- Invece di distruggere la casa e ricostruirla (`innerHTML`), React cambia solo la maniglia della porta.
+
+**Paradigma Dichiarativo vs Imperativo:**
+- Passaggio mentale da "dire al browser come fare ogni cosa" (imperativo, Vanilla JS) a "dichiarare lo stato finale desiderato" (dichiarativo, React). Tu dici "voglio che la navbar sia aperta", React si occupa del Come.
+- È come passare da guidare un'auto manuale (cambio esplicito di ogni marcia) a prendere un taxi (dici solo la destinazione).
+
+**JSX come syntactic sugar:**
+- Ogni tag JSX (`<div className="ciao">`) viene trasformato dal compilatore in `React.createElement('div', {className: 'ciao'})`. Stai scrivendo JavaScript puro travestito da HTML.
+- I Frammenti (`<>...</>`) sono buste trasparenti: raggruppano elementi per il `return`, ma si dissolvono nel DOM senza lasciare wrapper inutili che romperebbero layout Flexbox/Grid.
+
+**Sicurezza (XSS Protection):**
+- React sanitizza automaticamente tutto ciò che stampi tra graffe `{variabile}`, convertendolo in stringa di testo puro. Se un hacker inserisce `<script>alert('boom')</script>`, React lo rende come testo innocuo.
+- L'unico modo per disabilitare questa protezione è `dangerouslySetInnerHTML`, il cui nome terrorizzante è intenzionale.
+
+**Naming Convention e Export:**
+- Componenti con maiuscola obbligatoria per distinguerli dai tag HTML nativi a livello di compilatore.
+- Named Export preferito per componenti riutilizzabili: autocomplete dell'IDE, errori immediati su typo, tree shaking più efficace.
+
+**Ecosistema Vite (Architettura Ristorante):**
+- `src` (cucina): codice crudo (JSX), il browser non può leggerlo direttamente.
+- Vite (chef): transpila, compila, assembla il piatto finito.
+- `public` (buffet): asset statici serviti così come sono (immagini, icone).
+- `node_modules` (magazzino): librerie di terze parti, gestite da npm, mai toccate a mano.
+
+**Componentizzazione e DRY:**
+- Liste generate a mano sono WET code (ripetizione). React spinge verso `.map()` per trasformare array di dati in liste di componenti con una riga.
+- Nesting profondo (Matrioska) segnala necessità di spezzare in sotto-componenti (`<DropdownMenu />`). React "odia" piramidi di codice troppo profonde.
+
+**Accessibility e State (Anticipazione):**
+- Attributi come `aria-expanded="false"` hardcodati sono "promesse di dinamicità": segnalano dove servirà State per rendere la UI veramente interattiva e accessibile.
+- Tag `<a>` in SPA: usati solo per link esterni. Per navigazione interna si usano componenti tipo `<Link />` (React Router) che cambiano URL senza ricaricare la pagina.
+
+### Riflessioni
+
+**Calcola Turno mi ha insegnato il perché di React:**  
+Dopo tantissime righe di `document.createElement`, `day.className = ...`, `daysContainer.appendChild(day)`, capisco perfettamente perché React esista. Tutto quel blocco di codice imperativo diventa JSX dichiarativo:
+
+```jsx
+// Invece di loop for + createElement + appendChild...
+{daysArray.map(day => (
+  <div 
+    key={day.date} 
+    className={`day ${day.isToday ? 'today' : ''} ${day.shiftType}`}
+    onClick={() => handleDayClick(day)}
+  >
+    {day.number}
+  </div>
+))}
+```
+
+React introduce quindi un livello di astrazione superiore: ti liberi del carico mentale di gestire il DOM manualmente e ti concentri solo sulla logica dei dati.
+
+Mi chiedo quanto tutto questo zucchero sintattico avrà senso in un'era dove sarà l'AI a scrivere la stragrande maggioranza del codice. Ci sarà ancora bisogno di queste "scorciatoie"?  
+L'unica cosa di cui sono certo è che finché faremo da Reviewer noi umani, sì, sarà ancora necessario. Dovremo capire cosa fa il codice generato, verificarne la correttezza e prendere decisioni architetturali. Temo che lo zucchero sintattico servirà soltanto per rendere il codice leggibile agli umani, non alle macchine.
+
+Riporterò tutto nel nuovo **Real World Vademecum React**, dove organizzerò questi concetti in modo più strutturato e consultabile.
+
+***
+
+**Next**:  
+Creare un Reusable Footer

@@ -1,0 +1,244 @@
+---
+sidebar_position: 3
+sidebar_label: 'Card Profilo'
+title: 'Profile Card'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Card Profilo
+
+<img
+  src={require('./assets/profile-card.webp').default}
+  alt="Anteprima Profile Card Project - Tre Card Profilo (Mark, Tiffany, Doug)"
+  loading="lazy"
+  decoding="async"
+  width="1904"
+  height="946"
+  style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+/>
+
+### Il Progetto
+
+**Card Profilo** è il mio primo progetto React data-driven, dove ho applicato i concetti di Props, Rendering Condizionale e Liste per trasformare dati statici in componenti dinamici.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="js" label="index.jsx" default>
+
+```js
+export function Card({ name, title, bio }) {
+  return (
+    <div className="card">
+      <h2>{name}</h2>
+      <p className="card-title">{title}</p>
+      <p>{bio}</p>
+    </div>
+  )
+}
+
+export function App() {
+  const profiles = [
+    {
+      id: 1,
+      name: "Mark",
+      title: "Frontend developer",
+      bio: "I like to work with different frontend technologies and play video games."
+    },
+    {
+      id: 2,
+      name: "Tiffany",
+      title: "Engineering manager",
+      bio: "I have worked in tech for 15 years and love to help people grow in this industry."
+    },
+    {
+      id: 3,
+      name: "Doug",
+      title: "Backend developer",
+      bio: "I have been a software developer for over 20 years and I love working with Go and Rust."
+    }
+  ];
+  return (
+    <div className="flex-container">
+      {profiles.map((profile) => (
+        <Card
+          key={profile.id}
+          name={profile.name}
+          title={profile.title}
+          bio={profile.bio}
+        />
+      ))}
+    </div>
+  );
+}
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+:root {
+  --dark-grey: #1b1b32;
+  --light-grey: #f5f6f7;
+  --dark-orange: #f89808;
+}
+
+body {
+  background-color: var(--dark-grey);
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.card {
+  border: 5px solid var(--dark-orange);
+  border-radius: 10px;
+  width: 100%;
+  padding: 20px;
+  margin: 10px 0;
+  background-color: var(--light-grey);
+}
+
+.card-title {
+  border-bottom: 4px solid var(--dark-orange);
+  width: fit-content;
+}
+
+@media (min-width: 768px) {
+  .card {
+    width: 300px;
+  }
+}
+```
+</TabItem>
+
+<TabItem value="html" label="index.html">
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Reusable Card component</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.3/babel.min.js"></script>
+    <script
+      data-plugins="transform-modules-umd"
+      type="text/babel"
+      src="index.jsx"
+    ></script>
+     <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      data-plugins="transform-modules-umd"
+      type="text/babel"
+      data-presets="react"
+      data-type="module"
+    >
+      import { App } from './index.jsx';
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        <App />
+      );
+    </script>
+  </body>
+</html>
+```
+
+</TabItem> 
+
+</Tabs>
+
+### Cosa Ho Imparato nella Teoria
+
+Prima di arrivare a questo progetto c'è stata la teoria sui Dati, estremamente interessante. Ecco i concetti che voglio tenermi stretti.
+
+**La Maschera del JSX**
+
+Nei progetti precedenti avevo capito che React fosse zucchero sintattico, ma non avevo compreso quanto.
+In sostanza, sotto il cofano è tutto `React.createElement`, quindi oggetti JavaScript puri. Le **parentesi graffe `{ }`** non sono "sintassi React speciale", sono una sorta di “portale” che ti riporta nel mondo JavaScript. Fuori dalle graffe sei in modalità "testo statico", dentro le graffe sei in modalità "logica eseguibile". 
+
+Per esempio, quando scrivo `<h2>{name}</h2>`, le graffe dicono "prendi la variabile `name` ed eseguila come JavaScript". Se scrivo `<h2>name</h2>` senza graffe, React stampa letteralmente la parola "name" a schermo. Questo spiega perché `style={{ color: 'red' }}` ha doppie graffe: la prima coppia è il portale JavaScript, la seconda è l'oggetto CSS vero e proprio.
+
+Sono estremamente contento che il **template literal con ternario** sia una best practice in React perché lo adoravo già in JavaScript vanilla. La sua concisione ma semplicità assoluta alla lettura lo rende perfetto: `{condition ? 'sì' : 'no'}` si legge come se fosse una domanda naturale.
+
+Ero abituato a vedere `&&` come una condizione per logica booleana (vero o falso), in realtà funziona anche come operatore che restituisce valori. Quando scrivo `const risultato = true && "Ciao"`, l'operatore vede `true`, va avanti e restituisce `"Ciao"`. Se scrivo `const risultato = false && "Ciao"`, l'operatore vede `false`, si ferma e restituisce `false`. In React questo diventa `{message && <p>{message}</p>}`: se `message` è una stringa (truthy), React passa al secondo pezzo e renderizza il paragrafo. Se `message` è stringa vuota (falsy), React si ferma e restituisce `""`, che React ignora completamente (non disegna nulla). React è programmato per ignorare `false`, `null`, `undefined` e `true`, quindi il rendering condizionale con `&&` funziona perfettamente. Ironicamente, ho capito questo meccanismo di JavaScript non studiando JavaScript stesso, ma React.
+
+**I Componenti come Funzioni Pure**
+
+Ho capito che un componente è letteralmente una funzione che produce unicamente UI: Props in ingresso → UI in uscita. Le Props sono immutabili per contratto, il figlio non può modificarle. I dati scorrono solo verso il basso (One-Way Data Flow), quindi se voglio cambiare qualcosa devo cambiare l'input alla fonte nel componente genitore, e React rieseguirà la funzione del figlio con i nuovi dati.
+
+Nel mio caso pratico: `<Card name="Mark" />` passa la stringa "Mark" come input alla funzione `Card`. Dentro `Card`, se provo a fare `name = "Doug"`, sto solo riassegnando una variabile locale che viene buttata via al prossimo render. Per cambiare davvero cosa vede l'utente, devo modificare l'array `profiles` dentro `App` (che è il genitore), e React rieseguirà automaticamente `Card` con il nuovo valore. È come nelle catene di montaggio che ci sono nella fabbrica in cui lavoro: il nastro trasportatore (Props) porta i pezzi con l'etichetta già scritta. Io operaio (componente figlio) posso leggere l'etichetta e montare il pezzo di conseguenza, ma non posso cambiare cosa c'è scritto. Se l'etichetta è sbagliata, devo fermare la linea e far correggere a monte (nel componente genitore).
+
+**La Teoria dell'Identità (Keys)**
+
+Quando una lista cambia, React deve decidere se distruggere tutto e rifare o spostare solo certi elementi. Arriva in nostro soccorso la `key`, che non serve a ordinare, bensì ad identificare.
+
+Ad esempio, se ho una lista di tre utenti e uso `key={index}`, le key saranno `0, 1, 2`. Se rimuovo il primo utente, React vede ancora key `0, 1` e pensa "perfetto, gli utenti 0 e 1 sono ancora qui, devo solo rimuovere il numero 2". Ma in realtà l'utente 0 è stato eliminato, e quelli che vedo ora erano l'1 e il 2. React riutilizzerebbe quindi il nodo DOM sbagliato. Se invece uso `key={profile.id}` con ID univoci tipo `101, 202, 303`, quando rimuovo l'utente 101, React sa esattamente "l'utente con ID 101 non c'è più, ma 202 e 303 sono ancora qui". Quindi riutilizzerebbe correttamente i loro nodi DOM. Ho scoperto che questo diventerà importantissimo quando avrò box di input o animazioni, perché, senza key stabili, il testo che scrive l’utente può "saltare" in un'altra casella o sparire completamente perché React ha riutilizzato il nodo DOM sbagliato. 
+
+**crypto.randomUUID() - L’arma ideale per gli ID**
+
+Un punto su cui mi sono soffermato con molto piacere è `crypto.randomUUID()` perché lo trovo estremamente affascinante nel funzionamento.
+
+È una Web API nativa del browser che genera un UUID (Universally Unique Identifier) versione 4. Quando la invochi ottieni una stringa di 36 caratteri tipo `"c90d075d-53a1-4226-a634-118e69213159"`.
+
+È diverso da `Math.random()`, questo perché quest’ultimo è un generatore pseudo-casuale che usa una formula matematica, vale a dire che se conosci il punto di partenza (seed), puoi prevedere i numeri successivi ed esiste una probabilità non trascurabile di ottenere lo stesso numero per due volte. `crypto.randomUUID()` invece usa il **CSPRNG** (Cryptographically Strong Pseudo-Random Number Generator) che attinge all'**entropia del sistema operativo**: movimenti impercettibili del mouse, rumore termico della CPU, timing dei tasti premuti. È "vero" caso basato sul caos fisico del mondo reale, non solo matematica.
+
+La probabilità di collisione (generare due ID uguali) è praticamente impossibile. Un UUID ha \(2^{122}\) combinazioni possibili. Se generassi 1 miliardo di UUID al secondo per i prossimi 85 anni, la probabilità di trovarne due uguali sarebbe ancora inferiore a quella di vincere il jackpot del SuperEnalotto per 5 volte consecutive.
+
+L'errore da evitare è generare la key durante il render. Se scrivo `{todos.map(todo => <li key={crypto.randomUUID()}>{todo.text}</li>)}`, ogni volta che React ridisegna la lista genera nuove chiavi, pensa che siano tutti elementi nuovi, distrugge il DOM e lo ricrea da zero. Perdo il focus sugli input e devasto le performance. La regola è: genero l'ID **solo una volta alla creazione del dato**, quando l'utente preme "Invio", e lo incollo all'oggetto per sempre. Poi nel JSX uso quell'ID stabile come key.
+
+Mi sono poi chiesto il costo computazionale e a seguito di qualche ricerca è emerso che `crypto.randomUUID()` è circa 20-30 volte più lento di `Math.random()` (400ms vs 15ms per generare 1 milione di ID). Ma per generare UN singolo ID quando l'utente clicca "Aggiungi Task", il computer impiega 0.0004 millisecondi. Per dare un metro di paragone l’occhio umano impiega 16 millisecondi per percepire un fotogramma a 60Hz. Generare quindi un UUID è 40.000 volte più veloce di quanto l’occhio possa vedere. Il vero collo di bottiglia nelle app React è il rendering DOM (10-50ms), non la generazione dell'ID. Preoccuparsi del costo di `crypto.randomUUID()` per fare un analogia, sarebbe come preoccuparsi del peso di un capello mentre si fanno stacchi con un bilanciere da 200kg.
+
+Un altro dubbio che mi è venuto è se si potesse integrare in un'applicazione offline first e la risposta è stata sì, ed è anche molto semplice capirne il motivo, l'entropia viene dal dispositivo locale (rumore hardware, timing), non dal cloud. È stata una grande scoperta perché garantisce anche che se un giorno l'utente sincronizzerà i dati col cloud, quegli ID non andranno mai in conflitto con quelli di nessun altro utente al mondo.
+
+### Profile Card
+
+Il progetto è stato semplicissimo a livello di implementazione: un array di oggetti (`profiles`) mappato in componenti `<Card />` con destructuring delle Props.
+
+La parte interessante non è stata il "cosa" (tre card in fila), ma il "come". Ho separato completamente l'array di dati dalla logica di rendering: il componente `<Card />` è totalmente riutilizzabile perché non sa nulla dei dati specifici che riceve, lavora solo con le Props che gli arrivano. Ho usato `.map()` per iterare sull'array e generare JSX dinamicamente, e ogni card ha ricevuto `key={profile.id}` per dare a React un'identità stabile con cui tracciare ogni elemento.
+
+
+È la prima volta che vedo una **vera** separazione tra Dati e Vista. In Calcola Turno avevo HTML separato da JavaScript, ma il JS doveva "conoscere" la struttura DOM per manipolarla (`document.getElementById`, `appendChild`). Se cambiavo l'HTML, il JS si rompeva. Qui invece `<Card />` è totalmente cieco: non sa se i dati vengono da un array locale, da un server, o da un database. Riceve Props e renderizza, punto. Se domani cambio la sorgente dati, il componente non lo sa nemmeno.
+
+
+### Cosa Ho Imparato
+
+**Destructuring Props direttamente nei parametri:**
+- `function Card({ name, title, bio })` invece di `function Card(props)` + `props.name`. Più pulito, autocomplete dell'IDE funziona meglio, e si vede immediatamente cosa si aspetta il componente.
+
+**`.map()` come Core Pattern di React:**
+- Trasformare array di dati in array di JSX è il pattern più usato in React. Non è "magia React", è `.map()` JavaScript standard che restituisce valori renderizzabili.
+- Pattern: `{array.map(item => <Component key={item.id} {...item} />)}`. Essenziale capire che ogni iterazione deve restituire un elemento React valido.
+
+**One-Way Data Flow (Unidirezionalità):**
+- I dati vivono nel componente padre (`App`), scorrono verso i figli (`Card`) via Props, ma i figli non possono modificarli. Se il figlio deve comunicare verso l'alto, dovrà farlo via callback (concetto che vedrò presto con gli Event Handler).
+
+**Separazione tra Container e Presentational Components:**
+- `App` è il **Container**: gestisce i dati, orchestra i figli.
+- `Card` è **Presentational**: riceve Props, renderizza UI, non sa nulla del contesto più ampio.
+- Questo pattern rende `<Card />` riutilizzabile: posso usarlo in 10 posti diversi con dati diversi.
+
+**JSX come Espressione JavaScript:**
+- Il `return` di `.map()` restituisce JSX, che sotto il cofano è un oggetto JavaScript. React raccoglie tutti questi oggetti in un array e li renderizza.
+- Questo spiega perché posso fare `const cards = profiles.map(...)` e poi `return <div>{cards}</div>`. JSX è solo sintassi, non cambia la natura di JavaScript.
+
+**Immutabilità delle Props (Read-Only Contract):**
+- Se provo a fare `name = "altro"` dentro `<Card />`, React non esplode, ma sto violando il contratto. Le Props sono pensate come input immutabili. Se servono dati mutabili, userò lo State (prossimo step).
+
+**Flex Container per Layout Responsivo:**
+- `className="flex-container"` nel CSS usa probabilmente Flexbox per disporre le card in riga con wrap automatico. Questo prepara mentalmente al fatto che React gestisce la logica, CSS gestisce il layout.
+
+***
+
+**Next**:  
+Creare una Mood Board (Labs).
