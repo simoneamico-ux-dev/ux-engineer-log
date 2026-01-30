@@ -33,30 +33,27 @@ It was extremely useful as an exercise because freeCodeCamp had taught me how to
 
 ```js
 {/* DESIGN
-    ------
-    * Component: Footer
-    * Context: This component is a React adaptation of the documentation-style
-    * footer found on "simoneamico.com" (Docusaurus based)
-
-    * Architectural Decisions:
-    * Layout Strategy ("Divide et Impera"):
-    * - The original reference design utilizes a 2-column layout
-    * - To satisfy the strict lab constraint ("At least three unordered lists"),
-    *   I logically split the content into "Navigation", "Social", and "Contacts"
-    * - This allows the component to pass validation tests while maintaining 
-    *   logical grouping and visual hierarchy
-
-    * Semantic Structure:
-    * - Uses the HTML5 <footer> tag as the top-level semantic landmark
-    * - Link groups are encapsulated in <ul> elements to ensure accessibility 
-    *   (screen readers interpret these as navigational lists)
-    * - The Copyright section is isolated in a ".footer-bottom" container 
-    *   to allow for separate spacing/styling logic
-
-    * Implementation Details:
-    * - All links use href="#" placeholders as mandated by the lab requirements
-    * - The "footer-columns" wrapper is designed to support CSS Flexbox or Grid 
-    *   for responsive alignment.
+   ------
+   * This file contains the React structure for the Footer component
+   * The architecture follows this semantic and functional flow:
+   *
+   * Architectural decisions (Layout strategy):
+   * - I realized that the original reference design (simoneamico.com) utilized a 2-column layout
+   * - To satisfy the strict lab constraint ("At least three unordered lists"), I logically split the
+   *   content into "Navigation", "Social", and "Contacts"
+   * - This approach allows the component to pass validation tests while maintaining logical grouping
+   *   and visual hierarchy
+   *
+   * Semantic structure (Accessibility):
+   * - I chose the HTML5 <footer> tag as the top-level semantic landmark
+   * - I encapsulated link groups in <ul> elements to ensure accessibility, as screen readers
+   *   interpret these specifically as navigational lists
+   * - The copyright section is isolated in a ".footer-bottom" container to allow for separate
+   *   spacing and styling logic
+   *
+   * Implementation details:
+   * - All links use href="#" placeholders as mandated by the lab requirements
+   * - The "footer-columns" wrapper is designed to support CSS Flexbox or Grid for responsive alignment.
 */}
 
 {/* 
@@ -444,29 +441,29 @@ footer {
      ------
      * File Origin: Pre-packaged environment by freeCodeCamp
      * Role: The "Engine Room" (Host Environment)
-
+     *
      * How it works:
      * This file is different from a standard professional project (like Vite)
      * Usually, we "cook" (compile) the code on our computer before sending it
      * to the browser
      * Here, instead, the "cooking" happens directly inside the user's browser
-
+     *
      * The Ingredients (CDNs):
      * Instead of installing React via terminal (npm install), this file pulls
      * React (the logic) and ReactDOM (the rendering) directly from the internet
      * via <script> tags. It's like streaming a movie instead of downloading it
-
+     *
      * The Live Translator (Babel Standalone):
      * Browsers don't understand React/JSX natively
      * This file loads "Babel", a tool that acts as a simultaneous interpreter
      * It reads the code inside "index.jsx", translates it instantly into
      * standard JavaScript, and executes it. This allows the lab to work
      * immediately without any setup.
-
+     *
      * The Canvas (#root):
      * The <body> is intentionally empty except for a single <div id="root">
      * This is the "mounting point" where React will paint the entire application
-
+     *
      * The Spark (Bootstrapping):
      * The script at the very bottom connects the dots. It grabs the 'root' div
      * and tells React: "Take the <Footer /> component and draw it here".
