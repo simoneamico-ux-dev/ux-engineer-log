@@ -1,0 +1,262 @@
+---
+sidebar_position: 5
+sidebar_label: 'Toggle Text App'
+title: 'Toggle Text App'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Toggle Text App
+
+<img
+  src={require('./assets/toggle-text-app-1.webp').default}
+  alt="Interfaccia iniziale della Toggle Text App: una scheda bianca minimalista con un pulsante blu al centro che riporta la scritta 'Show Message'"
+  loading="lazy"
+  decoding="async"
+  width="1310"
+  height="738"
+  style={{ width: '100%', height: 'auto', maxWidth: '550px', borderRadius: '18px' }}
+/>
+
+<img
+  src={require('./assets/toggle-text-app-2.webp').default}
+  alt="Stato attivo: il pulsante mostra 'Hide Message' e il messaggio 'I love freeCodeCamp!' è visibile"
+  loading="lazy"
+  decoding="async"
+  width="1310"
+  height="890"
+  style={{ width: '100%', height: 'auto', maxWidth: '550px', borderRadius: '18px' }}
+/>
+
+
+### Il Progetto
+
+Toggle Text App sviluppata con React e Functional Components, focalizzata sulla gestione reattiva dello stato e sul rendering condizionale. Un'applicazione che abbandona l'approccio imperativo classico per dimostrare il ciclo dichiarativo di aggiornamento della UI (Trigger, Render, Commit) e l'immutabilità dei dati senza manipolazione diretta del DOM.
+
+### Codice Sorgente
+
+<Tabs>
+<TabItem value="js" label="index.jsx" default>
+
+```jsx
+const { useState } = React;
+
+export const ToggleApp = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const handleToggleVisibility = () => {
+    setIsVisible(!isVisible);
+  }
+
+  return (
+    <div id="toggle-container">
+      <button onClick={handleToggleVisibility} id="toggle-button">{isVisible ? "Hide Message" : "Show Message"}</button>
+      {isVisible && <p id="message">I love freeCodeCamp!</p>}
+    </div>
+  );
+};
+```
+
+</TabItem>
+<TabItem value="html" label="index.html">
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Toggle Visibility</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.5/babel.min.js"></script>
+  <script 
+    data-plugins="transform-modules-umd"
+    type="text/babel"
+    src="index.jsx"
+  ></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="root"></div>
+  <script
+    data-plugins="transform-modules-umd"
+    type="text/babel"
+    data-presets="react"
+    data-type="module"
+  >
+    import { ToggleApp } from "./index.jsx";
+    ReactDOM.createRoot(document.getElementById("root")).render(<ToggleApp />);
+  </script>
+</body>
+</html>
+```
+
+</TabItem>
+<TabItem value="css" label="styles.css">
+
+```css
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+#toggle-container {
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#toggle-button {
+  padding: 10px 20px;
+  border: none;
+  background: #007BFF;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#toggle-button:hover {
+  background: #0056b3;
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 1.125rem;
+  color: #333;
+}
+```
+
+</TabItem>
+</Tabs>
+
+È stato un esercizio che mi ha fatto riflettere molto, non per l'esercizio in sé, bensì per la parte teorica. <br />
+Al di là delle lezioni e quiz di ripasso che freeCodeCamp mi ha richiesto di completare al fine di chiudere con il modulo *React Fundamentals*, ho dovuto affrontare la sezione: **"Working with State and Responding to Events in React"**.
+
+Mi sono interrogato su **React Native**. Sento ormai da mesi che il mio ambito di interesse maggiore è quello di sviluppare per dispositivi mobili, poiché quasi tutte le mie idee nascono spontaneamente pensando al mondo mobile.
+E perciò mi sono chiesto, per aggiustare il tiro del percorso, quanto delle competenze di React per il web mi torneranno utili quando inizierò lo sviluppo in React Native. Non considero attualmente l'ipotesi di imparare Swift UI o Kotlin proprio perché React Native mi permette di creare app cross-platform; penso che un'idea non dovrebbe discriminare tra chi ha un iPhone e chi ha un Android.
+
+
+### Il "Dialetto" Mobile
+
+Mi ha dato una grande motivazione leggere che la parte più difficile in assoluto (Logica e Stato) sarà identica. Lo trovo estremamente efficiente perché sarò in grado di creare un sito web oppure un'applicazione con prestazioni quasi native usando gli stessi concetti, semplicemente adattandomi al "dialetto" mobile. È quindi come se stessi imparando una lingua e poi dovessi imparare un dialetto della stessa, ma nemmeno parlato stretto.
+
+Questa tabella riassume perfettamente il concetto:
+
+| Concetto | React (Web) | React Native (Mobile) | Percentuale di Trasferimento |
+| --- | --- | --- | --- |
+| **Logica e Stato** | `useState`, `useEffect` | **Identico** | **100%** |
+| **Struttura (JSX)** | `<div>`, `<span>`, `<button>` | `<View>`, `<Text>`, `<Pressable>` | **0%** (Devo imparare i nuovi tag) |
+| **Styling** | CSS Classico, Tailwind, Grid | **Solo Flexbox** (StyleSheet objects) | **80%** (La logica Flex è identica) |
+| **Eventi** | `onClick`, `onChange` | `onPress`, `onChangeText` | **90%** (Cambia solo il nome) |
+| **Navigazione** | URL (`react-router`) | Stack/Tab (`react-navigation`) | **50%** (Non esistono URL, sono "pile") |
+| **Scroll** | Automatico | `<ScrollView>` o `<FlatList>` | **0%** (Devo dirlo esplicitamente) |
+| **API Browser** | `document`, `window` | Non esistono. Usi API Native | **10%** (Ambiente diverso) |
+
+
+### Le Ipotesi e le Risposte del Code Tutor
+
+Ero scettico sulla reale parità tra le piattaforme: faticavo a credere che l'integrazione fosse così trasparente, sembrava troppo bello per essere vero. Ho quindi bombardato il Code Tutor di domande tecniche: la mia stima di un 10% di codice da scrivere specificamente per gestire le differenze tra iOS e Android era realistica? Supponevo che quel margine servisse a gestire manualmente aspetti critici come l'allocazione della memoria. Infine, quanto è realmente scalabile un'app React Native rispetto a una controparte nativa in Swift o Kotlin?
+Ecco le risposte chiave che ho ricevuto:
+
+**1. La Regola del 90/10**<br />
+L'ipotesi del 10% di codice specifico si è dimostrata pessimistica (spesso è il 5%).
+La logica di business è 100% condivisa. La UI è 95% condivisa (React traduce `<View>` nei corrispettivi nativi). Il resto si gestisce con semplici controlli come `Platform.OS === 'ios'`.
+
+**2. Le Prestazioni: Il "Ponte" è crollato (ed è un bene)**<br />
+Temevo il collo di bottiglia del "Bridge". Infatti, fino a poco fa, JavaScript e il Sistema Nativo comunicavano come due stranieri tramite un interprete: ogni comando doveva essere trascritto in un messaggio (serializzato in JSON), spedito e tradotto dall'altra parte. Un processo lento e asincrono.
+Ho scoperto che con la **New Architecture (JSI e Fabric)**, l'interprete è stato rimosso. Grazie a JSI, JavaScript ora può comunicare direttamente con la memoria C++ del dispositivo. Non serve più impacchettare e spedire dati: JavaScript invoca le funzioni native istantaneamente, come se fossero funzioni sue. Oggi la fluidità è tale da rendere l'app indistinguibile da una nativa per il 99% degli use-case.
+
+**3. Scalabilità e Limiti Reali**<br />
+React Native non è solo per prototipi. Lo usano **Meta (Instagram), Microsoft (Office), Shopify, Discord e Tesla**. Se regge il carico di Instagram, reggerà qualsiasi app io abbia in mente.
+React Native "perde" contro il nativo puro (Swift/Kotlin) o C++ solo in casi estremi: giochi 3D pesanti, elaborazione Audio/Video in tempo reale o AR spinta. Per tutto il resto React Native è adatta e vince per velocità di sviluppo.
+
+### React: Un Ufficio Burocratico Efficientissimo
+
+Nelle lezioni ho avuto modo di imparare gli Hooks e ho potuto ammirare l'efficienza assoluta di React rispetto a JavaScript puro. Ho scoperto che React non è una semplice libreria, ma un **ufficio burocratico efficientissimo**, ma di quelli che funzionano davvero: niente code, niente carta persa, massima efficienza.
+
+Credo che lo descriverò proprio in questi termini nel Vademecum, ecco perché:
+
+**1. Il Trigger (La Richiesta)**<br />
+Tutto parte da un innesco, come `setCount`. È come chiamare il cameriere al ristorante. React prende nota che i dati sono obsoleti e pianifica l'aggiornamento (spesso facendo "Batching", ovvero aspettando qualche millisecondo qualora arrivassero altri ordini, questo per fare un solo viaggio).
+
+**2. La Render Phase (La Pianificazione - Il Calcolo Invisibile)**<br />
+Questa è la fase più fraintesa. React chiama la funzione, crea un **Nuovo Virtual DOM** ed è come se giocasse a "Trova le differenze" (*Diffing*) con il vecchio.
+In questa fase l'utente non vede nulla. Tutto il lavoro avviene nella RAM. Se l'app è lenta qui, significa che ho messo calcoli troppo pesanti proprio nella gestione di questa fase.
+
+**3. La Commit Phase (L'Esecuzione)**<br />
+Solo ora React tocca il **DOM reale**. Poiché ha calcolato esattamente cosa è cambiato nella fase precedente, fa un'operazione molto precisa: cambia solo il testo dentro l'h1, senza ridisegnare tutto il resto.
+
+Ho scoperto inoltre che **SwiftUI** e **Jetpack Compose** hanno copiato questo approccio.
+Fino al 2019, lo sviluppo nativo era ancorato al paradigma **imperativo**: il programmatore doveva agire come un micro-manager, ordinando manualmente ogni singola modifica (Cerca l'etichetta X, cambia il testo, poi cambia il colore).
+Oggi, Apple e Google hanno abbracciato totalmente la filosofia **dichiarativa** introdotta da React: non si danno più ordini alla UI, ma si descrive come deve apparire in base allo stato. In pratica, la burocrazia efficiente di React ha vinto.
+
+
+
+
+### Il Dilemma del CSS: Artigianato vs Industria
+
+Un'altra cosa che mi ha fatto riflettere, lasciandomi scontento, è stata la questione **Tailwind** e i Framework CSS.
+Ho sempre fatto parte della categoria delle persone che legge i libri dall'inizio alla fine. Eppure ho messo in discussione questo approccio nell'ambito dei corsi: guardando il programma di "Front End Development Libraries", mi sono chiesto quanto avesse senso fare il modulo sulle librerie CSS.
+
+Me lo sono chiesto dopo aver visto due video di **Salvatore San Filippo**.
+Mi trovo perfettamente d'accordo con la sua filosofia, che va oltre il concetto di Tailwind e tocca le librerie in generale. Possiamo riassumerla in 3 punti:
+
+1. **L'Involuzione:** Abbiamo distrutto la semantica del Web (HTML semplice + CSS potente) per creare un mostro di complessità (React, Componenti, div annidati).
+2. **La "Pezza":** Tailwind e i framework CSS non sono "tecnologia avanzata", sono solo una pezza che abbiamo messo sopra questo mostro per renderlo gestibile.
+3. **L'AI:** L'AI non ha bisogno di scorciatoie, può scrivere CSS puro perfettamente. Quindi, se ci pensa lei a scrivere il codice, l'utilità di una "shorthand" come Tailwind crolla.
+
+In merito a quest'ultimo punto, era proprio ciò che descrissi nel primo progetto React (Navbar):
+
+> "Mi chiedo quanto tutto questo zucchero sintattico avrà senso in un'era dove sarà l'AI a scrivere la stragrande maggioranza del codice. Ci sarà ancora bisogno di queste "scorciatoie"? Temo che lo zucchero sintattico servirà soltanto per rendere il codice leggibile agli umani, non alle macchine."
+
+Trovo incredibile come siamo giunti alla stessa conclusione; avevo soltanto aggiunto la questione leggibilità che secondo me (almeno per ora) è importante per capire cosa ha scritto di fatto l'AI.
+
+Comunque ho indagato. Non seguo mai nessuno ciecamente (consapevole che l'*authority bias* è sempre un rischio), ma ho voluto comprendere a fondo il punto di vista opposto.
+Ho realizzato che la sua visione difende l'**artigianato del web**, non l'industria. Ed è esattamente quello che ho fatto io fino ad oggi: trattare i miei progetti come manufatti artigianali. 
+
+Ecco l'analisi del Code Tutor sul mio CSS:
+> **Artigianato vs IKEA:**
+> Il tuo codice è pulito, architettato con cura (variabili in :root, calcoli precisi). È come un mobile fatto a mano su misura.
+> Tailwind è l'IKEA. È standardizzato, veloce, modulare. Non ha l'"anima" del tuo codice, ma monti la stanza in 10 minuti invece che in 10 giorni.
+
+Prevedo uno shock iniziale nell'usarlo: perderò la narrativa semantica (niente più classi come `.window-top-separator`) e dovrò abbandonare i "valori magici" (come `377.702px`) per una scala standard.
+Tuttavia, capisco il vantaggio industriale: niente più fatica a dare i nomi alle variabili e un `tailwind.config.js` che agisce come un `:root`.
+
+Una cosa interessante, però, è che Tailwind non è solo shorthand, è anche un **sistema di vincoli**. Mi è sembrato di capire che lavorerò con valori come `p-4` invece di `padding: 17px`, accettando una scala predefinita che *forza* la coerenza. L'AI (per quanto sempre più precisa) può anche scrivere `padding: 17px` in un componente e `padding: 18px` in un altro. Un sistema come Tailwind (o un design token system) previene tutto questo anche nella programmazione assistita, come la chiama Salvatore.
+
+Non riesco a schierarmi né da una parte né dall'altra. Capisco quanto fosse più bello l'approccio artigianale e come l'industria sia riuscita a distruggere quest'arte per standardizzare. Era ciò che cercavo di fare con i commenti e l'accentramento nel root, ma capisco che in un team esteso non sia efficiente, per quanto io continui a trovarlo un approccio meraviglioso.
+
+### Cosa Ho Imparato
+
+**React Fundamentals:**
+- **Conditional Rendering Short-circuit:** `{isVisible && <p>...}` elimina i blocchi if/else per rendering UI condizionali
+- **Batching:** React raggruppa aggiornamenti di stato per un singolo ciclo di render (efficienza)
+
+**Architettura:**
+- **Trigger → Render → Commit:** Distinguere l'innesco, il calcolo Virtual DOM (invisibile all'utente) e l'aggiornamento chirurgico del DOM reale
+- **React come Standard Industriale:** SwiftUI e Jetpack Compose hanno copiato questo modello dichiarativo dopo il 2019
+
+**Strategia Cross-Platform:**
+- **90/10 Rule:** Logica di business 100% condivisa tra Web e Native; solo la UI cambia "dialetto" (da `<div>` a `<View>`)
+- **New Architecture (JSI):** React Native non è più limitato dal Bridge JSON — prestazioni quasi native per il 99% dei casi d'uso
+
+**Filosofia:**
+- **Artigianato vs IKEA:** Tailwind sacrifica semantica per velocità industriale; l'AI renderà obsolete molte "scorciatoie umane"
+- **Design Tokens vs Valori Magici:** I sistemi di vincoli (`p-4` vs `padding: 17px`) prevengono inconsistenze anche nella programmazione assistita
+
+
+---
+
+**Next**:
+Build a Color Picker App (Lab)
+
+P.S. Questa è la mia ultima settimana di lavoro in fabbrica. Ho dato le dimissioni per dedicarmi totalmente a questo percorso. Il dado è tratto.
+
