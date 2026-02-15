@@ -20,21 +20,32 @@ import Link from '@docusaurus/Link';
   {[
     {
       src: require('./assets/preview-1-input.webp').default,
-      alt: "The Center-01 input screen: macro buttons designed for rapid entry on resistive touch monitors"
+      alt: "The Center-01 input screen: macro buttons designed for rapid entry on resistive touch monitors",
+      width: 1413,
+      height: 2857
     },
     {
       src: require('./assets/preview-2-data.webp').default,
-      alt: "Inventory management in Center-02: the operator maps the status of silos, distinguishing between batches and types"
+      alt: "Inventory management in Center-02: the operator maps the status of silos, distinguishing between batches and types",
+      width: 1413,
+      height: 2857
     },
     {
       src: require('./assets/preview-3-logic.webp').default,
-      alt: "The system's algorithmic core: the FIFO log displays the automatic decision-making logic and safety alerts"
+      alt: "The system's algorithmic core: the FIFO log displays the automatic decision-making logic and safety alerts",
+      width: 1413,
+      height: 2857
     }
   ].map((img, index) => (
     <div key={index} style={{ flex: '1 1 200px', maxWidth: '260px' }}>
       <img 
         src={img.src}
         alt={img.alt}
+        width={img.width}
+        height={img.height}
+        loading={index === 0 ? "eager" : "lazy"} 
+        fetchPriority={index === 0 ? "high" : "auto"}
+        decoding="async"
         style={{
           width: '100%',
           height: 'auto',
@@ -89,8 +100,8 @@ Here is the very first version:
     <img 
       src={require('./assets/center-01-v1-html-raw.webp').default} 
       alt="The primitive interface of version 0.0.1 built with only raw HTML, showing the two standard buttons to add 1000 kg" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -129,8 +140,8 @@ The answer came with the second version, finally featuring something "human" in 
     <img 
       src={require('./assets/center-01-v2-css-timer.webp').default} 
       alt="The main screen of version 0.0.2 with CSS applied, showing for the first time the Remaining Time calculation in hours and minutes" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -145,8 +156,8 @@ The answer came with the second version, finally featuring something "human" in 
     <img 
       src={require('./assets/center-01-v2-bottom.webp').default} 
       alt="The lower section of version 0.0.2 replicating the main logic but dedicated to managing a second raw material" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -175,8 +186,8 @@ From here on, I will apply a monochrome filter, because even without the exact h
     <img 
       src={require('./assets/center-01-v3-brand.webp').default} 
       alt="The version with UI updated to brand colors where I added the button for the 500kg increment on the main screen" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -191,8 +202,8 @@ From here on, I will apply a monochrome filter, because even without the exact h
     <img 
       src={require('./assets/center-01-v3-brand-bottom.webp').default} 
       alt="The lower section also updated with brand colors for managing the second raw material" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -212,8 +223,8 @@ I made every modification on an IDE called "Koder" on an iPhone 12 mini:
     <img 
       src={require('./assets/center-dev-koder-ide.webp').default} 
       alt="A screenshot of the Koder code editor on an iPhone 12 mini while live-editing the CSS box class" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -241,8 +252,8 @@ Where I finally centered those input boxes within the container:
     <img 
       src={require('./assets/center-01-v4-centered.webp').default} 
       alt="The evolved interface where the input boxes for Current Quantity and Hourly Consumption are finally centered within the container" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -261,8 +272,8 @@ This was the moment the tool became **scalable** for the first time. The operato
     <img 
       src={require('./assets/center-01-v5-scalable.webp').default} 
       alt="The interface made scalable thanks to the introduction of a customizable input field allowing the user to enter any quantity of kg" 
-      width="1119"
-      height="2060"
+      width="1124"
+      height="1906"
       loading="lazy"
       decoding="async"
       style={{
@@ -300,8 +311,8 @@ What you see is the initial attempt. Although I later standardized the graphics 
     <img 
       src={require('./assets/center-abtest-auto-fail.webp').default} 
       alt="The failed attempt at Automatic Mode" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -316,8 +327,8 @@ What you see is the initial attempt. Although I later standardized the graphics 
     <img 
       src={require('./assets/center-abtest-selection.webp').default} 
       alt="The selection screen where the user had to choose between Manual and Automatic Mode" 
-      width="1119" 
-      height="2060" 
+      width="948" 
+      height="946" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -361,8 +372,8 @@ What was the point? Analyzing the process, **3 wastes** occurred simultaneously:
 <img
 src={require('./assets/center-01-dosate-calc.webp').default}
 alt="The Hourly Consumption calculator with the 3 inputs for Current and Residual Quantity that replaced the physical dosing checks"
-width="1119"
-height="2060"
+width="1413"
+height="2857"
 loading="lazy"
 decoding="async"
 style={{
@@ -393,8 +404,8 @@ I also automated this calculation (which until then was done by hand), democrati
     <img 
       src={require('./assets/center-logic-paper.webp').default} 
       alt="Handwritten notes on a piece of paper drafting the logic for production residue management" 
-      width="1119" 
-      height="2060" 
+      width="660" 
+      height="1343" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -420,8 +431,8 @@ I also automated this calculation (which until then was done by hand), democrati
     <img 
       src={require('./assets/center-logic-ui.webp').default} 
       alt="The UI implementation of the paper-based logic representing the digital translation of the notes for residue calculation" 
-      width="1119" 
-      height="2060" 
+      width="1142" 
+      height="1318" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -447,8 +458,8 @@ With every change in the department, I updated the interface. When we were told 
     <img 
       src={require('./assets/center-error-split-lines.webp').default} 
       alt="The flawed interface with a side-by-side two-column layout for Line 1 and Line 2, based on my wrong deduction" 
-      width="1119"
-      height="2060"
+      width="1883"
+      height="1074"
       loading="lazy"
       decoding="async"
       style={{
@@ -472,8 +483,8 @@ I chose the following mockup:
     <img 
       src={require('./assets/center-krispy-mockup.webp').default} 
       alt="The mockup of the new unified interface created with the Krisspy tool" 
-      width="1119"
-      height="2060"
+      width="2022"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -493,8 +504,8 @@ Here is what it looked like in the implementation phase:
     <img 
       src={require('./assets/center-final-ui-main.webp').default} 
       alt="The final implementation of the Main Screen based on the mockup, with data obscured for privacy" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -512,8 +523,8 @@ Here is what it looked like in the implementation phase:
     <img 
       src={require('./assets/center-final-ui-bottom.webp').default} 
       alt="The final implementation of the Lower Section showing details of the second production phase" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -531,8 +542,8 @@ Here is what it looked like in the implementation phase:
     <img 
       src={require('./assets/center-config-panel.webp').default} 
       alt="The configuration panel allowing operators to customize hourly consumption and parameters for each raw material" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -550,8 +561,8 @@ Here is what it looked like in the implementation phase:
     <img 
       src={require('./assets/center-new-type-added.webp').default} 
       alt="The updated interface showing the successful addition of a new custom raw material type" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -577,8 +588,8 @@ The technical problem here was the **FIFO** (*First In, First Out*) algorithm: d
     <img 
       src={require('./assets/center-02-fifo-main.webp').default} 
       alt="The Center-02 interface, the digital tool for FIFO batch management replacing pen and paper" 
-      width="1119"
-      height="2060"
+      width="2089"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -602,8 +613,8 @@ I added an in-app guide. I know that Norman (in "The Design of Everyday Things")
     <img 
       src={require('./assets/center-guide-timer-fail.webp').default} 
       alt="The in-app guide showing the screen where I explain the automatic data cleaning Timer, which was later removed" 
-      width="1119"
-      height="2060"
+      width="2005"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -640,8 +651,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-desktop-dashboard.webp').default} 
       alt="The post-withdrawal summary screen showing the operation's success: the main button is disabled to prevent double-submission errors, leaving only cancel or clear actions active" 
-      width="1119"
-      height="2060"
+      width="2506"
+      height="1477"
       loading="lazy"
       decoding="async"
       style={{
@@ -670,8 +681,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-ux-border-active.webp').default} 
       alt="Initial state: the Quantity and Consumption fields feature a colored border to visually indicate they are mandatory inputs" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -695,8 +706,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-ux-border-success.webp').default} 
       alt="Filled state: once the data is entered (e.g., 1000 kg), the colored border disappears, confirming to the user that the input has been accepted" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -716,8 +727,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-ux-success-state.webp').default} 
       alt="The post-withdrawal summary screen showing the operation's success: the main button is disabled to prevent double-submission errors, leaving only cancel or clear actions active" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -736,8 +747,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-02-color-coding.webp').default} 
       alt="The use of color immediately differentiates raw material 1 (Orange) and raw material 2 (Yellow)" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -764,8 +775,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-modal-types.webp').default} 
       alt="The configuration modal demonstrating the system's flexibility, allowing operators to select preset types or create new ones that will be saved in memory" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -784,8 +795,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-02-silos-input.webp').default} 
       alt="The inventory input screen where the operator manually enters batch codes and current kg for each silo, feeding the app's local database" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -813,8 +824,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-pwa-menu.webp').default} 
       alt="The contextual navigation menu offering quick access to accessory functions like PWA installation, the in-line guide, and the critical data reset action" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -829,8 +840,8 @@ Before handing in my resignation, I reopened the source code, performing a total
     <img 
       src={require('./assets/center-reset-modal.webp').default} 
       alt="The safety window intercepting the destructive full reset action, asking for explicit confirmation from the user to avoid accidental loss of batch history" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{

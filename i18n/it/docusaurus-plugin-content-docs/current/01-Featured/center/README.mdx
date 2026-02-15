@@ -20,21 +20,32 @@ import Link from '@docusaurus/Link';
   {[
     {
       src: require('./assets/preview-1-input.webp').default,
-      alt: "La schermata di input di Center-01: pulsanti macro progettati per l'inserimento rapido su monitor touch resistivi"
+      alt: "La schermata di input di Center-01: pulsanti macro progettati per l'inserimento rapido su monitor touch resistivi",
+      width: 1413,
+      height: 2857
     },
     {
       src: require('./assets/preview-2-data.webp').default,
-      alt: "La gestione delle giacenze in Center-02: l'operatore mappa lo stato dei silos distinguendo lotti e tipologie"
+      alt: "La gestione delle giacenze in Center-02: l'operatore mappa lo stato dei silos distinguendo lotti e tipologie",
+      width: 1413,
+      height: 2857
     },
     {
       src: require('./assets/preview-3-logic.webp').default,
-      alt: "Il cuore algoritmico del sistema: il log FIFO mostra la logica decisionale automatica e gli avvisi di sicurezza"
+      alt: "Il cuore algoritmico del sistema: il log FIFO mostra la logica decisionale automatica e gli avvisi di sicurezza",
+      width: 1413,
+      height: 2857
     }
   ].map((img, index) => (
     <div key={index} style={{ flex: '1 1 200px', maxWidth: '260px' }}>
       <img 
         src={img.src}
         alt={img.alt}
+        width={img.width}
+        height={img.height}
+        loading={index === 0 ? "eager" : "lazy"} 
+        fetchPriority={index === 0 ? "high" : "auto"}
+        decoding="async"
         style={{
           width: '100%',
           height: 'auto',
@@ -88,8 +99,8 @@ Ecco la primissima versione:
     <img 
       src={require('./assets/center-01-v1-html-raw.webp').default} 
       alt="L'interfaccia primitiva della versione 0.0.1 costruita con solo HTML grezzo dove si vedono i due pulsanti standard per aggiungere 1000 kg" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -128,8 +139,8 @@ La risposta arrivò con la seconda versione, con finalmente una cosa "umana" nel
     <img 
       src={require('./assets/center-01-v2-css-timer.webp').default} 
       alt="La schermata principale della versione 0.0.2 con il CSS applicato che mostra per la prima volta il calcolo del Tempo Rimanente in ore e minuti" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -144,8 +155,8 @@ La risposta arrivò con la seconda versione, con finalmente una cosa "umana" nel
     <img 
       src={require('./assets/center-01-v2-bottom.webp').default} 
       alt="La sezione inferiore della versione 0.0.2 che replica la logica della principale ma dedicata alla gestione di una seconda materia prima" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -174,8 +185,8 @@ Da qui applicherò un filtro monocromatico, perché anche senza i codici esadeci
     <img 
       src={require('./assets/center-01-v3-brand.webp').default} 
       alt="La versione con UI aggiornata ai colori del brand dove ho aggiunto il pulsante per il taglio da 500kg nella schermata principale" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -190,8 +201,8 @@ Da qui applicherò un filtro monocromatico, perché anche senza i codici esadeci
     <img 
       src={require('./assets/center-01-v3-brand-bottom.webp').default} 
       alt="La sezione inferiore aggiornata anch'essa con i colori del brand per la gestione della seconda materia prima" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -211,8 +222,8 @@ Ogni modifica la facevo su un IDE chiamato "Koder" su un iPhone 12 mini:
     <img 
       src={require('./assets/center-dev-koder-ide.webp').default} 
       alt="Uno screenshot dell'editor di codice Koder su iPhone 12 mini mentre modificavo live la classe CSS box" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -240,8 +251,8 @@ Dove ho finalmente centrato quei box input all’interno del container:
     <img 
       src={require('./assets/center-01-v4-centered.webp').default} 
       alt="L'interfaccia evoluta dove i box di input per Quantità Attuale e Consumo Orario sono finalmente centrati nel container" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -260,8 +271,8 @@ Questo è stato il momento in cui il tool è diventato per la prima volta **scal
     <img 
       src={require('./assets/center-01-v5-scalable.webp').default} 
       alt="L'interfaccia resa scalabile grazie all'introduzione di un campo di input personalizzabile per permettere all'utente di inserire qualsiasi quantità di kg" 
-      width="1119"
-      height="2060"
+      width="1124"
+      height="1906"
       loading="lazy"
       decoding="async"
       style={{
@@ -299,8 +310,8 @@ Quello che vedi è il tentativo iniziale. Nonostante avessi poi uniformato la gr
     <img 
       src={require('./assets/center-abtest-auto-fail.webp').default} 
       alt="Il tentativo fallito della Modalità Automatica" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -315,8 +326,8 @@ Quello che vedi è il tentativo iniziale. Nonostante avessi poi uniformato la gr
     <img 
       src={require('./assets/center-abtest-selection.webp').default} 
       alt="La schermata di selezione dove l'utente doveva scegliere tra la Modalità Manuale e quella Automatica" 
-      width="1119" 
-      height="2060" 
+      width="948" 
+      height="946" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -360,8 +371,8 @@ Che senso aveva? Analizzando il processo, si generavano **3 sprechi** in un colp
 <img
 src={require('./assets/center-01-dosate-calc.webp').default}
 alt="La calcolatrice del Consumo Orario con i 3 input per Quantità Attuale e Residua che ha sostituito le dosate fisiche"
-width="1119"
-height="2060"
+width="1413"
+height="2857"
 loading="lazy"
 decoding="async"
 style={{
@@ -392,8 +403,8 @@ Automatizzai anche questo calcolo (che fino ad allora si faceva a mano), democra
     <img 
       src={require('./assets/center-logic-paper.webp').default} 
       alt="Gli appunti scritti a mano su un foglio di carta con la bozza della logica per la gestione dei residui di produzione" 
-      width="1119" 
-      height="2060" 
+      width="660" 
+      height="1343" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -419,8 +430,8 @@ Automatizzai anche questo calcolo (che fino ad allora si faceva a mano), democra
     <img 
       src={require('./assets/center-logic-ui.webp').default} 
       alt="L'implementazione UI della logica scritta su carta che rappresenta la traduzione digitale degli appunti per il calcolo dei residui" 
-      width="1119" 
-      height="2060" 
+      width="1142" 
+      height="1318" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -446,8 +457,8 @@ Ad ogni cambiamento nel reparto aggiornavo l’interfaccia. Quando ci dissero ch
     <img 
       src={require('./assets/center-error-split-lines.webp').default} 
       alt="L'interfaccia errata con layout a due colonne affiancate per Linea 1 e Linea 2 basata su una mia deduzione sbagliata" 
-      width="1119"
-      height="2060"
+      width="1883"
+      height="1074"
       loading="lazy"
       decoding="async"
       style={{
@@ -471,8 +482,8 @@ Scelsi il seguente mockup:
     <img 
       src={require('./assets/center-krispy-mockup.webp').default} 
       alt="Il mockup della nuova interfaccia unificata realizzato con il tool Krisspy" 
-      width="1119"
-      height="2060"
+      width="2022"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -492,8 +503,8 @@ Ecco come divenne in fase implementazione:
     <img 
       src={require('./assets/center-final-ui-main.webp').default} 
       alt="L'implementazione finale della Schermata Principale basata sul mockup con i dati oscurati per privacy" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -511,8 +522,8 @@ Ecco come divenne in fase implementazione:
     <img 
       src={require('./assets/center-final-ui-bottom.webp').default} 
       alt="L'implementazione finale della Sezione Inferiore che mostra i dettagli della seconda fase di produzione" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -530,8 +541,8 @@ Ecco come divenne in fase implementazione:
     <img 
       src={require('./assets/center-config-panel.webp').default} 
       alt="Il pannello di configurazione che permette agli operatori di personalizzare i consumi orari e i parametri per ogni materia prima" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -549,8 +560,8 @@ Ecco come divenne in fase implementazione:
     <img 
       src={require('./assets/center-new-type-added.webp').default} 
       alt="L'interfaccia aggiornata che mostra l'avvenuta aggiunta di una nuova tipologia di materia prima personalizzata" 
-      width="1119"
-      height="2060"
+      width="2119"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -576,8 +587,8 @@ Il problema tecnico qui era l'algoritmo **FIFO** (*First In, First Out*): capire
     <img 
       src={require('./assets/center-02-fifo-main.webp').default} 
       alt="L'interfaccia di Center-02 ovvero lo strumento digitale per la gestione FIFO dei lotti che sostituisce carta e penna" 
-      width="1119"
-      height="2060"
+      width="2089"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -601,8 +612,8 @@ Aggiunsi una guida in-app. So che Norman (in "The Design of Everyday Things") e 
     <img 
       src={require('./assets/center-guide-timer-fail.webp').default} 
       alt="La guida in-app che mostra la schermata dove spiego il funzionamento del Timer automatico di pulizia dati poi rimosso" 
-      width="1119"
-      height="2060"
+      width="2005"
+      height="1179"
       loading="lazy"
       decoding="async"
       style={{
@@ -639,8 +650,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-desktop-dashboard.webp').default} 
       alt="La schermata di riepilogo post-prelievo che mostra il successo dell'operazione: il pulsante principale viene disabilitato per prevenire errori di doppio invio, lasciando attive solo le azioni di annullamento o pulizia" 
-      width="1119"
-      height="2060"
+      width="2506"
+      height="1477"
       loading="lazy"
       decoding="async"
       style={{
@@ -669,8 +680,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-ux-border-active.webp').default} 
       alt="Stato iniziale: i campi Quantità e Consumo presentano un bordo colorato per indicare visivamente che sono dati obbligatori da inserire" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -694,8 +705,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-ux-border-success.webp').default} 
       alt="Stato compilato: una volta inserito il dato (es. 1000 kg), il bordo colorato scompare confermando all'utente che l'input è stato accettato" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -716,8 +727,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-ux-success-state.webp').default} 
       alt="La schermata di riepilogo post-prelievo che mostra il successo dell'operazione: il pulsante principale viene disabilitato per prevenire errori di doppio invio, lasciando attive solo le azioni di annullamento o pulizia" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -736,8 +747,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-02-color-coding.webp').default} 
       alt="L'uso del colore differenzia immediatamente la materia prima 1 (Arancione) e la materia prima 2 (Giallo)" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -764,8 +775,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-modal-types.webp').default} 
       alt="Il modale di configurazione che dimostra la flessibilità del sistema, permettendo agli operatori di selezionare tipologie preimpostate o di crearne di nuove che verranno salvate in memoria" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -784,8 +795,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-02-silos-input.webp').default} 
       alt="La schermata di input delle giacenze dove l'operatore inserisce manualmente i codici lotto e i kg attuali per ogni silos, alimentando il database locale dell'app" 
-      width="1119"
-      height="2060"
+      width="1413"
+      height="2857"
       loading="lazy"
       decoding="async"
       style={{
@@ -813,8 +824,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-pwa-menu.webp').default} 
       alt="Il menu di navigazione contestuale che offre accesso rapido alle funzioni accessorie come l'installazione della PWA, la guida in linea e l'azione critica di reset dei dati" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{
@@ -829,8 +840,8 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
     <img 
       src={require('./assets/center-reset-modal.webp').default} 
       alt="La finestra di sicurezza che intercetta l'azione distruttiva di reset completo, chiedendo una conferma esplicita all'utente per evitare la perdita accidentale dello storico dei lotti" 
-      width="1119" 
-      height="2060" 
+      width="1413" 
+      height="2857" 
       loading="lazy" 
       decoding="async" 
       style={{

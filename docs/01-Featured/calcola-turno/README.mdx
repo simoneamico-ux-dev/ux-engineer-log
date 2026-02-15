@@ -16,20 +16,26 @@ import ThemedImage from '@theme/ThemedImage';
   flexWrap: 'wrap', 
   gap: '20px', 
   justifyContent: 'center', 
-  marginBottom: '40px' 
+  marginBottom: '50px' 
 }}>
   {[
     {
       light: require('./assets/calcola-turno-new-version-1-light.webp').default,
-      dark:  require('./assets/calcola-turno-new-version-1-dark.webp').default
+      dark:  require('./assets/calcola-turno-new-version-1-dark.webp').default,
+      width: 932,
+      height: 1876
     },
     {
       light: require('./assets/calcola-turno-new-version-2-light.webp').default,
-      dark:  require('./assets/calcola-turno-new-version-2-dark.webp').default
+      dark:  require('./assets/calcola-turno-new-version-2-dark.webp').default,
+      width: 932,
+      height: 1876
     },
     {
       light: require('./assets/calcola-turno-new-version-3-light.webp').default,
-      dark:  require('./assets/calcola-turno-new-version-3-dark.webp').default
+      dark:  require('./assets/calcola-turno-new-version-3-dark.webp').default,
+      width: 932,
+      height: 1876
     }
   ].map((images, index) => (
     <div key={index} style={{ flex: '1 1 200px', maxWidth: '280px' }}>
@@ -39,7 +45,10 @@ import ThemedImage from '@theme/ThemedImage';
           light: images.light,
           dark: images.dark,
         }}
-        loading="lazy"
+        width={images.width}
+        height={images.height}
+        loading={index === 0 ? "eager" : "lazy"}
+        fetchPriority={index === 0 ? "high" : "auto"}
         style={{
           borderRadius: '12px',
           display: 'block',
