@@ -88,7 +88,7 @@ const config = {
             items: [
               {
                 label: 'Featured',
-                to: '/docs/Featured/ux-engineer-log',
+                to: '/docs/Featured/center',
               },
               {
                 label: 'Path',
