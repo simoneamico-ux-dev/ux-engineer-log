@@ -62,6 +62,9 @@ const config = {
 
   themeConfig:
     ({
+      metadata: [
+        {name: 'google-site-verification', content: 'khP1TnDxkMdfEdD8JWm5WFb1xjcSzQfep0Xvgd5cRjA'},
+      ],
       image: 'img/docusaurus-social-card.jpg',
       colorMode: {
         respectPrefersColorScheme: true,
