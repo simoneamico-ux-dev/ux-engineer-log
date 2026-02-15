@@ -2,7 +2,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 const config = {
   title: 'UX Engineer Log',
-  tagline: 'From Zero to UX Engineer',
+  tagline: 'From Factory to UX Engineer',
   favicon: 'img/favicon.ico',
 
   future: {
