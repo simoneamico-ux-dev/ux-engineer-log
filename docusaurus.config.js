@@ -64,6 +64,7 @@ const config = {
     ({
       metadata: [
         {name: 'google-site-verification', content: 'khP1TnDxkMdfEdD8JWm5WFb1xjcSzQfep0Xvgd5cRjA'},
+        {name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'},
       ],
       image: 'img/docusaurus-social-card.jpg',
       colorMode: {

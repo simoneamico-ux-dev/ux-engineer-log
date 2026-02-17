@@ -97,7 +97,7 @@
     --ifm-color-primary-lightest: #f5efe2;
 
     /* Layout Backgrounds */
-    --frame-background: #140A07;
+    --frame-background: #211411;
     --ifm-background-color: #322620;
     --card-border-color: #574C43;
     --card-border-color-hover: #998874;
@@ -578,15 +578,72 @@ across the entire navigation tree.
 
 /* LANDSCAPE OPTIMIZATION */
 /*
-   * When rotating the device to landscape, vertical height becomes scarce
-   * The standard navbar consumes too much viewport, so I forcing a compact
-   * height specifically for this orientation.
+   * Observation: While testing on iPhone in landscape mode, I noticed unsightly
+   * colored bars on the sides (default browser behavior to avoid the notch)
+   *
+   * Benchmarking:
+   * I compared top-tier implementations:
+   * - Apple.com and Google's web apps: They extend the navbar to the physical edges ("Full Bleed")
+   *   while keeping the content aligned safely within the boundaries
+   * - Wikipedia: The navbar is constrained within the safe-area margins, creating a "boxed" look
+   *   that breaks visual continuity unlike the immersive edge-to-edge approach
+   *
+   * Decision: Adopt the "Apple approach" for visual continuity.
+   * The navbar must span the entire physical screen width (100%), passing *under* the notch,
+   * while the buttons and content remain respected via safe-area padding
 */
 @media screen and (max-width: 996px) and (orientation: landscape) {
     
     :root {
-        /* Reducing navbar height here (Default is 60px) */
-        --ifm-navbar-height: 50px;
+        --ifm-navbar-height: 50px; /* Reducing navbar height here (Default is 60px) to save vertical space */
+    }
+
+    /* Prevent horizontal scrolling caused by forcing full width */
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .navbar {
+        position: fixed !important; /* Detach from flow to cover physical edges */
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100% !important; 
+        margin: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-bottom: 1.7px solid var(--card-border-color) !important;
+        z-index: 100; /* Layer priority over content */
+
+        /* Notch Safety + Base Padding
+           I use calc() to ensure there is ALWAYS at least 12px of padding.
+           - On iPhone: Adds 12px to the notch area (safe & breathable)
+           - On Foldables (0 notch): Adds 0px + 12px (fixes the "stuck to edge" issue) */
+        padding-left: calc(env(safe-area-inset-left) + 12px) !important;
+        padding-right: calc(env(safe-area-inset-right) + 12px) !important;
+    }
+    
+    /* Compensation Logic
+       Since navbar is now 'fixed', the content flows underneath it
+       We must push the content down by the exact height of the navbar (50px) */
+    .main-wrapper {
+        margin-top: 50px !important;
+
+        /* Optical Alignment Fix:
+           Unlike the navbar, I DO NOT add the extra +12px here
+           Reason: The internal text container already possesses intrinsic padding
+           Adding extra padding here would push the text too far right on Foldables (double padding),
+           breaking the visual alignment with the navbar logo */
+        padding-left: env(safe-area-inset-left) !important;
+        padding-right: env(safe-area-inset-right) !important;
+        width: 100% !important;
+
+        /* Layout Stability Fix
+           When content is minimal, the wrapper would naturally collapse to a small height.
+           By setting min-height to full viewport minus navbar (100vh - 50px), we ensure 
+           the layout always fills the screen, preventing awkward white space at the bottom */ 
+        min-height: calc(100dvh - 50px) !important;
     }
 
 }
