@@ -909,18 +909,28 @@ fetch('https://api.example.com/pizza')
 
 **What it does**: The modern way to handle waiting. It makes asynchronous (complex) code look like synchronous (linear and simple) code.
 
+**They are not inseparable.**
+It is often thought that they must go together, but they do two distinct jobs:
+
+* `async`: It's the **Authorization**. It declares to JavaScript: *"Things that take time might happen in this function, be ready"*.
+* `await`: It's the actual **Pause Button**. It says: *"Stop on this exact line and don't proceed until you receive the data"*.
+
+**Remember:**
+
+* You can have `async` without `await`: the function will run extremely fast without ever pausing (syntactically valid, but useless).
+* You can **NEVER** have `await` without `async`: if you try to press the "pause button" in a regular function, JavaScript panics and throws a fatal error. `await` requires the `async` authorization.
+
 ```javascript
 // Before: Manual transmission (.then .then) 😫
 fetch(url).then(res => res.json()).then(data => ...);
 
 // After: Automatic transmission (async/await) 😎
 async function fetchData() {
-    // "await" pauses the function until the promise resolves
-    const res = await fetch(url);      // Wait for the box
-    const data = await res.json();     // Wait to open it
-    console.log(data);                 // Done!
+    // "await" pauses the function until the promise resolves
+    const res = await fetch(url);      // Wait for the box
+    const data = await res.json();     // Wait to open it
+    console.log(data);                 // Done!
 }
-
 ```
 
 **Analogy**:
@@ -940,36 +950,34 @@ async function fetchData() {
 
 ### 28. `try...catch` - The Trapeze Artist
 
-**What it does**: The universal safety net. It catches **any** error, whether it comes from the network (asynchronous) or it’s a typo bug on your side (synchronous).
+**What it does**: The universal safety net. It catches **any** error, whether it depends on the unpredictability of the real world (the user enters a tunnel and loses 4G, the server malfunctions), or it derives from a typo on your end (synchronous).
 
 ```javascript
 async function operation() {
-    try {
-        // The trapeze artist jumps...
-        const res = await fetch(url);
-        const data = await res.json();
-        
-        // Even if you mess up here, catch will handle it!
-        const name = data.user.toUpperCase(); 
-    } catch (err) {
-        // ...the net catches them if they fall!
-        console.error("Technical error:", err); // For you
-        alert("Unable to load data");           // For the user
-    }
+    try {
+        // The trapeze artist jumps...
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        // Even if you mess up here, catch will handle it!
+        const name = data.user.toUpperCase(); 
+    } catch (err) {
+        // ...the net catches them if the server crashes or if you mess up!
+        console.error("Technical error:", err); // For you
+        alert("Unable to load data");           // For the user
+    }
 }
-
 ```
 
 **Analogy**:
 
 * `try { ... }`: It’s the trapeze artist attempting a triple somersault.
-* `catch { ... }`: It’s the net underneath. If the trapeze artist slips (fetch fails) OR gets a cramp (a bug in the code), they land safely in the net instead of smashing into the ground (crashing the app).
+* `catch { ... }`: It’s the net underneath. If the trapeze artist slips (fetch fails) or gets a cramp (a bug in the code), they land safely in the net instead of smashing into the ground (crashing the app).
 
 **Golden rule**: Handle two levels of errors!
 
-1. **Console (Developer)**: The engine warning light 🔧 (`console.error` with technical details).
-2. **UI (User)**: The dashboard warning light 💡 (A friendly message: "There was a problem, try again").
-
+1. **Console (Developer)**: The engine warning light 🔧 (`console.error` with technical details to understand if it's your fault or the server's).
+2. **UI (User)**: The dashboard warning light 💡 (A friendly message: "There was a connection problem, try again").
 
 <br />
 <br />

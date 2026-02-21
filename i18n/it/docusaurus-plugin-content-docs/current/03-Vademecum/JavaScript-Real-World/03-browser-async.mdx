@@ -924,6 +924,18 @@ fetch('https://api.esempio.com/pizza')
 
 **Cosa fa**: È il modo moderno di gestire le attese. Fa sembrare il codice asincrono (complesso) come se fosse codice sincrono (lineare e semplice).
 
+**Non sono inseparabili.**
+Spesso si pensa che viaggino per forza insieme, ma fanno due lavori distinti:
+
+* `async`: È l'**Autorizzazione**. Dichiara a JavaScript: *"In questa funzione potrebbero succedere cose che richiedono tempo, tieniti pronto"*.
+* `await`: È il **Tasto Pausa** effettivo. Dice: *"Fermati su questa riga esatta e non andare avanti finché non ricevi i dati"*.
+
+**Ricorda:**
+
+* Puoi avere `async` senza `await`: la funzione girerà velocissima senza mai mettersi in pausa (sintatticamente valido, ma inutile).
+* **NON** puoi MAI avere `await` senza `async`: se provi a premere il "tasto pausa" in una funzione normale, JavaScript va in panico e genera un errore fatale. `await` esige l'autorizzazione `async`.
+
+
 ```javascript
 // Prima: Cambio Manuale (.then .then) 😫
 fetch(url).then(res => res.json()).then(data => ...);
@@ -935,7 +947,6 @@ async function prendiDati() {
     const data = await res.json();     // Aspetta di aprirla
     console.log(data);                 // Fatto!
 }
-
 ```
 
 **Analogia**:
@@ -959,7 +970,7 @@ async function prendiDati() {
 
 ### 28. `try...catch` - Il Trapezista
 
-**Cosa fa**: È la rete di sicurezza universale. Cattura **qualsiasi** errore, sia che venga dalla rete (asincrono), sia che sia un tuo errore di battitura (sincrono).
+**Cosa fa**: È la rete di sicurezza universale. Cattura **qualsiasi** errore, sia che dipenda dall'imprevedibilità del mondo reale (l'utente entra in galleria e perde il 4G, il server ha malfunzionamenti), sia che derivi da un tuo errore di battitura (sincrono).
 
 ```javascript
 async function operazione() {
@@ -971,23 +982,22 @@ async function operazione() {
         // Anche se sbagli tu qui, il catch lo prende!
         const nome = data.user.toUpperCase(); 
     } catch (err) {
-        // ...la rete lo prende se cade!
+        // ...la rete lo prende se il server cade o se tu sbagli!
         console.error("Errore tecnico:", err); // Per te
         alert("Impossibile caricare i dati");  // Per l'utente
     }
 }
-
 ```
 
 **Analogia**:
 
 * `try { ... }`: È il trapezista che tenta il triplo salto mortale.
-* `catch { ... }`: È la rete sotto. Se il trapezista scivola (fetch fallisce) O se ha un crampo (bug nel codice), cade sicuro nella rete invece di schiantarsi al suolo (crashare l'app).
+* `catch { ... }`: È la rete sotto. Se il trapezista scivola (fetch fallisce) o se ha un crampo (bug nel codice), cade sicuro nella rete invece di schiantarsi al suolo (crashare l'app).
 
 **Regola d'oro**: Gestisci due livelli di errori!
 
-1. **Console (Sviluppatore)**: La spia del motore 🔧 (`console.error` con i dettagli tecnici).
-2. **UI (Utente)**: La spia sul cruscotto 💡 (Messaggio gentile: "C'è stato un problema, riprova").
+1. **Console (Sviluppatore)**: La spia del motore 🔧 (`console.error` con i dettagli tecnici per capire se è colpa tua o del server).
+2. **UI (Utente)**: La spia sul cruscotto 💡 (Messaggio gentile: "C'è stato un problema di connessione, riprova").
 
 
 <br />
