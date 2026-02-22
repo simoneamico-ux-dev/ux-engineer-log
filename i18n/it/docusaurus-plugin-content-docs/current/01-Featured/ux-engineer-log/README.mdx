@@ -7,11 +7,11 @@ slug: /Featured/ux-engineer-log
 
 # UX Engineer Log
 
-### Dagli Appunti al Codice
+## Dagli Appunti al Codice
 Questo progetto rappresenta il punto di svolta del mio percorso. Se <strong><a href="https://github.com/simoneamico-ux-dev/from-factory-to-ux-engineer">from-factory-to-ux-engineer</a></strong> era il mio diario di bordo statico (GitHub usato come se fosse Google Drive), **UX Engineer Log** è il momento in cui il diario ha preso vita.
 Ho migrato tutto da una struttura statica a un'architettura **Docusaurus (React)**, trasformando la documentazione in un vero prodotto software con Design System, localizzazione e performance da produzione.
 
-### Le Origini: Il "Jailbreak" Mentale
+## Le Origini: Il "Jailbreak" Mentale
 **Tutto nasce da un iPod Touch 4G che mi ha rapito quando avevo 9 anni.**
 Apple offriva un'esperienza perfetta ma chiusa.
 Mettendo l'iPod in **DFU Mode** e installando **Cydia**, ho imparato la mia prima lezione fondamentale: l'User Experience è malleabile.
@@ -22,7 +22,7 @@ Ogni tweak comportava il rischio reale di "brikkare" il dispositivo (o di finire
 A quell'età andavo in biblioteca solo per avere la mia ora giornaliera di utilizzo dell'iMac con Mac OS X Lion. Anni dopo, creare il progetto **RPG Creature Search App** è stata un'emozione incredibile: replicare quella UI Aqua, simulare apertura, chiusura e minimizzazione delle finestre, ma sempre in chiave personale, è stata una delle esperienze più belle della mia vita.
 Quella curiosità infantile di guardare oltre l'interfaccia standard è la stessa che oggi mi spinge a non accontentarmi di un "funziona", ma a voler capire il perché.
 
-### L'Esperienza in Trincea (La Fabbrica)
+## L'Esperienza in Trincea (La Fabbrica)
 Prima ancora di definirmi UX Engineer, lo sono diventato per necessità in una fabbrica alimentare.
 Mentre i software gestionali ufficiali venivano ignorati perché complessi e distanti dalla realtà, io vedevo i miei colleghi stressati.
 Dopo appena 4 giorni nel reparto, ho capito che la pianificazione della produzione giornaliera era il collo di bottiglia. Da lì è nata l'idea di sviluppare una Web App per gestire i consumi orari e prevedere le quantità da produrre.
@@ -30,13 +30,13 @@ Ne ero ossessionato. Ci lavoravo durante le pause, in bagno, nei turni di notte,
 **Così è stato.** L'app ha raggiunto un'adozione organica del 100%, utilizzata da tutto il reparto su tutti e 3 i turni. Non perché fosse graficamente perfetta, ma perché risolveva un problema reale. Lì ho capito che l'empatia è la skill tecnica più potente che esista.
 Ben presto, colleghi di altri reparti hanno iniziato a chiedermi soluzioni simili. È stato in quel momento che ho fatto UX senza conoscere la UX: facevo usability test e interviste agli utenti senza conoscere il metodo formale, ma applicandone l'essenza.
 
-### Un Tributo Visivo: Cydia
+## Un Tributo Visivo: Cydia
 Tornando a UX Engineer Log, per l'aspetto visivo ho voluto omaggiare le mie origini.
 Mi sono armato del mio tablet, ho schizzato un wireframe, l'ho riportato in High Fidelity su Figma e mi sono addentrato in Docusaurus.
 I temi scelti, **Coffee & Sand** (Light Mode) e **Warm Night** (Dark Mode), non sono colori casuali. Riprendono le tonalità dell'icona originale di **Cydia**.
 La parte alta (chiara) è diventata la mia Light Mode, la parte bassa (scura) la mia Dark Mode. Un cerchio che si chiude.
 
-### La Filosofia del "Mac Silenzioso"
+## La Filosofia del "Mac Silenzioso"
 **La velocità è una forma di rispetto.**
 Possedendo un MacBook Intel, ho notato che molti siti moderni fanno decollare le ventole con effetti pesanti, non ottimizzati ed eccessivi. Io ho scelto una strada diversa:
 * **Asset Colocation:** Tutto in locale, convertito in WebP e WebM. Nessun hotlink esterno.
@@ -65,16 +65,16 @@ Per me, uno strumento di documentazione deve poter rimanere sempre aperto in bac
   </p>
 </div>
 
-### Il mio "Secondo Cervello"
+## Il mio "Secondo Cervello"
 Più andavo avanti, più capivo che non potevo ricordare tutto.
 La **Search Bar** e i **Vademecum** integrati in questo sito non sono esercizi di stile, ma il mio secondo cervello.
 Sono manuali pratici che ho costruito perché non potevo farne a meno. Analizzando la cronologia della repository (**zero-to-ux-engineer-logs**), si può vedere come appuntavo i concetti nuovi man mano che li incontravo nei progetti, per poi integrarli successivamente nei Vademecum. Come spiegherò in alcuni README specifici, queste note sono state vitali per completare le sfide più complesse.
 
-### Manuale di Manutenzione
+## Manuale di Manutenzione
 Prima di questo progetto non avevo mai usato seriamente il terminale. Credevo rallentasse il processo, invece ha migliorato drasticamente la qualità del mio lavoro, portandomi a ragionare a compartimenti stagni, o meglio, "a commit".
 Mi sono appuntato i comandi essenziali in un file .txt sul desktop; riporto qui quelli che, alla prova dei fatti, si sono rivelati indispensabili.
 
-#### Git Workflow
+## Git Workflow
 Comandi essenziali per il version control.
 
 ```bash
@@ -94,7 +94,7 @@ git commit -m "tipo(scope): descrizione delle modifiche"
 git push
 ```
 
-#### Docusaurus Operations
+## Docusaurus Operations
 
 Comandi per la gestione dell'ambiente React/Docusaurus.
 
@@ -111,7 +111,7 @@ npm run build
 npm run clear
 ```
 
-#### Mobile Testing
+## Mobile Testing
 
 Procedura per testare la UX su dispositivi reali (iPhone/Android) nella rete locale.
 
@@ -130,7 +130,7 @@ ipconfig getifaddr en0
 3. **Sul dispositivo mobile:**
 Aprire il browser e navigare su: `IP_TROVATO:3000` (es. `192.168.1.5:3000`).
 
-#### Utility
+## Utility
 
 * **Mappa file:** Generare una mappa della struttura (esclusi node_modules e file nascosti):
 ```bash
@@ -140,7 +140,7 @@ find . -not -path '*/.*' -not -path './node_modules*' > mappa.txt
 
 * **Ottimizzazione:** CloudConvert (GIF to WebM) e Squoosh (WebP).
 
-### Cosa ho imparato
+## Cosa ho imparato
 
 **Architettura & React:**
 

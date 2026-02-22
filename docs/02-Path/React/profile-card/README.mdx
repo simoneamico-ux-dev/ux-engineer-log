@@ -19,11 +19,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### The Project
+## The Project
 
 **Profile Card** is my first data-driven React project, where I applied the concepts of Props, Conditional Rendering and Lists to transform static data into dynamic components.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -158,7 +158,7 @@ body {
 
 </Tabs>
 
-### What I Learned in Theory
+## What I Learned in Theory
 
 Before getting to this project there was theory on Data, extremely interesting. Here are the concepts I want to hold onto.
 
@@ -201,7 +201,7 @@ I then wondered about computational cost and following some research it emerged 
 
 Another doubt I had is whether it could be integrated into an offline first application and the answer was yes, and it's also very simple to understand why, entropy comes from the local device (hardware noise, timing), not from the cloud. It was a great discovery because it also guarantees that if one day the user syncs data with the cloud, those IDs will never conflict with those of any other user in the world.
 
-### Profile Card
+## Profile Card
 
 The project was extremely simple in terms of implementation: an array of objects (`profiles`) mapped into `<Card />` components with Props destructuring.
 
@@ -209,7 +209,7 @@ The interesting part wasn't the "what" (three cards in a row), but the "how". I 
 
 It's the first time I see a **true** separation between Data and View. In Calcola Turno I had HTML separated from JavaScript, but the JS had to "know" the DOM structure to manipulate it (`document.getElementById`, `appendChild`). If I changed the HTML, the JS would break. Here instead `<Card />` is totally blind: it doesn't know if the data comes from a local array, from a server, or from a database. It receives Props and renders, period. If tomorrow I change the data source, the component doesn't even know.
 
-### What I Learned
+## What I Learned
 
 **Destructuring Props directly in parameters:**
 - `function Card({ name, title, bio })` instead of `function Card(props)` + `props.name`. Cleaner, IDE autocomplete works better, and you immediately see what the component expects.

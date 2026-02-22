@@ -27,11 +27,11 @@ import Link from '@docusaurus/Link';
   src={require('./assets/one-time-password-generator.webm').default} 
 />
 
-### The Project
+## The Project
 
 A freeCodeCamp Lab that turned out to be more of a conscious review than a discovery: `useState`, `useEffect`, conditional rendering. All already seen. But the freedom on the CSS and a question to the Code Tutor about cryptographic security made the exercise more interesting than I expected.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -687,17 +687,17 @@ body {
 </TabItem>
 </Tabs>
 
-### crypto.getRandomValues(): The Right Question at the Right Time
+## crypto.getRandomValues(): The Right Question at the Right Time
 
 The very first thing I thought before starting was: *can I use `crypto.randomUUID()` that I had explored in depth in the <Link to="/docs/Path/React/profile-card">Profile Card</Link>?*  
 The problem is that `randomUUID()` generates a string like `c90d075d-53a1-...`, and to extract 6 digits from it I would have had to remove the dashes, filter out the letters, extract the numbers, hope there were enough of them and, otherwise, regenerate. A hack. I asked the Code Tutor, who explained that there's a more direct tool, `crypto.getRandomValues()`, built exactly for this.  
 I didn't want to use `Math.random()`: I had learned that it's pseudo-random and therefore predictable. Even though it was over-engineering for a didactic exercise focused on applying `useState`, `useEffect` and conditional rendering, the way this API works fascinated me so much that I couldn't wait to apply it.
 
-### Design: Obsidian + Roman Numeral Converter
+## Design: Obsidian + Roman Numeral Converter
 
 I didn't focus on the design and I didn't prototype in Figma, but having a blank canvas on the CSS I decided to keep it simple. While looking for AppFlowy alternatives this morning, I had stumbled upon the Obsidian website: dark, minimal, no superfluous decorative elements. I decided to start from that style and combine it with a detail I had used in the <Link to="/docs/Path/JS-Algorithms/roman-numeral-converter">Roman Numeral Converter</Link>: the Material Design-inspired button that in `active` state transitions from square corners to pill-shaped via `border-radius` animation, giving pleasant tactile feedback.
 
-### Landscape: The Favorite Edge Case
+## Landscape: The Favorite Edge Case
 
 I dedicated more attention than usual to landscape, after realizing how even major websites treat it as a secondary case. I picked up my favorite edge case, the iPhone 12 mini, and optimized every spacing for that extremely narrow vertical viewport. I also added another tab in Safari to simulate the maximum possible constraint.  
 Here's the result:
@@ -745,7 +745,7 @@ This attention didn't come about randomly: three days before I had added a media
 
 I chose the Apple.com approach. The pattern I used is `calc(env(safe-area-inset-left) + 12px)`: this always guarantees at least 12px of padding, adding the notch size on top of that for devices that have one. On devices without a notch, `env(safe-area-inset-left)` is zero, so the result is simply 12px, also solving the "content glued to the edge" problem on foldables, the second edge case I'm lucky enough to be able to test on.
 
-### Anti-CLS
+## Anti-CLS
 
 A problem I hadn't considered from the start, but that turned out to be interesting to solve: **CLS** (Cumulative Layout Shift), those visual "jumps" that occur when an element changes size and drags everything else up or down with it.
 
@@ -764,7 +764,7 @@ The solution was to reserve the necessary space in advance with a fixed `height`
 
 Another thing I discovered while working on `letter-spacing`: CSS adds space after every character, including the last one, visually shifting the entire block to the left. I compensated with a `margin-right: calc(var(--otp-letter-spacing) * -1)` that brings everything back exactly on axis.
 
-### What I Learned
+## What I Learned
 
 **Guard Clause in useEffect:**  
 Checking exit conditions at the beginning of the effect, before any logic, keeps the code flat and readable. Without the `setIsActive(false)` when `timeLeft` reaches zero, the button would remain disabled forever: nothing resets the state, the cycle gets stuck.

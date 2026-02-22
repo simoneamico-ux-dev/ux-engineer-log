@@ -20,11 +20,11 @@ import Link from '@docusaurus/Link';
   style={{ width: '100%', height: 'auto', maxWidth: '550px', borderRadius: '16px' }}
 />
 
-### Il Progetto
+## Il Progetto
 
 Un workshop di freeCodeCamp che ha concluso la sezione **"Understanding Effects and Referencing Values in React"**, mettendo in pratica `useEffect`, `useRef` e Custom Hooks attraverso la gestione asincrona con `async/await`. Tecnicamente più articolato dei progetti React precedenti, ma soprattutto ricco di riflessioni teoriche che ho faticato a non mettere per iscritto.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -159,7 +159,7 @@ body {
 </TabItem>
 </Tabs>
 
-### React, 1984 e il Problema con l'AI
+## React, 1984 e il Problema con l'AI
 
 Da quando ho scoperto cosa c'è sotto il cofano di `useRef`, sostanzialmente un oggetto `{ current: valore }` che React gestisce in memoria, esattamente come farebbe JavaScript puro, mi sono ritrovato a fare la stessa domanda che mi faccio ad ogni progetto React: *quanto sarà utile tutto questo in un futuro dove sarà l'AI a scrivere la maggior parte del codice?*  
 La riflessione si è fatta più profonda. È vero che l'AI scriverà meno codice con questa libreria, ma dovrà comunque ricordare (tenere nella context window) che per ognuna delle funzioni di React ci sono, di fatto, funzioni JavaScript con comportamenti che non si vedono direttamente. È come se stessimo aggiungendo un livello di complessità invisibile che l'AI deve comunque conoscere per fare debugging.  
@@ -181,7 +181,7 @@ Ho cercato delle risposte che smentissero questo pensiero, perché ero consapevo
 
 Ha poi aggiunto una riflessione che ha chiuso definitivamente il cerchio: in 1984, il Partito riduceva le parole per prevenire lo "psicoreato", se non esiste la parola "libertà", non puoi nemmeno formulare il pensiero di ribellarti. React ha fatto la stessa cosa con il codice: ha reso fisicamente difficile scrivere certi pattern buggati (manipolazione diretta del DOM, stato non sincronizzato, listener persi in memoria). Ha tolto il vocabolario del DOM imperativo per costringerti a pensare in termini di Stato.
 
-### useEffect: Sincronizzazione, Non Reazione
+## useEffect: Sincronizzazione, Non Reazione
 
 Il tutor mi ha subito messo in guardia sul fatto che **non devo vedere `useEffect` come un modo per dire "fai questo quando succede questo".**
 Il modo corretto è la **Sincronizzazione**. Non devo pensare: *"Quando clicco, fai partire il timer."* Bensì: *"Voglio che il timer sia sincronizzato con lo stato `isActive`. Se è attivo, il timer deve partire. Se non è attivo, deve fermarsi."*
@@ -190,7 +190,7 @@ Il modo corretto è la **Sincronizzazione**. Non devo pensare: *"Quando clicco, 
 Questo cambia completamente come si ragiona sull'architettura, perché se penso per eventi, il mio codice diventa una lista di istruzioni: *"Quando clicco Start, fai partire il timer. Quando clicco Stop, fermalo. Quando clicco Reset, azzera tutto."* Funziona finché le cose sono semplici. Ma se aggiungo una nuova condizione, come "il timer si deve fermare anche se l'utente esce dalla pagina", devo ricordarmi di andare ad aggiungere quella logica in ogni posto giusto. Se dimentico un handler, il bug è assicurato.  
 Se invece penso per sincronizzazione, mi faccio una domanda sola: *"Quando deve essere attivo il timer? In questo caso quando `isActive` è `true`. Punto."* Scrivo un solo `useEffect` che osserva `isActive` e si comporta di conseguenza. Se domani aggiungo un nuovo modo per fermare il timer, un timeout, un'uscita dalla pagina, un errore di rete, non devo toccare l'`useEffect`. Mi basta impostare `isActive = false` da qualsiasi punto del codice, e il timer si ferma da solo. La logica è in un posto solo, non distribuita tra dieci handler.
 
-### Batching vs Debouncing: Due Cugini Che Si Assomigliano
+## Batching vs Debouncing: Due Cugini Che Si Assomigliano
 
 freeCodeCamp parlava di Debouncing, eppure mi sembrava di rivedere il Batching visto nella <Link to="/docs/Path/React/toggle-text-app">Toggle Text App</Link>. Non erano la stessa cosa?
 
@@ -206,7 +206,7 @@ La risposta ricevuta fu che sono due meccanismi che entrambi "aspettano", ma con
 
 In questo workshop ho usato proprio il Debouncing: aspetto 700ms dopo l'ultima battitura prima di chiamare l'API, evitando una richiesta per ogni singolo carattere digitato.
 
-### useRef: Il Regista dell'Attenzione
+## useRef: Il Regista dell'Attenzione
 
 freeCodeCamp mi ha introdotto `useRef` con un esempio sul focus di un input. La prima cosa che ho pensato è stata: *complessità aggiunta a ciò che HTML e CSS facevano già benissimo da soli.* In realtà ho successivamente capito il perché.  
 `useRef` e `useState` risolvono due problemi diversi. `useState` è la vetrina di un negozio, quindi ogni volta che cambi qualcosa, React ridisegna tutto e l'utente lo vede. `useRef` è la tasca: puoi metterci dentro cose, tirarle fuori, cambiarle, e nessuno se ne accorge. Nessun re-render.  
@@ -220,23 +220,23 @@ Ma il caso d'uso che mi ha colpito di più è l'accessibilità. Nelle Single Pag
 
 Vale sempre il **Curb Cut Effect** che incontrai per la prima volta nel corso di Google UX: la soluzione progettata per una necessità specifica finisce per aiutare tutti. Gestire il focus con `useRef` aiuta i power user che non toccano il mouse, gli utenti situazionali con un braccio rotto o un trackpad scarico e, cosa che non avevo mai considerato fino ad ora, chi naviga su Smart TV o PlayStation. Il controller di una console funziona esattamente come una tastiera: Su, Giù, Destra, Sinistra, Invio. Se il focus è gestito bene, il sito funziona anche sul divano. Se non lo è, il cursore si blocca (e l'utente scappa).
 
-### Custom Hooks: Separare la Logica dal Componente
+## Custom Hooks: Separare la Logica dal Componente
 
 Mi sono chiesto dove mettere il codice di accessibilità: aveva senso includerlo direttamente nel componente? Ho scoperto che la prassi comune è estrarlo in una funzione esterna, un Custom Hook, che vive nel suo file dedicato, ad esempio `hooks/useFocus.js`, e si richiama con una sola riga. Il componente rimane pulito, la logica è in un posto solo e riutilizzabile ovunque ne abbia bisogno.
 
-### async/await: Una Scoperta nel Ripasso
+## async/await: Una Scoperta nel Ripasso
 
 Il Vademecum è stato essenziale per riprendere `try`, `catch`, `async` e `await`, perché la sintassi non la ricordavo a memoria. Rileggendolo, però, ho scoperto qualcosa che non era spiegato a sufficienza: credevo che `async` e `await` fossero inseparabili. Non è così.  
 Puoi avere una funzione `async` senza `await`: è sintatticamente valida, ma inutilmente asincrona. Al contrario, `await` non può mai comparire fuori da una funzione `async`: è un errore di sintassi. I due non sono inseparabili, ma hanno una direzione precisa: `await` ha bisogno di `async`, `async` non ha bisogno di `await`.  
 Ho aggiornato subito il Vademecum per riflettere questa distinzione in modo più preciso.
 
-### La Trasparenza di Questo Log
+## La Trasparenza di Questo Log
 
 Mi capita spesso che le domande che mi faccio, come quella su 1984, mi sembrino stupide dopo aver letto la risposta. La tentazione di mostrarmi perfetto c'è, lo ammetto. Ma progetti come <Link to="/docs/Path/HTML-CSS/landing-page">Landing Page</Link> e <Link to="/docs/Featured/maintenance-ui-concept">Maintenance</Link> mi hanno fatto toccare il fondo degli errori, e quelle esperienze hanno alzato così in alto la mia tolleranza al "sembrare ignorante" che ormai la trasparenza mi viene naturale.
 
 Prendo appunti sulle domande e le risposte del Code Tutor in un file chiamato **"README futuro"**, poi cerco di dargli ordine come sto facendo adesso. Faccio sempre più fatica a capire se questo sito sia un diario, un portfolio o un secondo cervello. Probabilmente tutte e tre le cose insieme.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **useEffect come Sincronizzazione:**  
 Il cambio di modello mentale più importante del modulo. Non "fai X quando succede Y", ma "mantieni questo componente sincronizzato con questo sistema esterno". Cambia completamente come si progetta l'architettura.

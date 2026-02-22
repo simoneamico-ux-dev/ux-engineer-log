@@ -45,10 +45,10 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### The Project
+## The Project
 Arabic to Roman numeral converter developed with vanilla JavaScript, advanced input validation and component-based architecture. A complete application with Material Design 3 UI and professional commenting system.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -528,33 +528,33 @@ convertBtn.addEventListener("click", checkUserInput);
 
 </Tabs>
 
-### The Art of Comments
+## The Art of Comments
 
 Incredibly, I have very few things to say about this project, because I said everything in the comments. Nevertheless, those comments are for programmers who read them, these READMEs are for everyone. <br />
 After thoroughly internalizing Salvatore Sanfilippo's article ([https://antirez.com/news/124](https://antirez.com/news/124)) it's as if in this project I wrote comments for the first time. Previously I only used them in CSS to divide different components. This time I integrated design comments as well as the long introductory comment that explains the file architecture, so that anyone who reads it will have a general overview right from the start. This is useful in long projects, in my case I added this type of comment also in the HTML but I recognize that for such small files it's quite useless, nevertheless, since I want to practice right away, I decided to add it.
 
-### The "Why Comments"
+## The "Why Comments"
 
 I found the "why comments" amazing, as well as all those comments that explain the reasons why one choice was made rather than another and if this is very trivial then explain why it was the best choice at that moment. I say amazing because they forced me to reflect and research a lot in order to affirm certain choices. This gave me an understanding that I could never have received by writing only code.
 
-### The "Trivial Comments" with Culture
+## The "Trivial Comments" with Culture
 
 Then come the trivial comments, which should be all those comments dedicated to concepts that any programmer takes for granted, but which Salvatore Sanfilippo says he loves anyway. I wanted to add a pinch of culture inside. <br />
 For example in the HTML at a certain point I state: "I did some research and found out that input type="number" uses browser native validation operating with an underlying C/C++ engine, while regex is executed by the JavaScript interpreter." <br />
 Or again: "Adding min/max attributes provides defense in depth. Although this approach is typically used in more complex, cybersecurity scenarios, it provides a fallback in case JavaScript rule validation fails or is disabled." <br />
 Two concepts completely useless to include for any programmer, but still concepts worth rereading. For example, I, an absolute beginner, would be very happy to find similar comments in someone else's project.
 
-### The "Checklist Comments"
+## The "Checklist Comments"
 
 Subsequently I added warning comments, Salvatore calls them "checklist comments" that is, comments that helped me remember exactly what the freeCodeCamp instructions said and I'm not exaggerating if I say that it's precisely thanks to these that I managed to pass a certification project on the first attempt for the first time.
 
-### The Design: Material Design 3
+## The Design: Material Design 3
 
 Let's now talk about the design of this project. This time I chose to delve into the world of Material Design 3. <br />
 I was inspired by the Google Translate application on my smartphone, I've always liked the style, although "acidic" I find its style unique. I started studying this design current and after getting a general overview from a YouTube video, I dedicated myself to exploring the official website. Here I got all the answers, from the style and stylistic choices to a Figma file with all the main components.
 I took from this the various "shapes", that is all the shapes of Material Design 3 and scattered them on the background, adding an emoji depicting Android, also taken from the Material site.
 
-### A New Approach: Side Notes
+## A New Approach: Side Notes
 
 Here's an image of the notes I wrote alongside the project to help me. I had never adopted this approach. Did Salvatore even manage to change my way of using Figma?
 
@@ -565,23 +565,23 @@ Here's an image of the notes I wrote alongside the project to help me. I had nev
   decoding="async" 
   width="834"
   height="1734"
-  style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+  style={{ width: '100%', height: 'auto', maxWidth: '500px', borderRadius: '10px' }}
 />
 
-### Personal Reinterpretation of the Style
+## Personal Reinterpretation of the Style
 
 I took the liberty of reinterpreting this style. In fact, for the input box I decided to position the placeholder centered horizontally instead of left-aligned, with a slightly higher opacity than Google would have done and at the same time with a color analogous to the overall theme.
 I also inserted dashes, precisely 6, which are displayed when opening the application, before getting the output. Google would never have done this, it would have left it empty instead to emphasize that that field would be filled with the call to action by the user (pressing the "Convert" button).
 
 I made all these choices for a mere aesthetic reason, they brought me to the feeling that everything was in the right place.
 
-### Typography: Roboto Slab and Roboto
+## Typography: Roboto Slab and Roboto
 
 Beyond the style, I also kept the typical consistency pattern that Google dedicates to interactive elements (input, buttons) which must be immediately recognizable.
 For this reason I opted for the Roboto Slab font for the title and for the output, which had the objective of invoking classic characters, akin to ancient Rome, a sort of "thematic accent".
 While for input and button the Roboto font that follows modernity, has excellent readability and follows consolidated patterns that the user knows, characteristics central to Google's philosophy.
 
-### What I Learned
+## What I Learned
 
 **Advanced CSS Architecture:**
 - Component-Based Architecture for organization into components (card, title, output, input, button)
@@ -624,7 +624,7 @@ While for input and button the Roboto font that follows modernity, has excellent
 - Defense in depth approach
 - Semantic HTML
 
-### Reflection
+## Reflection
 
 Salvatore Sanfilippo taught me that comments are not a burden, but an art. Every technical choice has a reason, every discarded alternative has its why.
 Documenting this process is not wasting time, after all it led me to pass a certification project on the first attempt for the first time.

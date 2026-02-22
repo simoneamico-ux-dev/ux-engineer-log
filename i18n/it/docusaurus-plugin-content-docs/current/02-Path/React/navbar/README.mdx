@@ -19,11 +19,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### Il Progetto
+## Il Progetto
 
 **Navbar** è il mio primo progetto React, un componente di navigazione riutilizzabile che segna il passaggio da JavaScript vanilla a una libreria orientata ai componenti.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -192,7 +192,7 @@ button:hover {
 
 </Tabs>
 
-### Un Nuovo Approccio: freeCodeCamp Cambia Metodo
+## Un Nuovo Approccio: freeCodeCamp Cambia Metodo
 
 Nella nuova serie di corsi freeCodeCamp (compreso questo) è stata abbandonata la mentalità del "solo esercizio" in favore di quiz, parti teoriche con domande a risposta multipla e una maggiore enfasi sulla teoria. Gli esercizi guidati ora si chiamano **Workshop**, i certification project sono diventati **Labs**, e permangono alcuni definiti sempre "Certification Project".
 
@@ -214,7 +214,7 @@ Se ho compreso i concetti di React così efficacemente è stato proprio grazie a
 
 Ho tratto moltissimo aiuto dall’analizzare "dal vivo" file e concetti come `package.json` e `node_modules` direttamente da questo sito stesso, che ha come architettura Docusaurus (quindi React-based). Mi è servito per dare sostanza alle poche frasi del corso che spiegavano il tutto.
 
-### Il Progetto: Tre Macro-Tempi
+## Il Progetto: Tre Macro-Tempi
 
 Mi sono fermato in tre macro-tempi, analizzando ciò che avevo appreso fino a quel punto. Ecco cosa ho appreso in ogni fase.
 
@@ -278,7 +278,7 @@ Ho anche notato che `aria-expanded="false"` è, in questo momento, una bugia. È
 
 In React reale non scriverò mai `"false"` a mano. Scriverò una variabile di stato tipo `aria-expanded={isOpen}`. Se `isOpen` è vero, React cambierà l'attributo HTML automaticamente.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Library vs Framework (Inversion of Control):**
 - Compreso che React è una libreria, non un framework: tu chiami React quando serve (per disegnare la UI), non viceversa. È come andare all'IKEA e decidere tutto tu, invece di comprare una casa modello con layout predefinito.
@@ -322,7 +322,7 @@ In React reale non scriverò mai `"false"` a mano. Scriverò una variabile di st
 - Attributi come `aria-expanded="false"` hardcodati sono "promesse di dinamicità": segnalano dove servirà State per rendere la UI veramente interattiva e accessibile.
 - Tag `<a>` in SPA: usati solo per link esterni. Per navigazione interna si usano componenti tipo `<Link />` (React Router) che cambiano URL senza ricaricare la pagina.
 
-### Riflessioni
+## Riflessioni
 
 **Calcola Turno mi ha insegnato il perché di React:**  
 Dopo tantissime righe di `document.createElement`, `day.className = ...`, `daysContainer.appendChild(day)`, capisco perfettamente perché React esista. Tutto quel blocco di codice imperativo diventa JSX dichiarativo:

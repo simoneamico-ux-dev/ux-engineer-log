@@ -20,13 +20,13 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '16px' }}
 />
 
-### The Project
+## The Project
 
 **Footer** is a React component that represents my first unguided exercise after learning the basics of JSX syntax and componentization.
 
 It was extremely useful as an exercise because freeCodeCamp had taught me how to create a navbar, but not a footer. Well, the concepts translate with extreme similarity: same logic of semantic lists, same separation between structure (JSX) and style (CSS), same declarative approach.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -504,7 +504,7 @@ footer {
 
 </Tabs>
 
-### Design: Hybrid between Light and Dark Mode
+## Design: Hybrid between Light and Dark Mode
 
 I opted to replicate the footer of the **simoneamico.com** site (Docusaurus), but I didn't want to make it identical because that one already exists.  
 I played with a visual hybrid between the site's Light and Dark mode: "Espresso & Amber" palette (dark variant of "Coffee & Sand"), three-column layout, but with a skeuomorphic twist that simulates a "dark wood frame" (#7c6148) wrapping the "espresso content" (#423121).
@@ -513,7 +513,7 @@ It was the CSS that dressed the footer as if it were at the bottom of a card/app
 
 Note on shared CSS: I kept navbar styles (from the previous project) in the file to have a coherent design system. Navbar and Footer share the same tokens (colors, spacing, z-index), so it makes sense to keep them in the same CSS instead of duplicating variables. It's the same approach I would use in a real project.
 
-### What I Learned
+## What I Learned
 
 **Divide et Impera (Layout Strategy):**
 - The reference design uses a 2-column layout, but freeCodeCamp required "at least three `<ul>` lists". I logically divided the content into "Navigation", "Social" and "Contacts" to satisfy the constraint while maintaining visual hierarchy and logical grouping.
@@ -557,7 +557,7 @@ Note on shared CSS: I kept navbar styles (from the previous project) in the file
 **Mobile-First Mindset:**
 - I wrote desktop-first CSS (for visual convenience during development), but I understood that in production you start from mobile (`@media (min-width: 768px)`) for Progressive Enhancement. Now that I've seen both approaches, I understand why mobile-first is standard.
 
-### Reflections
+## Reflections
 
 By now you know it's always like this: when I do unguided exercises like Certification Projects or these Labs (which are essentially Certification Projects with pre-packaged `index.html`), I find little to say in READMEs precisely because **I said everything in the source code in various comments**.
 ***

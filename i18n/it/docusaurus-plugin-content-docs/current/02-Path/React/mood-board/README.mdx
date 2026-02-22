@@ -19,11 +19,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### Il Progetto
+## Il Progetto
 
 **Build a Mood Board** è un Lab freeCodeCamp dove ho applicato Props, `.map()` e Spread Syntax per creare una griglia di card visive. Tecnicamente semplice, ma mi ha fatto ragionare su vincoli architetturali nascosti e dipendenze implicite che possono generare bug "silenziosi".
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -323,7 +323,7 @@ body {
 
 Come al solito mi sono "sfogato" nei commenti, ma ci tengo a riportare alcuni passaggi anche qui.
 
-### Il Ripasso su UX Engineer Log
+## Il Ripasso su UX Engineer Log
 
 Di recente sono stato a Roma per partecipare a due laboratori universitari di design. Durante il viaggio, ho deciso di sostituire la lettura dei soliti libri con il mio **UX Engineer Log**. Era da tempo che volevo ripassare tutto ciò che ho appreso in questi mesi, sfruttando questo strumento per il suo vero scopo: fungere da **Secondo Cervello**. Sebbene ne avessi già tratto beneficio consultandolo durante i progetti, non l'avevo mai usato sistematicamente per lo studio attivo.
 
@@ -331,7 +331,7 @@ Ho iniziato sfogliando i singoli progetti, ma ho capito subito che l'approccio e
 Mi sono immerso nella prima sezione, densissima, cercando di leggerla con gli occhi di un utente esterno. Per quanto il mio giudizio sia di parte (ho un inevitabile conflitto di interessi), ne sono rimasto sorpreso. Il metodo con cui ho aggregato le informazioni progetto dopo progetto, appuntandomi le spiegazioni del Code Tutor in AppFlowly nel blocco **"Add al Vademecum"**, ha creato una progressione naturale. Rileggere tutto insieme è stato soddisfacente: non erano nozioni astratte, ma concetti assimilati attraverso la pratica, finalmente ordinati. Adoro questo modo di documentare e trovo estremamente gratificante farlo. <br />
 Credevo che le basi di JavaScript fossero ormai assodate, ma mi sbagliavo. Il ripasso ha fatto emergere dubbi che ho prontamente chiarito e trasformato in nuove note: le integrerò presto nel Vademecum per renderlo ancora più cristallino per chi leggerà in futuro.
 
-### Architettura Data-Driven
+## Architettura Data-Driven
 
 L'adozione di `.map()` e dello Spread Operator è scaturita quasi naturalmente dal ripasso appena concluso. Sebbene siano pattern che avrei probabilmente utilizzato comunque, averli freschi nella memoria ha trasformato una possibilità in una scelta consapevole e immediata (il bias di disponibilità ha giocato il suo ruolo).
 Anziché cedere all'hardcoding (scrivere manualmente sei componenti `<MoodBoardItem />`), ho optato per un approccio **Data-Driven** orientato alla scalabilità:
@@ -340,14 +340,14 @@ Anziché cedere all'hardcoding (scrivere manualmente sei componenti `<MoodBoardI
 * **Componente `<MoodBoard />`:** È l'orchestratore. Non conosce il contenuto specifico, ma sa come trasformare una lista di dati in elementi UI tramite `.map()`, generando la griglia dinamicamente.
 * **Componente `<MoodBoardItem />`:** È il template visivo. Riceve i dati e li "impacchetta" nella struttura HTML richiesta dal CSS, senza preoccuparsi della logica.
 
-### Perché `.map()` e non `forEach`
+## Perché `.map()` e non `forEach`
 
 La scelta di `.map()` è dettata dalla natura dichiarativa di React. In JSX, ogni espressione deve restituire un valore renderizzabile, cosa che `forEach` non fa (esegue un ciclo ma restituisce `undefined` in termini di UI). 
 Al contrario, `.map()` produce un **nuovo array** (garantendo immutabilità dell'array originale): prende un array di dati in entrata e restituisce un nuovo array di componenti in uscita. React renderizza automaticamente gli array di componenti.
 
 Questa distinzione è fondamentale per la **Reconciliation**. Dato che React decide se aggiornare la UI confrontando i riferimenti in memoria, se modificassi l'array originale (es. con `push`), il riferimento rimarrebbe identico e React ignorerebbe il cambiamento. `.map()`, restituendo sempre un nuovo array, garantisce un **nuovo riferimento**, segnalando a React che è tempo di aggiornare la UI.
 
-### Lo Spread Operator e il "Blind Courier"
+## Lo Spread Operator e il "Blind Courier"
 
 Ho utilizzato lo Spread Operator (`{...item}`) per pulizia e comodità, ma questa scelta mi ha fatto riflettere su come React agisca da **"Corriere Cieco"** (Blind Courier).
 
@@ -355,13 +355,13 @@ La libreria si preoccupa solo dell'etichetta di spedizione (`key`) per tracciare
 Qui nasce un vincolo critico: React non controlla se il destinatario capisce il contenuto. Se l'array contiene la chiave `imgUrl` ma il componente si aspetta `image`, la consegna avviene con successo, ma il componente riceverà una prop (proprietà) sconosciuta, lasciando quella corretta `undefined`.
 Per usare questa scorciatoia, Data e Componente devono parlare esattamente la stessa lingua: è una **dipendenza implicita** che, se avessi ignorato, avrei generato bug silenziosi.
 
-### L'Errore nel Footer (e la scelta dell'autenticità)
+## L'Errore nel Footer (e la scelta dell'autenticità)
 
 Rileggendo il codice del progetto Footer, ho notato di aver utilizzato la sintassi `{/* commento */}` anche all'esterno dei componenti. Ho scoperto che si trattava di un errore concettuale: le parentesi graffe servono ad aprire il "portale" JavaScript dentro il JSX; fuori da esso, siamo in un JavaScript standard e bastava un classico `/* commento */`.
 
 Ho deciso deliberatamente di **non correggere** quel file. Anche se potrebbe sembrare un autogol agli occhi di un recruiter, questo percorso l'ho fondato sulla **cronologia reale dei log**. Preferisco mostrare la trasparenza della mia evoluzione piuttosto che una perfezione retroattiva costruita a posteriori.
 
-### Vincoli CSS Preconfezionati
+## Vincoli CSS Preconfezionati
 
 L'analisi del CSS fornito da freeCodeCamp ha definito i confini entro cui il mio React doveva muoversi:
 
@@ -369,7 +369,7 @@ L'analisi del CSS fornito da freeCodeCamp ha definito i confini entro cui il mio
 * **Grid Hardcoded:** La regola `grid-template-columns: repeat(3, 1fr)` forza un layout a tre colonne. Questa è stata una **scoperta critica**: ho dovuto posizionare l'`<h1>` *fuori* dal container `.mood-board`. Se l'avessi messo dentro, sarebbe stato trattato come un elemento della griglia e schiacciato in una colonna, rompendo il design. In poche parole il CSS ha imposto la struttura, React l'ha riempita.
 * **Card Anatomy:** Con un'altezza fissa di 250px e Flexbox gestito dal CSS, il componente `<MoodBoardItem />` è diventato puramente un riempitivo di contenuto, delegando interamente il layout al foglio di stile.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Inline Styles (Il Portale JavaScript):**
 
@@ -396,7 +396,7 @@ L'analisi del CSS fornito da freeCodeCamp ha definito i confini entro cui il mio
 * Appreso che JSX non è HTML nemmeno nei commenti. All'interno del rendering visivo, i commenti devono essere incapsulati in `{/* ... */}` per essere interpretati come JavaScript e non renderizzati come testo.
 * È un continuo cambio di contesto: fuori dal `return` siamo in JavaScript puro (`//` o `/* */`), dentro siamo nel Virtual DOM che richiede le graffe di escape.
 
-### Vademecum Git & GitHub
+## Vademecum Git & GitHub
 
 Attualmente ho in cantiere un nuovo Vademecum dedicato a Git e GitHub, mantenendo lo stesso approccio **"Real World"** che ho già applicato a quelli su **HTML, CSS, JavaScript e UX & UI**.
 È un progetto in divenire, nato per consolidare i concetti appresi durante lo sviluppo con Docusaurus. Non mi sono però limitato alla mia esperienza "in solitaria": ho voluto approfondire le dinamiche reali del lavoro in team, studiando i flussi di lavoro collaborativi standard. Ho arricchito il tutto con una raccolta essenziale dei comandi da terminale che si sono rivelati, nel pratico, tra i miei migliori alleati quotidiani.

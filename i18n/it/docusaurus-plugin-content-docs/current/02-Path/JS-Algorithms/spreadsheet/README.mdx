@@ -63,10 +63,10 @@ Il foglio di calcolo calcola il Tasso di Conversione per entrambi, mostrando il 
 La metrica chiave "Lift (Miglioramento)" mostra che il Design B ha una performance di ~3 punti percentuali superiore all'originale.
 Questa è una chiara convalida basata sui dati. L'insight che si ottiene da questo spreadsheet è di raccomandare la sostituzione del Design A con il Design B, poiché il nuovo design è palesemente più efficace nel convertire gli utenti.
 
-### Il Progetto
+## Il Progetto
 Spreadsheet funzionale sviluppato con JavaScript puro, implementando funzioni avanzate come somme, medie, mediane, range e valutazione di formule. Un progetto che dimostra i principi della programmazione funzionale applicati a un caso d'uso reale.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -217,14 +217,14 @@ const update = event => {
 
 </Tabs>
 
-### La Svolta: Quando il Currying ha fatto "Click"
+## La Svolta: Quando il Currying ha fatto "Click"
 
 È stato veramente interessante incontrare per la prima volta il **currying con funzioni freccia**.
 All'inizio sembrava solo sintassi strana: `character1 => character2 => num => ...`. Addirittura 3 frecce?<br />
 Ora lo reputo un concetto semplicissimo, ma inizialmente non lo era. Perché si è trattato di ristrutturare cognitivamente un concetto che avevo ormai dato per assodato: le arrow function.<br />
 Riassumerò qui di seguito tutte le analogie e spiegazioni che mi ha fornito il Code Tutor per farmi comprendere il concetto.
 
-#### L'Analogia della Fabbrica
+**L'Analogia della Fabbrica**
 
 Una funzione normale è come un macchinario che ha bisogno di tutte le chiavi inserite contemporaneamente:
 ```javascript
@@ -242,7 +242,7 @@ const curriedAdd = a => b => a + b;
 
 Ciò significa che ogni livello "blocca" un pezzo di informazione e passa una nuova funzione al livello successivo. È la **closure** al lavoro, perciò ogni funzione "si ricorda" (tiene in memoria) i parametri ricevuti ai livelli superiori.
 
-#### Il File .zip vs La Cartella 📦
+**Il File .zip vs La Cartella 📦**
 
 Sono andato avanti negli step, ma dopo un errore assolutamente evitabile ho deciso di approfondire ulteriormente: sia perché non volevo rifarne altri, sia perché non volevo lacune.<br />
 Ecco l'analogia che per me è stata più efficace:
@@ -270,7 +270,7 @@ Dopo qualche ricerca, ecco cos'è emerso in termini di "workflow ideale":
 4. Risolvo il problema
 5. "Ricompatto" nella versione corta
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Programmazione Funzionale Avanzata:**
 - **Currying:** Funzioni che restituiscono funzioni, creando specializzazioni progressive.
@@ -302,7 +302,7 @@ Dopo qualche ricerca, ecco cos'è emerso in termini di "workflow ideale":
 - Valutazione ricorsiva di formule con dipendenze tra celle.
 - Prevenzione di riferimenti circolari.
 
-### Riflessione
+## Riflessione
 
 Ora quando incontro una sintassi come `num => character => idToText(character + num)`, il mio cervello non legge più codice, legge un flusso: "Prendo `num`, che mi porta a una funzione che prende `character`, che mi porta al risultato finale."<br />
 La sintassi `=>` è diventata per me un **diagramma di flusso visuale**. Ogni volta che l'ho incontrata successivamente, dicevo dentro di me "porta a...", come se stessi seguendo una mappa. Non più parentesi, return e variabili temporanee da tenere a mente, solo la pura trasformazione dei dati, passo dopo passo.

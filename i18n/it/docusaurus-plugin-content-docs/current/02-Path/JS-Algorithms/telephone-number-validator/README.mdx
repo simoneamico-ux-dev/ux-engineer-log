@@ -53,10 +53,10 @@ import TabItem from '@theme/TabItem';
   }}
 />
 
-### Il Progetto
+## Il Progetto
 Validatore di numeri telefonici statunitensi sviluppato con Regular Expressions, design responsive mobile-first e architettura orientata alla performance. Un'applicazione che dimostra la potenza delle regex nella validazione di pattern complessi.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -576,16 +576,16 @@ clearBtn.addEventListener("click", (e) => {
 
 </Tabs>
 
-### Il Progetto Più Bello Fatto Fin'ora
+## Il Progetto Più Bello Fatto Fin'ora
 
 È stato il progetto più bello fatto fin'ora. La regex è stata la parte più difficile in assoluto.<br />
 Non ho provato altri approcci: avrei potuto gestire la convalida del numero di telefono in modi alternativi, come una cascata di `if` statement. Il codice sarebbe stato più facile da scrivere e persino da leggere, ma sarebbe stato tremendamente lungo. Optare per la regex è stato anche un modo per rafforzarne la mia comprensione. Ho infatti scritto la spiegazione dettagliata della regex all'interno dello `script.js`, sia per far comprendere a chiunque a cosa serve ogni pezzetto, sia per consolidare quanto ho appreso.
 
-### Il Design: HTC One M8 e Windows Phone Aesthetic
+## Il Design: HTC One M8 e Windows Phone Aesthetic
 
 Per quanto riguarda il design, ho deciso di inserire un **HTC One M8 for Windows** (la versione per Verizon) in un semplice sfondo blu stile Windows Phone. È venuto meglio di come me lo ero immaginato. Ho provato con la versione gold e black, ma questa **silver** è quella che si sposa meglio con lo sfondo.
 
-### Mobile-First (Davvero): Una Scelta Consapevole
+## Mobile-First (Davvero): Una Scelta Consapevole
 
 La versione mobile è la versione di default. Come ho scritto nei commenti dello `styles.css`, ho scelto di creare una media query per desktop e non più, contrariamente al passato, la versione mobile in media query.
 
@@ -593,20 +593,20 @@ La versione mobile è la versione di default. Come ho scritto nei commenti dello
 1. **Diffusione:** Il mobile ha ormai da anni superato il traffico del desktop.
 2. **Performance:** Impostandola come default, il caricamento del device frame (l'HTC) avviene solo se visualizzato da desktop. Inoltre chi naviga da desktop ha generalmente internet più veloce, quindi è stato ancora più sensato.
 
-### La Riflessione: Mobile-First non è un Dogma
+## La Riflessione: Mobile-First non è un Dogma
 
 Non se ne parla mai, ma credo che al di là del gold standard "mobile-first", bisognerebbe valutare in base al dispositivo che verrà utilizzato prevalentemente per navigare la nostra applicazione.<br />
 Se si crea un'applicazione destinata principalmente al desktop, forse ha più senso adottare il vecchio metodo di dedicare una media query al mobile.<br />
 In questo progetto ho comunque scelto l'approccio mobile-first anche per abituarmi a questo modo di pensare, una skill che voglio consolidare.<br />
 Potrei sbagliarmi, ma mi sorgono sempre **red flag** quando sento "è così e basta". Ci sono sempre mille sfumature e "dipende" che spesso non vengono menzionati.
 
-### La Filosofia dei Commenti
+## La Filosofia dei Commenti
 
 Come già fatto nello scorso certification project, ho dedicato particolare attenzione ai commenti nel codice. Ho scritto tutto lì: la logica, le scelte architetturali, i pattern utilizzati. Ripeterlo qui sarebbe ridondante e, soprattutto, difficile da comprendere senza avere il codice sottomano.<br />
 In questo progetto ho deciso di ridurre i commenti inutili, quelli che antirez chiama "Trivial Comments", al fine di rendere il codice più pulito. Ho concentrato la maggior parte dei commenti all'inizio di ogni documento, creando una sorta di mappa che guida la lettura del codice senza appesantirlo.<br />
 Ci tengo solo a dire che a ogni progetto che passa la mia self confidence aumenta e, allo stesso passo, il mio divertimento.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Regular Expressions:**
 - Pattern complessi per validazione numeri telefonici US: `/^(1\s?)?(\(\d{3}\)|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}$/`
@@ -651,7 +651,7 @@ Ci tengo solo a dire che a ogni progetto che passa la mia self confidence aument
 - Commenti strutturati con sezione DESIGN per overview architetturale
 - Naming semantico per funzioni riutilizzabili
 
-### Riflessione
+## Riflessione
 È stato fondamentale, nella creazione dell'HTML, testare iterativamente sul mio edge case preferito: l'iPhone 12 mini e, sorprendentemente, anche su un HTC One M8 (versione Android).<br />
 Ho infatti scoperto di recente il comando "ipconfig getifaddr en0" (in macOS) nel terminale, che mi ha aperto un mondo. Mi sono aggiunto sul desktop in un file txt la procedura che ho riassunto:
 - Esegui ipconfig getifaddr en0 nel terminale

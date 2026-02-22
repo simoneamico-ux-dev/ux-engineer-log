@@ -29,11 +29,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### The Project
+## The Project
 
 News Authors Page developed with vanilla JavaScript, fetch API, and asynchronous data management. An application that demonstrates progressive loading, pagination, and robust error handling to optimize performance and user experience.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -192,11 +192,11 @@ loadMoreBtn.addEventListener('click', fetchMoreAuthors);
 
 </Tabs>
 
-### The Favorite Project
+## The Favorite Project
 
 It was one of my favorite freeCodeCamp projects! It made me think deeply about how to optimize content loading for users with different needs.
 
-### The Insight: Adaptive Loading
+## The Insight: Adaptive Loading
 
 An insight came to me that I attribute to the Google UX course, where it was explained how pay-as-you-go rates work in emerging countries like India, and how desktop users are much more likely to have a fast connection being more likely to be connected to a home network (ADSL, Fiber optic).<br />
 
@@ -208,14 +208,14 @@ There's an approach called **Adaptive Loading** that solves exactly this problem
 
 Furthermore, by differentiating between desktop and mobile (`window.innerWidth`), you can further optimize: desktop with home WiFi can load everything, mobile on data network loads progressively.
 
-### The Night Reflection: Lazy Loading
+## The Night Reflection: Lazy Loading
 
 Last night (literally) I woke up thinking that the best solution, simple and that truly adapts to everyone, is to eliminate the button entirely and load the page content bit by bit (Lazy Loading with Infinite Scroll).<br />
 
 I believe it's the optimal solution because those with fast internet won't notice the progressive loading, everything will appear fluid, those with slow internet will see a loading message after a brief delay, without the friction of manual clicking, using Intersection Observer, the next 8 authors are automatically loaded when the user reaches the bottom of the list, guaranteeing zero friction.<br />
 This is the most elegant solution because it's passive; in fact, it adapts to the user without the user having to do (or know) anything.
 
-### What I Learned
+## What I Learned
 
 **Fetch API and Promise Chain:**
 - `.fetch()` returns a Promise that resolves with a Response object

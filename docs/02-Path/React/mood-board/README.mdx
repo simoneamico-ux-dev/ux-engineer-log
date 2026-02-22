@@ -19,11 +19,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### The Project
+## The Project
 
 **Build a Mood Board** is a freeCodeCamp Lab where I applied Props, `.map()`, and Spread Syntax to create a grid of visual cards. While technically simple, it pushed me to reason about hidden architectural constraints and implicit dependencies that can generate "silent" bugs.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -323,7 +323,7 @@ body {
 
 As usual, I "went into detail" in the code comments, but I want to highlight a few key passages here as well.
 
-### Reviewing the UX Engineer Log
+## Reviewing the UX Engineer Log
 
 Recently, I traveled to Rome to participate in two university design workshops. During the trip, I decided to replace my usual reading books with my **UX Engineer Log**. I had been wanting to review everything I’ve learned over these months for a while, using this tool for its true purpose: serving as a **Second Brain**. Although I had already benefited from consulting it during projects, I had never systematically used it for active study.
 
@@ -331,7 +331,7 @@ I started by browsing through individual projects, but I immediately realized th
 I immersed myself in the first section—which was incredibly dense—trying to read it through the eyes of an external user. As much as my judgment might be biased (I have an inevitable conflict of interest), I was surprised. The method by which I aggregated information project after project, noting down the Code Tutor's explanations in AppFlowly under the **"Add to Vademecum"** block, created a natural progression. Reading it all together was satisfying: these weren't abstract notions, but concepts assimilated through practice, finally organized. I love this method of documenting, and I find it extremely rewarding. <br />
 I thought my JavaScript basics were solid, but I was wrong. The review brought up doubts that I promptly cleared up and transformed into new notes: I will integrate them into the Vademecum soon to make it crystal clear for future readers.
 
-### Data-Driven Architecture
+## Data-Driven Architecture
 
 The adoption of `.map()` and the Spread Operator stemmed almost naturally from the review I just finished. Although these are patterns I likely would have used anyway, having them fresh in my memory turned a possibility into a conscious and immediate choice (availability bias played its role).
 Instead of giving in to hardcoding (manually writing six `<MoodBoardItem />` components), I opted for a **Data-Driven** approach oriented towards scalability:
@@ -340,14 +340,14 @@ Instead of giving in to hardcoding (manually writing six `<MoodBoardItem />` com
 * **`<MoodBoard />` Component:** This is the orchestrator. It doesn't know the specific content, but it knows how to transform a list of data into UI elements via `.map()`, generating the grid dynamically.
 * **`<MoodBoardItem />` Component:** This is the visual template. It receives data and "packages" it into the HTML structure required by the CSS, without worrying about logic.
 
-### Why `.map()` and not `forEach`
+## Why `.map()` and not `forEach`
 
 The choice of `.map()` is dictated by React's declarative nature. In JSX, every expression must return a renderable value, which `forEach` does not do (it executes a loop but returns `undefined` in terms of UI).
 Conversely, `.map()` produces a **new array** (guaranteeing immutability of the original array): it takes an input array of data and returns a new output array of components. React automatically renders arrays of components.
 
 This distinction is fundamental for **Reconciliation**. Since React decides whether to update the UI by comparing memory references, if I were to modify the original array (e.g., with `push`), the reference would remain identical, and React would ignore the change. `.map()`, by always returning a new array, guarantees a **new reference**, signaling to React that it is time to update the UI.
 
-### The Spread Operator and the "Blind Courier"
+## The Spread Operator and the "Blind Courier"
 
 I used the Spread Operator (`{...item}`) for cleanliness and convenience, but this choice made me reflect on how React acts as a **"Blind Courier"**.
 
@@ -355,13 +355,13 @@ The library only cares about the shipping label (`key`) to track the component i
 Here arises a critical constraint: React does not check if the recipient understands the content. If the array contains the key `imgUrl` but the component expects `image`, the delivery succeeds, but the component will receive an unknown prop (property), leaving the correct one `undefined`.
 To use this shortcut, the Data and the Component must speak exactly the same language: it is an **implicit dependency** that, had I ignored it, would have generated silent bugs.
 
-### The Error in the Footer (and the choice of authenticity)
+## The Error in the Footer (and the choice of authenticity)
 
 Re-reading the code for the Footer project, I noticed I used the `{/* comment */}` syntax outside of the components as well. I discovered this was a **conceptual error**: curly braces serve to open the JavaScript "portal" inside JSX; outside of it, we are in standard JavaScript, and a classic `/* comment */` would have sufficed.
 
 I deliberately decided **not to fix** that file. Even though it might look like an "own goal" in the eyes of a recruiter, I founded this path on the **real chronology of the logs**. I prefer to show the transparency of my evolution rather than a retroactive perfection constructed after the fact.
 
-### Pre-packaged CSS Constraints
+## Pre-packaged CSS Constraints
 
 Analyzing the CSS provided by freeCodeCamp defined the boundaries within which my React code had to operate:
 
@@ -369,7 +369,7 @@ Analyzing the CSS provided by freeCodeCamp defined the boundaries within which m
 * **Hardcoded Grid:** The rule `grid-template-columns: repeat(3, 1fr)` forces a three-column layout. This was a **critical discovery**: I had to position the `<h1>` *outside* the `.mood-board` container. If I had placed it inside, it would have been treated as a grid item and squashed into a single column, breaking the design. Simply put, CSS imposed the structure, and React filled it.
 * **Card Anatomy:** With a fixed height of 250px and Flexbox managed by CSS, the `<MoodBoardItem />` component became purely a content filler, entirely delegating layout logic to the stylesheet.
 
-### What I Learned
+## What I Learned
 
 **Inline Styles (The JavaScript Portal):**
 
@@ -396,7 +396,7 @@ Analyzing the CSS provided by freeCodeCamp defined the boundaries within which m
 * Learned that JSX is not HTML, not even in comments. Inside visual rendering, comments must be encapsulated in `{/* ... */}` to be interpreted as JavaScript and not rendered as text.
 * It's a constant context switch: outside the `return`, we are in pure JavaScript (`//` or `/* */`); inside, we are in the Virtual DOM, which requires escape braces.
 
-### Git & GitHub Vademecum
+## Git & GitHub Vademecum
 
 I currently have a new Vademecum dedicated to Git and GitHub in the works, maintaining the same **"Real World"** approach I already applied to the ones on **HTML, CSS, JavaScript, and UX & UI**.
 It is a project in the making, born to consolidate concepts learned during the development with Docusaurus. However, I didn't limit myself to my "solo" experience: I wanted to delve into the real dynamics of teamwork, studying standard collaborative workflows. I enriched it all with an essential collection of terminal commands that have proven, in practice, to be among my best daily allies.

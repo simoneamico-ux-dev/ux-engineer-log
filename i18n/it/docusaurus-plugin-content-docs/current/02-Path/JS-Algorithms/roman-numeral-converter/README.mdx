@@ -53,10 +53,10 @@ import TabItem from '@theme/TabItem';
   }}
 />
 
-### Il Progetto
+## Il Progetto
 Convertitore da numeri arabi a numeri romani sviluppato con JavaScript vanilla, validazione avanzata degli input e architettura basata su componenti. Un'applicazione completa con design Material Design 3 e sistema di commenti professionale.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -536,64 +536,60 @@ convertBtn.addEventListener("click", checkUserInput);
 
 </Tabs>
 
-### L'Arte dei Commenti
+## L'Arte dei Commenti
 
 Incredibilmente ho pochissime cose da dire in merito a questo progetto, perché ho detto tutto nei commenti. Ciononostante, quei commenti sono per i programmatori che leggono, questi README sono per tutti. <br />
 Dopo aver interiorizzato l'articolo di Salvatore Sanfilippo ([https://antirez.com/news/124](https://antirez.com/news/124)) è come se in questo progetto avessi scritto i commenti per la prima volta. Precedentemente li utilizzavo soltanto nel CSS per suddividere i diversi componenti. Questa volta ho integrato i commenti di design (design comments) nonché il lungo commento introduttivo che spiega l'architettura del file, in modo tale da permettere a chi lo leggerà di avere fin da subito un'infarinatura generale. Questo è utile in progetti lunghi, nel mio caso ho aggiunto questo tipo di commento anche nell'HTML ma riconosco che per file così piccoli sia alquanto inutile, nonostante ciò, dato che voglio esercitarmi fin da subito, ho deciso di aggiungerlo.
 
-### I "Why Comments"
+## I "Why Comments"
 
 Ho trovato strabilianti i "why comments" nonché tutti quei commenti che spiegano le ragioni per le quali si è optato per una scelta piuttosto che l'altra e se questa è molto banale allora spiegare il perché è stata la scelta migliore in quel momento. Dico strabilianti perché mi hanno costretto a riflettere e documentarmi molto per poter affermare certe scelte. Questo mi ha dato una comprensione che non avrei mai potuto ricevere scrivendo solo codice.
 
-### I "Trivial Comments" con Cultura
+## I "Trivial Comments" con Cultura
 
 Poi arrivano i trivial comments, che dovrebbero essere tutti quei commenti dedicati a concetti che qualsiasi programmatore dà per scontato, ma che Salvatore Sanfilippo dice comunque di amare. Ho voluto aggiungere un pizzico di cultura all'interno. <br />
 Ad esempio nell'HTML a un certo punto affermo: "I did some research and found out that input type="number" uses browser native validation operating with an underlying C/C++ engine, while regex is executed by the JavaScript interpreter." <br />
 O ancora: "Adding min/max attributes provides defense in depth. Although this approach is typically used in more complex, cybersecurity scenarios, it provides a fallback in case JavaScript rule validation fails or is disabled." <br />
 Due concetti del tutto inutili da includere per un qualsiasi programmatore, ma pur sempre concetti che vale la pena rileggere. Per esempio io, assoluto principiante, sarei felicissimo di trovare commenti simili nel progetto di qualcun altro.
 
-### I "Checklist Comments"
+## I "Checklist Comments"
 
 Successivamente ho aggiunto dei commenti di monito, Salvatore li chiama "checklist comments" ovvero commenti che mi sono serviti per ricordare esattamente cosa diceva nelle istruzioni freeCodeCamp e non esagero se affermo che è proprio grazie a questi se sono riuscito per la prima volta a passare al primo tentativo un certification project.
 
-### Il Design: Material Design 3
+## Il Design: Material Design 3
 
 Parliamo ora del design di questo progetto. Questa volta ho scelto di addentrarmi nel mondo del Material Design 3. <br />
 Mi sono ispirato dall'applicazione Google Translate del mio smartphone, mi è sempre piaciuto lo stile, seppur "acido" trovo il suo stile unico. Ho iniziato a studiare questa corrente di design e dopo aver ottenuto un'infarinatura generale da un video YouTube, mi sono dedicato all'esplorazione del sito ufficiale. Qui ho ottenuto tutte le risposte, dallo stile e scelte stilistiche a un file Figma con tutti i componenti principali.
 Ho preso da questo le varie "shapes", ovvero tutte le forme del Material Design 3 e le ho sparse sullo sfondo, aggiungendoci un emoji che raffigura Android, anche quest'ultima presa dal sito Material.
 
-### Un Nuovo Approccio: Note a Fianco
+## Un Nuovo Approccio: Note a Fianco
 
 In seguito, un'immagine delle note che ho scritto a fianco al progetto per aiutarmi. Non avevo mai adottato questo approccio. Salvatore è persino riuscito a cambiare il mio modo di usare Figma?
 
-<img 
-  src={require('./assets/roman-numeral-converter-3-it.webp').default} 
+<img
+  src={require('./assets/roman-numeral-converter-3-it.webp').default}
   alt="Approccio Notes in Figma"
   loading="lazy"
   decoding="async" 
   width="834"
   height="1734"
-  style={{
-    borderRadius: '10px',
-    width: '50%',
-    height: 'auto'
-  }}
+  style={{ width: '100%', height: 'auto', maxWidth: '500px', borderRadius: '10px' }}
 />
 
-### Reinterpretazione Personale dello Stile
+## Reinterpretazione Personale dello Stile
 
 Mi sono preso la libertà di reinterpretare questo stile. Infatti al box dell'input ho deciso di posizionare il placeholder centrato orizzontalmente anziché allineato a sinistra, con un'opacità leggermente più alta di come avrebbe fatto Google ed allo stesso tempo di un colore analogo al tema complessivo.
 Inoltre ho inserito dei trattini, per la precisione 6, che vengono mostrati all'apertura dell'applicazione, prima di ottenere l'output. Google non l'avrebbe mai fatto, l'avrebbe piuttosto lasciato vuoto per sottolineare che quel campo si sarebbe riempito con la call to action da parte dell'utente (la pressione del pulsante "Convert").
 
 Tutte queste scelte le ho fatte per una mera questione estetica, mi hanno portato alla sensazione che così fosse tutto al posto giusto.
 
-### Tipografia: Roboto Slab e Roboto
+## Tipografia: Roboto Slab e Roboto
 
 Al di là dello stile, ho anche conservato il tipico pattern di coerenza che Google dedica agli elementi interattivi (input, pulsanti) i quali devono essere immediatamente riconoscibili.
 Per questo motivo ho optato per il font Roboto Slab per il titolo e per l'output, che ha avuto come obiettivo quello di invocare caratteri classici, affini all'antica Roma, una sorta di "accento tematico".
 Mentre per input e button il font Roboto che segue modernità, ha ottima leggibilità e segue pattern consolidati che l'utente conosce, caratteristiche centrali nella filosofia di Google.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Architettura CSS Avanzata:**
 - Component-Based Architecture per organizzazione in componenti (card, title, output, input, button)
@@ -636,7 +632,7 @@ Mentre per input e button il font Roboto che segue modernità, ha ottima leggibi
 - Defense in depth approach
 - Semantic HTML
 
-### Riflessione
+## Riflessione
 
 Salvatore Sanfilippo mi ha insegnato che i commenti non sono un peso, ma un'arte. Ogni scelta tecnica ha una ragione, ogni alternativa scartata ha un perché.
 Documentare questo processo non è perdere tempo, d'altronde mi ha portato a superare per la prima volta un certification project al primo tentativo.

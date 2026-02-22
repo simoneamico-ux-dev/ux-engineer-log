@@ -20,11 +20,11 @@ import Link from '@docusaurus/Link';
   style={{ width: '100%', height: 'auto', maxWidth: '550px', borderRadius: '16px' }}
 />
 
-### The Project
+## The Project
 
 A freeCodeCamp workshop that concluded the **"Understanding Effects and Referencing Values in React"** section, putting `useEffect`, `useRef`, and Custom Hooks into practice through asynchronous management with `async/await`. Technically more complex than previous React projects, but above all rich in theoretical reflections that I struggled not to put in writing.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -159,7 +159,7 @@ body {
 </TabItem>
 </Tabs>
 
-### React, 1984, and the Problem with AI
+## React, 1984, and the Problem with AI
 
 Ever since I discovered what's under the hood of `useRef`, essentially a `{ current: value }` object that React manages in memory, exactly as plain JavaScript would do, I found myself asking the same question I ask with every React project: *how useful will all this be in a future where AI writes most of the code?*  
 The reflection got deeper. It's true that AI will write less code with this library, but it still has to remember (keep in the context window) that for each of React's functions there are, in fact, JavaScript functions with behaviors that aren't directly visible. It's as if we're adding a layer of invisible complexity that AI still needs to know to do debugging.
@@ -181,7 +181,7 @@ I looked for answers that would disprove this thought, because I was aware of th
 
 He then added a reflection that definitively closed the circle: in 1984, the Party reduced words to prevent "thoughtcrime", if the word "freedom" doesn't exist, you can't even formulate the thought of rebelling. React did the same thing with code: it made it physically difficult to write certain buggy patterns (direct DOM manipulation, unsynchronized state, listeners lost in memory). It removed the vocabulary of imperative DOM to force you to think in terms of State.
 
-### useEffect: Synchronization, Not Reaction
+## useEffect: Synchronization, Not Reaction
 
 The tutor immediately warned me that **I shouldn't see `useEffect` as a way to say "do this when this happens".**  
 The correct way is **Synchronization**. I shouldn't think: *"When I click, start the timer."* Rather: *"I want the timer to be synchronized with the `isActive` state. If it's active, the timer should start. If it's not active, it should stop."*  
@@ -190,7 +190,7 @@ The correct way is **Synchronization**. I shouldn't think: *"When I click, start
 This completely changes how you reason about architecture, because if I think in events, my code becomes a list of instructions: *"When I click Start, start the timer. When I click Stop, stop it. When I click Reset, reset everything."* It works as long as things are simple. But if I add a new condition, like "the timer should also stop if the user leaves the page," I have to remember to go add that logic in every right place. If I forget a handler, the bug is guaranteed.  
 If instead I think in synchronization, I ask myself just one question: *"When should the timer be active? In this case when `isActive` is `true`. Period."* I write a single `useEffect` that observes `isActive` and behaves accordingly. If tomorrow I add a new way to stop the timer, a timeout, leaving the page, a network error, I don't have to touch the `useEffect`. I just need to set `isActive = false` from anywhere in the code, and the timer stops on its own. The logic is in one place, not distributed across ten handlers.
 
-### Batching vs Debouncing: Two Cousins That Look Alike
+## Batching vs Debouncing: Two Cousins That Look Alike
 
 freeCodeCamp talked about Debouncing, yet it seemed like I was seeing the Batching from the <Link to="/docs/Path/React/toggle-text-app">Toggle Text App</Link> again. Weren't they the same thing?
 
@@ -206,7 +206,7 @@ The answer I received was that they are two mechanisms that both "wait," but wit
 
 In this workshop I used precisely Debouncing: I wait 700ms after the last keystroke before calling the API, avoiding a request for every single character typed.
 
-### useRef: The Director of Attention
+## useRef: The Director of Attention
 
 freeCodeCamp introduced me to `useRef` with an example on input focus. The first thing I thought was: *complexity added to what HTML and CSS already did perfectly well on their own.* I actually understood why later.  
 `useRef` and `useState` solve two different problems. `useState` is a shop window, so every time you change something, React redraws everything and the user sees it. `useRef` is the pocket: you can put things in it, take them out, change them, and nobody notices. No re-render.  
@@ -220,23 +220,23 @@ But the use case that struck me most is accessibility. In Single Page Applicatio
 
 The **Curb Cut Effect** always applies, which I first encountered in the Google UX course: the solution designed for a specific need ends up helping everyone. Managing focus with `useRef` helps power users who don't touch the mouse, situational users with a broken arm or dead trackpad, and, something I'd never considered until now, those browsing on Smart TV or PlayStation. A console controller works exactly like a keyboard: Up, Down, Right, Left, Enter. If focus is managed well, the site works on the couch too. If it's not, the cursor gets stuck (and the user leaves).
 
-### Custom Hooks: Separating Logic from Component
+## Custom Hooks: Separating Logic from Component
 
 I wondered where to put the accessibility code: did it make sense to include it directly in the component? I discovered that common practice is to extract it into an external function, a Custom Hook, that lives in its dedicated file, for example `hooks/useFocus.js`, and is called with a single line. The component stays clean, the logic is in one place and reusable wherever I need it.
 
-### async/await: A Discovery in the Review
+## async/await: A Discovery in the Review
 
 The Vademecum was essential for reviewing `try`, `catch`, `async`, and `await`, because I didn't remember the syntax by heart. Rereading it, though, I discovered something that wasn't explained sufficiently: I thought `async` and `await` were inseparable. They're not.  
 You can have an `async` function without `await`: it's syntactically valid, but pointlessly asynchronous. Conversely, `await` can never appear outside an `async` function: it's a syntax error. The two aren't inseparable, but they have a precise direction: `await` needs `async`, `async` doesn't need `await`.  
 I immediately updated the Vademecum to reflect this distinction more precisely.
 
-### The Transparency of This Log
+## The Transparency of This Log
 
 It often happens that the questions I ask myself, like the one about 1984, seem stupid to me after reading the answer. The temptation to show myself as perfect is there, I admit it. But projects like <Link to="/docs/Path/HTML-CSS/landing-page">Landing Page</Link> and <Link to="/docs/Featured/maintenance-ui-concept">Maintenance</Link> made me hit rock bottom with errors, and those experiences raised my tolerance for "seeming ignorant" so high that by now transparency comes naturally to me.
 
 I take notes on the questions and answers from the Code Tutor in a file called **"future README"**, then I try to organize them like I'm doing now. I'm finding it increasingly difficult to understand whether this site is a diary, a portfolio, or a second brain. Probably all three things together.
 
-### What I Learned
+## What I Learned
 
 **useEffect as Synchronization:**  
 The most important mental model shift of the module. Not "do X when Y happens," but "keep this component synchronized with this external system." It completely changes how you design architecture.

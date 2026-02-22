@@ -19,11 +19,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### The Project
+## The Project
 
 **Navbar** is my first React project, a reusable navigation component that marks the transition from vanilla JavaScript to a component-oriented library.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -192,7 +192,7 @@ button:hover {
 
 </Tabs>
 
-### A New Approach: freeCodeCamp Changes Method
+## A New Approach: freeCodeCamp Changes Method
 
 In the new freeCodeCamp course series (including this one), the "exercise-only" mentality has been abandoned in favor of quizzes, theoretical parts with multiple-choice questions, and a greater emphasis on theory. Guided exercises are now called **Workshops**, certification projects have become **Labs**, and some remain defined as "Certification Projects".
 
@@ -214,7 +214,7 @@ If I understood React concepts so effectively, it was precisely thanks to that p
 
 I got a lot of help from analyzing "live" files and concepts like `package.json` and `node_modules` directly from this site itself, which has Docusaurus as its architecture (therefore React-based). It helped me give substance to the few sentences in the course that explained everything.
 
-### The Project: Three Macro-Times
+## The Project: Three Macro-Times
 
 I stopped at three macro-times, analyzing what I had learned up to that point. Here's what I learned in each phase.
 
@@ -278,7 +278,7 @@ I also noticed that `aria-expanded="false"` is, at this moment, a lie. It's stat
 
 In real React I'll never write `"false"` by hand. I'll write a state variable like `aria-expanded={isOpen}`. If `isOpen` is true, React will change the HTML attribute automatically.
 
-### What I Learned
+## What I Learned
 
 **Library vs Framework (Inversion of Control):**
 - Understood that React is a library, not a framework: you call React when needed (to draw the UI), not vice versa. It's like going to IKEA and deciding everything yourself, instead of buying a model home with predefined layout.
@@ -322,7 +322,7 @@ In real React I'll never write `"false"` by hand. I'll write a state variable li
 - Hardcoded attributes like `aria-expanded="false"` are "promises of dynamism": they signal where State will be needed to make the UI truly interactive and accessible.
 - `<a>` tags in SPA: used only for external links. For internal navigation, components like `<Link />` (React Router) are used that change URL without reloading the page.
 
-### Reflections
+## Reflections
 
 **Calcola Turno taught me the why of React:**  
 After many lines of `document.createElement`, `day.className = ...`, `daysContainer.appendChild(day)`, I perfectly understand why React exists. All that imperative code block becomes declarative JSX:

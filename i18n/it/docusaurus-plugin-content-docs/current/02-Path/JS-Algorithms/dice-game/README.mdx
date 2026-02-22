@@ -65,10 +65,10 @@ import TabItem from '@theme/TabItem';
   }}
 />
 
-### Il Progetto
+## Il Progetto
 Dice Game sviluppato con JavaScript puro, focalizzato su logica algoritmica, gestione dello stato e manipolazione del DOM. Un progetto che richiede di mettere insieme molteplici concetti precedentemente appresi in un contesto con poca guida strutturata.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -523,24 +523,24 @@ keepScoreBtn.addEventListener("click", () => {
 
 </Tabs>
 
-### Il Progetto Più Difficile
+## Il Progetto Più Difficile
 
 È stato il progetto più difficile in assoluto. Erano pochi step ma molto complessi. Ora capisco perché sia il corso di freeCodeCamp con il più alto tasso di abbandono.<br />
 Non mi è piaciuto in sé per una questione di argomento: non era un gioco che conoscevo e non mi ha emozionato giocarci prima di iniziare il progetto per capire la logica, e nemmeno dopo averla implementata. Fatto sta che ho imparato tanto. In progetti come questo, che lasciano "carta bianca", proprio come nei certification project, la difficoltà principale sta nel mettere insieme i pezzi e quindi nel riassumere tutto ciò che si è imparato prima.<br />
 Mi è mancato il non avere un unico vademecum completo ma sono ugualmente riuscito a reperire le informazioni dato che è come se ne avessi due, aspettavo di finire il corso per unirli ma è possibile che lo faccia prima, perché è un passaggio che mi ha sempre aiutato a riordinare i concetti nella mente.
 
-### La Riflessione: Strategia di Apprendimento
+## La Riflessione: Strategia di Apprendimento
 
 Sono indeciso tra fare il corso 6 di Google UX o iniziare subito il certification project, ma leggendo quanto ho scritto, la cosa più logica che emerge è: unire il vademecum, fare il corso Google UX per staccare dalla full immersion con freeCodeCamp, poi iniziare il 4° certification project con massima carica.<br />
 Riflettendoci, sarebbe intelligente anche per capire se il vademecum necessita di modifiche, dopotutto, la maggior parte di queste le ho fatte proprio mentre lo usavo per i certification project, dove diventava essenziale. Quando ho dubbi, consultare il vademecum è il mio primo step, il secondo MDN Web Docs, anche se ultimamente meno, il terzo, come ultima spiaggia, è il code tutor.<br />
 L'AI per approfondire i concetti è eccezionale, sebbene tu stia un po' giocando a testa o croce nella speranza che sia giusto ciò che dice. È ottima anche per suggerire alternative, ma è uno strumento che impigrisce parecchio. Una bici con le rotelle che se non impari a togliere te le tieni a vita.<br />
 Per mitigare il rischio allucinazione, da quasi 2 mesi ho sostituito Claude con Perplexity, impostando sempre Claude o Gemini come modello, entrambi con chain of thought attiva, spazio tra un modello all'altro in base al temperamento desiderato. Così mi assicuro le prestazioni dei migliori modelli accompagnate da fonti verificabili. A volte lo faccio attivamente, anche se dovrei farlo più spesso, e scopro siti veramente interessanti.
 
-### I Tre Concetti Critici
+## I Tre Concetti Critici
 
 Mi sono appuntato alcuni concetti basati su confronti tra l'approccio di freeCodeCamp e alternative migliori. Niente era sbagliato, d'altronde chi sono io per dirlo? Ma approfondire le alternative mi ha portato a ragionare con pensiero critico.
 
-#### 1. style.display vs classList.toggle() - Il SRP
+**1. style.display vs classList.toggle() - Il SRP**
 
 FreeCodeCamp ha proposto:
 
@@ -575,7 +575,7 @@ rulesBtn.textContent = isModalShowing ? "Hide rules" : "Show rules";
 
 Così facendo non abbiamo pezzi di CSS nel JavaScript, bensì due documenti ben distinti: il JavaScript si occupa solo di richiamare lo stile nel CSS, non di crearlo.
 
-#### 2. parseInt() vs Number() - Rigore Semantico
+**2. parseInt() vs Number() - Rigore Semantico**
 
 L'approccio di freeCodeCamp è stato `score += parseInt(selectedValue);`
 
@@ -592,7 +592,7 @@ Sono corrette entrambe, ma **Number() sembra essere più rigoroso**. Ecco perch�
 
 Number() è più rigoroso perché fallisce quando incontra input invalidi, mentre parseInt() fa conversioni "ottimiste". A seconda del contesto, la rigorosità di Number() può essere preferibile per catturare errori di input.
 
-#### 3. innerHTML += vs createElement() - Performance e DOM Integrity
+**3. innerHTML += vs createElement() - Performance e DOM Integrity**
 
 Questo punto è emerso dal code tutor che ha giustamente fatto notare che:
 
@@ -620,7 +620,7 @@ Aggiungendo il 4° elemento con `innerHTML +=`, il browser distrugge i primi 3 e
 Questo accade perché in scoreHistory, trovandosi gli altri 3 elementi, il browser andrà a leggere tutto l'HTML esistente (riferito solo a scoreHistory in questo caso), convertire in stringa, aggiungere quella nuova e distruggere quindi gli altri elementi del DOM, rischiando che cambi gli stati da com'erano prima.<br />
 `innerHTML` rimane ottimo quando si vuole creare da zero il contenuto di un elemento (con assegnazione, non con aggiunta), ma per append iterativi `createElement()` + `appendChild()` è decisamente superiore.<br />
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Algoritmi di Pattern Matching:**
 - Rilevamento Three/Four of a Kind contando occorrenze di numeri

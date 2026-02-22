@@ -19,11 +19,11 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### Il Progetto
+## Il Progetto
 
 **Card Profilo** è il mio primo progetto React data-driven, dove ho applicato i concetti di Props, Rendering Condizionale e Liste per trasformare dati statici in componenti dinamici.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -158,7 +158,7 @@ body {
 
 </Tabs>
 
-### Cosa Ho Imparato nella Teoria
+## Cosa Ho Imparato nella Teoria
 
 Prima di arrivare a questo progetto c'è stata la teoria sui Dati, estremamente interessante. Ecco i concetti che voglio tenermi stretti.
 
@@ -201,7 +201,7 @@ Mi sono poi chiesto il costo computazionale e a seguito di qualche ricerca è em
 
 Un altro dubbio che mi è venuto è se si potesse integrare in un'applicazione offline first e la risposta è stata sì, ed è anche molto semplice capirne il motivo, l'entropia viene dal dispositivo locale (rumore hardware, timing), non dal cloud. È stata una grande scoperta perché garantisce anche che se un giorno l'utente sincronizzerà i dati col cloud, quegli ID non andranno mai in conflitto con quelli di nessun altro utente al mondo.
 
-### Profile Card
+## Profile Card
 
 Il progetto è stato semplicissimo a livello di implementazione: un array di oggetti (`profiles`) mappato in componenti `<Card />` con destructuring delle Props.
 
@@ -211,7 +211,7 @@ La parte interessante non è stata il "cosa" (tre card in fila), ma il "come". H
 È la prima volta che vedo una **vera** separazione tra Dati e Vista. In Calcola Turno avevo HTML separato da JavaScript, ma il JS doveva "conoscere" la struttura DOM per manipolarla (`document.getElementById`, `appendChild`). Se cambiavo l'HTML, il JS si rompeva. Qui invece `<Card />` è totalmente cieco: non sa se i dati vengono da un array locale, da un server, o da un database. Riceve Props e renderizza, punto. Se domani cambio la sorgente dati, il componente non lo sa nemmeno.
 
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Destructuring Props direttamente nei parametri:**
 - `function Card({ name, title, bio })` invece di `function Card(props)` + `props.name`. Più pulito, autocomplete dell'IDE funziona meglio, e si vede immediatamente cosa si aspetta il componente.

@@ -49,10 +49,10 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### Il Progetto
+## Il Progetto
 Platformer game sviluppato con programmazione orientata agli oggetti intermedia in JavaScript. Un'applicazione che dimostra animazioni fluide, physics engine, collision detection e gestione avanzata dello stato per creare un gioco platform completo.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -483,23 +483,23 @@ window.addEventListener("keyup", ({ key }) => {
 
 </Tabs>
 
-### Le Tre Rivelazioni
+## Le Tre Rivelazioni
 
 Sono 3 i concetti che mi hanno colpito di questo progetto: **API**, **requestAnimationFrame** e **Infinity**.
 
-#### API: Sulle Spalle di Giganti
+**API: Sulle Spalle di Giganti**
 
 Trovo incredibile come un semplice richiamo ad una API dia a noi utilizzatori finali la sensazione di facilità del comando, ma dietro le quinte ci sono svariate linee di codice che la compongono.<br />
 Riconosco ora il grande lavoro dei backend: che siano gli ingegneri software dei vari browser, che siano i developer che contribuiscono con l'opensource. Riconosco di stare letteralmente **sulle spalle di giganti**.<br />
 Ogni volta che scrivo `requestAnimationFrame()` o `canvas.getContext('2d')`, sto usando il risultato di anni di ottimizzazioni, discussioni tecniche e iterazioni.
 
-#### requestAnimationFrame: Efficienza Intelligente
+**requestAnimationFrame: Efficienza Intelligente**
 
 Prendiamo ad esempio l'API `requestAnimationFrame()`. Grazie a questa semplice chiamata, il browser conosce esattamente quando sta per ridisegnare lo schermo (refresh cycle).<br />
 **Passa dai 60 agli 0 fps in base a se c'è attività o meno**, con conseguente risparmio di energia e memoria allocata. Quando il pulsante tab non è attivo, il browser semplicemente smette di chiamare la funzione. Zero cicli sprecati.<br />
 È intelligente perché invece di un loop infinito che gira sempre (anche quando non serve), il browser sincronizza il codice con il suo ciclo di rendering nativo.
 
-#### Infinity: Il Pattern "Disattiva, Non Distruggere"
+**Infinity: Il Pattern "Disattiva, Non Distruggere"**
 
 I checkpoint in questo gioco sono settati su `Infinity` quando vengono ottenuti. Ma perché non distruggere l'oggetto? Perché non eliminarlo del tutto dall'array?
 
@@ -527,7 +527,7 @@ Il **claimed = true** protegge con la logica ed è il controllo più efficiente.
 Eliminare con checkpoints.splice(index, 1) creerebbe più problemi di quanti ne risolva. A 60fps, gli indici dell'array cambiano mentre stai iterando, causando possibili bug visivi. Ogni eliminazione inoltre richiede riallocazione di memoria e attiva il garbage collector (il sistema che pulisce automaticamente la memoria), senza contare che modificare l'array mentre altri lo leggono causa race condition (situazioni dove più parti del codice accedono alla stessa risorsa contemporaneamente creando bug imprevedibili).<br />
 Con `claim()` non c'è allocazione, nessuna garbage collection, zero pause. Risulta pertanto decisamente migliore "spegnere/riaccendere" oggetti esistenti.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **OOP Intermedia:**
 - **Inheritance:** Estensione di classi base per creare varianti di oggetti

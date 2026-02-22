@@ -27,11 +27,11 @@ import Link from '@docusaurus/Link';
   src={require('./assets/one-time-password-generator.webm').default} 
 />
 
-### Il Progetto
+## Il Progetto
 
 Un Lab di freeCodeCamp che si è rivelato più un ripasso consapevole che una scoperta: `useState`, `useEffect`, rendering condizionale. Tutto già visto. Ma la libertà sul CSS e una domanda al Code Tutor sulla sicurezza crittografica hanno reso l'esercizio più interessante di quanto mi aspettassi.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -687,17 +687,17 @@ body {
 </TabItem>
 </Tabs>
 
-### crypto.getRandomValues(): La Domanda Giusta al Momento Giusto
+## crypto.getRandomValues(): La Domanda Giusta al Momento Giusto
 
 La primissima cosa che ho pensato prima di iniziare è stata: *posso usare `crypto.randomUUID()` che avevo approfondito nella <Link to="/docs/Path/React/profile-card">Profile Card</Link>?*  
 Il problema è che `randomUUID()` genera una stringa come `c90d075d-53a1-...`, e per estrarne 6 cifre avrei dovuto rimuovere i trattini, filtrare le lettere, estrarre i numeri, sperare ce ne fossero abbastanza e, altrimenti, rigenerare. Un accrocchio. Ho chiesto al Code Tutor, che mi ha spiegato che esiste uno strumento più diretto, `crypto.getRandomValues()`, nato esattamente per questo.  
 Non volevo usare `Math.random()`: avevo imparato che è pseudo-casuale e quindi prevedibile. Seppur fosse over-engineering per un esercizio didattico focalizzato sull'applicare `useState`, `useEffect` e il rendering condizionale, il funzionamento di questa API mi affascinava così tanto che non vedevo l'ora di applicarla.
 
-### Design: Obsidian + Roman Numeral Converter
+## Design: Obsidian + Roman Numeral Converter
 
 Non mi sono focalizzato sul design e non ho fatto il prototipo in Figma, ma avendo carta bianca sul CSS ho deciso di andare sul semplice. Cercando alternative ad AppFlowy questa mattina, mi ero imbattuto nel sito di Obsidian: dark, minimal, nessun elemento decorativo superfluo. Ho deciso di partire da quello stile e di combinarlo con un dettaglio che avevo usato nel <Link to="/docs/Path/JS-Algorithms/roman-numeral-converter">Roman Numeral Converter</Link>: il pulsante ispirato al Material Design che in stato `active` passa da angoli squadrati a pill-shaped (a forma di pillola) tramite animazione del `border-radius`, dando un feedback tattile gradevole.
 
-### Landscape: L'Edge Case Preferito
+## Landscape: L'Edge Case Preferito
 
 Ho dedicato più attenzione del solito al landscape, dopo essermi reso conto di quanto siti anche importanti lo trattino come un caso secondario. Ho preso in mano il mio edge case preferito, l'iPhone 12 mini, e ho ottimizzato ogni spaziatura per quella viewport strettissima in verticale. Ho aggiunto anche un'altra scheda in Safari per simulare la massima costrizione possibile.  
 Ecco il risultato:
@@ -745,7 +745,7 @@ Questa attenzione non è nata casualmente: tre giorni prima avevo aggiunto una m
 
 Ho scelto l'approccio di Apple.com. Il pattern che ho usato è `calc(env(safe-area-inset-left) + 12px)`: garantisce quindi sempre almeno 12px di padding, aggiungendo sopra di essi la dimensione della tacca sui dispositivi che ce l'hanno. Su dispositivi senza tacca, `env(safe-area-inset-left)` vale zero, quindi il risultato è semplicemente 12px, risolvendo anche il problema del "contenuto incollato al bordo" sui foldable, il secondo edge case su cui ho la fortuna di poter testare.
 
-### Anti-CLS
+## Anti-CLS
 
 Un problema che non avevo considerato fin dall'inizio, ma che si è rivelato interessante da risolvere: il **CLS** (Cumulative Layout Shift), ovvero quei "salti" visivi che si verificano quando un elemento cambia dimensione e trascina tutto il resto su o giù con sé.
 
@@ -764,7 +764,7 @@ La soluzione è stata riservare in anticipo lo spazio necessario con un `height`
 
 Un'altra cosa che ho scoperto lavorando sul `letter-spacing`: CSS aggiunge lo spazio dopo ogni carattere, incluso l'ultimo, spostando visivamente tutto il blocco verso sinistra. Ho compensato con un `margin-right: calc(var(--otp-letter-spacing) * -1)` che riporta tutto esattamente in asse.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Guard Clause nel useEffect:**  
 Controllare le condizioni di uscita all'inizio dell'effect, prima di qualsiasi logica, mantiene il codice piatto e leggibile. Senza il `setIsActive(false)` quando `timeLeft` raggiunge zero, il bottone resterebbe disabilitato per sempre: niente reimposta lo stato, il ciclo si blocca.

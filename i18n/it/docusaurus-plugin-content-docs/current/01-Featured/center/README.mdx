@@ -56,20 +56,20 @@ import Link from '@docusaurus/Link';
   ))}
 </div>
 
-### Il Progetto
+## Il Progetto
 
 Una suite di Web App (PWA) progettata per operare come **widget flottanti** sui monitor touch industriali della linea di produzione. Nata tra un turno di notte e l'altro per risolvere colli di bottiglia operativi, ha raggiunto un'adozione organica del 100% eliminando l'errore umano nei calcoli dei consumi e nella gestione FIFO.
 
-### Codice Sorgente
+## Codice Sorgente
 
 *Il codice sorgente è stato consegnato all'azienda per uso esclusivo. Di seguito documento i momenti chiave del percorso di sviluppo, le scelte tecniche più significative e, soprattutto, gli errori commessi.*
 
-### Genesi: L'Ossessione
+## Genesi: L'Ossessione
 
 Center rappresenta la chiusura del mio capitolo in fabbrica. <br />
 Ho aspettato l'ultimo giorno di lavoro per scriverne, perché solo allora ho avuto la lucidità per raccontarlo senza l'adrenalina della produzione in corso.
 
-L’avevo accennato nel readme <Link to="/docs/Featured/ux-engineer-log">UX Engineer Log</Link> dove dissi: 
+L’avevo accennato nel <Link to="/docs/Featured/ux-engineer-log">readme UX Engineer Log</Link> dove dissi: 
 > Prima ancora di definirmi UX Engineer, lo sono diventato per necessità in una fabbrica alimentare.
 > Mentre i software gestionali ufficiali venivano ignorati perché complessi e distanti dalla realtà, io vedevo i miei colleghi stressati.
 > Dopo appena 4 giorni nel reparto, ho capito che la pianificazione della produzione giornaliera era il collo di bottiglia. Da lì è nata l'idea di sviluppare una Web App per gestire i consumi orari e prevedere le quantità da produrre.
@@ -79,7 +79,7 @@ L’avevo accennato nel readme <Link to="/docs/Featured/ux-engineer-log">UX Engi
 
 In un anno e mezzo di iterazioni, quando ancora non avevo nessuna skill formale di UX e coding, sono riuscito nel mio piccolo ad agevolare il lavoro di due reparti critici all’interno dell’azienda.
 
-### Rompere i Silos: La Trasparenza Radicale
+## Rompere i Silos: La Trasparenza Radicale
 
 In contesti aziendali complessi, ho spesso osservato quella che definirei, per restare in tema, "dinamica dei silos": una frammentazione dove i reparti non si parlano e la conoscenza viene custodita gelosamente anziché condivisa. Ho vissuto situazioni in cui l'innovazione veniva percepita più come un rischio che come un'opportunità.
 
@@ -90,7 +90,7 @@ Oltre all'applicazione di questo principio nelle Web App, trovavo estremamente e
 Mi rendevo conto di come i problemi fossero ricorrenti; ecco perché trovavo inefficiente non avere una guida su come erano stati risolti. Era lo stesso proposito che applicai in <Link to="/docs/Featured/maintenance-ui-concept">Maintenance</Link>, uno dei progetti svolti nel corso di Google UX.
 Alcune di queste procedure sono state poi ufficializzate dall'ufficio senza che io ne facessi richiesta: plastificate, appese alle pareti, copia-incolla delle mie parole. Fu la prima volta che vidi una mia idea "istituzionalizzata" senza passare per burocrazia o approvazioni formali. La trasparenza radicale aveva vinto.
 
-### Center-01: L'Evoluzione dei Modelli Mentali
+## Center-01: L'Evoluzione dei Modelli Mentali
 
 Ecco la primissima versione:
 
@@ -448,7 +448,7 @@ Automatizzai anche questo calcolo (che fino ad allora si faceva a mano), democra
 
 A questo punto lo strumento si è esteso e ha ricevuto l’adozione, seppur non totale, anche in un altro reparto, perché risolveva anche un loro problema, non solo il nostro.
 
-### L'Errore della Deduzione (e il perché l'IT deve scendere in reparto)
+## L'Errore della Deduzione (e il perché l'IT deve scendere in reparto)
 
 Ad ogni cambiamento nel reparto aggiornavo l’interfaccia. Quando ci dissero che avremmo dovuto gestire due linee e non più soltanto una, implementai due sezioni identiche affiancate.
 
@@ -574,7 +574,7 @@ Ecco come divenne in fase implementazione:
   </div>
 </div>
 
-### Center-02: L'Apprendista e il Gatekeeping
+## Center-02: L'Apprendista e il Gatekeeping
 
 La voce si era diffusa al punto che altri 3 reparti mi chiesero una soluzione che potesse essere d'aiuto anche per loro. Ne accettai soltanto una, poiché le altre avrebbero violato le policy sulla proprietà intellettuale o sulla sicurezza dei dati; ho quindi preferito rifiutare spiegandone i rischi.
 La richiesta che accettai presupponeva il lavorare con un operatore Senior (oltre 30 anni di esperienza nella mansione).
@@ -603,7 +603,7 @@ Il problema tecnico qui era l'algoritmo **FIFO** (*First In, First Out*): capire
 
 Un dato interessante emerse durante l'adozione: il collega non voleva condividere lo strumento con gli altri. Voleva custodirlo gelosamente. Sebbene eticamente non concordassi, lo presi come la validazione empirica più forte possibile: il software gli dava un **vantaggio competitivo** tale da volerlo tenere per sé. Fu un déjà-vu, perché la stessa gelosia l'avevo vista nel mio turno. Quando scoprirono che avevo condiviso il tool con gli altri due turni, la presero male: mi chiesero di cambiare la password per tagliare fuori gli altri e tenercelo tutto per noi. Avevo creato ancora una volta, senza rendermene conto, un superpotere.
 
-### Norman vs Realtà: Il Fallimento del Timer
+## Norman vs Realtà: Il Fallimento del Timer
 
 Aggiunsi una guida in-app. So che Norman (in "The Design of Everyday Things") e Krug (in "Don't Make Me Think") dicono che se serve un manuale hai fallito. Tuttavia, resto dell'idea che una guida di un minuto sia un prezzo accettabile per evitare errori critici in produzione.
 
@@ -631,7 +631,7 @@ Implementai un **Timer automatico** di pulizia dati dopo 5 minuti, visualizzato 
 Si rivelò disastrosa.
 Il senior mi spiegò che capitava spesso che non si segnassero al volo i dati di output; procedetti eliminandola. Fu in quel momento che capii che l'eleganza teorica spesso vale zero rispetto al pragmatismo operativo.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactoring totale per lasciare all'IT un prodotto professionale.
 
@@ -855,7 +855,7 @@ Prima di dare le dimissioni ho riaperto il codice sorgente, facendo un refactori
 
 </div>
 
-### Riflessione
+## Riflessione
 
 In poche parole: sono entrato in fabbrica unendo blocchi di codice creando un "Frankenstein" per sopravvivenza. Ne esco lasciando due software scalabili, mantenibili, Mobile e Offline-First.
 

@@ -49,10 +49,10 @@ The spreadsheet calculates the Conversion Rate for both, showing Design A at 12.
 The key metric "Lift (Improvement)" shows that Design B performs ~3 percentage points higher than the original.
 This provides clear, data-driven validation. The insight from this spreadsheet is a clear recommendation to replace Design A with Design B, since the new design is clearly more effective at converting users.
 
-### The Project
+## The Project
 Functional spreadsheet developed with pure JavaScript, implementing advanced functions such as sums, averages, medians, ranges and formula evaluation. A project that demonstrates functional programming principles applied to a real-world use case.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -204,14 +204,14 @@ const update = event => {
 </Tabs>
 
 
-### The Breakthrough: When Currying "Clicked"
+## The Breakthrough: When Currying "Clicked"
 
 It was really interesting to encounter **currying with arrow functions** for the first time.
 At first it just seemed like strange syntax: `character1 => character2 => num => ...`. Even 3 arrows?<br />
 Now I consider it a very simple concept, but initially it wasn't at all. Because it involved cognitively restructuring a concept I had by then taken for granted: arrow functions.<br />
 I will summarize below all the analogies and explanations that the Code Tutor provided to help me understand the concept.
 
-#### The Factory Analogy
+**The Factory Analogy**
 
 A normal function is like a machine that needs all keys inserted simultaneously:
 ```javascript
@@ -229,7 +229,7 @@ const curriedAdd = a => b => a + b;
 
 This means that each level "locks" a piece of information and passes a new function to the next level. It's **closure** at work, so each function "remembers" (keeps in memory) the parameters received at higher levels.
 
-#### The .zip File vs The Folder 📦
+**The .zip File vs The Folder 📦**
 
 I continued through the exercises, but after making a completely avoidable error I decided to delve deeper: both because I didn't want to make similar mistakes, and because I didn't want any gaps in my understanding.<br />
 Here's the analogy that was most effective for me:
@@ -257,7 +257,7 @@ After some research, here's what emerged in terms of "ideal workflow":
 4. I solve the problem
 5. I "recompress" into the short version
 
-### What I Learned
+## What I Learned
 
 **Advanced Functional Programming:**
 - **Currying:** Functions that return functions, creating progressive specializations.
@@ -289,7 +289,7 @@ After some research, here's what emerged in terms of "ideal workflow":
 - Recursive formula evaluation with cell dependencies.
 - Circular reference prevention.
 
-### Reflection
+## Reflection
 
 Now when I encounter a syntax like `num => character => idToText(character + num)`, my brain no longer reads code, it reads a flow: "I take `num`, which leads me to a function that takes `character`, which leads me to the final result."<br />
 The `=>` syntax has become a **visual flow diagram** for me. Every time I encountered it subsequently, I said to myself "leads to...", as if I were following a map. No more parentheses, returns and temporary variables to keep in mind, just the pure transformation of data, step by step.

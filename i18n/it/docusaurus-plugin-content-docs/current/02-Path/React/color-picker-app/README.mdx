@@ -23,11 +23,11 @@ import Link from '@docusaurus/Link';
   style={{ width: '100%', height: 'auto', maxWidth: '550px', borderRadius: '10px' }}
 />
 
-### Il Progetto
+## Il Progetto
 
 Un esercizio Lab di freeCodeCamp incentrato sugli **Stati in React**, trasformato in un'opportunità per esplorare i limiti tra purezza dell'esercizio e over-engineering. Nato come semplice color picker, si è evoluto mentalmente in un "Color Harmony Tool" prima di essere riportato volutamente all'essenziale.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -253,7 +253,7 @@ input[type="color"] {
 
 </Tabs>
 
-### La Regola del 70%: Quando il Superpotere Diventa un Ostacolo
+## La Regola del 70%: Quando il Superpotere Diventa un Ostacolo
 
 Dopo aver scritto il README di <Link to="/docs/Featured/center">Center</Link>, mi sono concentrato nel continuare il percorso React. È stato in quel momento che la **regola del 70%** mi ha salvato dall'over-engineering in cui stavo incappando.
 
@@ -263,7 +263,7 @@ L'esercizio di freeCodeCamp chiedeva semplicemente di:
 
 **Ma ho iniziato a immaginare altro.**
 
-### L'Idea Che Non Divenne Realtà
+## L'Idea Che Non Divenne Realtà
 
 Volevo costruire un tool per ricavare il **complementare esatto** di un colore. Non un semplice opposto calcolato con l'inversione hex (quella che si fa con la calcolatrice da programmatore), ma un complementare che preservasse luminosità e saturazione.  
 Avevo imparato quella procedura qualche mese fa, ma era fine a sé stessa: invertendo i valori hex si invertivano anche luminosità e saturazione, rendendo il risultato inutilizzabile.  
@@ -284,7 +284,7 @@ Esempi:
 - **Rosso (H = 0°):** 0 + 180 = 180° → Ciano (complementare perfetto)
 - **Blu (H = 200°):** 200 + 180 = 380° → 380 % 360 = 20° → Arancione
 
-### Il Mockup Che Non Vide La Luce
+## Il Mockup Che Non Vide La Luce
 
 Immaginavo un'interfaccia con:
 
@@ -330,7 +330,7 @@ Ho trovato grande piacere nell'immergermi nell'`index.jsx` cercando di garantire
 3. **Architettura "Controlled Component"**  
    L'input non gestisce il proprio stato internamente. Il suo `value` è vincolato allo stato React (`value={color}`), e gli aggiornamenti avvengono solo tramite `onChange`, che cattura l'input continuo dell'utente.
 
-### La Formula YIQ: Perché i Nostri Occhi Preferiscono il Verde
+## La Formula YIQ: Perché i Nostri Occhi Preferiscono il Verde
 
 Nel codice ho commentato estensivamente la formula:
 ``` javascript
@@ -344,7 +344,7 @@ yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000
 
 Infatti se rimuoviamo il verde da un'immagine, diventa molto scura. Questo è il motivo per cui il verde domina il calcolo della luminosità percepita.
 
-### onClick vs onChange: Una Scoperta Fondamentale
+## onClick vs onChange: Una Scoperta Fondamentale
 
 Nei commenti ho documentato una distinzione importantissima che ho imparato:
 
@@ -355,7 +355,7 @@ Nei commenti ho documentato una distinzione importantissima che ho imparato:
 
 Per questo ho usato `onChange` sul color input: non mi interessa l'azione del click, ma il **valore** che l'utente sta selezionando in tempo reale.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Controlled Component Pattern:**  
 L'input non gestisce il proprio stato. Il suo `value` è vincolato allo stato React (`value={color}`), gli aggiornamenti avvengono solo tramite `onChange`. Questo è "Single Source of Truth": esiste un solo punto dove il dato vive, prevenendo conflitti.

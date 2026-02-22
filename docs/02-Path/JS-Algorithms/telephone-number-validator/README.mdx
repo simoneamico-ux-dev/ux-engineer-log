@@ -45,10 +45,10 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### The Project
+## The Project
 US phone number validator developed with Regular Expressions, responsive mobile-first design and performance-oriented architecture. An application that demonstrates the power of regex in validating complex patterns.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -568,16 +568,16 @@ clearBtn.addEventListener("click", (e) => {
 
 </Tabs>
 
-### The Best Project So Far
+## The Best Project So Far
 
 This has been the best project I've done so far. The regex was by far the most difficult part.<br />
 I didn't try other approaches: I could have handled phone number validation in alternative ways, such as a cascade of `if` statements. The code would have been easier to write and even easier to read, but it would have been tremendously long. Opting for regex was also a way to strengthen my understanding of it. I wrote a detailed explanation of the regex inside `script.js`, both to help anyone understand what each piece does and to consolidate what I learned.
 
-### The Design: HTC One M8 and Windows Phone Aesthetic
+## The Design: HTC One M8 and Windows Phone Aesthetic
 
 As for the design, I decided to place an **HTC One M8 for Windows** (the Verizon version) on a simple Windows Phone-style blue background. It turned out better than I had imagined. I tried the gold and black versions, but this **silver** one pairs best with the background.
 
-### Mobile-First (Really): A Conscious Choice
+## Mobile-First (Really): A Conscious Choice
 
 The mobile version is the default version. As I wrote in the `styles.css` comments, I chose to create a media query for desktop and no longer putting the mobile version in a media query, as I did in the past.
 
@@ -585,20 +585,20 @@ The mobile version is the default version. As I wrote in the `styles.css` commen
 1. **Adoption:** Mobile has surpassed desktop traffic for years now.
 2. **Performance:** By setting it as default, the device frame (the HTC) loads only when viewed from desktop. Additionally, desktop users generally have faster internet connections, so it made even more sense.
 
-### The Reflection: Mobile-First is not a Dogma
+## The Reflection: Mobile-First is not a Dogma
 
 This is rarely discussed, but I believe that beyond the "mobile-first" gold standard, we should evaluate based on the device that will predominantly be used to navigate our application.<br />
 If you're creating an application primarily intended for desktop, perhaps it makes more sense to adopt the old method of dedicating a media query to mobile.<br />
 In this project, I still chose the mobile-first approach also to get used to this way of thinking, a skill I want to consolidate.<br />
 I could be wrong, but I always get **red flags** when I hear "that's just how it is". There are always a thousand nuances and "it depends" that often go unmentioned.
 
-### The Philosophy of Comments
+## The Philosophy of Comments
 
 As I did in the previous certification project, I paid particular attention to comments in the code. I wrote everything there: the logic, architectural choices, patterns used. Repeating it here would be redundant and, above all, difficult to understand without having the code at hand.<br />
 In this project, I decided to reduce useless comments, what antirez calls "Trivial Comments," in order to make the code cleaner. I concentrated most of the comments at the beginning of each document, creating a sort of map that guides the reading of the code without weighing it down.<br />
 I just want to say that with each passing project, my self-confidence increases and, at the same pace, my enjoyment.
 
-### What I Learned
+## What I Learned
 
 **Regular Expressions:**
 - Complex patterns for US phone number validation: `/^(1\s?)?(\(\d{3}\)|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}$/`
@@ -643,7 +643,7 @@ I just want to say that with each passing project, my self-confidence increases 
 - Structured comments with DESIGN section for architectural overview
 - Semantic naming for reusable functions
 
-### Reflection
+## Reflection
 It was essential, in creating the HTML, to test iteratively on my favorite edge case: the iPhone 12 mini and, surprisingly, also on an HTC One M8 (Android version).<br />
 I recently discovered the "ipconfig getifaddr en0" command (on macOS) in the terminal, which opened up a world to me. I added a text file to my desktop with the procedure I summarized:
 - Run ipconfig getifaddr en0 in the terminal

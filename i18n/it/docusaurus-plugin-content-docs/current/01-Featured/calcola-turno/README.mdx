@@ -103,12 +103,12 @@ import ThemedImage from '@theme/ThemedImage';
   </p>
 </div>
 
-### Il Progetto
+## Il Progetto
 
 **Calcola Turno** è una Progressive Web App (PWA) che risolve un problema concreto per gli operatori di fabbrica: sapere in anticipo quale turno faranno (mattino, pomeriggio o notte) in qualsiasi giorno futuro. <br />
 Pensata per essere installata come app nativa, funziona completamente offline e calcola i turni in modo automatico senza richiedere aggiornamenti manuali o connessione.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -2046,7 +2046,7 @@ self.addEventListener('fetch', (e) => {
 
 </Tabs>
 
-### Seconda versione
+## Seconda versione
 
 Questa è la seconda versione di Calcola Turno. La prima l'avevo sviluppata un anno e mezzo fa, molto prima di iniziare questo percorso, usando esclusivamente l'AI in modalità "Vibe Coding" (termine che "all'epoca" non esisteva ancora) senza capire realmente cosa stesse accadendo sotto il cofano. Impiegai diversi giorni, non ricordo con esattezza quanti, ma non avevo alcuna competenza, solo la voglia di realizzarla a qualunque costo. <br />
 Aveva funzionato: l'app si è diffusa in fabbrica e ha risolto un problema concreto per chi lavora sui 3 turni. <br />
@@ -2080,12 +2080,12 @@ Questa volta è diverso. Ho ricostruito l'app da zero in 5 ore totali (2 ore per
   </div>
 </div>
 
-### Perché Rifarla?
+## Perché Rifarla?
 
 La sera prima di rientrare al lavoro ero in ansia. Non sapevo se sarei rimasto nello stesso reparto, e il solo pensiero di non poter continuare a imparare e dedicarmi ai progetti mi "uccideva". Ho placato quell'ansia facendo l'unica cosa che amo fare: costruendo qualcosa.
 Ho ripreso l'idea di Calcola Turno, ma questa volta con una consapevolezza completamente diversa. Non stavo solo "facendo funzionare" un'app con l'aiuto dell'AI. Stavo **orchestrando** l'AI, dicendole esattamente cosa serviva, chiedendo conferma su ogni scelta, verificando che non mi stessi perdendo qualcosa di importante.
 
-### Il Design System: Windows Phone 8 Rivisitato
+## Il Design System: Windows Phone 8 Rivisitato
 
 Ho usato il design system creato per **Telephone Number Validator**, fortemente ispirato a Windows Phone 8, ma con una scelta particolare: **nessun primary color** nel senso tradizionale. <br />
 Dato che è un'app destinata agli operatori della fabbrica in cui lavoro, sapevo che l'estetica Windows sarebbe stata familiare: tutti i computer aziendali usano Windows, quindi il linguaggio visivo Metro/Modern UI risulta immediato e riconoscibile per loro.
@@ -2097,7 +2097,7 @@ Volevo che l'utente avesse solo 3 colori in testa quando usava l'app:
 
 È un'applicazione colorata, ma con colori primari neutri. Paradossale, ma funziona: i colori qui non fungono da decorazione, bensì da **informazione diretta**.
 
-### Il Design dell'Icona: Dal Calendario ai Tre Turni
+## Il Design dell'Icona: Dal Calendario ai Tre Turni
 
 Ero ancorato mentalmente all'idea del calendario con all'interno un orologio che caratterizzava la primissima versione.  
 Volevo qualcosa di diverso e guardando le altre applicazioni sul mio telefono, mi sono reso conto di una cosa: le icone migliori sono quelle con **semplicità assoluta**. Niente sovrapposizioni complesse, niente dettagli che si perdono a 60×60 pixel.
@@ -2173,7 +2173,7 @@ D'altronde l'app promette di fare una cosa sola: dirti quale dei 3 turni farai.
 
 </div>
 
-### Architettura: Offline-First e Gestione della Cache
+## Architettura: Offline-First e Gestione della Cache
 
 Fin dall'inizio ho ragionato sull'architettura e su cosa avrei avuto bisogno per il backend, in particolare mi riferisco al **localStorage** e alla **gestione della cache**. Volevo che funzionasse offline e ricordasse il turno scelto dall'utente nell'onboarding.
 Volevo che fosse funzionante la sera stessa, quindi ho orchestrato l'AI dicendole le mie idee e chiedendo conferma se mi stessi perdendo qualcosa o se ci fossero modi migliori per giungere alla soluzione.
@@ -2190,12 +2190,12 @@ L'idea del "Timer preciso alla mezzanotte" avrebbe quindi rischiato di creare bu
 
 Ebbene, in **2 ore avevo l'app funzionante**. Ho dedicato altre **3 ore il giorno successivo** per rifinire i dettagli e disegnare l'esperienza desktop e landscape negli smartphone.
 
-### Layout Responsive: Da Mobile a Dashboard
+## Layout Responsive: Da Mobile a Dashboard
 
 L'esperienza landscape trasforma l'app in una **dashboard**: i turni vengono disposti orizzontalmente, sfruttando al meglio lo spazio disponibile e offrendo una visione più ampia del calendario. <br />
 È stato un progetto divertentissimo. Mi sono fermato perché mi sarei perso nei dettagli.
 
-### Riflessioni: Empatia, Processo e Controllo
+## Riflessioni: Empatia, Processo e Controllo
 
 Non sono cinico, altrimenti non mirerei a fare questo lavoro, ma credo che alle persone non interessi sentire che sai fare questo o quell'altro, bensì sapere **cosa sai fare nel concreto** e, per essere ancora più specifici, **cosa sai fare di concreto da cui loro possano trarre vantaggio**. <br />
 Credo sia il medesimo tema del public speaking. Carlo Loiudice diceva (non ricordo se in uno dei suoi corsi oppure nei suoi podcast) che il pubblico è egoista: non gli interessa chi sei, cosa hai fatto e perché sei lì a parlare, bensì **cosa si porta a casa** di quello che dici. <br />
@@ -2204,7 +2204,7 @@ Proprio per questo motivo sostengo che sia di vitale importanza che quello che f
 La sensazione più bella infatti non è stata da parte dei colleghi che mi hanno fatto i complimenti e hanno aggiunto l'app alla home, bensì la sensazione che **seppur usando l'AI molto più del solito, sapevo esattamente cosa stavamo facendo e perché**. <br />
 È stato tutto ciò che mi ha permesso di fare un lavoro migliore, molto più divertente e didattico della versione precedente in 1/10 del tempo.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Architettura SPA senza framework:**
 - Implementato pattern Single Page Application pura con switching di visibilità (`.hidden`) tra onboarding e vista principale, eliminando navigazione e ricariche pagina per un'esperienza "app nativa".

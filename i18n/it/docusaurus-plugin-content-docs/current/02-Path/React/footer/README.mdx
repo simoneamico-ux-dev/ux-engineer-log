@@ -20,13 +20,13 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '16px' }}
 />
 
-### Il Progetto
+## Il Progetto
 
 **Footer** è un componente React che rappresenta il mio primo esercizio non guidato dopo aver appreso le basi della sintassi JSX e della componentizzazione.
 
 È stato estremamente utile come esercizio perché freeCodeCamp mi aveva insegnato come creare una navbar, ma non un footer. Ebbene, i concetti si tramutano con estrema similitudine: stessa logica di liste semantiche, stessa separazione tra struttura (JSX) e stile (CSS), stesso approccio dichiarativo.
 
-### Codice Sorgente
+## Codice Sorgente
 
 <Tabs>
 <TabItem value="js" label="index.jsx" default>
@@ -504,7 +504,7 @@ footer {
 
 </Tabs>
 
-### Design: Ibrido tra Light e Dark Mode
+## Design: Ibrido tra Light e Dark Mode
 
 Ho optato per replicare il footer del sito **simoneamico.com** (Docusaurus), ma non volevo farlo identico perché quello già esiste.  
 Ho giocato su un ibrido visivo tra la modalità Light e Dark del sito: palette "Espresso & Amber" (variante dark di "Coffee & Sand"), layout a tre colonne, ma con un twist skeuomorfico che simula una "cornice in legno scuro" (#7c6148) che avvolge il "contenuto espresso" (#423121).
@@ -513,7 +513,7 @@ Ho giocato su un ibrido visivo tra la modalità Light e Dark del sito: palette "
 
 Nota sul CSS condiviso: Ho mantenuto nel file anche gli stili della navbar (dal progetto precedente) per avere un design system coerente. Navbar e Footer condividono gli stessi token (colori, spacing, z-index), quindi ha senso tenerli nello stesso CSS invece di duplicare variabili. È lo stesso approccio che userei in un progetto reale.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Divide et Impera (Strategia di Layout):**
 - Il design di riferimento usa un layout a 2 colonne, ma freeCodeCamp richiedeva "almeno tre liste `<ul>`". Ho diviso logicamente il contenuto in "Navigation", "Social" e "Contacts" per soddisfare il vincolo mantenendo gerarchia visiva e raggruppamento logico.
@@ -557,7 +557,7 @@ Nota sul CSS condiviso: Ho mantenuto nel file anche gli stili della navbar (dal 
 **Mobile-First Mindset:**
 - Ho scritto CSS desktop-first (per comodità visiva durante sviluppo), ma ho capito che in produzione si parte da mobile (`@media (min-width: 768px)`) per Progressive Enhancement. Ora che ho visto entrambi gli approcci, capisco perché mobile-first è standard.
 
-### Riflessioni
+## Riflessioni
 
 Ormai sai che è sempre così: quando faccio esercizi non guidati come i Certification Project o questi Labs (che di fatto sono Certification Project con `index.html` preconfezionato), trovo poco da dire nei README proprio perché **ho detto tutto nel codice sorgente nei vari commenti**.
 ***

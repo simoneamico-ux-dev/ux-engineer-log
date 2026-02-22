@@ -29,10 +29,10 @@ import TabItem from '@theme/TabItem';
   style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
 />
 
-### Il Progetto
+## Il Progetto
 News Authors Page sviluppato con JavaScript vanilla, fetch API e gestione asincrona dei dati. Un'applicazione che dimostra caricamento progressivo, paginazione e gestione errori robusta per ottimizzare performance e user experience.
 
-### Source Code
+## Source Code
 
 <Tabs>
 <TabItem value="html" label="index.html" default>
@@ -191,11 +191,11 @@ loadMoreBtn.addEventListener('click', fetchMoreAuthors);
 
 </Tabs>
 
-### Il Progetto Preferito
+## Il Progetto Preferito
 
 È stato uno dei miei progetti freeCodeCamp preferiti! Mi ha fatto riflettere profondamente su come ottimizzare il caricamento dei contenuti per utenti con esigenze diverse.
 
-### L'Intuizione: Adaptive Loading
+## L'Intuizione: Adaptive Loading
 
 Mi è sorta un'intuizione che attribuisco al corso di Google UX, dove è stato spiegato come funzionano le tariffe a consumo in paesi emergenti come l'India, e di come chi usa desktop abbia molte più probabilità di avere una connessione veloce essendo più probabilmente connesso a una rete domestica (ADSL, Fibra ottica).<br />
 
@@ -207,14 +207,14 @@ Esiste un approccio chiamato **Adaptive Loading** che risolve esattamente questo
 
 Inoltre, differenziando tra desktop e mobile (`window.innerWidth`), si può ottimizzare ulteriormente: desktop con WiFi domestico può caricare tutto, mobile su rete dati carica progressivamente.
 
-### La Riflessione Notturna: Lazy Loading
+## La Riflessione Notturna: Lazy Loading
 
 Questa notte (letteralmente) mi sono svegliato pensando che la soluzione migliore, semplice e che si adatta veramente a tutti sia eliminare del tutto il pulsante e caricare un po' alla volta (Lazy Loading con Infinite Scroll) il contenuto della pagina.<br />
 
 Credo sia la soluzione ottimale perché chi ha internet veloce non noterà il caricamento progressivo, tutto apparirà fluido, chi ha internet lento vedrà un messaggio di caricamento dopo un breve lasso di tempo, senza la frizione del click manuale, usando Intersection Observer, si caricano automaticamente i prossimi 8 autori quando l'utente arriva in fondo alla lista, garantendo zero frizioni. <br />
 Questa è la soluzione più elegante perché è passiva, infatti, si adatta all'utente senza che l'utente debba fare (o sapere) nulla.
 
-### Cosa Ho Imparato
+## Cosa Ho Imparato
 
 **Fetch API e Catena di Promesse:**
 - `.fetch()` restituisce una Promise che risolve con un oggetto Response
