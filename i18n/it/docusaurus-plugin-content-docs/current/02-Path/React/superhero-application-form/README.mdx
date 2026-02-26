@@ -1,0 +1,380 @@
+---
+sidebar_position: 9
+sidebar_label: 'Superhero Application Form'
+title: 'Superhero Application Form'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Link from '@docusaurus/Link';
+
+# Superhero Application Form
+
+<img
+  src={require('./assets/superhero-application-form.webp').default}
+  alt="Anteprima Superhero Application Form - Modulo compilato per 'The Bottleneck Breaker' con poteri selezionati (Super Speed, Telekinesis, Other)"
+  loading="lazy"
+  decoding="async"
+  width="1904"
+  height="946"
+  style={{ width: '100%', height: 'auto', maxWidth: '495px', borderRadius: '1.5px' }}
+/>
+
+## Il Progetto
+
+Un workshop di freeCodeCamp per mettere in pratica la gestione dei form in React, preceduto da una sezione di teoria che ha ripreso il ciclo di rendering, l'immutabilità dello stato e gli Hook fondamentali, per poi analizzare l'evoluzione degli approcci per gestire i dati utente: dal compromesso storico tra Input Controllati (tramite `state`) e Non Controllati (tramite `ref`), fino alla rivoluzione moderna di `useActionState`, che delega il lavoro sporco al server alleggerendo di molto la quantità di codice necessario.
+
+## Codice Sorgente
+
+<Tabs>
+<TabItem value="js" label="index.jsx" default>
+
+```jsx
+const { useState } = React;
+
+export const SuperheroForm = () => {
+
+  const powerSourceOptions = [
+    'Bitten by a strange creature',
+    'Radioactive exposure',
+    'Science experiment',
+    'Alien heritage',
+    'Ancient artifact discovery',
+    'Other'
+  ];
+
+  const powersOptions = [
+    'Super Strength',
+    'Super Speed',
+    'Flight',
+    'Invisibility',
+    'Telekinesis',
+    'Other'
+  ];
+
+  const [heroName, setHeroName] = useState('');
+  const [realName, setRealName] = useState('');
+  const [powerSource, setPowerSource] = useState('');
+  const [powers, setPowers] = useState([]);
+
+  const handlePowersChange = e => {
+    const { value, checked } = e.target;
+    setPowers(checked ? [...powers, value] : powers.filter(p => p !== value));
+  }
+
+  return (
+    <div className='form-wrap'>
+      <h2>Superhero Application Form</h2>
+      <p>Please complete all fields</p>
+       <form method='post' action='https://superhero-application-form.freecodecamp.org'>
+        <div className='section'>
+          <label>
+            Hero Name
+            <input
+              type='text'
+              value={heroName}
+              onChange={e => setHeroName(e.target.value)}
+            />
+          </label>
+          <label>
+            Real Name
+            <input
+              type='password'
+              value={realName}
+              onChange={e => setRealName(e.target.value)}
+            />
+          </label>
+        </div>
+        <label className='section column'>
+          How did you get your powers?
+          <select value={powerSource} onChange={e => setPowerSource(e.target.value)}>
+            <option value=''>
+              Select one
+            </option>
+           {powerSourceOptions.map(source => (
+             <option key={source} value={source}>
+                {source}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className='section column'>
+          List your powers (select all that apply):
+
+          {powersOptions.map(power => (
+            <label key={power}>
+              <input
+                type='checkbox'
+                value={power}
+                checked={powers.includes(power)}
+                onChange={handlePowersChange}
+              />
+              <span>{power}</span>
+            </label>
+          ))}
+        </label>
+        <button
+          className='submit-btn'
+          type='submit'
+          disabled={!heroName || !realName || !powerSource || powers.length === 0}
+        >
+          Join the League
+        </button>
+      </form>
+    </div>
+  )
+};
+```
+
+</TabItem>
+<TabItem value="html" label="index.html">
+
+```html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Superhero Application Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.3/babel.min.js"></script>
+    <script
+      data-plugins="transform-modules-umd"
+      type="text/babel"
+      src="index.jsx"
+    ></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script
+      data-plugins="transform-modules-umd"
+      type="text/babel"
+      data-presets="react"
+      data-type="module"
+    >
+      import { SuperheroForm } from './index.jsx';
+      ReactDOM.createRoot(document.getElementById('root')).render(<SuperheroForm />);
+    </script>
+  </body>
+</html>
+```
+
+</TabItem>
+<TabItem value="css" label="styles.css">
+
+```css
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(30deg, #ff9999 50%, #6699ff 50%)
+}
+
+.form-wrap {
+  background-color: white;
+  width: 400px;
+  padding: 20px;
+  border: 1px solid black;
+  box-shadow: 5px 5px 10px black;
+}
+
+.form-wrap h2,
+.form-wrap p {
+  text-align: center;
+}
+
+.form-wrap p {
+  position: relative;
+  top: -18px;
+}
+
+.section {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.column {
+  flex-direction: column;
+}
+
+.submit-wrap {
+  text-align: center;
+}
+
+.submit-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid black
+}
+
+.submit-btn:hover {
+  cursor: pointer;
+  background-color: #f3f3f3;
+}
+
+.submit-btn:disabled {
+  cursor: not-allowed;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## La Teoria: Input Controllati, Non Controllati e useActionState
+
+È il capitolo che mi è piaciuto meno di React. Ho visto troppa complessità per gestire dei form che in HTML puro si facevano in modo molto più semplice. Ricordo che nel <Link to="/docs/Path/JS-Algorithms/telephone-number-validator">Telephone Number Validator</Link> scrissi:
+
+> Non se ne parla mai, ma credo che al di là del gold standard "mobile-first", bisognerebbe valutare in base al dispositivo che verrà utilizzato prevalentemente per navigare la nostra applicazione. Se si crea un'applicazione destinata principalmente al desktop, forse ha più senso adottare il vecchio metodo di dedicare una media query al mobile. In questo progetto ho comunque scelto l'approccio mobile-first anche per abituarmi a questo modo di pensare, una skill che voglio consolidare. Potrei sbagliarmi, ma mi sorgono sempre red flag quando sento "è così e basta". Ci sono sempre mille sfumature e "dipende" che spesso non vengono menzionati.
+
+Questo è un altro di quei casi. freeCodeCamp mi ha spiegato tre approcci distinti:
+
+**Input Controllati,** lo strumento è `useState` + `onChange`. React diventa la Single Source of Truth: l'input HTML non ricorda nulla da solo.
+Ogni tasto premuto viene intercettato, React aggiorna lo stato, genera un re-render e stampa la lettera a schermo.
+Si ha così il controllo assoluto in tempo reale, perfetto per validazioni istantanee e per disabilitare bottoni dinamicamente, ma al prezzo di re-render continui.
+
+```jsx
+import { useState } from "react";
+
+function ControlledForm() {
+  const [name, setName] = useState("");
+
+  return (
+    <input 
+      type="text" 
+      value={name} // React comanda cosa si vede a schermo
+      onChange={(e) => setName(e.target.value)} // React intercetta e aggiorna
+    />
+  );
+}
+```
+
+**Input Non Controllati,** lo strumento è `useRef`. È un approccio “vecchia scuola”, simile a Vanilla JS: React non salva quello che scrivi nello stato. 
+Lascia che sia il browser a gestire il campo input. React interviene solo quando premi Submit: in quel momento legge il valore con `ref.current.value` e prende il dato finale tutto insieme.  
+Questo spesso rende la digitazione più “leggera”, perché non fai un re-render a ogni lettera come negli Input Controllati. Il rovescio della medaglia è che perdi la comodità di React in tempo reale: validazioni e formattazioni mentre scrivi diventano più scomode da fare.
+
+```jsx
+import { useRef } from "react";
+import { inviaAlDatabase } from "./api"; // Invia il dato al backend
+
+function UncontrolledForm() {
+  const nameRef = useRef(null); // Un "gancio" per leggere l'input più tardi
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Evita il refresh della pagina
+    const finalValue = nameRef.current.value; // Legge il valore solo al submit
+    inviaAlDatabase(finalValue); // Invia il valore finale
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" ref={nameRef} /> {/* Niente value/onChange: gestisce tutto il browser */}
+      <button type="submit">Invia</button>
+    </form>
+  );
+}
+```
+
+**useActionState,** lo strumento è `useActionState` + l'attributo nativo `<form action={...}>`. Invece di combattere contro il browser, usa l'HTML nativo per spedire i dati. 
+L'hook si mette in ascolto e restituisce in automatico variabili come `isPending`, senza dover scrivere manualmente `isLoading = true/false` o gestire `try/catch`. 
+Riduce drasticamente il codice e gestisce il caricamento in automatico. 
+Viene definito come lo standard moderno per le operazioni di invio dati ai server.
+
+```jsx
+import { useActionState } from "react";
+import { salvaDati } from "./actions"; // La logica remota (lato server) che salva nel database
+
+function ModernForm() {
+  const [
+    state,      // Contiene la risposta finale del server (es. "Errore" o "Salvato!")
+    formAction, // Il sostituto automatico del vecchio "handleSubmit". Gestisce l'invio per noi
+    isPending   // Vale 'true' nei secondi in cui i dati viaggiano verso il server, altrimenti 'false'
+  ] = useActionState(salvaDati, null);
+
+  return (
+    // Passiamo 'formAction' ad 'action'. Ferma il ricaricamento pagina da solo senza e.preventDefault()
+    <form action={formAction}> 
+      
+      {/* Niente onChange o value. Il server pescherà il dato usando esclusivamente l'attributo 'name' */}
+      <input type="text" name="username" /> 
+      
+      {/* Sfruttiamo isPending per bloccare fisicamente il bottone e impedire all'utente i doppi click */}
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Caricamento..." : "Invia"}
+      </button>
+
+    </form>
+  );
+}
+```
+
+## Il Workshop
+
+Il form raccoglie quattro dati: Hero Name, Real Name (campo password), la fonte dei poteri tramite un `<select>`, e una lista di poteri tramite checkbox. freeCodeCamp ha scelto l'approccio con Input Controllati: uno `useState` separato per ogni campo, con `onChange` che aggiorna lo stato a ogni carattere digitato.
+
+La parte più interessante è stata la gestione delle checkbox. Con un input di testo il problema è semplice: salvi una stringa. Con le checkbox devi tenere traccia di un array che cresce quando l'utente ne spunta una e si restringe quando la deseleziona:
+
+```jsx
+const handlePowersChange = e => {
+    const { value, checked } = e.target;
+    setPowers(checked ? [...powers, value] : powers.filter(p => p !== value));
+}
+```
+
+`checked` è un booleano che React legge direttamente dalla checkbox: `true` se è appena stata spuntata, `false` se è appena stata deselezionata. 
+Se `checked` è `true`, lo spread operator `...powers` spacchetta tutti i poteri già selezionati in un nuovo array e aggiunge in fondo il nuovo valore: se `powers` era `["Flight", "Invisibility"]` e l'utente spunta "Super Speed", il risultato è `["Flight", "Invisibility", "Super Speed"]`. 
+Se invece la checkbox viene deselezionata, `filter` restituisce un nuovo array senza quel valore. In entrambi i casi non tocco mai l'array originale: ne creo sempre uno nuovo, rispettando l'immutabilità.
+
+Il bottone di submit è disabilitato finché tutti i campi non sono compilati. Invece di creare uno stato dedicato `isFormValid` da tenere sincronizzato, ho legato `disabled` direttamente a una condizione costruita dagli stati già esistenti:
+
+```jsx
+disabled={!heroName || !realName || !powerSource || powers.length === 0}
+```
+
+Se anche solo uno dei quattro è vuoto, il bottone resta disabilitato.
+
+## Cosa Ho Imparato
+
+**Gestione delle checkbox con array:**  
+Con le checkbox non basta salvare una stringa: devi gestire un array nello stato che cresce e si restringe. Il punto critico è l'immutabilità: se modifichi l'array direttamente con `push`, React non vede il cambiamento perché il riferimento all'array rimane lo stesso, e il componente non re-renderizza.
+
+**Validazione del bottone senza stato dedicato:**  
+Legare `disabled` direttamente a una condizione booleana costruita dagli stati già esistenti evita di creare uno stato `isFormValid` ridondante. Se tutti i dati necessari sono già nello stato, la validazione è solo una questione di logica: `!heroName || !realName || !powerSource || powers.length === 0`. Nessuna riga extra, nessun `useEffect` per tenerlo sincronizzato.
+
+**Le liste di opzioni e l'ottimizzazione della memoria:**  
+Nell'esercizio, freeCodeCamp fa dichiarare gli array `powerSourceOptions` e `powersOptions` all'interno del componente.
+Mantenere tutto incapsulato sembra ordinato, ma ho scoperto grazie al Code Tutor un potenziale collo di bottiglia legato al funzionamento stesso di React: gli oggetti/array definiti nella funzione vengono ricreati (nuove referenze) a ogni render (quindi a ogni lettera digitata nell'input).
+Poiché queste liste sono dati statici, la vera best practice per un'app di produzione è dichiararle "fisicamente" **fuori e prima** del componente.
+```jsx
+// Best practice: Queste sono FUORI. Vengono create una sola volta quando il file viene caricato.
+const powerSourceOptions = ['Bitten...', 'Radioactive...'];
+const powersOptions = ['Super Strength...', 'Super Speed...'];
+
+export const SuperheroForm = () => { // <--- Inizio del componente
+  const [heroName, setHeroName] = useState('');
+  // ...
+};
+```
+
+**Un `useState` per ogni campo:**  
+In questo workshop ogni campo del form ha il suo stato separato: `heroName`, `realName`, `powerSource`, `powers`. È l'approccio più esplicito e leggibile, ma scala male: con dieci campi avremmo dieci `useState` e dieci `onChange` quasi identici.
+Ho scoperto che l'alternativa è raccogliere tutto in un unico oggetto nello stato, chiamato tipicamente `formData`, e scrivere una sola funzione `handleChange` generica che capisce quale campo aggiornare leggendo `e.target.name`, ovvero il nome dell'input che ha scatenato l'evento. Così si ottiene un solo stato con una sola funzione che gestisce il tutto, qualunque sia il numero di campi.
+
+**Il `<select>` controllato:**  
+Collegare un `<select>` allo stato funziona esattamente come un input di testo: `value={powerSource}` tiene il menu sincronizzato con lo stato, e `onChange` lo aggiorna quando l'utente sceglie un'opzione. L'unica attenzione è inizializzare lo stato con una stringa vuota (`useState("")`) e aggiungere come prima voce del menu un'opzione con `value=""`, in questo caso "Select one". Senza questa accortezza, React mostrerebbe visivamente la prima opzione reale come già selezionata, ma lo stato sarebbe ancora vuoto: i due sarebbero fuori sincronia, e la validazione del bottone non funzionerebbe correttamente perché `powerSource` risulterebbe sempre vuoto anche con un'opzione apparentemente scelta.
+
+## Lo Dirò nel Prossimo
+
+La mia impressione sulla complessità aggiuntiva dei form in React rimane: sembra eccessiva rispetto all'HTML puro.
+Ma mi riservo di confermare o cambiare idea nel prossimo esercizio, dove creerò un form da zero senza istruzioni guidate.
+
+***
+
+**Next:**  
+Creare un Event RSVP (Lab)
