@@ -3,7 +3,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'UX Engineer Log',
   tagline: 'From Factory to UX Engineer',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.svg',
 
   future: {
     v4: true,
@@ -65,8 +65,9 @@ const config = {
       metadata: [
         {name: 'google-site-verification', content: 'khP1TnDxkMdfEdD8JWm5WFb1xjcSzQfep0Xvgd5cRjA'},
         {name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover'},
+        {name: 'apple-touch-icon', content: '/img/apple-touch-icon.png'},
       ],
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/social-card.png',
       colorMode: {
         respectPrefersColorScheme: true,
       },
