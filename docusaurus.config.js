@@ -60,12 +60,30 @@ const config = {
     ],
   ],
 
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        href: '/img/apple-touch-icon.png',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '512x512',
+        href: '/img/apple-touch-icon.png',
+      },
+    },
+  ],
+
   themeConfig:
     ({
       metadata: [
         {name: 'google-site-verification', content: 'khP1TnDxkMdfEdD8JWm5WFb1xjcSzQfep0Xvgd5cRjA'},
         {name: 'viewport', content: 'width=device-width, initial-scale=1.0, viewport-fit=cover'},
-        {name: 'apple-touch-icon', content: '/img/apple-touch-icon.png'},
       ],
       image: 'img/social-card.png',
       colorMode: {
