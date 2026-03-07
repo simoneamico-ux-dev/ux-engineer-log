@@ -1,0 +1,16 @@
+{
+  "name": "UX Engineer Log",
+  "short_name": "UX Log",
+  "icons": [
+    {
+      "src": "/img/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#211411",
+  "background_color": "#211411",
+  "display": "standalone",
+  "start_url": "/"
+}

@@ -77,6 +77,13 @@ const config = {
         href: '/img/apple-touch-icon.png',
       },
     },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'manifest',
+        href: '/manifest.json',
+      },
+    },
   ],
 
   themeConfig:
