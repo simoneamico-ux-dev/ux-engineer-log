@@ -2,6 +2,7 @@
 sidebar_position: 2
 sidebar_label: 'CSS'
 title: 'CSS Real World Vademecum'
+description: "Practical CSS study notes: learn how to import external fonts, manage advanced selectors, and master pseudo-classes and pseudo-elements for your UIs."
 ---
 
 # CSS Real World Vademecum

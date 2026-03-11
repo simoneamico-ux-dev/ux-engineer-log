@@ -2,6 +2,7 @@
 sidebar_position: 1
 sidebar_label: 'HTML'
 title: 'HTML Real World Vademecum'
+description: "Impara le fondamenta dell'HTML: dalla struttura del documento ai tag semantici essenziali. Una guida pratica con esempi per scrivere codice pulito."
 ---
 
 # HTML Real World Vademecum

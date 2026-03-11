@@ -2,6 +2,7 @@
 sidebar_position: 1
 sidebar_label: 'HTML'
 title: 'HTML Real World Vademecum'
+description: "Master HTML fundamentals: from document structure to essential semantic tags. A practical guide with clear examples for writing clean, accessible code."
 ---
 
 # HTML Real World Vademecum
