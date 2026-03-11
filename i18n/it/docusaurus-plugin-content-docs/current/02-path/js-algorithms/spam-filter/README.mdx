@@ -1,0 +1,271 @@
+---
+sidebar_position: 14
+sidebar_label: 'Spam Filter'
+title: 'Spam Filter'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Link from '@docusaurus/Link';
+
+# Spam Filter
+
+<img
+  src={require('./assets/spam-filter-1.webp').default}
+  alt="Anteprima del progetto Spam Filter – screenshot che mostra un messaggio correttamente identificato come spam"
+  loading="lazy"
+  decoding="async"
+  width="1732"
+  height="1126"
+  style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+/>
+
+<img
+  src={require('./assets/spam-filter-2.webp').default}
+  alt="Anteprima del progetto Spam Filter – screenshot che mostra un messaggio correttamente identificato come non spam"
+  loading="lazy"
+  decoding="async"
+  width="1732"
+  height="1126"
+  style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+/>
+
+## Il Progetto
+Spam filter sviluppato con Regular Expressions (Regex), validazione di messaggi in tempo reale e pattern matching avanzato. Un'applicazione che identifica messaggi spam attraverso una deny list di pattern regex specifici.
+
+## Codice Sorgente
+
+<Tabs>
+<TabItem value="html" label="index.html" default>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Learn Regular Expressions by Building a Spam Filter</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+
+  <body>
+    <header class="main-text">
+      <h1 class="title">Is this Spam?</h1>
+      <p class="description">
+        Enter a phrase to check if it would be marked as spam or not.
+      </p>
+    </header>
+
+    <main>
+      <label class="message-label" for="message-input">Message: </label>
+      <textarea
+        placeholder="Enter message here"
+        value=""
+        type="text"
+        name="message"
+        id="message-input"
+        rows="10"
+        cols="40"
+      ></textarea>
+      <button class="btn" id="check-message-btn" type="button">
+        Check message
+      </button>
+      <p id="result"></p>
+    </main>
+    <footer class="footer">&copy; freeCodeCamp</footer>
+    <script src="./script.js"></script>
+  </body>
+</html>
+```
+</TabItem>
+
+<TabItem value="css" label="styles.css">
+
+```css
+*,
+*::before,
+*::after {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+:root {
+--dark-grey: #1b1b32;
+--light-grey: #f5f6f7;
+--golden-yellow: #fecc4c;
+--yellow: #ffcc4c;
+--gold: #feac32;
+--orange: #ffac33;
+--dark-orange: #f89808;
+}
+
+body {
+background-color: var(--dark-grey);
+color: var(--light-grey);
+}
+
+body,
+#message-input:placeholder-shown {
+text-align: center;
+}
+
+textarea {
+max-width: 90%;
+}
+
+.main-text {
+margin: 25px 0;
+}
+
+.title {
+font-size: 2.5rem;
+}
+
+.description {
+margin-top: 15px;
+font-size: 1.4rem;
+}
+
+.message-label {
+display: block;
+margin-bottom: 20px;
+font-size: 1.5rem;
+}
+
+#message-input:placeholder-shown,
+textarea {
+font-size: 1.1rem;
+}
+
+.btn {
+display: block;
+cursor: pointer;
+width: 200px;
+margin: 10px auto;
+color: var(--dark-grey);
+background-color: var(--gold);
+background-image: linear-gradient(var(--golden-yellow), var(--orange));
+border-color: var(--gold);
+border-width: 3px;
+}
+
+.btn:hover {
+background-image: linear-gradient(var(--yellow), var(--dark-orange));
+}
+
+#result {
+font-size: 2rem;
+margin: 20px 0;
+}
+
+.footer {
+margin-top: 10px;
+}
+```
+</TabItem>
+
+<TabItem value="js" label="script.js">
+
+```js
+const messageInput = document.getElementById("message-input");
+const result = document.getElementById("result");
+const checkMessageButton = document.getElementById("check-message-btn");
+
+const helpRegex = /please help|assist me/i;
+const dollarRegex = /[0-9]+\s*(?:hundred|thousand|million|billion)?\s+dollars/i;
+const freeRegex = /(?:^|\s)fr[e3][e3] m[o0]n[e3]y(?:$|\s)/i;
+const stockRegex = /(?:^|\s)[s5][t7][o0][c{[(]k [a@4]l[e3]r[t7](?:$|\s)/i;
+const dearRegex = /(?:^|\s)d[e3][a@4]r fr[i1|][e3]nd(?:$|\s)/i;
+
+const denyList = [helpRegex, dollarRegex, freeRegex, stockRegex, dearRegex];
+
+const isSpam = (msg) => denyList.some((regex) => regex.test(msg));
+
+checkMessageButton.addEventListener("click", () => {
+if (messageInput.value === "") {
+    alert("Please enter a message.");
+    return;
+}
+
+result.textContent = isSpam(messageInput.value)
+    ? "Oh no! This looks like a spam message."
+    : "This message does not seem to contain any spam.";
+messageInput.value = "";
+});
+```
+
+</TabItem> 
+
+</Tabs>
+
+## Due Settimane di Pausa Strategica
+
+<div className="alert alert--info" style={{marginBottom: '1rem', paddingBottom: 1}}>
+
+Sono passate quasi due settimane dall'ultimo progetto perché ho deciso di mettere in pausa il percorso di freeCodeCamp per completare il **Corso 5 del Google UX Certificate**.<br />
+Non è stata una semplice pausa di studio. Ho sfruttato questo tempo per prototipare una **Maintenance App** reale per la fabbrica in cui lavoravo. Si è trasformata in una lezione fondamentale sui **fallimenti nella User Research** e sull'adattamento della UI agli ambienti industriali (passando dal Material al Metro Design).<br />
+Ho documentato questa intera deviazione, inclusa l'analisi dei miei errori di reclutamento, in un Case Study dedicato.
+
+<strong><Link to="/docs/featured/maintenance-ui-concept">Leggi il Case Study di Maintenance</Link></strong>
+<br />
+<br />
+</div>
+
+## Il Progetto Spam Filter
+
+Detto ciò questo Spam Filter è stato un progetto breve ma al quale ho impiegato più tempo di quanto pensavo per una ragione specifica: ho riassunto tutti i nuovi concetti, sono andato oltre ai casi che freeCodeCamp mi ha spiegato e ora ho materiale prezioso pronto per essere integrato nel vademecum.
+
+## Cosa Ho Imparato
+
+**Fondamenti delle Espressioni Regolari (Regex):**
+- Corrispondenza di pattern con `/pattern/flags`
+- Flag `i` per corrispondenza senza distinzione maiuscole/minuscole
+- Classi di caratteri e alternanza `[e3]` per varianti
+- Gruppi non di cattura `(?:pattern)` per organizzazione
+- Corrispondenza di confini `(?:^|\s)` per limiti di parola
+
+**Pattern Regex Avanzati:**
+- Quantificatori `+`, `*`, `?` per occorrenze variabili
+- Asserzioni lookahead e lookbehind
+- Sequenze di escape per caratteri speciali
+- Corrispondenza di caratteri alternativi `[o0]`, `[e3]`, `[a@4]`
+
+**Metodi Array con Regex:**
+- `.test()` per verificare corrispondenza di pattern
+- `.some()` per testare array di regex
+- Programmazione funzionale per logica di validazione
+
+**Pattern di Rilevamento Spam:**
+- Approccio con lista di negazione per pattern noti
+- Combinazioni multiple di regex
+- Rilevamento leet speak (`fr[e3][e3]`, `m[o0]n[e3]y`)
+- Corrispondenza di pattern contestuale
+
+**Metodologie di UX Research:**
+- Ricerca blue sky per innovazione di design
+- Test di usabilità moderato vs non moderato
+- Progettazione script di test e formulazione task
+- Consapevolezza e mitigazione dei bias
+
+**Lezioni dall'Usability Testing:**
+- Formato del messaggio: vocale > testo lungo
+- Incentivi chiari fin dall'inizio
+- Semplificazione delle istruzioni
+- Importanza dell'ordine dei task
+- Principio "Don't Make Me Think" in azione
+
+**Evoluzione del Design System:**
+- Da Material Design a Metro Design
+- Scelte di design specifiche per piattaforma
+- Considerazione della comfort zone per gli utenti
+
+**Crescita Professionale:**
+- Responsabilità degli errori
+- Approccio di test iterativo
+- Pensiero centrato sull'utente
+- Documentazione completa per vademecum
+
+***
+
+**Prossimo progetto**: Imparare il Basic Algorithmic Thinking costruendo un Number Sorter

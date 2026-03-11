@@ -1,0 +1,259 @@
+---
+sidebar_position: 7
+sidebar_label: 'Fruit Search App ★'
+title: 'Fruit Search App'
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Link from '@docusaurus/Link';
+
+# Fruit Search App
+
+<img
+  src={require('./assets/fruit-search-app.webp').default}
+  alt="Anteprima Fruit Search App - Risultati di ricerca per 'app' che mostrano Apple, Apricot e Grapefruit"
+  loading="lazy"
+  decoding="async"
+  width="1904"
+  height="946"
+  style={{ width: '100%', height: 'auto', maxWidth: '550px', borderRadius: '16px' }}
+/>
+
+## Il Progetto
+
+Un workshop di freeCodeCamp che ha concluso la sezione **"Understanding Effects and Referencing Values in React"**, mettendo in pratica `useEffect`, `useRef` e Custom Hooks attraverso la gestione asincrona con `async/await`. Tecnicamente più articolato dei progetti React precedenti, ma soprattutto ricco di riflessioni teoriche che ho faticato a non mettere per iscritto.
+
+## Codice Sorgente
+
+<Tabs>
+<TabItem value="js" label="index.jsx" default>
+
+```jsx
+const { useState, useEffect } = React;
+
+export function FruitsSearch() {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
+  useEffect(() => {
+    if (query.trim() === '') {
+      setResults([]);
+      return;
+    }
+    const timeoutId = setTimeout(async () => {
+      try {
+        const response = await fetch(`https://fruit-search.freecodecamp.rocks/api/fruits?q=${query}`);
+        const data = await response.json();
+        setResults(data.map(fruit => fruit.name));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }, 700);
+    return () => clearTimeout(timeoutId);
+  }, [query]);
+
+  return (
+    <div id="search-container">
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="search-input">Search for fruits:</label>
+        <input
+          id="search-input"
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </form>
+      <div id="results">
+        {results.length > 0 ? (
+          results.map(item => (
+            <p key={item} className="result-item">{item}</p>
+          ))
+        ) : (
+          <p>No results found</p>
+        )}
+      </div>
+    </div>
+  );
+};
+```
+
+</TabItem>
+<TabItem value="html" label="index.html">
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Fruits Search</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.development.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.development.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.5/babel.min.js"></script>
+  <script 
+    data-plugins="transform-modules-umd"
+    type="text/babel"
+    src="index.jsx"
+  ></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="root"></div>
+  <script
+    data-plugins="transform-modules-umd"
+    type="text/babel"
+    data-presets="react"
+    data-type="module"
+  >
+    import { FruitsSearch } from './index.jsx';
+    ReactDOM.createRoot(document.getElementById('root')).render(<FruitsSearch />);
+  </script>
+</body>
+</html>
+```
+
+</TabItem>
+<TabItem value="css" label="styles.css">
+
+```css
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+#search-container {
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#search-input {
+  padding: 10px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#results {
+  text-align: left;
+  max-height: 150px;
+  overflow-y: auto;
+}
+.result-item {
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+```
+
+</TabItem>
+</Tabs>
+
+## React, 1984 e il Problema con l'AI
+
+Da quando ho scoperto cosa c'è sotto il cofano di `useRef`, sostanzialmente un oggetto `{ current: valore }` che React gestisce in memoria, esattamente come farebbe JavaScript puro, mi sono ritrovato a fare la stessa domanda che mi faccio ad ogni progetto React: *quanto sarà utile tutto questo in un futuro dove sarà l'AI a scrivere la maggior parte del codice?*  
+La riflessione si è fatta più profonda. È vero che l'AI scriverà meno codice con questa libreria, ma dovrà comunque ricordare (tenere nella context window) che per ognuna delle funzioni di React ci sono, di fatto, funzioni JavaScript con comportamenti che non si vedono direttamente. È come se stessimo aggiungendo un livello di complessità invisibile che l'AI deve comunque conoscere per fare debugging.  
+
+Mi è venuta in mente la **Neolingua di 1984**: un vocabolario idealmente ridotto da 50.000 a 5.000 parole per limitare il pensiero. React non è forse la stessa cosa? Riduce le funzioni disponibili, raggruppa comportamenti sotto nomi nuovi. Uno scrittore che conosce solo quelle 5.000 non si sta perdendo la possibilità di combinare le restanti 45.000 in modi che con il vocabolario ridotto non erano nemmeno concepibili? Non staremmo quindi privando un'AI ancora più capace di quelle odierne della possibilità di unire funzioni grezze e senza contenitori per creare il sistema perfetto per l'applicazione che si stava progettando? Non stiamo aggiungendo complessità inutile?
+
+Mi rendo conto di non riuscire a studiare React senza farmi domande del genere. In questi momenti mi rassicura il fatto che React non è un framework ma una libreria: nulla mi vieta di mescolare entrambe le cose. Ma la domanda restava.  
+Ho cercato delle risposte che smentissero questo pensiero, perché ero consapevole del **Dunning-Kruger effect** che sentivo addosso, d'altronde è solo il 7° esercizio di React che svolgo. Il Code Tutor mi ha risposto con cinque punti che mi hanno convinto:
+
+**1. La metafora ribaltata.** In 1984, la Neolingua riduce le parole per *ridurre* la capacità di pensare. In React, si riducono i comandi imperativi per *aumentare* la capacità di gestire la complessità. Con Vanilla JS hai controllo su ogni singolo atomo, ma se devi gestire 10 milioni di atomi la probabilità di spaghetti code ingestibile è altissima, anche per un'AI. React non toglie parole per censurarti, le toglie per evitare che l'edificio crolli sotto il peso dei dettagli inutili.
+
+**2. L'AI ama le strutture, non il caos.** Se hai una variabile `count` mostrata in 10 punti della pagina, in Vanilla JS un'AI deve ricordarsi di scrivere 10 istruzioni `document.getElementById` ogni volta che cambia. Se ne dimentica una (e le AI "allucinano" o perdono contesto), la UI è rotta silenziosamente. In React, l'AI scrive `count` nello stato e il motore si occupa del resto. React fornisce all'AI una struttura mentale collaudata per risolvere il problema della sincronizzazione, che è matematicamente difficile.
+
+**3. La Legge delle Astrazioni Fallaci (Leaky Abstractions).** Joel Spolsky (l'inventore di Trello) ha scritto: *"Tutte le astrazioni non banali, prima o poi, perdono acqua."* React è un'astrazione sul JS puro. Finché tutto va bene, le 5.000 parole bastano. Ma appena c'è un bug strano del browser, un problema di performance, o un'animazione complessa a 60fps, la Neolingua di React fallisce. E se non conosci il JS puro, non sai come riparare la perdita d'acqua.
+
+**4. Il fattore collaborazione Uomo-AI.** L'AI scriverà il codice, ma chi lo leggerà? Se mi sputa 5.000 righe di Vanilla JS ultra-ottimizzato ma incomprensibile e devo cambiare il colore di un bottone, sono finito. React è la *lingua franca* tra l'intento umano e l'esecuzione della macchina. È il linguaggio comune che permette a un essere umano di intervenire su ciò che l'AI ha prodotto.
+
+**5. L'Ipotesi di Sapir-Whorf.** *"Il linguaggio che parli forma il modo in cui pensi."* Nella programmazione è un fatto riconosciuto: se conosci solo la Neolingua di React, il tuo cervello cercherà di risolvere qualsiasi problema con `useState` e un componente, anche quando non serve. Conoscere le 50.000 parole ti ricorda che a volte bastano due righe di JS e un tag HTML standard per fare quello che React farebbe con 100 righe di codice complesso.
+
+Ha poi aggiunto una riflessione che ha chiuso definitivamente il cerchio: in 1984, il Partito riduceva le parole per prevenire lo "psicoreato", se non esiste la parola "libertà", non puoi nemmeno formulare il pensiero di ribellarti. React ha fatto la stessa cosa con il codice: ha reso fisicamente difficile scrivere certi pattern buggati (manipolazione diretta del DOM, stato non sincronizzato, listener persi in memoria). Ha tolto il vocabolario del DOM imperativo per costringerti a pensare in termini di Stato.
+
+## useEffect: Sincronizzazione, Non Reazione
+
+Il tutor mi ha subito messo in guardia sul fatto che **non devo vedere `useEffect` come un modo per dire "fai questo quando succede questo".**
+Il modo corretto è la **Sincronizzazione**. Non devo pensare: *"Quando clicco, fai partire il timer."* Bensì: *"Voglio che il timer sia sincronizzato con lo stato `isActive`. Se è attivo, il timer deve partire. Se non è attivo, deve fermarsi."*
+`useEffect` funge quindi da meccanismo che mantiene il componente sincronizzato con sistemi esterni (Browser, API, tempo) che React non controlla direttamente.
+
+Questo cambia completamente come si ragiona sull'architettura, perché se penso per eventi, il mio codice diventa una lista di istruzioni: *"Quando clicco Start, fai partire il timer. Quando clicco Stop, fermalo. Quando clicco Reset, azzera tutto."* Funziona finché le cose sono semplici. Ma se aggiungo una nuova condizione, come "il timer si deve fermare anche se l'utente esce dalla pagina", devo ricordarmi di andare ad aggiungere quella logica in ogni posto giusto. Se dimentico un handler, il bug è assicurato.  
+Se invece penso per sincronizzazione, mi faccio una domanda sola: *"Quando deve essere attivo il timer? In questo caso quando `isActive` è `true`. Punto."* Scrivo un solo `useEffect` che osserva `isActive` e si comporta di conseguenza. Se domani aggiungo un nuovo modo per fermare il timer, un timeout, un'uscita dalla pagina, un errore di rete, non devo toccare l'`useEffect`. Mi basta impostare `isActive = false` da qualsiasi punto del codice, e il timer si ferma da solo. La logica è in un posto solo, non distribuita tra dieci handler.
+
+## Batching vs Debouncing: Due Cugini Che Si Assomigliano
+
+freeCodeCamp parlava di Debouncing, eppure mi sembrava di rivedere il Batching visto nella <Link to="/docs/path/react/toggle-text-app">Toggle Text App</Link>. Non erano la stessa cosa?
+
+La risposta ricevuta fu che sono due meccanismi che entrambi "aspettano", ma con scopi completamente diversi:
+
+| | **Batching** | **Debouncing** |
+|---|---|---|
+| **Chi lo fa?** | React automaticamente | Tu, nel codice |
+| **Scopo** | Unire più render in uno | Ritardare una chiamata pesante |
+| **Analogia** | Il cameriere che aspetta tutti gli ordini prima di andare in cucina | Le porte dell'ascensore che fanno ripartire il timer ogni volta che qualcuno entra |
+| **Quando si attiva?** | Ogni volta che chiami più `setState` di fila | Solo dopo X millisecondi di "silenzio" |
+| **Tipico use case** | Ottimizzazione automatica dei render | Search input, resize, scroll |
+
+In questo workshop ho usato proprio il Debouncing: aspetto 700ms dopo l'ultima battitura prima di chiamare l'API, evitando una richiesta per ogni singolo carattere digitato.
+
+## useRef: Il Regista dell'Attenzione
+
+freeCodeCamp mi ha introdotto `useRef` con un esempio sul focus di un input. La prima cosa che ho pensato è stata: *complessità aggiunta a ciò che HTML e CSS facevano già benissimo da soli.* In realtà ho successivamente capito il perché.  
+`useRef` e `useState` risolvono due problemi diversi. `useState` è la vetrina di un negozio, quindi ogni volta che cambi qualcosa, React ridisegna tutto e l'utente lo vede. `useRef` è la tasca: puoi metterci dentro cose, tirarle fuori, cambiarle, e nessuno se ne accorge. Nessun re-render.  
+La sintassi `inputRef.current` esiste perché `useRef` crea un oggetto `{ current: valore }` che sopravvive ai re-render. Le variabili normali dentro un componente muoiono e rinascono ad ogni ridisegno. `useRef` no, React ti restituisce sempre lo stesso identico indirizzo di memoria.
+
+Ma il caso d'uso che mi ha colpito di più è l'accessibilità. Nelle Single Page Application la pagina non si ricarica mai: l'`index.html` è sempre lo stesso. Per chi usa la tastiera o uno screen reader, questo è problematico perché non avendo il browser che ci pensa al posto tuo ad avvisare l'utente del cambio di pagina, sei **tu** che devi comunicare al browser stesso che qualcosa è cambiato. Ecco tre scenari estremamente problematici se non si gestisce il focus con `useRef`:
+
+- **Errore nel Form:** L'utente compila un form lungo, clicca "Invia" in fondo alla pagina. C'è un errore nel primo campo in alto: appare una scritta rossa. Visivamente è ovvio. Ma il focus del browser è rimasto sul bottone "Invia" in fondo. Chi usa uno screen reader sente: "Bottone Invia premuto." Poi il silenzio... Il messaggio di errore esiste nel DOM, ma nessuno glielo ha comunicato. Con `useRef`, sposti il focus direttamente sul messaggio di errore nel momento in cui appare: lo screen reader lo legge immediatamente.
+- **Cambio di Pagina:** In un sito HTML tradizionale, quando clicchi un link la pagina si ricarica e il focus riparte automaticamente dall'inizio. In React non succede: il contenuto cambia, ma il focus rimane sul link che hai appena cliccato, che a volte non esiste nemmeno più nel DOM, perché il componente è stato smontato. Lo screen reader si ritrova ad annunciare un elemento fantasma. Con `useRef`, al cambio di "pagina" sposti il focus sull'`<h1>` del nuovo contenuto: l'utente sa subito dove si trova.
+- **Apertura del Modale** (finestra di dialogo che appare sopra la pagina)**:** Visivamente lo sfondo è scuro, il resto del sito è inaccessibile. Per la tastiera no: continua a esistere tutto. Se l'utente preme TAB abbastanza volte, il focus esce dal modale e finisce sui link e bottoni nascosti sotto lo sfondo scuro. Sta interagendo con qualcosa che non vede. Con `useRef`, quando il modale si apre sposti il focus al suo interno (solitamente sul primo input o sul bottone "Chiudi") permettendo quindi soltanto le azioni al suo interno.
+
+Vale sempre il **Curb Cut Effect** che incontrai per la prima volta nel corso di Google UX: la soluzione progettata per una necessità specifica finisce per aiutare tutti. Gestire il focus con `useRef` aiuta i power user che non toccano il mouse, gli utenti situazionali con un braccio rotto o un trackpad scarico e, cosa che non avevo mai considerato fino ad ora, chi naviga su Smart TV o PlayStation. Il controller di una console funziona esattamente come una tastiera: Su, Giù, Destra, Sinistra, Invio. Se il focus è gestito bene, il sito funziona anche sul divano. Se non lo è, il cursore si blocca (e l'utente scappa).
+
+## Custom Hooks: Separare la Logica dal Componente
+
+Mi sono chiesto dove mettere il codice di accessibilità: aveva senso includerlo direttamente nel componente? Ho scoperto che la prassi comune è estrarlo in una funzione esterna, un Custom Hook, che vive nel suo file dedicato, ad esempio `hooks/useFocus.js`, e si richiama con una sola riga. Il componente rimane pulito, la logica è in un posto solo e riutilizzabile ovunque ne abbia bisogno.
+
+## async/await: Una Scoperta nel Ripasso
+
+Il Vademecum è stato essenziale per riprendere `try`, `catch`, `async` e `await`, perché la sintassi non la ricordavo a memoria. Rileggendolo, però, ho scoperto qualcosa che non era spiegato a sufficienza: credevo che `async` e `await` fossero inseparabili. Non è così.  
+Puoi avere una funzione `async` senza `await`: è sintatticamente valida, ma inutilmente asincrona. Al contrario, `await` non può mai comparire fuori da una funzione `async`: è un errore di sintassi. I due non sono inseparabili, ma hanno una direzione precisa: `await` ha bisogno di `async`, `async` non ha bisogno di `await`.  
+Ho aggiornato subito il Vademecum per riflettere questa distinzione in modo più preciso.
+
+## La Trasparenza di Questo Log
+
+Mi capita spesso che le domande che mi faccio, come quella su 1984, mi sembrino stupide dopo aver letto la risposta. La tentazione di mostrarmi perfetto c'è, lo ammetto. Ma progetti come <Link to="/docs/path/html-css/landing-page">Landing Page</Link> e <Link to="/docs/featured/maintenance-ui-concept">Maintenance</Link> mi hanno fatto toccare il fondo degli errori, e quelle esperienze hanno alzato così in alto la mia tolleranza al "sembrare ignorante" che ormai la trasparenza mi viene naturale.
+
+Prendo appunti sulle domande e le risposte del Code Tutor in un file chiamato **"README futuro"**, poi cerco di dargli ordine come sto facendo adesso. Faccio sempre più fatica a capire se questo sito sia un diario, un portfolio o un secondo cervello. Probabilmente tutte e tre le cose insieme.
+
+## Cosa Ho Imparato
+
+**useEffect come Sincronizzazione:**  
+Il cambio di modello mentale più importante del modulo. Non "fai X quando succede Y", ma "mantieni questo componente sincronizzato con questo sistema esterno". Cambia completamente come si progetta l'architettura.
+
+**Debouncing Implementato:**  
+700ms di ritardo prima di chiamare l'API. Ogni nuova battitura cancella il timeout precedente (`clearTimeout`) e ne avvia uno nuovo. La funzione di cleanup di `useEffect` (`return () => clearTimeout(timeoutId)`) è il meccanismo che rende tutto questo possibile.
+
+**useRef come Sopravvivenza al Re-render:**  
+Un riferimento a un oggetto `{ current: valore }` che React mantiene in memoria tra un render e l'altro. Non scatena re-render quando cambia: è la differenza tra la vetrina (visibile a tutti) e la tasca (invisibile, ma sempre accessibile).
+
+**Custom Hooks come Separazione della Logica:**  
+Estrarre la logica in un hook riutilizzabile (`hooks/useFocus.js`) mantiene i componenti puliti e centralizza comportamenti trasversali come l'accessibilità.
+
+**async/await Non Sono Inseparabili:**  
+`async` dichiara una funzione come asincrona. `await` sospende l'esecuzione dentro quella funzione. Possono esistere l'uno senza l'altro, anche se raramente ha senso.
+
+***
+
+**Next:**  
+One-Time Password Generator (Lab)

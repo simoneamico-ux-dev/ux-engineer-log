@@ -118,19 +118,19 @@ const config = {
             items: [
               {
                 label: 'Featured',
-                to: '/docs/Featured/center',
+                to: '/docs/featured/center',
               },
               {
                 label: 'Path',
-                to: '/docs/Path/HTML-CSS/cat-photo-app',
+                to: '/docs/path/html-css/cat-photo-app',
               },
               {
                 label: 'Vademecum',
-                to: '/docs/Vademecum/html-real-world-vademecum',
+                to: '/docs/vademecum/html-real-world-vademecum',
               },
               {
                 label: 'Bookshelf',
-                to: '/docs/Bookshelf/the-design-of-everyday-things',
+                to: '/docs/bookshelf/the-design-of-everyday-things',
               },
             ],
           },
