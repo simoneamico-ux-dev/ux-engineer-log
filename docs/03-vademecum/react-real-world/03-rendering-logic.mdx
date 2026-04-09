@@ -1,0 +1,448 @@
+---
+sidebar_position: 3
+title: Rendering Logic
+description: Conditional rendering, lists, keys and how React decides what to display.
+---
+
+# React Real World Vademecum
+
+# Part III: Rendering Logic
+
+React does not have a special template language. You will not find `v-if`, `*ngIf` or `{% if %}` like in Vue, Angular or Django. Conditions, loops and decisions are handled with **plain JavaScript**. This choice is the reason React is so powerful: you can use everything you already know.
+
+---
+
+## Rendering Logic
+
+### 11. Conditional Rendering (Three Roads, One Destination)
+
+React does not have a special attribute for conditional rendering. It has something better: the entire JavaScript language. There are three main techniques, each with its own use case. Learning to pick the right one is the difference between readable code and nightmare code.
+
+#### The `if` Statement (The Bouncer, Early Return)
+
+Think of a bouncer at the entrance of a club. Before letting you in, he checks your ID. If you are underage, he turns you away at the door and you never get in. If you are of age, you enter and the party begins.
+
+In React, this is called **Early Return**: the component runs a check at the top, and if the condition is not met, it immediately returns something else (or `null` to render nothing). The code below the first `return` never executes.
+
+```jsx
+// The bouncer checks your documents before letting you in
+function UserProfile({ loggedInUser }) {
+  if (!loggedInUser) {
+    return <p>You must log in to view your profile.</p>;
+  }
+
+  // Only logged-in users reach this point
+  return (
+    <div>
+      <h1>Welcome back, {loggedInUser.name}\!</h1>
+      <p>Email: {loggedInUser.email}</p>
+    </div>
+  );
+}
+```
+
+Use it for "all or nothing" cases at the whole component level. If the condition is false, there is no point in rendering anything, the bouncer sends you home.
+
+-----
+
+#### The Ternary Operator (The Highway Fork)
+
+The `if` has a big problem: it is **bulky** and, above all, **cannot go inside the curly braces `{ }` of JSX**. React does not allow you to write `{if (condition) { ... }}`.
+
+The **ternary** works like a highway fork. While driving at 130 km/h, you see a sign "Milan on the left, Turin on the right". You cannot stop to think: you have to pick one of the two roads in an instant. The ternary **always** returns one of the two values, guaranteed.
+
+```jsx
+// The fork: one way the greeting, the other way the sign-up prompt
+function Header({ loggedInUser }) {
+  return (
+    <header>
+      <h1>
+        {loggedInUser ? `Hello, ${loggedInUser.name}!` : "Welcome, guest!"}
+      </h1>
+    </header>
+  );
+}
+```
+
+The ternary also works for entire JSX elements, not just text values:
+
+```jsx
+function StatusBadge({ active }) {
+  return (
+    <span style={{ color: active ? "green" : "red" }}>
+      {active ? <strong>Online</strong> : <em>Offline</em>}
+    </span>
+  );
+}
+```
+
+Use it when you want to show **this OR that**, always two options, never more. If the options become three or four, consider a separate function with `if/else`.
+
+-----
+
+#### The `&&` Operator (The Short-Circuit Switch)
+
+Scenario: you want to show a message **only if** a condition is true. If it is false, you do not want to show anything, not an alternative, nothing at all. The ternary would force you to write `condition ? <element> : null`. There is a better way.
+
+The `&&` operator works like a **double-command light switch**: if the first switch is off (false), current does not flow. If the first is on (true), current reaches the second switch and turns it on.
+
+```jsx
+// If there are notifications, show the badge. Otherwise, nothing
+function NotificationBell({ notificationCount }) {
+  return (
+    <div>
+      <span>🔔</span>
+      {notificationCount > 0 && (
+        <span className="badge">{notificationCount}</span>
+      )}
+    </div>
+  );
+}
+```
+
+Under the hood, `&&` does not return `true` or `false`. It returns the **value of the last evaluated operand**. If the left-hand condition is truthy, JavaScript evaluates the right-hand side and returns it. So `true && <p>Hello</p>` returns `<p>Hello</p>`, which is exactly what React renders.
+
+Use it when you want to show something **only if** a condition is true, with no alternative.
+
+-----
+
+#### Why `if` Does Not Work Inside Curly Braces (Statement vs Expression)
+
+You have probably wondered why you cannot write `{if (...) {}}` inside JSX.
+
+The answer lies in the fundamental distinction between **Statement** and **Expression**.
+
+A **Statement** (instruction) is a command. It performs an action, tells the computer what to do, but does not directly produce a value. `if`, `for`, `switch`, `while` are all statements.
+
+```javascript
+// These are statements, they perform actions, they do not produce values
+if (condition) { ... }
+for (let i = 0; i < 10; i++) { ... }
+```
+
+An **Expression** is instead a formula that resolves to a value. You can put an expression anywhere React expects a value.
+
+```javascript
+// These are expressions, they produce values
+condition ? "yes" : "no"    // produces a string
+"hello" && <p>Text</p>      // produces the JSX element
+2 + 2                       // produces 4
+userName.toUpperCase()       // produces a string
+```
+
+**Rule:** the curly braces `{ }` in JSX accept ONLY expressions, things that become a value. The `if` does not produce a value, it performs an action, which is why it is forbidden inside curly braces.
+
+The ternary and `&&` produce values, that is why they are welcome inside curly braces. The `if` performs actions, so it must stay outside JSX, before the `return`.
+
+-----
+
+#### React's Invisible Trash Can (What Gets Ignored)
+
+React is programmed to **silently ignore** certain values. It neither renders them nor turns them into text, it throws them in the trash:
+
+- `false`
+- `null`
+- `undefined`
+- `true`
+
+```jsx
+// React ignores null, no errors, no spurious text
+function Notification({ message }) {
+  return (
+    <div>
+      {message ? <p>{message}</p> : null}
+    </div>
+  );
+}
+```
+
+In Vanilla JavaScript, writing `element.innerHTML = false` would literally print the text `"false"` on the page.
+
+-----
+
+#### The Zero Trap (The Most Common Bug with `&&`)
+
+There is one exception that burns everyone at least once. **React does not ignore the number `0`.**
+
+```jsx
+// BUG: if quantity is 0, React prints "0" on screen!
+function Cart({ quantity }) {
+  return (
+    <div>
+      {quantity && <p>You have {quantity} items in your cart</p>}
+    </div>
+  );
+}
+```
+
+What happens when `quantity` is `0`? The `&&` operator evaluates `0` (falsy) and returns `0`. React receives `0`, and since `0` is a number (not `false`, `null`, or `undefined`), it **renders it as text**. The user sees a lonely `0` in the middle of the page.
+
+The fix is very simple: force an explicit boolean condition.
+
+```jsx
+// CORRECT: 0 > 0 is false, React ignores it
+function Cart({ quantity }) {
+  return (
+    <div>
+      {quantity > 0 && <p>You have {quantity} items in your cart</p>}
+    </div>
+  );
+}
+```
+
+**Rule:** when using `&&` with numbers, always use an explicit comparison (`> 0`, `!== 0`).
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 12. Rendering Lists (The Assembly Line)
+
+Lists are everywhere in UIs: products, messages, notifications, users. Knowing how to render lists correctly and performantly is one of the most used skills in React. And it all revolves around two concepts: `.map()` and the `key` prop.
+
+#### Why `.map()` and Not `for` (Expression vs Statement)
+
+A `for` loop says "repeat this action", it is a Statement. It does not produce a value, it executes commands. Placing it inside the curly braces `{ }` of JSX is impossible for the same reason as `if`.
+
+`.map()` is different: it is an array method that **transforms** each element and returns a **new array** with the results. It is an Expression, it produces a value.
+
+React accepts arrays of JSX elements inside curly braces: `{[<p>A</p>, <p>B</p>]}`, it unpacks them and renders them both.
+
+```jsx
+// for, IMPOSSIBLE inside JSX
+// for (let fruit of fruits) { ... }  ← does not produce a value
+
+// .map() produces an array of JSX, React renders it
+function FruitList({ fruits }) {
+  return (
+    <ul>
+      {fruits.map((fruit) => (
+        <li key={fruit.id}>{fruit.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+// Usage
+<FruitList fruits={[
+  { id: 1, name: "Apple" },
+  { id: 2, name: "Banana" },
+  { id: 3, name: "Cherry" },
+]} />
+```
+
+-----
+
+#### How `.map()` Works (The Conveyor Belt)
+
+Think of an assembly line in a factory. The conveyor belt carries the raw parts (the array elements) in front of the worker (your function inside `.map()`). The worker takes each part, transforms it into a finished product (a JSX element), and places it on the return belt. At the end, you have a new belt full of finished products.
+
+The function parameters (`element` and `index`) are not properties to look up inside objects. They are **temporary labels** that you assign to the current values on the belt.
+
+```jsx
+// Freeze frame of the conveyor belt
+const products = [
+  { id: "p1", name: "Shoes", price: 89.99 },
+  { id: "p2", name: "Belt", price: 34.99 },
+  { id: "p3", name: "Hat", price: 49.99 },
+];
+
+function ProductCatalog() {
+  return (
+    <div>
+      {products.map((product, index) => (
+        // Round 1: product = { id: "p1", name: "Shoes", ... }, index = 0
+        // Round 2: product = { id: "p2", name: "Belt", ... }, index = 1
+        // Round 3: product = { id: "p3", name: "Hat", ... }, index = 2
+        <div key={product.id}>
+          <span>{index + 1}. </span>
+          <strong>{product.name}</strong>
+          <span> - ${product.price}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+`.map()` does not generate attributes inside a tag. It manufactures complete JSX elements, and each iteration produces an entire element ready to render.
+
+-----
+
+#### The `key` Prop (The ID Badge)
+
+Imagine a post office with a line of ten people. Every day the clerk (React) has to update everyone's situation. One day a new person shows up and cuts to the front of the line.
+
+Without ID badges (without `key`), the clerk does not know who is who. He sees that the first slot is now occupied by someone different, updates the first slot, then the second, then the third, destroying and rebuilding every record. With ID badges (with `key`), each person has a unique number. The clerk sees "Mario (ID: 101) moved up one spot", updates only Mario's address, and everyone else stays intact.
+
+```jsx
+// Without key, React panics at every list change
+{users.map((user) => <div>{user.name}</div>)}
+
+// With key, React knows exactly who is who
+{users.map((user) => <div key={user.id}>{user.name}</div>)}
+```
+
+The `key` must be **unique** among siblings (among the elements of the same `.map()`), **stable** (it must not change between renders) and of type string or number.
+
+-----
+
+#### The Anti-Pattern (Index as Key)
+
+When you do not have an ID, the temptation is to use the `index` parameter of `.map()`. React does not throw errors, and it seems to work. But it is a ticking time bomb.
+
+Think of it like a deli counter ticket. People are numbered: 0, 1, 2, 3. If the person with ticket 0 leaves, whoever had ticket 1 becomes 0, whoever had 2 becomes 1. React looks at the numbers and thinks "The person with ID 0 is still here, just with a different name", keeps the state associated with the old 0 and attaches it to the new 0.
+An example of this bug is that if the user had checked a checkbox on the element at position 0 and that element gets removed, the check does not disappear but jumps to the element now occupying position 0, even though it is a completely different element.
+
+```jsx
+// DANGEROUS, only works if the list is static and not sortable
+{items.map((el, index) => <li key={index}>{el.text}</li>)}
+
+// CORRECT, always use a stable ID
+{items.map((el) => <li key={el.id}>{el.text}</li>)}
+```
+
+The index is fine only for purely decorative lists that will never change, like a static navigation menu with fixed entries ("Home", "About Us", "Contact"). Nobody will delete or reorder those entries, and none of them contain an input or a checkbox. In every other case, use stable IDs.
+
+-----
+
+#### Where to Put the `key` (The Suitcase Handle)
+
+The `key` goes on the **outermost** element returned by each iteration of `.map()`. React only looks at the "handle", the first element, and does not open the suitcase to search inside.
+
+With a simple HTML tag, the `key` goes directly on the tag:
+```jsx
+{users.map((user) => (
+  <li key={user.id}>{user.name}</li>
+))}
+```
+
+With a custom component, the `key` goes on the component, not inside:
+```jsx
+{users.map((user) => (
+  // key ON THE COMPONENT, not inside
+  <UserCard key={user.id} name={user.name} />
+))}
+```
+
+With a wrapper `<div>`, the key goes on the outer div:
+```jsx
+{products.map((product) => (
+  <div key={product.id}>
+    <h3>{product.name}</h3>
+    <p>{product.description}</p>
+  </div>
+))}
+```
+
+With a Fragment with `key`, pay attention to the syntax. The short syntax `<>...</>` does not accept attributes, so you cannot write a `key` on it. You must use the extended form `<React.Fragment>`.
+
+```jsx
+import React from "react";
+
+{definitions.map((entry) => (
+  // <> does not accept key, you must use React.Fragment
+  <React.Fragment key={entry.term}>
+    <dt>{entry.term}</dt>
+    <dd>{entry.explanation}</dd>
+  </React.Fragment>
+))}
+```
+
+-----
+
+#### Key Strategies (Where Does the ID Come From?)
+
+The practical question is: "Fine, I need to use a stable ID, but where do I get it?"
+
+In a tutorial or with hardcoded data, when you are learning and building arrays by hand in code, you assign the integer numbers yourself.
+
+```jsx
+const categories = [
+  { id: 1, label: "Technology" },
+  { id: 2, label: "Sports" },
+  { id: 3, label: "Cooking" },
+];
+```
+
+With data from the server (the real-world case), when you make an API call, the server sends you JSON objects with their IDs from the database. You do not have to do anything, you use the ID that comes back.
+
+```jsx
+// The JSON from the server already has IDs
+// { id: "usr_482", name: "Julia", ... }
+{users.map((user) => (
+  <UserCard key={user.id} {...user} />
+))}
+```
+
+With locally created data (like a Todo list without a server), the user adds elements and you have no server generating IDs. This is where `crypto.randomUUID()` enters the scene.
+
+```jsx
+function AddTodo({ setTodos }) {
+  function handleAdd(text) {
+    const newTodo = {
+      id: crypto.randomUUID(), // Generate here, once only
+      text: text,
+      completed: false,
+    };
+    setTodos((previous) => [...previous, newTodo]);
+  }
+  // ...
+}
+```
+
+-----
+
+#### `crypto.randomUUID()` (The Industrial ID Generator)
+
+When you need to create unique IDs without a server, `crypto.randomUUID()` is the modern and correct choice.
+
+It generates a **UUID v4**: a 36-character string with a specific pattern.
+
+```javascript
+crypto.randomUUID()
+// "c90d075d-53a1-4226-a634-118e69213159"
+// "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+```
+
+Compared to `Math.random()`, which uses a deterministic and technically predictable algorithm, `crypto.randomUUID()` uses **operating system entropy** (mouse movements, interrupt timing, thermal noise) and is practically unpredictable. The probability of generating two identical UUIDs is roughly 1 in 5.3 x 10^36. It works offline because it is an API built into the modern browser, available without a connection.
+
+**Rule:** NEVER inside `.map()`.
+
+```jsx
+// ❌ DISASTER, generates a new UUID on every render
+{items.map((el) => (
+  <li key={crypto.randomUUID()}>{el.text}</li>
+))}
+// React sees constantly different keys → destroys and rebuilds every element on every render
+// You lose the internal state of every element
+
+// ✅ CORRECT, generate the UUID ONCE, when you create the data
+function addItem(text) {
+  return {
+    id: crypto.randomUUID(), // Generated here, never changes
+    text: text,
+  };
+}
+```
+
+The UUID should be generated **at the moment the data is created**, in the function that builds the object, not in the function that renders it. An ID must be stable for the entire lifetime of the element. If you generate it in the render, it changes on every re-render and React can no longer tell who is who.
+
+<br />
+<br />
+
+---
+
+### Summary (Rendering Logic at a Glance)
+
+| Tool | When to use it | Notes |
+|-----------|---------------|------|
+| `if` / Early Return | "All or nothing" at the component level | Does not work inside `{ }` JSX |
+| Ternary `? :` | "This OR that", always two options | Works inside `{ }` JSX |
+| `&&` | "Show only if true", no alternative | Watch out for the `0` trap |
+| `.map()` | Rendering arrays of elements | Requires `key` on every element |
+| `key` | Identifying elements in a list | Must be stable, never index if the list changes |
+| `crypto.randomUUID()` | Creating IDs for local data | Generate at creation time, never in the render |

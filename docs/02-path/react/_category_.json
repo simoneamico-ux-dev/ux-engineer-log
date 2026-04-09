@@ -1,5 +1,6 @@
 {
   "label": "React",
+  "key": "path-react",
   "position": 3,
   "collapsible": true,
   "collapsed": true

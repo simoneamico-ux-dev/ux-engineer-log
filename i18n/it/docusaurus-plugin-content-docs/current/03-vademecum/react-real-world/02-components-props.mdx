@@ -1,0 +1,715 @@
+---
+sidebar_position: 2
+title: Componenti e Props
+description: Costruire pezzi di UI riutilizzabili e passare dati con il flusso unidirezionale.
+---
+
+# React Real World Vademecum
+
+# Parte II: Componenti e Props
+
+Un componente è solo una funzione. Le props sono solo i suoi argomenti. Una volta che riesci a vederlo così, tutto il resto si incastra da solo. Questa seconda parte ti porta dal concetto astratto di "componente" alla realtà concreta di come i dati fluiscono in un'app React.
+
+---
+
+## Componenti e Props
+
+### 7. Componenti (Lo Stampino per Biscotti)
+
+#### Un Componente È Solo una Funzione
+
+Tutto il "mistero" di React si dissolve in un'osservazione semplice: un componente React è **solo una funzione JavaScript** che riceve un oggetto di dati (le *props*) e restituisce UI (codice JSX).
+
+Confronta queste due funzioni.
+
+```jsx
+// Funzione JS normale
+function saluta(nome) {
+  return "Ciao " + nome;   // restituisce una stringa
+}
+
+// Componente React
+function Saluto(props) {
+  return <h1>Ciao {props.nome}</h1>;  // restituisce JSX (UI)
+}
+```
+
+La struttura è identica. La differenza è solo in cosa restituiscono: una stringa di testo vs. un pezzo di interfaccia.
+
+Questa osservazione ha conseguenze profonde: tutto ciò che vale per le funzioni JavaScript (scope, closures, argomenti di default, return) vale per i componenti React.
+
+-----
+
+#### PascalCase (La Lista VIP)
+
+React usa la maiuscola iniziale come **segnale discriminante** per capire che tipo di elemento stai creando. Non è una convenzione stilistica, è una regola tecnica con conseguenze precise.
+
+Quando Babel incontra un tag JSX, controlla la prima lettera. Se è **minuscola** (`<navbar />`) genera `React.createElement('navbar')` e cerca un tag HTML standard nel browser. Se è **maiuscola** (`<Navbar />`) genera `React.createElement(Navbar)` e cerca una funzione JavaScript con quel nome.
+
+È come una lista degli invitati alla porta di un locale esclusivo. Chi si presenta con la minuscola (`div`, `span`, `button`) è un tag HTML che il browser conosce già: React lo lascia passare direttamente nel DOM senza fargli domande. Chi si presenta con la maiuscola (`Navbar`, `ContatoreLike`, `CardProdotto`) è un VIP, cioè un componente custom. React non lo mette nel DOM così com'è: lo *chiama come funzione*, riceve il JSX che quella funzione restituisce, e inserisce nel DOM solo il risultato. È per questo che la maiuscola non è una preferenza estetica ma un meccanismo tecnico: senza di essa React non sa che deve eseguire del codice.
+
+```jsx
+// ❌ SBAGLIATO, React pensa che 'saluto' sia un tag HTML sconosciuto
+<saluto nome="Mario" />
+
+// ✅ CORRETTO, React capisce che è un componente custom
+<Saluto nome="Mario" />
+
+// Il componente si chiama con PascalCase
+function Saluto({ nome }) {
+  return <h1>Ciao {nome}!</h1>;
+}
+```
+
+**Regola:** ogni componente React deve iniziare con la **maiuscola**. Non è solo una convenzione, il codice smette di funzionare se non lo fai.
+
+-----
+
+#### Named Export vs. Default Export (Il Citofono vs. "Chi Abita Qui?")
+
+Ogni componente deve essere esportato dal suo file per poter essere importato altrove. Hai due opzioni:
+
+Il **Default Export** (`export default Navbar`) funziona come suonare al citofono di una villetta: c'è una sola risposta possibile. Puoi importare il componente con **qualsiasi nome tu voglia**.
+
+```jsx
+// File: Navbar.jsx
+function Navbar() { ... }
+export default Navbar;
+
+// File: App.jsx, puoi importarlo con qualsiasi nome!
+import Navbar from './Navbar';           // ✅ funziona
+import BarraNavigazione from './Navbar'; // ✅ funziona anche questo!
+import XyzPippo from './Navbar';         // ✅ funziona pure questo (ma evitalo)
+```
+
+Il **Named Export** (`export function Navbar`) funziona come il citofono di un palazzo con decine di appartamenti: devi cercare il cognome specifico. L'import deve usare esattamente lo stesso nome, tra `{ }`.
+
+```jsx
+// File: componenti.jsx
+export function Navbar() { ... }
+export function Footer() { ... }
+export function Sidebar() { ... }
+
+// File: App.jsx, devi usare il nome esatto tra graffe
+import { Navbar, Footer } from './componenti';   // ✅ corretto
+import { navbar } from './componenti';           // ❌ errore, 'n' minuscola!
+```
+
+**Quale scegliere?**
+
+I Named Exports sono quasi sempre preferibili nei progetti moderni, per tre ragioni:
+
+1. **Autocomplete dell'IDE**: l'editor sa già come si chiama il componente, ti suggerisce il nome corretto
+2. **Errori espliciti**: un typo (`{ Navber }`) ti dà subito un errore chiaro invece di importare silenziosamente qualcosa di sbagliato
+3. **Tree Shaking**: i bundler possono rimuovere dal bundle finale solo le esportazioni che non vengono usate
+
+```jsx
+// ✅ PRATICA MODERNA PREFERITA
+// Nel file del componente
+export function CartaProdotto({ titolo, prezzo }) {
+  return (
+    <div className="carta">
+      <h2>{titolo}</h2>
+      <p>€{prezzo}</p>
+    </div>
+  );
+}
+
+// Nell'app
+import { CartaProdotto } from './CartaProdotto';
+```
+
+-----
+
+#### Function Declaration vs. Arrow Function
+
+Hai due modi per scrivere un componente React. Entrambi sono validi, ma hanno sfumature diverse.
+
+```jsx
+// 1. Function Declaration
+function Contatore() {
+  return <div>0</div>;
+}
+
+// 2. Arrow Function (const)
+const Contatore = () => {
+  return <div>0</div>;
+};
+```
+
+La differenza pratica più importante: l'**hoisting**.
+
+- `function Contatore()` viene "sollevata" all'inizio del file da JavaScript → puoi usarla anche prima di dichiararla nel codice
+- `const Contatore = () => {}` non viene sollevata → devi dichiararla prima di usarla
+
+Nel React moderno, la scelta è principalmente stilistica. Molti sviluppatori preferiscono la `function` declaration per i componenti perché la parola `function` rende immediatamente chiaro che si tratta di una funzione (non di una costante che potrebbe essere qualsiasi cosa).
+
+```jsx
+// Scelta comune nel React moderno:
+// 'function' per i componenti (è esplicito)
+export function AppPrincipale() {
+  return <div>...</div>;
+}
+
+// 'const' con arrow per funzioni handler e helper
+const handleClick = () => { ... };
+const formattaPrezzo = (n) => `€${n.toFixed(2)}`;
+```
+
+-----
+
+#### Componenti "Stupidi" vs. "Intelligenti" (Lo Stampino vs. Il Cervello)
+
+In React esiste una separazione concettuale fondamentale tra due tipi di componenti.
+
+Un **componente presentazionale** (detto anche stateless) riceve dati via props e li mostra, senza logica interna e senza decisioni. Non sa chi è Mario o Tiffany, sa solo come visualizzare i dati che gli arrivano. Proprio per questo è facile da riusare e da testare.
+
+```jsx
+// Componente "stupido", sa solo come mostrare una carta
+function CartaUtente({ nome, ruolo, urlAvatar }) {
+  return (
+    <div className="carta-utente">
+      <img src={urlAvatar} alt={nome} />
+      <h3>{nome}</h3>
+      <span className={`badge ${ruolo}`}>{ruolo}</span>
+    </div>
+  );
+}
+```
+
+Un **componente smart** (detto anche stateful) è l'opposto: contiene logica applicativa, gestisce lo stato con `useState`, decide quali dati passare ai componenti figli e comunica con API esterne.
+
+```jsx
+// Componente "intelligente", sa chi caricare e gestisce i dati
+function PaginaTeam() {
+  const [membri, setMembri] = useState([]);
+  const [staCaricando, setStaCaricando] = useState(true);
+
+  // ... logica di caricamento dati ...
+
+  return (
+    <div>
+      {membri.map(m => <CartaUtente key={m.id} {...m} />)}
+    </div>
+  );
+}
+```
+
+La separazione ideale è che l'UI sia stupida e la logica sia intelligente, senza mischiare le due responsabilità. Se un componente fa troppe cose conviene dividerlo.
+
+-----
+
+#### Il Nesting e il Problema della Matrioska
+
+React incoraggia a scomporre la UI in componenti piccoli che si annidano l'uno dentro l'altro. Questo è ottimo, ma fino a un certo punto. Quando un singolo componente fa troppo, è come un ristorante dove lo chef cucina, serve ai tavoli e lava i piatti contemporaneamente: funziona con un cliente, ma con trenta è un disastro.
+
+Quando un componente cresce troppo (più di 50-100 righe o più di 3-4 livelli di nesting nel JSX) è il segnale per **componentizzare**.
+
+```jsx
+// ❌ PRIMA, un unico componente gigante e difficile da leggere
+function Pagina() {
+  return (
+    <div>
+      <div className="intestazione">
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/chi-siamo">Chi Siamo</a></li>
+          </ul>
+        </nav>
+      </div>
+      <main>
+        <div className="prodotti">
+          <div className="carta-prodotto">
+            <img src="..." />
+            <h2>Prodotto 1</h2>
+            <button>Aggiungi</button>
+          </div>
+          {/* ... ripetuto 20 volte ... */}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+// ✅ DOPO, ogni componente ha una sola responsabilità
+function Pagina() {
+  return (
+    <div>
+      <BarraNavigazione />
+      <main>
+        <GrigliaProdotti />
+      </main>
+    </div>
+  );
+}
+```
+
+**Regola:** quando il JSX di un componente diventa una piramide profonda o quando lo stesso blocco si ripete più volte, crea un nuovo componente.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. La Struttura del Progetto (La Cucina di Vite)
+
+#### Le Cartelle di un Progetto React
+
+Quando crei un progetto React con Vite (`npm create vite@latest`), ottieni una struttura di cartelle con scopi ben precisi. Capire a cosa serve ognuna ti evita confusione fin dal primo giorno.
+
+```
+mio-progetto/
+├── src/           ← La Cucina
+├── public/        ← Il Buffet
+├── node_modules/  ← Il Magazzino
+├── package.json   ← La Lista della Spesa
+└── vite.config.js ← Il Manuale del Forno
+```
+
+La cartella **`src/`** è dove lavori tu. Contiene tutto il codice "crudo" che deve essere compilato da Vite prima di andare in produzione: file JSX, componenti React, CSS e immagini usate nei componenti. Il browser non capisce JSX grezzo, quindi Vite lo trasforma in Vanilla JavaScript.
+
+La cartella **`public/`** contiene asset già pronti che vengono serviti direttamente al browser senza alcuna trasformazione: favicon, `robots.txt`, immagini grandi che non vuoi processare. I file qui hanno un URL diretto (`/logo.png`).
+
+La cartella **`node_modules/`** è dove `npm install` scarica le librerie reali. Sono centinaia di megabyte di codice di terze parti. Non la apri mai direttamente, non la modifichi e non la committi su Git. Viene infatti esclusa dal repository tramite il file .gitignore (se vuoi approfondire come funziona, vedi il punto 11 del Git e GitHub Real World Vademecum).
+
+-----
+
+#### `package.json` vs. `node_modules` (La Lista della Spesa vs. La Dispensa)
+
+Questa distinzione confonde tutti all'inizio. Il `package.json` è la tua **lista della spesa**, un file di testo leggero che elenca i nomi e le versioni delle librerie che ti servono. La cartella `node_modules` è la **dispensa fisica**, dove i pacchetti veri vengono scaricati e occupano spazio reale sul disco.
+
+```json
+// package.json, file di testo leggero (~1KB)
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
+```
+
+```
+node_modules/, cartella fisica enorme (~200MB)
+├── react/
+│   ├── index.js  ← l'intera libreria React
+│   └── ...
+├── react-dom/
+│   └── ...
+└── (500+ altre sottocartelle)
+```
+
+Il `package.json` viaggia su Git perché è piccolo e contiene solo testo. La cartella `node_modules` non viaggia mai su Git perché è enorme ma ricostruibile: quando qualcuno clona il tuo repository, esegue `npm install` e npm legge il `package.json` per scaricare tutto il necessario.
+
+```bash
+# Il .gitignore esclude sempre node_modules
+node_modules/
+```
+
+-----
+
+#### Vite come Standard Moderno (Dimentica `create-react-app`)
+
+Fino al 2022, lo strumento ufficiale per creare app React era `create-react-app` (CRA). Oggi è **obsoleto** e non viene più mantenuto attivamente.
+
+CRA usava Webpack per fare il bundle di tutto il codice prima di mostrartelo in sviluppo, e con un'app grande ogni salvataggio poteva richiedere 3-10 secondi di attesa. Vite usa un approccio diverso: serve i moduli ES direttamente al browser durante lo sviluppo, senza fare il bundle preventivo. Il risultato è un server di sviluppo che si avvia in **meno di un secondo** e aggiorna la pagina quasi istantaneamente.
+
+```bash
+# Il modo moderno di creare un'app React con Vite
+npm create vite@latest mia-app -- --template react
+cd mia-app
+npm install
+npm run dev
+```
+
+**Regola:** per ogni nuovo progetto React usa Vite. Se vedi tutorial che usano `create-react-app`, sono datati.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Props (Gli Argomenti della Funzione)
+
+#### Le Props Sono Solo Argomenti (Il Pacco Anonimo)
+
+Le props non sono un meccanismo misterioso di React, sono letteralmente gli argomenti di una funzione JavaScript. Per capirlo basta guardare cosa fa Babel quando incontra un componente con attributi.
+
+```jsx
+// Quello che scrivi tu
+<Saluto nome="Mario" eta={25} admin={true} />
+```
+
+```javascript
+// Quello che Babel genera
+React.createElement(
+  Saluto,
+  { nome: "Mario", eta: 25, admin: true }  // ← questo oggetto sono le props!
+);
+```
+
+Babel prende tutti gli attributi JSX, li impacchetta in un **oggetto JavaScript anonimo** e lo passa come primo argomento alla tua funzione componente. È come se il componente genitore preparasse un pacco di spedizione e lo consegnasse a React, che a sua volta suona il campanello del figlio e gli consegna il pacco. Il figlio decide come aprirlo e come chiamare le cose che ci trova dentro.
+
+```jsx
+// Il pacco arriva come primo argomento
+function Saluto(props) {
+  // props è: { nome: "Mario", eta: 25, admin: true }
+  return <h1>Ciao {props.nome}!</h1>;
+}
+```
+
+`props` non è quindi una parola magica di React, è solo il nome che *tu* dai al primo parametro della funzione. Potresti chiamarlo `dati`, `configurazione` o in qualsiasi altro modo e funzionerebbe ugualmente. `props` è solo una convenzione universale.
+
+-----
+
+#### Accedere alle Props (Due Modi)
+
+**Senza destructuring** ricevi il pacco chiuso e devi aprirlo ogni volta.
+
+```jsx
+function Saluto(props) {
+  // Devi scrivere 'props.' ogni volta
+  return (
+    <div>
+      <h1>Ciao {props.nome}!</h1>
+      <p>Hai {props.eta} anni</p>
+      {props.admin && <span className="badge">Admin</span>}
+    </div>
+  );
+}
+```
+
+**Con destructuring** il corriere apre il pacco alla porta e ti consegna direttamente le cose.
+
+```jsx
+function Saluto({ nome, eta, admin }) {
+  // Le variabili sono già disponibili direttamente
+  return (
+    <div>
+      <h1>Ciao {nome}!</h1>
+      <p>Hai {eta} anni</p>
+      {admin && <span className="badge">Admin</span>}
+    </div>
+  );
+}
+```
+
+Il destructuring nei parametri è la pratica moderna preferita perché richiede meno digitazione, rende il codice più pulito e rende subito visibile la "firma" del componente, cioè quali dati si aspetta.
+
+-----
+
+#### La Trappola Mortale (Parentesi Senza Graffe)
+
+Questo è l'errore che fa impazzire i principianti perché non produce un errore esplicito ma un comportamento silenziosamente sbagliato.
+
+```jsx
+// ❌ SBAGLIATO, questo è un errore sottile e pericoloso!
+function Saluto(nome) {
+  return <h1>Ciao {nome}!</h1>;
+}
+
+// Cosa viene visualizzato: "Ciao [object Object]!"
+
+// Questo perché'nome' non è una stringa, è l'INTERO oggetto props!
+// React ti ha passato { nome: "Mario" } come primo argomento
+// Tu l'hai chiamato 'nome' ma contiene tutto l'oggetto
+```
+
+```jsx
+// ✅ CORRETTO, le graffe dicono a JavaScript "estrai la proprietà 'nome'"
+function Saluto({ nome }) {
+  return <h1>Ciao {nome}!</h1>;
+}
+```
+
+La forma corretta ha **graffe dentro le tonde**: `({ nome })`. Le parentesi tonde `()` sono i parametri della funzione. Le graffe `{}` sono il destructuring dell'oggetto props. Senza le graffe, stai ricevendo l'intero oggetto props e chiamandolo con il nome sbagliato.
+
+```jsx
+// Visualizzazione mentale di quello che succede:
+<Saluto nome="Mario" />
+// ↓ Babel trasforma in:
+Saluto({ nome: "Mario" })
+// ↓ Senza destructuring:
+function Saluto(nome) { }   // 'nome' = { nome: "Mario" } ← SBAGLIATO
+// ↓ Con destructuring:
+function Saluto({ nome }) { } // 'nome' = "Mario" ← CORRETTO
+```
+
+-----
+
+#### La Prop `children` (La Cornice)
+
+A volte non vuoi passare dati come attributi ma vuoi passare altri elementi JSX "dentro" al componente, come fai con i tag HTML normali. È come una cornice: chi la produce disegna i bordi in legno e decide la forma, ma non sa e non deve necessariamente sapere che foto ci metterai dentro.
+
+React mette automaticamente tutto ciò che sta tra il tag di apertura e quello di chiusura di un componente nella prop speciale chiamata **`children`**.
+
+```jsx
+// Chi usa il componente decide il "contenuto del buco"
+function App() {
+  return (
+    <Carta>                           {/* → children */}
+      <h2>Titolo della Carta</h2>     {/* → children */}
+      <p>Testo descrittivo qui</p>    {/* → children */}
+    </Carta>
+  );
+}
+
+// Carta non sa cosa c'è dentro, riceve solo 'children'
+function Carta({ children }) {
+  return (
+    <div className="carta-ombra">
+      {children}     {/* Qui React disegna quello che gli è stato passato */}
+    </div>
+  );
+}
+```
+
+`children` può essere qualsiasi cosa: testo, un singolo elemento, un array di elementi, addirittura un'altra funzione (pattern avanzato). Carta non controlla cosa le viene messo dentro.
+
+I componenti "contenitore" come Modal, Card, Layout e Panel usano quasi sempre `children` perché devono poter contenere qualsiasi cosa senza dover conoscere il contenuto in anticipo.
+
+-----
+
+#### Spread Operator per le Props (Rovesciare il Portafoglio)
+
+Quando hai un oggetto con molte proprietà e vuoi passarle tutte come props a un componente figlio, scrivere ogni prop singolarmente è noioso e soprattutto fragile.
+
+```jsx
+// ❌ NOIOSO e fragile, se aggiungi proprietà all'oggetto devi ricordarti di aggiungerle anche qui
+function CartaUtente({ utente }) {
+  return (
+    <Profilo
+      nome={utente.nome}
+      eta={utente.eta}
+      citta={utente.citta}
+      ruolo={utente.ruolo}
+      urlAvatar={utente.urlAvatar}
+    />
+  );
+}
+```
+
+Lo spread operator `{...oggetto}` ti permette di passare tutte le proprietà dell'oggetto come props in una riga sola, come rovesciare il contenuto di un portafoglio sul bancone invece di tirare fuori monete e banconote una alla volta.
+
+```jsx
+// ✅ COMPATTO, tutte le proprietà vengono passate automaticamente
+function CartaUtente({ utente }) {
+  return <Profilo {...utente} />;
+}
+// Equivalente a: <Profilo nome={...} eta={...} citta={...} ruolo={...} urlAvatar={...} />
+```
+
+Lo spread è però "cieco": passa *tutte* le chiavi dell'oggetto senza controllare se il componente figlio le comprende. Se l'oggetto ha 20 proprietà e il componente ne capisce solo 5, le altre 15 vengono passate comunque (React le ignorerà, ma HTML potrebbe mostrare warning per props non valide su tag nativi).
+
+```jsx
+// Usalo quando sai che le chiavi dell'oggetto corrispondono alle props del componente
+const datiUtente = { nome: "Mario", eta: 25, admin: true };
+<Saluto {...datiUtente} />
+// equivale a: <Saluto nome="Mario" eta={25} admin={true} />
+```
+
+-----
+
+#### Le Props Sono Read-Only (La Cascata Unidirezionale)
+
+Una delle leggi fondamentali di React è che un componente figlio **non può mai modificare le sue props**. Sono read-only.
+
+```jsx
+function Saluto({ nome }) {
+  // ❌ VIETATO, React in Strict Mode lancia un errore
+  nome = "Marco";  // Non si fa MAI!
+
+  return <h1>Ciao {nome}!</h1>;
+}
+```
+
+I dati in React fluiscono come l'acqua in una cascata, sempre dall'alto verso il basso, dal genitore al figlio. L'acqua non risale la cascata e il figlio non può modificare la sorgente.
+
+```
+       App (ha lo stato: nome = "Mario")
+        │
+        │  nome="Mario"  (prop, read-only)
+        ▼
+      Saluto
+        │
+        │  nome="Mario" (prop, read-only)
+        ▼
+     NomeTesto
+```
+
+Questo si chiama **One-Way Data Flow** (flusso di dati unidirezionale). È una caratteristica deliberata e non una limitazione, per questi due motivi:
+
+1. **Predicibilità**: se vedi un valore in un componente figlio, sai che viene *da un genitore*. Non può essere cambiato da nessun altro posto.
+2. **Debug facile**: per capire perché un valore è sbagliato, risali la catena verso il genitore.
+
+**Come cambiare un valore passato via props?** Cambialo alla *sorgente*, cioè nello stato del componente genitore che lo controlla. Vedremo come farlo con `useState` nei capitoli successivi.
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Stili Inline (CSS Travestito da JavaScript)
+
+#### Le Doppie Graffe Demistificate `{{ }}`
+
+Abbiamo già visto nella sezione JSX che `{{ }}` non è una sintassi speciale, ma con gli stili inline la confusione è ancora più comune. Quando scrivi `style={{ color: 'red' }}`, stai facendo due cose distinte: la prima graffa `{` apre il portale JavaScript in JSX (come per qualsiasi espressione) e la seconda graffa `{color: 'red'}` è un normale oggetto JavaScript letterale.
+
+```jsx
+// Queste due scritture producono esattamente lo stesso risultato:
+
+// Modo compatto (le "doppie graffe" che potrebbero confonderti la prima volta)
+<button style={{ backgroundColor: 'blu', fontSize: 16 }}>Clicca</button>
+
+// Modo esplicito (più chiaro per capire la struttura)
+const stilePulsante = { backgroundColor: 'blu', fontSize: 16 };
+<button style={stilePulsante}>Clicca</button>
+```
+
+-----
+
+#### CamelCase Obbligatorio (Perché Niente Trattini?)
+
+In CSS scrivi `background-color`, `font-size`, `margin-top`. In React JSX devi scrivere `backgroundColor`, `fontSize`, `marginTop`. Il motivo è che gli oggetti JavaScript usano il trattino `-` come operatore di **sottrazione matematica**. Scrivere `{ background-color: 'red' }` in JavaScript viene letto come
+
+```javascript
+{
+  background - color: 'red'  // sottrai 'color' da 'background'?? ERRORE!
+}
+```
+
+Non è sintassi valida per una chiave di oggetto. La conversione è semplice: rimuovi i trattini e metti in maiuscolo la prima lettera di ogni parola successiva (camelCase).
+
+```jsx
+// CSS → JSX
+
+// background-color → backgroundColor
+// font-size        → fontSize
+// margin-top       → marginTop
+// text-align       → textAlign
+// border-radius    → borderRadius
+// z-index          → zIndex
+
+const mioStile = {
+  backgroundColor: '#f0f0f0',
+  fontSize: 18,
+  marginTop: 20,
+  textAlign: 'center',
+  borderRadius: 8
+};
+
+<div style={mioStile}>Contenuto</div>
+```
+
+-----
+
+#### Il Potere Dinamico (Perché Usare Oggetti?)
+
+La vera utilità degli stili inline in React non è la comodità ma la **dinamicità**, perché un oggetto JavaScript può contenere logica.
+
+```jsx
+function Pulsante({ isAttivo, coloreBase }) {
+  return (
+    <button
+      style={{
+        backgroundColor: isAttivo ? '#4CAF50' : '#ccc',  // colore condizionale
+        color: isAttivo ? 'white' : '#666',
+        fontSize: 16,
+        padding: '8px 16px',
+        borderRadius: 4,
+        border: 'none',
+        cursor: isAttivo ? 'pointer' : 'not-allowed',
+      }}
+    >
+      {isAttivo ? 'Attivo' : 'Non disponibile'}
+    </button>
+  );
+}
+```
+
+Lo stato `isAttivo` cambia → il componente re-esegue → l'oggetto stile viene ricreato con i nuovi valori → React aggiorna solo le proprietà CSS cambiate.
+
+-----
+
+#### I Limiti (Cosa Non Puoi Fare con gli Stili Inline)
+
+Gli stili inline sono potenti ma hanno limitazioni fondamentali. Non supportano Media Queries (`@media`), pseudo-classi (`:hover`, `:active`, `:focus`), pseudo-elementi (`::before`, `::after`), animazioni CSS (`@keyframes`) e selettori discendenti (`div > p`).
+
+```jsx
+// ❌ NON FUNZIONA con gli stili inline
+const stileLink = {
+  ':hover': { color: 'blue' },  // ERRORE! non esiste questa sintassi
+};
+```
+
+Per tutto ciò che va oltre la colorazione dinamica di base, la strada corretta è usare file CSS tradizionali con `className` condizionale, CSS Modules (`styles.module.css`) oppure librerie come Tailwind, Styled Components o Emotion.
+
+-----
+
+#### La Trappola della Performance
+
+C'è un dettaglio importante che non va mai ignorato.
+
+```jsx
+// ❌ PROBLEMA NASCOSTO, crea un nuovo oggetto ad ogni render
+function Titolo({ testo }) {
+  return (
+    <h1 style={{ color: 'red', fontSize: 24 }}>
+      {testo}
+    </h1>
+  );
+}
+```
+
+Ogni volta che `Titolo` viene ri-renderizzato (anche per motivi non legati allo stile), React crea un **nuovo oggetto** `{ color: 'red', fontSize: 24 }` in una nuova posizione di memoria. React confronta la prop `style`, vede indirizzi di memoria diversi, pensa che lo stile sia cambiato e aggiorna il DOM anche se il colore è rimasto identico.
+
+La soluzione per stili statici è portare l'oggetto *fuori* dal componente, così viene creato una volta sola.
+
+```jsx
+// ✅ CORRETTO, l'oggetto viene creato una volta sola, mai ricreato
+const stileTitolo = { color: 'red', fontSize: 24 };
+
+function Titolo({ testo }) {
+  return <h1 style={stileTitolo}>{testo}</h1>;
+}
+```
+
+Per stili *dinamici* (che dipendono da props o state) la ricreazione è inevitabile e accettabile. Per stili fissi, portali sempre fuori dal componente.
+
+-----
+
+#### La Regola Auto-`px` (e le Sue Eccezioni)
+
+React aggiunge automaticamente l'unità `px` ai valori numerici per le proprietà che tipicamente richiedono pixel:
+
+```jsx
+// React converte i numeri in '...px' automaticamente per molte proprietà
+<div style={{ width: 200, height: 100, marginTop: 16 }}>
+// → style="width:200px; height:100px; margin-top:16px"
+```
+
+Non tutte le proprietà CSS usano i pixel. React lo sa, e per proprietà come opacity, zIndex o flex non aggiunge px in automatico perché il loro valore è un numero puro senza unità di misura.
+
+```jsx
+// In queste proprietà React sa che non deve aggiungere px
+<div style={{
+  opacity: 0.5,
+  zIndex: 10,
+  flex: 1,
+  lineHeight: 1.5,
+  fontWeight: 700,
+}} />
+```
+
+Per unità diverse da `px` (percento, em, rem, vw, vh) devi invece usare le **stringhe**.
+
+```jsx
+<div style={{
+  width: '50%',      // stringa con unità
+  padding: '1em',    // stringa con unità
+  fontSize: '1.2rem' // stringa con unità
+}} />
+```

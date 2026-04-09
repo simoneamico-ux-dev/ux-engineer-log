@@ -1,0 +1,1037 @@
+---
+sidebar_position: 5
+title: Advanced State and Hooks
+description: Updating complex state, working with forms, and the Hooks ecosystem.
+---
+
+# React Real World Vademecum
+
+# Part V: Advanced State and Hooks
+
+You already know how to store a number. Now you will learn to store and update real things: objects, arrays, forms with dozens of fields. And then to build your own Hooks, the reusable building blocks that separate logic from the interface. This fifth part will enable you to write cleaner and more maintainable code.
+
+---
+
+## Advanced State and Hooks
+
+### 16. Updating State, Objects (The Lazy Guardian)
+
+When state is not a primitive number but an object, the rules change. The "obvious" way to update it, modifying it directly, does not work. To understand why, you need to understand how React checks if something has changed.
+
+#### Why `user.age = 31` Does Not Work (Reference Equality)
+
+React is a lazy guardian. To decide if a component needs to re-render, it does not open the box and check every single property of the object. It only looks at the **memory address**, the "barcode" on the box.
+
+```javascript
+// Two different situations for React:
+
+// SITUATION 1: Direct mutation (React sees nothing)
+const user = { name: "Mario", age: 30 };
+user.age = 31; // You change the content BUT the box is the same
+// React checks: "Same address? Yes → no re-render"
+
+// SITUATION 2: Replacement (React sees the change)
+const newUser = { ...user, age: 31 }; // New box, new address
+setUser(newUser); // React checks: "Different address → RE-RENDER!"
+```
+
+You change the painting inside the frame? The lazy guardian does not notice, it only looks at the barcode on the frame. You hang a new frame? Then it wakes up.
+
+**Rule:** never modify a state object directly. Always create a new object.
+
+-----
+
+#### The Spread Operator (The Photocopier)
+
+It is used to create a new object by copying the old one and modifying only what is needed. It is like a photocopier that copies everything and lets you correct only the details.
+
+```jsx
+function ProfileForm() {
+  const [user, setUser] = useState({
+    firstName: "Mario",
+    lastName: "Rossi",
+    age: 30,
+    city: "Roma",
+  });
+
+  function celebrateBirthday() {
+
+    // ❌ WRONG: you tell React the new state contains ONLY the age
+    // setUser({ age: 31 }); → firstName, lastName, city get deleted!
+
+    // ✅ CORRECT: photocopy everything, overwrite only the age
+    setUser({ ...user, age: user.age + 1 });
+  }
+
+  return (
+    <div>
+      <p>{user.firstName} {user.lastName}, {user.age} years old, {user.city}</p>
+      <button onClick={celebrateBirthday}>Happy Birthday!</button>
+    </div>
+  );
+}
+```
+
+The order is mandatory: spread first, override after.
+
+```javascript
+// ✅ CORRECT: copy everything, then overwrite age with the new value
+{ ...previousUser, age: 31 }
+
+// ❌ WRONG: set age=31, then copy from the old object (which had age=30)
+// The old value wins, silent bug
+{ age: 31, ...previousUser }
+```
+
+-----
+
+#### The Updater Function `prev => ...` (The Freshest State)
+
+When the new value depends on the old one, there is a subtle risk: the state you read inside the component might not be updated yet (stale) if React still has queued updates to process.
+
+The solution is to pass a **function** to `setUser` instead of a direct value. React guarantees that the `prev` parameter is always the very latest confirmed state.
+
+```jsx
+// ❌ Potentially stale, uses 'user' from the current render
+setUser({ ...user, age: user.age + 1 });
+
+// ✅ Always fresh. React guarantees that 'prev' is the latest value
+setUser(prev => ({ ...prev, age: prev.age + 1 }));
+```
+
+**Rule:** if the new state depends on the old one, always use the updater function `prev => newValue`.
+
+-----
+
+#### Computed Property Names `[name]: value` (The Magic Form)
+
+When you have a form with ten fields, writing ten functions `handleNameChange`, `handleEmailChange`, `handleCityChange`... is a mess. There is a way to handle them all with a single function.
+
+JavaScript **Computed Property Names** allow you to use the value of a variable as a property name in an object literal:
+
+```javascript
+const fieldName = "email";
+const object = { [fieldName]: "mario@example.com" };
+// Equivalent to: { email: "mario@example.com" }
+```
+
+Applied to a React form with `e.target.name`:
+
+```jsx
+function RegistrationForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    city: "",
+    phone: "",
+  });
+
+  // ONE SINGLE function for all fields
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // [name] reads the content of the variable 'name'
+    // If name = "email", it updates the 'email' property in state
+  }
+
+  return (
+    <form>
+      <input name="name"     value={formData.name}     onChange={handleChange} />
+      <input name="email"    value={formData.email}    onChange={handleChange} />
+      <input name="city"    value={formData.city}    onChange={handleChange} />
+      <input name="phone" value={formData.phone} onChange={handleChange} />
+    </form>
+  );
+}
+```
+
+The trick works because `e.target.name` reads the `name` attribute of the HTML tag, which must match the property in state.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 17. Updating State, Arrays (The Sealed Box Factory)
+
+Arrays in state follow the same rules as objects: never modify them directly. But there are specific JavaScript methods that "betray" this rule silently.
+
+#### The Treacherous Methods (The Blacklist)
+
+These methods modify the array "in place", they change the content without creating a new array and without changing the memory address. The Lazy Guardian sees nothing.
+
+```javascript
+// ❌ BLACKLIST: they modify the original array
+array.push(newElement)       // adds at the end
+array.pop()                  // removes the last
+array.shift()                // removes the first
+array.unshift(element)       // adds at the top
+array.splice(index, 1)       // removes or inserts at position
+array.sort()                 // reorders
+array.reverse()              // reverses
+```
+
+All of these change the content but leave the address unchanged. React does not re-render.
+
+-----
+
+#### Adding Elements (The "Open and Repackage" Technique)
+
+You cannot add a piece to a sealed box. You must open a new box, put all the old content plus the new piece inside, and seal the new box.
+
+```jsx
+function ShoppingList() {
+  const [items, setItems] = useState([
+    { id: "a1", name: "Bread" },
+    { id: "a2", name: "Milk" },
+  ]);
+
+  function addItem(itemName) {
+    const newItem = {
+      id: crypto.randomUUID(),
+      name: itemName,
+    };
+    // Adds at the end: [Bread, Milk, → Eggs ←]
+    setItems(prev => [...prev, newItem]);
+  }
+
+  function addToTop(itemName) {
+    const newItem = { id: crypto.randomUUID(), name: itemName };
+    // Adds at the top: [→ Eggs ←, Bread, Milk]
+    setItems(prev => [newItem, ...prev]);
+  }
+  // ...
+}
+```
+
+-----
+
+#### Removing Elements (The `.filter()` Bouncer)
+
+`.filter()` is a "good" (immutable) method that iterates over the array and **always returns a new array** containing only the elements that pass the test. The original array remains untouched.
+
+```jsx
+function handleDelete(idToDelete) {
+  // "Let everyone through except the one with this ID"
+  setItems(prev => prev.filter(item => item.id !== idToDelete));
+}
+```
+
+If the list had 5 elements and the one with id `"a3"` is removed, `filter` returns a **new array** of 4 elements. React sees the changed address and triggers the re-render.
+
+-----
+
+#### Modifying Elements (The `.map()` + Spread Swiss Army Knife)
+
+How do you update **a single element** inside a list without touching the others?
+
+`.map()` iterates over the array and for each element asks: "Is this the one I am looking for?" If not, it returns the original element untouched. If yes, it returns a modified copy (spread + override).
+
+```jsx
+function handleComplete(idToComplete) {
+  setItems(prev =>
+    prev.map(item =>
+      item.id === idToComplete
+        ? { ...item, completed: true }  // Copy + override
+        : item                           // Original untouched
+    )
+  );
+}
+```
+
+The result is a new array where only that element is different. All others are the original references.
+
+-----
+
+<br />
+
+#### Summary Table (Forbidden vs Correct)
+
+| Operation | Forbidden Method (Mutates) | Correct Method (Immutable) |
+|-----------|----------------------|------------------------------|
+| Add | `array.push(el)` | `[...array, el]` |
+| Add at top | `array.unshift(el)` | `[el, ...array]` |
+| Remove | `array.splice(i, 1)` | `array.filter(el => el.id !== id)` |
+| Modify | `array[i].prop = val` | `array.map(el => el.id === id ? {...el, prop: val} : el)` |
+| Sort | `array.sort()` | `[...array].sort()` (copy first) |
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 18. Controlled Components and Forms (The React Dictatorship)
+
+A form with React can work in two philosophically opposite ways. Choosing the right one for the wrong context is the source of much frustration.
+
+#### Controlled vs Uncontrolled (The Dictatorship vs The Democracy)
+
+In the controlled component React is the Single Source of Truth. The HTML input does not remember anything on its own, it is a screen that only shows what React tells it to show. Every user modification must go through React.
+
+```jsx
+// TV (screen) + Remote Control = controlled pattern
+function NameInput() {
+  const [name, setName] = useState("");
+
+  return (
+    <input
+      value={name}                              // TV: shows only state
+      onChange={(e) => setName(e.target.value)} // Remote control: updates state
+    />
+  );
+}
+```
+
+The pro is real-time control (letter-by-letter validation, dynamically enable/disable buttons). The con is a re-render on every keystroke.
+
+In the uncontrolled component React steps aside. The DOM manages data on its own and you read it only when needed (on submit).
+
+```jsx
+function SimpleForm() {
+  const inputRef = useRef(null);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(inputRef.current.value); // Read only on submit
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input ref={inputRef} defaultValue="" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+The pro is very little code and no re-render while the user types. The con is that you lose React's superpowers (real-time validation, synchronization with other fields).
+
+React 19 introduced a third way with `useActionState`. The idea is to stop fighting the browser and go back to using the native `action` attribute of HTML forms, the same one the web used in 1999 with PHP. But this time React adds its superpower on top.
+
+```jsx
+// 1. The function lives on the server, the browser never sees it
+"use server";
+async function submitForm(previousState, formData) {
+  const name = formData.get("name"); // Native browser FormData!
+  return { message: `Hello, ${name}!` };
+}
+
+// 2. In the component the hook acts as a "radio bridge" between browser and server
+const [state, submit, isPending] = useActionState(submitForm, { message: "" });
+
+// 3. No onChange, no e.target.value, no e.preventDefault()
+<form action={submit}>
+  <input name="name" type="text" />
+  <button disabled={isPending}>
+    {isPending ? "Loading..." : "Submit"}
+  </button>
+</form>
+<p>{state.message}</p>
+```
+
+It is the perfect compromise: no re-render while the user types (like an uncontrolled component), but with automatic management of `isPending` and the server response (like a controlled component). Without having to manually write `useState`, `try/catch` or `fetch()`.
+
+`useActionState` requires a framework with Server Actions support (like Next.js) and does not work with "pure" client-side React. We will explore it in depth in a future chapter.
+
+-----
+
+#### Text Input (The TV and the Remote Control)
+
+The controlled pattern for a text input is the most common in React. It is worth visualizing it clearly:
+
+```jsx
+<input
+  value={nameState}                              // TV: shows only this
+  onChange={(e) => setNameState(e.target.value)} // Remote control
+/>
+```
+
+If you removed `onChange` while keeping `value`, the input would become read-only. The user types but sees nothing change and React would warn with a warning.
+
+-----
+
+#### Select (`value` on the Parent Tag)
+
+In standard HTML, you select an option by putting `selected` on the individual `<option>`. With 50 options it is a mess. React changes the approach:
+
+```jsx
+function CategorySelect() {
+  const [category, setCategory] = useState("technology");
+
+  return (
+    <select
+      value={category}                              // React manages which option is selected
+      onChange={(e) => setCategory(e.target.value)}
+    >
+      <option value="technology">Technology</option>
+      <option value="sports">Sports</option>
+      <option value="cooking">Cooking</option>
+      <option value="travel">Travel</option>
+    </select>
+  );
+}
+```
+
+The hidden superpower is that having `category` in state lets you do instant conditional rendering based on the selection.
+
+```jsx
+{category === "cooking" && <SuggestedRecipes />}
+```
+
+-----
+
+#### Checkbox (The Dual Personality)
+
+Checkboxes have a different nature from text inputs. They do not have a value to display, they have a **boolean state** (checked/unchecked) and you use `checked` instead of `value`.
+
+For a single checkbox the pattern is straightforward.
+
+```jsx
+function TermsOfService() {
+  const [accepted, setAccepted] = useState(false);
+
+  return (
+    <label>
+      <input
+        type="checkbox"
+        checked={accepted}
+        onChange={(e) => setAccepted(e.target.checked)} // e.target.checked, not .value
+      />
+      <span>I accept the Terms of Service</span>
+    </label>
+  );
+}
+```
+
+With multiple checkboxes state becomes an array.
+
+```jsx
+function InterestSelector() {
+  const [interests, setInterests] = useState(["sports"]); // Array of selected
+
+  function handleChange(e) {
+    const { value, checked } = e.target;
+    // checked=true → add to the array
+    // checked=false → remove from the array
+    setInterests(prev =>
+      checked ? [...prev, value] : prev.filter(i => i !== value)
+    );
+  }
+
+  const allInterests = ["sports", "music", "technology", "cooking", "travel"];
+
+  return (
+    <div>
+      {allInterests.map((interest) => (
+        <label key={interest}>
+          <input
+            type="checkbox"
+            value={interest}
+            checked={interests.includes(interest)} // Invisible thread UI ↔ data
+            onChange={handleChange}
+          />
+          <span>{interest}</span>
+        </label>
+      ))}
+      <p>Selected: {interests.join(", ")}</p>
+    </div>
+  );
+}
+```
+
+`interests.includes(interest)` is the invisible thread. If the value is in the array the checkmark appears, if it is not the checkmark disappears. UI and data always stay in sync.
+
+-----
+
+#### The Dynamic Submit Button
+
+With controlled components enabling/disabling the button based on form state is trivial, just read the current values.
+
+```jsx
+function HeroForm({ onSubmit }) {
+  const [heroName, setHeroName] = useState("");
+  const [realName, setRealName] = useState("");
+  const [powers, setPowers] = useState([]);
+
+  const formInvalid = !heroName || !realName || powers.length === 0;
+
+  return (
+    <form onSubmit={onSubmit}>
+      <input value={heroName} onChange={(e) => setHeroName(e.target.value)} placeholder="Hero name" />
+      <input value={realName} onChange={(e) => setRealName(e.target.value)} placeholder="Real name" />
+      {/* ... checkboxes for powers ... */}
+      <button type="submit" disabled={formInvalid}>
+        Create Hero
+      </button>
+    </form>
+  );
+}
+```
+
+The button enables/disables automatically as state changes. No imperative code, no `querySelector`. React takes care of everything.
+
+-----
+
+#### The `<span>` Inside `<label>` (Why Not Just Text?)
+
+A subtle detail that comes up often in forms: why do components put `<span>` inside `<label>` instead of writing the text directly?
+
+```jsx
+// Direct text, works but limits CSS
+<label><input type="checkbox" /> I accept</label>
+
+// With span, precise CSS control
+<label>
+  <input type="checkbox" />
+  <span>I accept the Terms</span>
+</label>
+```
+
+Direct text inside `<label>` is a **Text Node** that has no "body" you can grab with CSS selectors. With `<span>` you can write `label span { margin-left: 8px; }` and align with precision.
+
+For **custom checkboxes** (visually customized ones, not the native browser style), the `<span>` is the element that becomes the CSS square: the native input is hidden and the `<span>` is used to draw an animated square with pure CSS.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 19. useRef (The Secret Drawer)
+
+`useState` is the shop window, every change reopens the shop (re-render) and everyone sees it.  
+`useRef` is the cashier's secret drawer. You can put something in it, retrieve it when needed, change it as much as you want. Nobody knows, which means: no re-render.
+
+#### useState (Window) vs useRef (Drawer)
+
+```jsx
+// useState: every change triggers a re-render
+const [counter, setCounter] = useState(0);
+
+// useRef: changes are silent
+const countRef = useRef(0);
+countRef.current = countRef.current + 1; // Silent, no re-render
+```
+
+Use `useRef` when you want to access a DOM element directly (focus, measurements) or when you want to keep a value in memory across renders without triggering updates (timer ID, previous values).
+
+-----
+
+#### Under the Hood (The Immortal Box `{ current: ... }`)
+
+Normal variables inside a function are born and die on every render. `useRef` is different, it creates a small object `{ current: initialValue }` that **lives outside the component function**. React gives you back the same object (same memory address) on every render.
+
+```javascript
+// On the first call:
+const myRef = useRef(null); // Creates { current: null } in permanent memory
+
+// On the second render:
+const myRef = useRef(null); // React returns the same { current: null } as before
+                             // The initial value (null) is ignored
+```
+
+You can change `ref.current` as much as you want, the box stays the same and React does not notice.
+
+-----
+
+#### Hooking into the DOM (The Three Steps)
+
+The most common use case for `useRef` is getting a direct reference to an HTML element to call its native methods (`.focus()`, `.scrollIntoView()`, `.play()`).
+
+```jsx
+import { useRef } from "react";
+
+function SearchBar() {
+  // Step 1 (Reservation): create the empty box
+  const inputRef = useRef(null);
+
+  function handleFocus() {
+    // Step 3 (Usage): current is now the actual HTML element
+    if (inputRef.current) { // Best practice: verify it exists
+      inputRef.current.focus();
+    }
+  }
+
+  return (
+    <div>
+      {/* Step 2 (Labeling): React puts the DOM reference here */}
+      <input ref={inputRef} type="search" placeholder="Search..." />
+      <button onClick={handleFocus}>Search</button>
+    </div>
+  );
+}
+```
+
+In the first step (reservation) `useRef(null)` creates the box with `current = null` because the element does not exist yet. In the second step (labeling) `ref={inputRef}` tells React "when you build this DOM element, put it inside `inputRef.current`", and React does so after the Commit. In the third step (usage) `inputRef.current` points to the real HTML element, with all its native methods.
+The `if (inputRef.current)` protects from errors if the element is not yet mounted or has been unmounted.
+
+-----
+
+#### Accessibility and Focus Management (The Attention Telepathy)
+
+`useRef` with the DOM is not just a convenience, in certain contexts it is a necessity for accessibility. React SPAs "break" the browser's natural behavior regarding focus.
+
+In classic websites (MPA) every page change resets focus to the beginning. In React SPAs the page never changes and content is silently replaced. The Screen Reader does not understand that the context has changed, and the visually impaired user finds themselves teleported to a different room without knowing it.
+
+The solution is `useRef` as a director that tells the browser "Do not look where you had the cursor. Look HERE."
+
+A first example is error handling in a form.
+
+```jsx
+function ContactForm() {
+  const [error, setError] = useState("");
+  const errorMessageRef = useRef(null);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!validateData()) {
+      setError("Please fill in all required fields.");
+      // Wait for the render, then move focus to the error message
+      setTimeout(() => {
+        if (errorMessageRef.current) {
+          errorMessageRef.current.focus();
+        }
+      }, 0);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {error && (
+        // tabIndex="-1": focusable via JS but not via manual Tab
+        <h2 ref={errorMessageRef} tabIndex="-1" style={{ color: "red" }}>
+          {error}
+        </h2>
+      )}
+      {/* form fields... */}
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+The `tabIndex="-1"` on `<h2>` is needed because non-interactive elements like headings and paragraphs are not focusable by default.
+This attribute allows JavaScript to move focus to them with `.focus()`, without adding them to the Tab key navigation sequence.
+
+A second example is a "page" change in a SPA.
+
+```jsx
+function AboutUsPage() {
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    // On component mount, move focus to the title
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, []);
+
+  return (
+    <main>
+      <h1 ref={titleRef} tabIndex="-1">About Us</h1>
+      {/* ... */}
+    </main>
+  );
+}
+// The Screen Reader announces: "About Us, heading level 1"
+```
+
+A third example is a modal with focus trap. When a modal opens, focus must go inside it. Otherwise the keyboard navigates elements behind the dark overlay, visually invisible but reachable via Tab.
+
+```jsx
+function Modal({ isOpen, onClose }) {
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>Confirm Action</h2>
+        <p>Are you sure you want to proceed?</p>
+        <button ref={closeButtonRef} onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+It is the curb cut effect in action, the ramps on sidewalks, invented for wheelchairs but used by everyone: strollers, trolleys, bikes. Your accessibility code also helps keyboard power users, users with a broken mouse, smart TVs and consoles (controller navigation), users with cognitive overload who prefer the keyboard.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 20. useEffect (Synchronizing with the Outside World)
+
+An ideal React component is a pure mathematical formula: same data in, same UI out, without doing anything else. But real apps need to do "dirty" things like calling APIs, setting timers, listening to browser events, updating the tab title. These actions happen *outside* the rendering flow and are **Side Effects**.
+
+`useEffect` is the safe enclosure where React lets you do dirty things without breaking the rendering flow.
+
+#### Pure vs Impure
+
+```jsx
+// ✅ PURE: same inputs, same output, no side effects
+function Welcome({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+// ❌ IMPURE: during rendering, does things outside
+function TabTitle({ title }) {
+  document.title = title; // Side effect during render = problem
+  return <h1>{title}</h1>;
+}
+
+// ✅ CORRECT: the side effect goes inside useEffect
+function TabTitle({ title }) {
+  useEffect(() => {
+    document.title = title;
+  }, [title]); // Re-run only if 'title' changes
+
+  return <h1>{title}</h1>;
+}
+```
+
+-----
+
+#### The Dependency Array (The Effect's Bouncer)
+
+`useEffect` accepts two arguments: the function to execute and a dependency array. The array is the bouncer that decides when the function should run.
+
+Without array the effect is a parasite.
+
+```jsx
+useEffect(() => {
+  // Executed after EVERY render, even those that have nothing to do with it
+  console.log("Render\!");
+});
+// Danger: if inside you call setState, re-render, effect, re-render...
+// Infinite loop and browser crash
+```
+
+With empty array `[]` the effect runs only once.
+
+```jsx
+useEffect(() => {
+  // Executed ONLY ONCE after the first render (Mount)
+  console.log("Component mounted\!");
+  // Common uses: initial data fetch, WebSocket setup, global event registration
+}, []);
+```
+
+The bouncer says: "The effect entered at the grand opening. It never comes in again."
+
+With array containing variables the effect becomes a guardian.
+
+```jsx
+useEffect(() => {
+  // Executed at Mount AND every time 'userId' changes
+  loadUserData(userId);
+}, [userId]);
+// React saves the value of 'userId' from the previous render.
+// On the next render, if it changed it runs the effect. If unchanged, it saves the work.
+```
+
+-----
+
+#### The Cleanup Function (The Cleaning Crew)
+
+When an effect activates something that lives over time, like a timer, a global event listener, or a WebSocket connection, that something does not stop working on its own when the component is removed from the screen.
+If you do not stop it explicitly, it continues running in the background consuming memory and potentially causing errors on components that no longer exist.
+
+The **cleanup function** serves exactly this purpose. Return a function inside the effect and React calls it when the component unmounts or before re-running the effect with new dependencies.
+
+```jsx
+function ActiveTimer({ isActive }) {
+  useEffect(() => {
+    if (!isActive) return;
+
+    // Mount: start the timer
+    const timerId = setInterval(() => {
+      console.log("Tick...");
+    }, 1000);
+
+    // Cleanup: React calls this function when
+    // the component disappears from the screen (definitive Unmount)
+    // or before re-running the effect (if 'isActive' changes)
+    return () => {
+      clearInterval(timerId); // Turn off the music before you leave
+    };
+  }, [isActive]);
+
+  return <div>{isActive ? "Timer active" : "Timer stopped"}</div>;
+}
+```
+
+Without cleanup: if the user unmounts the component, `setInterval` continues running in the background. If that timer calls `setState` on an unmounted component, React throws a warning and you could have a memory leak.
+
+-----
+
+#### The True Mental Model (Synchronization, Not "Do When")
+
+The wrong way to think about `useEffect` is "When I click this button, I want X to happen."  
+The right way is instead "I want my component to always be **synchronized** with this external system."
+
+```jsx
+// ❌ Wrong thinking: "When 'query' changes, do the search"
+// ✅ Right thinking: "Search results must be synchronized with 'query'"
+
+useEffect(() => {
+  if (!query) return;
+
+  let isCancelled = false; // Flag to avoid race conditions
+
+  fetch(`/api/search?q=${query}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!isCancelled) {
+        setResults(data);
+      }
+    });
+
+  return () => { isCancelled = true; }; // Cleanup: cancel the response if it arrives late
+}, [query]);
+```
+
+Side Effects are all operations that touch the world outside React: `fetch()` for the network, `document.title` and `localStorage` as Browser APIs, `addEventListener` for global events, `setInterval` and `setTimeout` for timers.
+
+---
+
+### 21. Custom Hooks (The Reusable Specialists)
+
+A component becomes complicated when it does too many things: it manages the UI, fetches data, handles errors, handles loading, handles timers. It is like a chef who cooks, serves tables, washes dishes, and runs the register.
+
+**Custom Hooks** separate logic from the interface: the component only takes care of drawing. The Custom Hook takes care of everything else.
+
+#### The Philosophy (Separation of Concerns)
+
+```jsx
+// ❌ Component that does everything, hard to read and test
+function SearchComponent() {
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(query), 500);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  useEffect(() => {
+    if (!debouncedQuery) return;
+    setLoading(true);
+    fetch(`/api/search?q=${debouncedQuery}`)
+      .then(res => res.json())
+      .then(data => { setResults(data); setLoading(false); });
+  }, [debouncedQuery]);
+
+  return (/* JSX... */);
+}
+
+// ✅ Component that only takes care of the UI
+function SearchComponent() {
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 500); // Logic extracted
+
+  return (/* JSX... */);
+}
+```
+
+**Rule:** the name of a Custom Hook must start with use (lowercase).
+When React and the linter (the tool that analyzes code in your editor and flags errors in real time) see a function that starts with `use`, they treat it as a Hook and check that it is called only at the top level of the component, never inside `if`, `for`, or nested functions. If you forget the `use` prefix, that function looks like a regular function and nobody warns you if you call it inside an `if`, causing the shelf-order bugs we saw in the section on `useState`.
+
+Apart from this naming convention, Custom Hooks are regular JavaScript functions that internally call other Hooks. There is no special registration mechanism.
+
+-----
+
+#### Case Study `useDebounce` (The Patient Waiter)
+
+You have a search bar that wants to show results in real time. Every keystroke triggers an API call? With a user typing "MESSI" quickly, sending 5 API calls in 200ms is pointless and expensive. The solution is debounce: wait until the user stops typing for X milliseconds, then act. It works like a waiter who waits for you to finish speaking before going to the kitchen.
+
+```jsx
+// hooks/useDebounce.js
+import { useState, useEffect } from "react";
+
+export function useDebounce(value, delayMs) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    // Every time 'value' changes, set a timer
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delayMs);
+
+    // Cleanup: if 'value' changes again before the timer expires
+    // reset the old timer (avoid updating with intermediate values)
+    return () => clearTimeout(timer);
+  }, [value, delayMs]);
+
+  return debouncedValue;
+}
+```
+
+Here is the cleanup chain visualized.
+
+```
+The user types "MESSI" quickly (0.1s between each letter):
+
+Type "M"  → Timer "M" (500ms) started
+Type "E"  → CLEANUP: reset timer "M" → Timer "ME" (500ms) started
+Type "S"  → CLEANUP: reset timer "ME" → Timer "MES" started
+Type "S"  → CLEANUP: reset timer "MES" → Timer "MESS" started
+Type "I"  → CLEANUP: reset timer "MESS" → Timer "MESSI" started
+...500ms of silence...
+→ setDebouncedValue("MESSI") executed
+→ ONE SINGLE API call
+```
+
+Usage example.
+
+```jsx
+function PlayerSearchBar() {
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebounce(query, 500);
+
+  useEffect(() => {
+    if (!debouncedQuery) return;
+    searchPlayers(debouncedQuery);
+  }, [debouncedQuery]);
+
+  return (
+    <input
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search player..."
+    />
+  );
+}
+```
+
+-----
+
+#### Reusability and File Structure
+
+```
+src/
+  hooks/
+    useDebounce.js     ← written once, imported everywhere
+    useFocusOnMount.js
+    useLocalStorage.js
+  components/
+    SearchBar.jsx      ← uses useDebounce
+    ArtistsPage.jsx    ← uses useDebounce (zero duplicated code)
+```
+
+The Custom Hook `useDebounce` written today for the player search is identical to the one you would use tomorrow for product search, user search, article search. Zero duplication.
+
+It is also **testable in isolation**, you can verify the timer works correctly without mounting any UI component.
+
+-----
+
+#### Batching vs Debouncing (Two Cousins, Not the Same Thing)
+
+These two terms are often confused because both "group" updates. They are very different mechanisms.
+
+| | Batching | Debouncing |
+|---|---|---|
+| **Who does it** | React automatically | You, in your code |
+| **Where it operates** | Inside React (state updates) | In your functions (user events, APIs) |
+| **Purpose** | Avoid multiple re-renders in the same JS call | Avoid excessive calls from rapid inputs |
+| **When it triggers** | End of each event handler function | After X ms of silence from the last event |
+
+-----
+
+#### Pattern `useFocusOnMount` (The Clean Accessibility Hook)
+
+We saw the focus pattern in `useRef`. Extracting it into a Custom Hook transforms repetitive and verbose code into a single readable line.
+
+Before, with code scattered in the component.
+
+```jsx
+function RegistrationForm() {
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+  return <input ref={inputRef} />;
+}
+```
+
+After, with the clean Custom Hook.
+
+```jsx
+// hooks/useFocusOnMount.js
+import { useRef, useEffect } from "react";
+
+export function useFocusOnMount() {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  }, []);
+
+  return ref;
+}
+```
+
+```jsx
+// Usage: a single line that says it all
+function RegistrationForm() {
+  const inputRef = useFocusOnMount();
+
+  return <input ref={inputRef} placeholder="Focus arrives here automatically" />;
+}
+```
+
+The version with the Custom Hook is self-documenting: `useFocusOnMount()` says exactly what it does. The logic is hidden in the hook, the component only shows the intention.
+
+<br />
+<br />
+
+---
+
+### Summary (Advanced State and Hooks at a Glance)
+
+| Concept | Key rule | Common trap |
+|----------|--------------|-----------------|
+| State objects | Always create a new object with spread | `object.prop = val` does not trigger re-render |
+| Spread order | `{ ...prev, key: value }`, spread first | `{ key: val, ...prev }`, the old value wins |
+| Updater function | `set(prev => ...)` when you depend on the old value | `set(value)` can use state not yet updated (stale) |
+| `[name]: value` | One function for all form fields | The HTML `name` must match the key in state |
+| Forbidden methods | `push`, `splice`, `sort` mutate the array | React does not see the change |
+| `.filter()` | Remove elements immutably | Always returns a new array |
+| `.map()` + spread | Modify an element immutably | The element not found must return untouched |
+| Controlled vs Uncontrolled | `value={state}` + `onChange` vs `ref` + read on submit | Controlled input without `onChange` = read-only |
+| `useActionState` | `[state, submit, isPending]`, React 19, form + server | Requires framework with Server Actions (Next.js) |
+| Checkbox | `checked={bool}` + `e.target.checked` | Do not use `value` for the check state |
+| `useRef` | Does not trigger re-render, keeps value across renders | Do not use it as a substitute for visible state |
+| `ref={...}` | Hooks into DOM element after Commit | `ref.current` is `null` during rendering |
+| `tabIndex="-1"` | Focusable via JS, excluded from Tab nav | Needed on non-interactive elements where adding focus |
+| `useEffect` | Side effects after render | Calling `setState` without dependencies = infinite loop |
+| Dependency array | `[]` = mount only, `[val]` = when val changes | Missing dependency = effect not updated |
+| Cleanup | `return () => { ... }` to release resources | Orphaned timers/listeners = memory leak |
+| Custom Hook | Starts with `use`, separates logic from UI | Without `use` prefix: React does not enforce the rules |
+| `useDebounce` | Cleanup of timer on every keystroke | Generating UUID or timer in render = disaster |

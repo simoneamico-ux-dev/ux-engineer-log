@@ -1,0 +1,599 @@
+---
+sidebar_position: 4
+title: State and Events
+description: Making components interactive with useState and the event system.
+---
+
+# React Real World Vademecum
+
+# Part IV: State and Events
+
+State is React's memory. Events are its nervous system. Together they transform a static UI, a nice photograph, into an interactive application. Without state, React draws; with state, React *responds*. This fourth part is the beating heart of everything you will build.
+
+---
+
+## State and Events
+
+### 13. Events (The Diplomatic Nervous System)
+
+An application without events is a poster: you look at it but you don't touch it. Events are the channels through which the user communicates with your app. React has built an elegant system to handle them uniformly across every browser, and understanding the mechanics saves you from subtle bugs and unexpected behavior.
+
+#### The Synthetic Event System (The Universal Adapter)
+
+Browsers are anarchic. Chrome, Firefox, Safari: every engine has written its own event implementation. A click event on Chrome can have different properties from one on Firefox. A `event.which` field exists in some browsers and not in others.
+
+React solves this problem with elegance: it intercepts every native browser event, wraps it in a standardized object called `SyntheticBaseEvent`, and always delivers the same clean interface, regardless of the browser. It is like a universal travel adapter: you have an Italian plug, the wall has different sockets in every country, and the adapter makes everything work without you having to think about it.
+
+```jsx
+function RegistrationForm() {
+  function handleSubmit(event) {
+    // 'event' is a SyntheticBaseEvent, identical in every browser
+    event.preventDefault();
+    console.log("Form submitted!");
+    // If you ever need it, the raw native event is here:
+    // event.nativeEvent
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <button type="submit">Register</button>
+    </form>
+  );
+}
+```
+
+`event.nativeEvent` contains the original browser event. In 99.9% of cases you won't need it, but it's there if you do.
+
+-----
+
+#### Event Delegation (A Single Listener for Performance)
+
+In Vanilla JavaScript, the "instinctive" way to handle 1000 buttons is to attach 1000 event listeners, one for each button. This uses up memory and slows down the app.
+
+React doesn't work that way. React never attaches listeners to elements in the real DOM, one by one.
+
+It attaches **a single listener** to the root of the entire application (the `#root` element). When you click a button 5 levels deep, the event "bubbles up" (Bubbling) through the DOM to the root. React intercepts it there, sees which component it belongs to, and calls the correct handler.
+
+It works like a switchboard operator at the entrance of a large building. There isn't a phone on every desk: all calls go through the operator, who routes them to the right office.
+
+```
+DOM:         [root] ← React attaches ONE SINGLE listener here
+               |
+             [App]
+               |
+        [ProductList]
+               |
+[Product] [Product] [Product]
+               |
+           [Button] ← the user clicks here
+               |
+               ↑  the click bubbles up (Bubbling) to [root]
+```
+
+Result: better performance, zero orphan listeners in memory.
+
+-----
+
+#### `onClick={fn}` vs `onClick={fn()}` (The Recipe vs The Cake)
+
+There is a huge difference between passing a function and calling it.
+
+```jsx
+// ✅ CORRECT: "Here is the recipe. Use it when the user clicks."
+<button onClick={handleClick}>Click</button>
+
+// ❌ WRONG: "Execute this recipe NOW. Then pass the result (undefined) as the listener."
+<button onClick={handleClick()}>Click</button>
+```
+
+In the wrong case, `handleClick()` is executed **during rendering**, not on click. If that function calls `setState`, it triggers a re-render, which triggers another render, which executes `handleClick()` again, until an infinite loop or immediate crash.
+
+**Rule:** inside `onClick={}` always put a **reference** to the function (without parentheses), not its execution.
+
+-----
+
+#### Arrow Functions as Wrappers (Passing Arguments)
+
+But if you need to pass an argument to the function, you need the parentheses. How do you do it?
+
+```jsx
+// You want to pass the ID of the product to delete
+
+// ❌ WRONG: handleDelete(product.id) executes immediately
+<button onClick={handleDelete(product.id)}>Delete</button>
+
+// ✅ CORRECT: a "wrapper" function that doesn't execute immediately
+<button onClick={() => handleDelete(product.id)}>Delete</button>
+```
+
+`() => handleDelete(product.id)` is a new function that, when called on click, will execute `handleDelete(product.id)`. React stores this wrapper and on click executes it, which in turn calls the function with the right argument.
+
+-----
+
+#### The `handle` vs `on` Convention (Pure Semantics)
+
+React doesn't check the names you give your functions. There are no errors for "wrong" names. But there is a strongly followed convention that makes code readable at a glance.
+
+Props are named `on...` because they describe an event that can happen (`onDelete`, `onConfirm`, `onColorChange`), with the meaning of "When *this happens*...". Functions instead are named `handle...` because they describe who handles the event (`handleDelete`, `handleConfirm`, `handleColorChange`), with the meaning of "I take care of handling *this action*".
+
+```jsx
+// The child component exposes an onDelete prop
+function ProductCard({ product, onDelete }) {
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <button onClick={onDelete}>Remove</button>
+    </div>
+  );
+}
+
+// The parent passes the handleDelete function as onDelete
+function ProductList() {
+  function handleDelete(id) {
+    console.log("Deleting product:", id);
+  }
+
+  return (
+    <ProductCard
+      product={sampleProduct}
+      onDelete={() => handleDelete(sampleProduct.id)}
+    />
+  );
+}
+```
+
+On native HTML tags (`<button>`, `<input>`, `<form>`) the names are fixed and imposed by the browser: `onClick`, `onChange`, `onSubmit`, `onKeyDown`. You cannot change these.
+
+-----
+
+#### `e.preventDefault()` (Stop the Browser's Instinct)
+
+Every HTML tag has a default behavior. The browser performs that action automatically, without asking permission. A `<form>` with submit reloads the entire page, a clicked `<a href="...">` changes the URL and navigates away, an `<input type="checkbox">` checks or unchecks the box, and a drag on an image starts the native drag.
+
+`e.preventDefault()` tells the browser: "Stop your instinct. I'll take care of what to do."
+
+```jsx
+function ContactForm({ onSubmission }) {
+  function handleSubmit(e) {
+    e.preventDefault(); // Stop the page from reloading
+    // Now we can handle the data our own way
+    const data = new FormData(e.target);
+    onSubmission(Object.fromEntries(data));
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="email" type="email" />
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+`preventDefault` **has nothing to do** with the parent/child hierarchy of components. It stops the browser's action on the HTML tag, nothing else.
+
+-----
+
+#### `e.stopPropagation()` (Stop the Bubble)
+
+When an event fires on a child element, it automatically rises toward the parents (Bubbling). Sometimes this is undesirable.
+
+Imagine this classic scenario: a clickable Card that opens the product details. Inside the Card there is a "Like" button. Without `stopPropagation`, clicking "Like" also triggers the click on the entire Card and the user ends up on the details page when they only wanted to like.
+
+```jsx
+function ArticleCard({ article, onOpenDetails }) {
+  function handleLike(e) {
+    e.stopPropagation(); // Stop here, don't bubble up to the Card
+    console.log("Like added to:", article.title);
+  }
+
+  return (
+    <div onClick={onOpenDetails} className="clickable-card">
+      <h3>{article.title}</h3>
+      <button onClick={handleLike}>❤️ Like</button>
+    </div>
+  );
+}
+```
+
+So, `preventDefault` is a problem of **Nature** (what the browser or the HTML tag does by default), while `stopPropagation` is a problem of **Hierarchy** (the event must not bubble up toward the parents).
+
+-----
+
+#### `e.target` (The Smoking Gun)
+
+`e.target` physically points to the HTML element that triggered the event. From `e.target` you can extract information about the user's input.
+
+```jsx
+function ProfileForm() {
+  function handleChange(e) {
+    // e.target is the <input> element the user modified
+    const fieldName = e.target.name;    // the name attribute of the HTML field
+    const fieldValue = e.target.value;  // what the user typed
+
+    // Or with destructuring in one shot:
+    const { name, value } = e.target;
+    console.log(`Field: ${name}, Value: ${value}`);
+  }
+
+  return (
+    <form>
+      <input name="name" onChange={handleChange} />
+      <input name="email" onChange={handleChange} />
+      <input name="city" onChange={handleChange} />
+    </form>
+  );
+}
+```
+
+The most useful properties of `e.target` are `e.target.value` to extract the typed text or the selected option, `e.target.name` to extract the `name` attribute of the HTML element, `e.target.checked` to extract the state of checkboxes and radios, and `e.target.type` to extract the input type.
+
+-----
+
+#### `onClick` vs `onChange` (Which One to Use When)
+
+It is often not obvious which event to use. But the distinction is actually simple.
+
+Use `onClick` when you want to react to an **immediate and intentional command** from the user: clicking a "Save" button, opening a modal, deleting an element.
+
+Use `onChange` when you want to **capture a value** while the user is building it in real time: updating state with every letter typed in an input, reacting to a selection in a `<select>`, capturing a color from an `<input type="color">` while the user drags the picker.
+
+```jsx
+// onChange: capture the color in real time while the user picks
+function ColorPicker() {
+  const [color, setColor] = useState("#000000");
+
+  return (
+    <div>
+      <input
+        type="color"
+        value={color}
+        onChange={(e) => setColor(e.target.value)}
+      />
+      <div style={{ backgroundColor: color, width: 100, height: 100 }} />
+    </div>
+  );
+}
+```
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 14. useState (The External Memory)
+
+You can click, hover, focus with events. But if you want something to *change* visually in response to that interaction, you need state. State is the mechanism that tells React: "Something has changed, redraw."
+
+#### The Problem (Functions Have Alzheimer's)
+
+React builds your UI by calling component functions. It calls them again every time something changes. Every time a function is called, local variables are created from scratch and then forgotten.
+
+```jsx
+// ❌ This does NOT work, the counter never increments
+function Counter() {
+  let count = 0; // Recreated at 0 on every call
+
+  function handleClick() {
+    count = count + 1; // Increments... but only in local memory
+    console.log(count); // Prints 1, 2, 3... but React doesn't redraw
+  }
+
+  return (
+    <div>
+      <p>Count: {count}</p> {/* Always 0 */}
+      <button onClick={handleClick}>+1</button>
+    </div>
+  );
+}
+```
+
+The variable `count` gets incremented in memory, but React doesn't know about it and for this reason doesn't redraw. But even if it did redraw, `count` would immediately go back to `0` (the initialization value).
+
+-----
+
+#### useState (The Sticky Note on the Fridge)
+
+`useState` is a special React function (a **Hook**) that solves both problems: it preserves the value between one render and the next, and when the value changes it tells React to redraw. It is as if React Core had a fridge with sticky notes. Each `useState` corresponds to a sticky note. Between one render and the next, the note stays stuck to the fridge. On the next render, React reads it again and uses it.
+
+```jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  // On the first render: reads 0 from the sticky note (initial value)
+  // On subsequent renders: ignores the 0, takes from the sticky note
+
+  function handleClick() {
+    setCount(count + 1); // Updates the sticky note + triggers re-render
+  }
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={handleClick}>+1</button>
+    </div>
+  );
+}
+```
+
+-----
+
+#### Anatomy of useState
+
+```jsx
+const [count, setCount] = useState(0);
+```
+
+This single line contains three pieces, each with a precise role.
+
+`useState(0)` creates the memory slot and writes the initial value into it. This happens only on the first render (the Mount). From that moment on React ignores the `0` parameter and always reads from its internal store. You can pass any type of initial value, such as: `0`, `""`, `false`, `[]`, `{}`, `null`.
+
+`count` is a `const` that holds the store value captured at this exact render. You cannot do `count = 5` because it is read-only. When React re-executes the component, it creates a new constant with the updated value, but the one from the previous render (being const and not let) never changes.
+
+`setCount` is the function that writes a new value to the store and tells React to re-execute the component. The re-render does not happen immediately but in the next cycle, so a `console.log(count)` right after `setCount(5)` will still show the old value.
+
+This is the reason why a `console.log(count)` right after `setCount(5)` will still show the old value: the variable count belongs to this render, and the new value will only exist in the next render.
+
+-----
+
+#### The Render Lifecycle in Slow Motion
+
+To truly understand how useState works, let's see what happens step by step in a Counter component from 0 to 1.
+
+On Mount (the first time the component appears) React calls `Counter()`, encounters `useState(0)`, creates a "drawer" in memory and puts `0` in it. The function returns `<p>0</p>` + `<button>+1</button>` and React draws in the DOM: the user sees "0".
+
+On Click the user presses the button, `handleClick` runs, `setCount(0 + 1)` updates the drawer from `0` to `1`, and React queues `Counter()` for re-render.
+
+On Re-render React calls `Counter()` again, encounters `useState(0)` but IGNORES the `0` and takes `1` from the drawer. The function returns `<p>1</p>` + `<button>+1</button>`, React compares the old `<p>0</p>` with the new `<p>1</p>`, changes only the text, and the user sees "1".
+
+-----
+
+#### The Shelf Order Rule (Hooks at the Top)
+
+React doesn't save state by name. It saves it by **position**, in the order the Hooks are called inside the component.
+
+"Shelf 1" = first `useState`, "Shelf 2" = second `useState`, and so on.
+
+```jsx
+function ProfessionalProfile() {
+  // Shelf 1 → name
+  const [name, setName] = useState("Mario");
+  // Shelf 2 → age
+  const [age, setAge] = useState(30);
+  // Shelf 3 → city
+  const [city, setCity] = useState("Rome");
+}
+```
+
+If on the next render React calls only 2 Hooks instead of 3 (because you put one inside an `if`), the shelves swap. `age` reads from the drawer of `name`. Silent disaster.
+
+```jsx
+// ❌ NEVER do this. Hook inside an if
+function Component({ loading }) {
+  if (loading) {
+    const [data, setData] = useState(null); // Sometimes doesn't get called!
+  }
+  const [error, setError] = useState(false); // Shelf 1 or 2? Depends on loading!
+}
+
+// ✅ Hooks always at the top, always all of them, always in the same order
+function Component({ loading }) {
+  const [data, setData] = useState(null);      // Shelf 1, always
+  const [error, setError] = useState(false);    // Shelf 2, always
+}
+```
+
+**Rule:** Hooks always go at the top of the component function, never inside `if`, nested functions, or conditions of any kind.
+
+-----
+
+#### Isolation (The Cookie Cutter Principle)
+
+Every instance of a component has its own private state space. Two `<Counter />` on the same page are born from the same function but live independent lives: if you bring the count of the first to 5, the second stays at 0.
+
+```jsx
+function App() {
+  return (
+    <div>
+      {/* Counter A: has its own count */}
+      <Counter />
+      {/* Counter B: has ITS OWN count, independent from A */}
+      <Counter />
+    </div>
+  );
+}
+```
+
+Clicking +1 on the first `<Counter />` doesn't affect the second one at all.
+
+-----
+
+#### Immutability in Time (The Animated Flipbook)
+
+`const count = false` is immutable for **that specific render**. Being a constant, it cannot change while the component is drawing.
+
+But then how does animation work? How does React show different values?
+
+Think of an animated flipbook: a little book with 24 frames. The animation exists because the pages are different from each other, not because a page changes while you look at it. Every page is immutable: it already has its colors, its shapes. But flipping the pages at speed, the eye sees movement.
+
+React works exactly like this. When you call `setIsVisible(true)` you don't modify the variable `isVisible` in the current render (Page 1), you are asking React to create a **new render** (Page 2) where `isVisible` is `true`. Page 1 remains unchanged in the memory of this render.
+
+-----
+
+#### The `console.log` Lie (Stale Closure)
+
+After calling `setIsVisible(true)`, you might be tempted to do `console.log(isVisible)` to see if it changed. You will still get `false`. This is not a bug, it is the consequence of how closures work in JavaScript.
+
+```jsx
+function Toggle() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  function handleToggle() {
+    setIsVisible(true);
+    console.log(isVisible); // Prints: false!
+    // The function "handleToggle" belongs to the current render
+    // In this render, isVisible is false
+    // The re-render with isVisible=true hasn't happened yet
+  }
+  // ...
+}
+```
+
+The function `handleToggle` was created during a render in which `isVisible` was `false`. It is "trapped" (closure) with that value. `setIsVisible(true)` schedules a new render, but the current render hasn't finished yet. The `console.log` runs before the new render.
+
+The updated value is only visible in the next render. To verify it, log `isVisible` directly in the body of the component function, outside of any handler.
+
+```jsx
+function Toggle() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  // This console.log runs on EVERY render
+
+  // On the first render it prints: false
+  // After the click it prints: true (because it's a new render with the new value)
+  console.log("Render with isVisible =", isVisible);
+
+  function handleToggle() {
+    setIsVisible(true);
+  }
+
+  return <button onClick={handleToggle}>Show</button>;
+}
+```
+
+-----
+
+#### Batching (The Efficiency Engine)
+
+React doesn't execute every `setState` immediately, one by one. It waits a moment to collect all state changes and then performs **a single re-render** for all of them.
+
+```jsx
+function handleRegistration() {
+  setName("Julia");        // 1st setState
+  setEmail("j@j.com");    // 2nd setState
+  setActive(true);        // 3rd setState
+  // React does NOT execute 3 separate re-renders.
+  // It waits for the function to end → 1 single re-render with all values updated
+}
+```
+
+Since React 18 batching has become **automatic everywhere**, even inside Promises, setTimeout, and async calls. In previous versions, it only worked in synchronous event handlers.
+
+The practical result is your UI stays fluid, without partial updates and flickering.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 15. The Trigger, Render, Commit Cycle (The Three Phases)
+
+Here is the underlying cycle of `useState`.
+
+#### The Common Misconception
+
+The word "render" is used in a confusing way. Everyone says "React renders", but what does it actually mean?
+
+The most common mistake is thinking that "render" means "drawing pixels on the screen". **That's wrong.** What draws pixels is the **Commit** phase (and then the browser itself). The **Render** phase is just invisible math, calculations in RAM.
+
+-----
+
+#### Phase 1 (The Trigger)
+
+Something tells React: "This component needs to be recalculated." A re-render can be triggered by a call to `setSomething()`, by a parent component re-rendering (children follow), by a context (`Context`) changing, or by subscribing to an external store via `useSyncExternalStore`.
+
+It is like a customer calling the waiter and ordering. The waiter writes down the order and takes it to the kitchen. The dish is not ready yet and the customer is not eating yet.
+
+```jsx
+function Counter() {
+  const [number, setNumber] = useState(0);
+
+  // This is the Trigger: setNumber sets the entire cycle in motion
+  return <button onClick={() => setNumber(number + 1)}>{number}</button>;
+}
+```
+
+-----
+
+#### Phase 2 (The Render Phase)
+
+React calls your component function. The function executes from start to finish and returns JSX, which is actually a JavaScript object, a description of how the UI should look.
+
+React takes this "New Virtual DOM" and compares it with the old one (the **Diffing** operation, like finding the differences between two drawings).
+
+```
+Old Virtual DOM:        New Virtual DOM:
+<div>                   <div>
+  <h1>Title</h1>     →    <h1>Title</h1>     (same, skip)
+  <p>Text</p>        →    <p>New text</p>    (DIFFERENT, mark)
+  <button>+</button> →    <button>+</button>  (same, skip)
+</div>                  </div>
+                                ↓
+               Diffing Result: "change only <p>"
+```
+
+All of this happens in RAM and therefore very quickly.
+
+If your app is slow in this phase, you probably have heavy computations inside the component function. The solutions involve `useMemo`, `useCallback`, or **moving the logic outside the component**.
+
+-----
+
+#### Phase 3 (The Commit Phase)
+
+React has the list of differences from Diffing. Now, and only now, it touches the real DOM. With surgical precision, it applies only the necessary changes.
+
+In our example: it doesn't destroy the `<div>`, doesn't touch `<h1>`, doesn't touch `<button>`. It goes directly to the `<p>` node and changes only its inner text from "Text" to "New text".
+
+**Only now do the pixels change** and the human eye sees the difference.
+
+If your app is slow in this phase, you are probably trying to draw too many elements at once, like a 10,000-row list.
+The concrete solutions are pagination (dividing data into pages, with numbered navigation or infinite scroll that loads new elements as the user scrolls) or virtualization with libraries like react-window or TanStack Virtual, which render only the rows visible on screen and ignore the other thousands.
+
+-----
+
+#### Phase 4 (The Browser Paint)
+
+After the Commit, the browser receives the DOM changes and updates the pixels on screen, the process called "paint". This phase is outside React's control, the browser handles it.
+
+-----
+
+#### Why This Architecture Is Brilliant
+
+The browser DOM is heavy. Every node carries hundreds of properties. Every change to the real DOM can trigger Reflow (layout recalculation) and Repaint (pixel redrawing), costly operations.
+
+JavaScript, on the other hand, is fast. Creating and comparing JS objects in memory is nearly free.
+
+React exploits this asymmetry. All the dirty work (calculating what changes) happens in pure JavaScript in RAM during the Render Phase, while the real DOM is touched only for the bare minimum during the Commit Phase.
+
+```
+[Trigger] → [Render Phase]       → [Commit Phase]  →   [Browser Paint]
+              Fast JS                Slow DOM           Visible Pixels
+                (RAM)               (surgical)           (60fps)
+```
+
+Result: fluid 60fps interfaces, even on modest machines. React does the hard work in RAM (fast), and touches the DOM (slow) only as strictly necessary.
+
+<br />
+<br />
+
+---
+
+### Summary (State and Events at a Glance)
+
+| Concept | What it does | Common pitfall |
+|---------|-------------|----------------|
+| SyntheticBaseEvent | Normalizes events across browsers | You almost never need `e.nativeEvent` |
+| Event Delegation | A single listener on `#root` | React handles it automatically |
+| `onClick={fn}` | Passes a reference | `onClick={fn()}` executes immediately, bug |
+| `e.preventDefault()` | Stops the browser/tag action | Has nothing to do with parent/child |
+| `e.stopPropagation()` | Stops Bubbling | Has nothing to do with browser actions |
+| `useState(value)` | Creates persistent state + triggers re-render | `let` doesn't trigger re-render |
+| `set...()` | Updates state in the next render | The value doesn't change in the current render |
+| Hooks at the top | Fixed order guarantees stable shelves | Never Hook inside `if` or `for` |
+| Batching | Groups multiple `setState` into 1 re-render | In React 18 it's automatic everywhere |
+| Trigger, Render, Commit | React's engine | "Render" is not "pixel drawing", it's math |

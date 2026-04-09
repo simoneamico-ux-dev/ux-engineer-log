@@ -1,0 +1,599 @@
+---
+sidebar_position: 4
+title: State ed Eventi
+description: Rendere i componenti interattivi con useState e il sistema degli eventi.
+---
+
+# React Real World Vademecum
+
+# Parte IV: State ed Eventi
+
+Lo State è la memoria di React. Gli Events sono il suo sistema nervoso. Insieme trasformano una UI statica, una bella fotografia, in un'applicazione interattiva. Senza state, React disegna; con state, React *risponde*. Questa quarta parte è il cuore pulsante di tutto ciò che costruirai.
+
+---
+
+## State ed Eventi
+
+### 13. Gli Eventi (Il Sistema Nervoso Diplomatico)
+
+Un'applicazione senza eventi è un manifesto: si guarda ma non si tocca. Gli eventi sono i canali attraverso cui l'utente comunica con la tua app. React ha costruito un sistema elegante per gestirli in modo uniforme su ogni browser, e capirne i meccanismi ti salva da bug sottili e comportamenti inaspettati.
+
+#### Il Sistema degli Eventi Sintetici (L'Adattatore Universale)
+
+I browser sono anarchici. Chrome, Firefox, Safari: ogni motore ha scritto la propria implementazione degli eventi. Un evento di click su Chrome può avere proprietà diverse da quello su Firefox. Un campo `event.which` esiste in alcuni browser e non in altri.
+
+React risolve questo problema con eleganza: intercetta ogni evento nativo del browser, lo avvolge in un oggetto standardizzato chiamato `SyntheticBaseEvent`, e ti consegna sempre la stessa interfaccia pulita, indipendentemente dal browser. È come un adattatore universale da viaggio: tu hai una spina italiana, il muro ha prese diverse in ogni Paese, e l'adattatore fa funzionare tutto senza che tu debba pensarci.
+
+```jsx
+function FormRegistrazione() {
+  function handleSubmit(evento) {
+    // 'evento' è un SyntheticBaseEvent, uguale in ogni browser
+    evento.preventDefault();
+    console.log("Form inviato!");
+    // Se dovesse servirti, l'evento nativo grezzo è qui:
+    // evento.nativeEvent
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <button type="submit">Registrati</button>
+    </form>
+  );
+}
+```
+
+`evento.nativeEvent` contiene l'evento del browser originale. Nel 99.9% dei casi non ne avrai bisogno, ma è lì se serve.
+
+-----
+
+#### Event Delegation (Un Solo Listener per la Performance)
+
+In JavaScript Vanilla, il modo "istintivo" di gestire 1000 bottoni è attaccare 1000 event listener, uno per ogni bottone. Questo occupa memoria e rallenta l'app.
+
+React non funziona così. React non attacca mai listener agli elementi nel DOM reale, uno per uno.
+
+Attacca **un unico listener** alla radice dell'intera applicazione (l'elemento `#root`). Quando clicchi un bottone a 5 livelli di profondità, l'evento "risale a galla" (Bubbling) attraverso il DOM fino alla radice. React intercetta lì, vede a quale componente appartiene, e chiama il gestore corretto.
+
+Funziona come un centralinista all'ingresso di un grande palazzo. Non c'è un telefono su ogni scrivania: tutte le chiamate passano dal centralinista, che le smista all'ufficio giusto.
+
+```
+DOM:         [root] ← React attacca qui UN SOLO listener
+               |
+             [App]
+               |
+        [ListaProdotti]
+               |
+[Prodotto] [Prodotto] [Prodotto]
+               |
+           [Bottone] ← l'utente clicca qui
+               |
+               ↑  il click risale (Bubbling) fino a [root]
+```
+
+Risultato: performance migliore, zero listener orfani in memoria.
+
+-----
+
+#### `onClick={fn}` vs `onClick={fn()}` (La Ricetta vs La Torta)
+
+C'è una differenza enorme tra passare una funzione e chiamarla.
+
+```jsx
+// ✅ CORRETTO: "Ecco la ricetta. Usala quando l'utente clicca."
+<button onClick={handleClick}>Clicca</button>
+
+// ❌ SBAGLIATO: "Esegui questa ricetta ORA. Poi passa il risultato (undefined) come listener."
+<button onClick={handleClick()}>Clicca</button>
+```
+
+Nel caso sbagliato, `handleClick()` viene eseguita **durante il rendering**, non al click. Se quella funzione chiama `setState`, triggera un re-render, che triggera un altro rendering, che esegue di nuovo `handleClick()`, fino a un loop infinito o crash immediato.
+
+**Regola:** dentro `onClick={}` metti sempre un **riferimento** alla funzione (senza le parentesi), non la sua esecuzione.
+
+-----
+
+#### Funzioni Arrow come Wrapper (Passare Argomenti)
+
+Ma se hai bisogno di passare un argomento alla funzione, le parentesi servono. Come si fa?
+
+```jsx
+// Vuoi passare l'ID del prodotto da eliminare
+
+// ❌ SBAGLIATO: handleEliminazione(prodotto.id) esegue subito
+<button onClick={handleEliminazione(prodotto.id)}>Elimina</button>
+
+// ✅ CORRETTO: funzione "cuscinetto" che non esegue subito
+<button onClick={() => handleEliminazione(prodotto.id)}>Elimina</button>
+```
+
+`() => handleEliminazione(prodotto.id)` è una nuova funzione che, quando verrà chiamata al click, eseguirà `handleEliminazione(prodotto.id)`. React memorizza questo cuscinetto e al click lo esegue, che a sua volta chiama la funzione con l'argomento giusto.
+
+-----
+
+#### La Convenzione `handle` vs `on` (Semantica Pura)
+
+React non controlla i nomi che dai alle tue funzioni. Non esistono errori per nomi "sbagliati". Ma esiste una convenzione fortemente seguita che rende il codice leggibile a colpo d'occhio.
+
+Le props si chiamano `on...` perché descrivono un evento che può accadere (`onElimina`, `onConferma`, `onCambioColore`), con il significato di "Quando *succede questo*...". Le funzioni invece si chiamano `handle...` perché descrivono chi gestisce l'evento (`handleEliminazione`, `handleConferma`, `handleCambioColore`), con il significato di "Io mi occupo di gestire *questa azione*".
+
+```jsx
+// Il componente figlio espone una prop onElimina
+function CartaProdotto({ prodotto, onElimina }) {
+  return (
+    <div>
+      <h3>{prodotto.nome}</h3>
+      <button onClick={onElimina}>Rimuovi</button>
+    </div>
+  );
+}
+
+// Il genitore passa la funzione handleEliminazione come onElimina
+function ListaProdotti() {
+  function handleEliminazione(id) {
+    console.log("Eliminare prodotto:", id);
+  }
+
+  return (
+    <CartaProdotto
+      prodotto={prodottoEsempio}
+      onElimina={() => handleEliminazione(prodottoEsempio.id)}
+    />
+  );
+}
+```
+
+Invece sui tag HTML nativi (`<button>`, `<input>`, `<form>`) i nomi sono fissi e imposti dal browser: `onClick`, `onChange`, `onSubmit`, `onKeyDown`. Questi non puoi cambiarli.
+
+-----
+
+#### `e.preventDefault()` (Ferma l'Istinto del Browser)
+
+Ogni tag HTML ha un comportamento predefinito. Il browser esegue quell'azione automaticamente, senza chiedere permesso. Un `<form>` con submit ricarica la pagina intera, un `<a href="...">` cliccato cambia URL e naviga via, un `<input type="checkbox">` spunta o rimuove la spunta, e un drag su un'immagine avvia il trascinamento nativo.
+
+`e.preventDefault()` dice al browser: "Ferma il tuo istinto. Mi occupo io di cosa fare."
+
+```jsx
+function FormContatto({ onInvio }) {
+  function handleSubmit(e) {
+    e.preventDefault(); // Ferma il ricaricamento della pagina
+    // Ora possiamo gestire i dati a modo nostro
+    const dati = new FormData(e.target);
+    onInvio(Object.fromEntries(dati));
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="email" type="email" />
+      <button type="submit">Invia</button>
+    </form>
+  );
+}
+```
+
+`preventDefault` **non ha niente a che fare** con la gerarchia genitori/figli dei componenti. Ferma l'azione del browser sul tag HTML, nient'altro.
+
+-----
+
+#### `e.stopPropagation()` (Ferma la Bolla)
+
+Quando un evento scatta su un elemento figlio, risale automaticamente verso i genitori (Bubbling). A volte questo è indesiderato.
+
+Immagina questo classico scenario: una Card cliccabile che apre i dettagli del prodotto. Dentro la Card c'è un bottone "Mi Piace". Senza `stopPropagation`, cliccare "Mi Piace" triggera anche il click della Card intera e l'utente finisce nella pagina dettagli quando voleva solo mettere like.
+
+```jsx
+function CartaArticolo({ articolo, onApriDettagli }) {
+  function handleLike(e) {
+    e.stopPropagation(); // Ferma qui, non risalire alla Card
+    console.log("Like aggiunto a:", articolo.titolo);
+  }
+
+  return (
+    <div onClick={onApriDettagli} className="carta-cliccabile">
+      <h3>{articolo.titolo}</h3>
+      <button onClick={handleLike}>❤️ Mi Piace</button>
+    </div>
+  );
+}
+```
+
+Quindi, `preventDefault` è un problema di **Natura** (cosa fa il browser o il tag HTML di default), mentre `stopPropagation` è un problema di **Gerarchia** (l'evento non deve risalire verso i genitori).
+
+-----
+
+#### `e.target` (La Prova del Delitto)
+
+`e.target` punta fisicamente all'elemento HTML che ha scatenato l'evento. Da `e.target` puoi estrarre informazioni sull'input dell'utente.
+
+```jsx
+function FormProfilo() {
+  function handleCambiamento(e) {
+    // e.target è l'elemento <input> che l'utente ha modificato
+    const nomeCampo = e.target.name;    // l'attributo name del campo HTML
+    const valoreCampo = e.target.value; // quello che l'utente ha scritto
+
+    // Oppure con destructuring in un colpo solo:
+    const { name, value } = e.target;
+    console.log(`Campo: ${name}, Valore: ${value}`);
+  }
+
+  return (
+    <form>
+      <input name="nome" onChange={handleCambiamento} />
+      <input name="email" onChange={handleCambiamento} />
+      <input name="citta" onChange={handleCambiamento} />
+    </form>
+  );
+}
+```
+
+Le proprietà più utili di `e.target` sono `e.target.value` per estrarre il testo digitato o l'opzione selezionata, `e.target.name` per estrarre l'attributo `name` dell'elemento HTML, `e.target.checked` per estrarre lo stato di checkbox e radio, e `e.target.type` per estrarre il tipo di input.
+
+-----
+
+#### `onClick` vs `onChange` (Quale Usare Quando)
+
+Spesso non è ovvio quale evento usare. Ma la distinzione è in realtà semplice.
+
+Usa `onClick` quando vuoi reagire a un **comando immediato e intenzionale** dell'utente: cliccare un bottone "Salva", aprire una modale, eliminare un elemento.
+
+Usa `onChange` quando vuoi **catturare un valore** mentre l'utente lo sta costruendo in tempo reale: aggiornare lo state ad ogni lettera digitata in un input, reagire alla selezione di un'opzione in un `<select>`, catturare il colore da un `<input type="color">` mentre l'utente trascina il selettore.
+
+```jsx
+// onChange: cattura il colore in tempo reale mentre l'utente sceglie
+function SceltoColore() {
+  const [colore, setColore] = useState("#000000");
+
+  return (
+    <div>
+      <input
+        type="color"
+        value={colore}
+        onChange={(e) => setColore(e.target.value)}
+      />
+      <div style={{ backgroundColor: colore, width: 100, height: 100 }} />
+    </div>
+  );
+}
+```
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 14. useState (La Memoria Esterna)
+
+Puoi fare click, hover, focus con gli eventi. Ma se vuoi che qualcosa *cambi* visivamente in risposta a quell'interazione, hai bisogno di state. Lo stato è il meccanismo che dice a React: "Qualcosa è cambiato, ridisegna".
+
+#### Il Problema (Le Funzioni Hanno l'Alzheimer)
+
+React costruisce la tua UI chiamando le funzioni componente. Le chiama di nuovo ogni volta che qualcosa cambia. Ogni volta che una funzione viene chiamata, le variabili locali vengono create da zero e poi dimenticate.
+
+```jsx
+// ❌ Questo NON funziona, il contatore non incrementa mai
+function Contatore() {
+  let conteggio = 0; // Ricreata a 0 ad ogni chiamata
+
+  function handleClick() {
+    conteggio = conteggio + 1; // Incrementa... ma solo nella memoria locale
+    console.log(conteggio); // Stampa 1, 2, 3... ma React non ridisegna
+  }
+
+  return (
+    <div>
+      <p>Conteggio: {conteggio}</p> {/* Sempre 0 */}
+      <button onClick={handleClick}>+1</button>
+    </div>
+  );
+}
+```
+
+La variabile `conteggio` viene incrementata in memoria, ma React non lo sa e per questo motivo non ridisegna. Ma anche se ridisegnasse, `conteggio` tornerebbe subito a `0` (il valore di inizializzazione).
+
+-----
+
+#### useState (Il Post-it sul Frigo)
+
+`useState` è una funzione speciale di React (un **Hook**) che risolve entrambi i problemi: conserva il valore tra un render e l'altro, e quando il valore cambia dice a React di ridisegnare. È come se React Core avesse un frigo con post-it. Ogni `useState` corrisponde a un post-it. Tra un render e l'altro, la nota rimane attaccata al frigo. Al prossimo render, React la rilegge e la usa.
+
+```jsx
+import { useState } from "react";
+
+function Contatore() {
+  const [conteggio, setConteggio] = useState(0);
+  // Al primo render: legge 0 dal post-it (valore iniziale)
+  // Ai render successivi: ignora lo 0, prende dal post-it
+
+  function handleClick() {
+    setConteggio(conteggio + 1); // Aggiorna il post-it + triggera re-render
+  }
+
+  return (
+    <div>
+      <p>Conteggio: {conteggio}</p>
+      <button onClick={handleClick}>+1</button>
+    </div>
+  );
+}
+```
+
+-----
+
+#### Anatomia di useState
+
+```jsx
+const [conteggio, setConteggio] = useState(0);
+```
+
+Questa singola riga contiene tre pezzi, ognuno con un ruolo preciso.
+
+`useState(0)` crea lo spazio di memoria e ci scrive il valore iniziale. Questo succede solo al primo render (il Mount). Da quel momento in poi React ignora il parametro `0` e legge sempre dal suo magazzino interno. Puoi passare qualsiasi tipo di valore iniziale, come: `0`, `""`, `false`, `[]`, `{}`, `null`.
+
+`conteggio` è una `const` che contiene il valore del magazzino fotografato in questo preciso render. Non puoi fare `conteggio = 5` perché è di sola lettura. Quando React riesegue il componente, crea una nuova costante con il valore aggiornato, ma quella del render precedente (essendo const e non let) non cambia mai.
+
+`setConteggio` è la funzione che scrive un nuovo valore nel magazzino e dice a React di rieseguire il componente. Il re-render non avviene immediatamente ma nel ciclo successivo, quindi un `console.log(conteggio)` subito dopo `setConteggio(5)` mostrerà ancora il vecchio valore.
+
+Questa è la ragione per cui un `console.log(conteggio)` subito dopo `setConteggio(5)` mostrerà ancora il vecchio valore: la variabile conteggio appartiene a questo render, e il nuovo valore esisterà solo nel render successivo.
+
+-----
+
+#### Il Ciclo di Vita del Render in Slow Motion
+
+Per capire davvero come funziona useState, vediamo cosa succede passo dopo passo in un componente Counter da 0 a 1.
+
+Al Mount (prima volta che il componente appare) React chiama `Contatore()`, incontra `useState(0)`, crea un "cassetto" nella memoria e ci mette `0`. La funzione restituisce `<p>0</p>` + `<button>+1</button>` e React disegna nel DOM: l'utente vede "0".
+
+Al Click l'utente preme il bottone, `handleClick` viene eseguita, `setConteggio(0 + 1)` aggiorna il cassetto da `0` a `1`, e React mette `Contatore()` in coda per il re-render.
+
+Al Re-render React chiama di nuovo `Contatore()`, incontra `useState(0)` ma IGNORA lo `0` e prende `1` dal cassetto. La funzione restituisce `<p>1</p>` + `<button>+1</button>`, React confronta il vecchio `<p>0</p>` con il nuovo `<p>1</p>`, cambia solo il testo, e l'utente vede "1".
+
+-----
+
+#### La Regola dell'Ordine degli Scaffali (Gli Hook in Cima)
+
+React non salva lo state per nome. Lo salva per **posizione**, nell'ordine in cui gli Hook vengono chiamati dentro il componente.
+
+"Scaffale 1" = primo `useState`, "Scaffale 2" = secondo `useState`, e così via.
+
+```jsx
+function ProfiloProfessionista() {
+  // Scaffale 1 → nome
+  const [nome, setNome] = useState("Mario");
+  // Scaffale 2 → età
+  const [eta, setEta] = useState(30);
+  // Scaffale 3 → città
+  const [citta, setCitta] = useState("Roma");
+}
+```
+
+Se al prossimo render React chiama solo 2 Hook invece di 3 (perché ne hai messo uno dentro un `if`), gli scaffali si scambiano. `eta` legge dal cassetto di `nome`. Disastro silenzioso.
+
+```jsx
+// ❌ MAI fare questo. Hook dentro un if
+function Componente({ carica }) {
+  if (carica) {
+    const [dati, setDati] = useState(null); // A volte non viene chiamato!
+  }
+  const [errore, setErrore] = useState(false); // Scaffale 1 o 2? Dipende da carica!
+}
+
+// ✅ Hook sempre in cima, sempre tutti, sempre nello stesso ordine
+function Componente({ carica }) {
+  const [dati, setDati] = useState(null);      // Scaffale 1, sempre
+  const [errore, setErrore] = useState(false); // Scaffale 2, sempre
+}
+```
+
+**Regola:** gli Hook vanno sempre in cima alla funzione componente, mai dentro `if`, funzioni annidate, o condizioni di qualsiasi tipo.
+
+-----
+
+#### Isolamento (Il Principio dello Stampino)
+
+Ogni istanza di un componente ha il suo spazio privato di state. Due `<Contatore />` nella stessa pagina nascono dalla stessa funzione ma vivono vite indipendenti: se porti il conteggio del primo a 5, il secondo resta a 0.
+
+```jsx
+function App() {
+  return (
+    <div>
+      {/* Contatore A: ha il suo conteggio */}
+      <Contatore />
+      {/* Contatore B: ha il SUO conteggio, indipendente da A */}
+      <Contatore />
+    </div>
+  );
+}
+```
+
+Cliccare +1 sul primo `<Contatore />` non tocca minimamente il secondo.
+
+-----
+
+#### Immutabilità nel Tempo (Il Flipbook Animato)
+
+`const conteggio = false` è immutabile per **quel render specifico**. Essendo una costante, non può cambiare mentre il componente sta disegnando.
+
+Ma allora come funziona l'animazione? Come fa React a mostrare valori diversi?
+
+Pensa a un flipbook animato: un libricino con 24 fotogrammi. L'animazione esiste perché le pagine sono diverse tra loro, non perché una pagina cambia mentre la guardi. Ogni pagina è immutabile: ha già i suoi colori, le sue forme. Ma sfogliando le pagine a velocità, l'occhio vede il movimento.
+
+React funziona esattamente così. Quando chiami `setIsVisibile(true)` non modifichi la variabile `isVisibile` nel render corrente (Pagina 1), ma stai chiedendo a React di creare un **nuovo render** (Pagina 2) dove `isVisibile` è `true`. La Pagina 1 rimane invariata nella memoria di questo render.
+
+-----
+
+#### La Bugia del `console.log` (Stale Closure)
+
+Dopo aver chiamato `setIsVisibile(true)`, potresti essere tentato di fare `console.log(isVisibile)` per vedere se è cambiato. Otterrai ancora `false`. Questo non è un bug, è la conseguenza di come funzionano le closure in JavaScript.
+
+```jsx
+function Interruttore() {
+  const [isVisibile, setIsVisibile] = useState(false);
+
+  function handleToggle() {
+    setIsVisibile(true);
+    console.log(isVisibile); // Stampa: false!
+    // La funzione "handleToggle" appartiene al render corrente
+    // In questo render, isVisibile è false
+    // Il re-render con isVisibile=true non è ancora avvenuto
+  }
+  // ...
+}
+```
+
+La funzione `handleToggle` è stata creata durante un render in cui `isVisibile` era `false`. È "intrappolata" (closure) con quel valore. `setIsVisibile(true)` programma un nuovo render, ma il render attuale non è ancora finito. Il `console.log` gira prima del nuovo render.
+
+Il valore aggiornato lo vedi solo nel render successivo. Per verificarlo, logga `isVisibile` direttamente nel corpo della funzione componente, fuori da qualsiasi handler.
+
+```jsx
+function Interruttore() {
+  const [isVisibile, setIsVisibile] = useState(false);
+
+  // Questo console.log gira ad OGNI render
+
+  // Al primo render stampa: false
+  // Dopo il click stampa: true (perché è un nuovo render con il nuovo valore)
+  console.log("Render con isVisibile =", isVisibile);
+
+  function handleToggle() {
+    setIsVisibile(true);
+  }
+
+  return <button onClick={handleToggle}>Mostra</button>;
+}
+```
+
+-----
+
+#### Batching (Il Motore dell'Efficienza)
+
+React non esegue ogni `setState` immediatamente, uno per uno. Aspetta un momento per raccogliere tutti i cambiamenti di stato e poi esegue **un unico re-render** per tutti.
+
+```jsx
+function handleRegistrazione() {
+  setNome("Giulia");     // 1° setState
+  setEmail("g@g.com");   // 2° setState
+  setAttivo(true);       // 3° setState
+  // React NON esegue 3 re-render separati.
+  // Aspetta la fine della funzione → 1 solo re-render con tutti i valori aggiornati
+}
+```
+
+Da React 18 il batching è diventato **automatico ovunque**, anche dentro le Promise, i setTimeout e le chiamate asincrone. Nelle versioni precedenti, funzionava solo negli event handler sincroni.
+
+Il risultato pratico è la tua UI rimane fluida, senza aggiornamenti parziali e sfarfallii.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### 15. Il Ciclo Trigger, Render, Commit (Le Tre Fasi)
+
+Ecco il ciclo sottostante di `useState`.
+
+#### L'Equivoco Comune
+
+La parola "render" è usata in modo confuso. Tutti dicono "React fa il render", ma cosa significa esattamente?
+
+L'errore più comune è pensare che "render" significhi "disegnare i pixel sullo schermo". **È sbagliato.** Quello che disegna i pixel è la fase di **Commit** (e poi il browser stesso). La fase di **Render** è solo matematica invisibile, calcoli nella RAM.
+
+-----
+
+#### Fase 1 (Il Trigger)
+
+Qualcosa dice a React: "Questo componente deve essere ricalcolato." Un re-render può essere triggerato da una chiamata a `setQualcosa()`, da un componente genitore che si re-renderizza (i figli seguono), dal contesto (`Context`) che cambia, oppure dalla sottoscrizione a uno store esterno tramite `useSyncExternalStore`.
+
+È come un cliente che chiama il cameriere e ordina. Il cameriere scrive l'ordine e lo porta in cucina. Il piatto non è ancora pronto e il cliente non sta ancora mangiando.
+
+```jsx
+function Contatore() {
+  const [numero, setNumero] = useState(0);
+
+  // Questo è il Trigger: setNumero mette in moto l'intero ciclo
+  return <button onClick={() => setNumero(numero + 1)}>{numero}</button>;
+}
+```
+
+-----
+
+#### Fase 2 (La Fase di Render)
+
+React chiama la tua funzione componente. La funzione esegue dall'inizio alla fine e restituisce JSX, che in realtà è un oggetto JavaScript, una descrizione di come dovrebbe apparire la UI.
+
+React prende questo "Nuovo Virtual DOM" e lo confronta col vecchio (l'operazione di **Diffing**, come trovare le differenze tra due disegni).
+
+```
+Vecchio Virtual DOM:    Nuovo Virtual DOM:
+<div>                   <div>
+  <h1>Titolo</h1>    →    <h1>Titolo</h1>    (uguale, ignora)
+  <p>Testo</p>       →    <p>Nuovo testo</p> (DIVERSO, segna)
+  <button>+</button> →    <button>+</button>  (uguale, ignora)
+</div>                  </div>
+                                ↓
+               Risultato Diffing: "cambia solo <p>"
+```
+
+Tutto questo avviene nella RAM e quindi molto velocemente.
+
+Se la tua app è lenta in questa fase, probabilmente hai calcoli pesanti dentro la funzione componente. Le soluzioni passano da `useMemo`, `useCallback`, o **spostare la logica fuori dal componente**.
+
+-----
+
+#### Fase 3 (La Fase di Commit)
+
+React ha la lista delle differenze dal Diffing. Ora, e solo ora, tocca il DOM reale. Con precisione chirurgica, applica solo le modifiche necessarie.
+
+Nel nostro esempio: non distrugge il `<div>`, non tocca `<h1>`, non tocca `<button>`. Va direttamente al nodo `<p>` e cambia solo il suo testo interno da "Testo" a "Nuovo testo".
+
+**Solo ora i pixel cambiano** e l'occhio umano vede la differenza.
+
+Se la tua app è lenta in questa fase, probabilmente stai cercando di disegnare troppi elementi contemporaneamente, come una lista da 10.000 righe.
+Le soluzioni concrete sono la paginazione (dividere i dati in pagine, con navigazione numerata o infinite scroll che carica nuovi elementi man mano che l'utente scorre) oppure la virtualizzazione con librerie come react-window o TanStack Virtual, che renderizzano solo le righe visibili sullo schermo e ignorano le altre migliaia.
+
+-----
+
+#### Fase 4 (Il Browser Paint)
+
+Dopo il Commit, il browser riceve le modifiche al DOM e aggiorna i pixel sullo schermo, il processo chiamato "paint". Questa fase è fuori dal controllo di React, ci pensa il browser.
+
+-----
+
+#### Perché Questa Architettura È Geniale
+
+Il DOM del browser è pesante. Ogni nodo porta centinaia di proprietà. Ogni modifica al DOM reale può triggerare Reflow (ricalcolo del layout) e Repaint (ridisegno dei pixel), operazioni costose.
+
+JavaScript, invece, è veloce. Creare e confrontare oggetti JS in memoria è quasi gratuito.
+
+React sfrutta questa asimmetria. Tutto il lavoro sporco (calcolare cosa cambia) avviene in JavaScript puro nella RAM durante la Fase di Render, mentre il DOM reale viene toccato solo per lo stretto indispensabile nella Fase di Commit.
+
+```
+[Trigger] → [Render Phase]       → [Commit Phase]  →   [Browser Paint]
+              JS Veloce              DOM Lento          Pixel Visibili
+                (RAM)               (chirurgico)           (60fps)
+```
+
+Risultato: interfacce a 60fps fluidi, anche su macchine modeste. React fa il lavoro difficile nella RAM (veloce), e tocca il DOM (lento) solo quanto strettamente necessario.
+
+<br />
+<br />
+
+---
+
+### Riepilogo (State e Events in Sintesi)
+
+| Concetto | Cosa fa | Trappola comune |
+|----------|---------|-----------------|
+| SyntheticBaseEvent | Normalizza gli eventi tra browser | Non serve quasi mai `e.nativeEvent` |
+| Event Delegation | Un solo listener su `#root` | React lo gestisce automaticamente |
+| `onClick={fn}` | Passa riferimento | `onClick={fn()}` esegue subito, bug |
+| `e.preventDefault()` | Ferma l'azione del browser/tag | Non c'entra con genitore/figlio |
+| `e.stopPropagation()` | Ferma il Bubbling | Non c'entra con le azioni del browser |
+| `useState(valore)` | Crea stato persistente + trigger re-render | `let` non triggera re-render |
+| `set...()` | Aggiorna stato nel prossimo render | Il valore non cambia nel render corrente |
+| Hook in cima | Ordine fisso garantisce scaffali stabili | Mai Hook dentro `if` o `for` |
+| Batching | Raggruppa più `setState` in 1 re-render | In React 18 è automatico ovunque |
+| Trigger, Render, Commit | Il motore di React | "Render" non è "disegno pixel", è matematica |
