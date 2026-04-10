@@ -1,0 +1,1911 @@
+---
+sidebar_position: 1
+sidebar_label: HTML
+title: HTML Real World Vademecum
+description: Dalle fondamenta alla semantica avanzata. Guida pratica per scrivere HTML pulito, accessibile e professionale.
+---
+
+import Link from '@docusaurus/Link';
+
+# HTML Real World Vademecum
+
+Questo vademecum ti porta dalle basi assolute dell'HTML fino alla scrittura di pagine professionali, accessibili e semanticamente corrette.
+
+---
+
+## Le Fondamenta dell'HTML
+
+### 1. Cos'è l'HTML (Il Linguaggio delle Etichette)
+
+Prima di scrivere una singola riga di codice, vale la pena fermarsi sul nome. **HTML** sta per *HyperText Markup Language*, e ognuna di queste tre parole racconta qualcosa di preciso su cosa stai per imparare.
+
+#### HyperText (L'Ipertesto)
+
+Quando leggi un libro, vai dalla pagina 1 alla pagina 2 alla pagina 3. Il percorso è lineare, deciso dall'autore. L'ipertesto rompe questa regola: è testo che contiene **collegamenti ad altro testo**. Cliccando un link passi da una pagina a un'altra, da un sito a un altro, da un concetto a un concetto collegato. Il percorso lo decidi tu.
+
+Questa è l'idea rivoluzionaria su cui si basa l'intero web: documenti collegati tra loro attraverso link. Ogni pagina HTML che scrivi è un nodo di questa rete. Il prefisso *Hyper* significa proprio questo, ovvero, testo che va oltre i confini del singolo documento.
+
+-----
+
+#### Markup (La Marcatura)
+
+Questa è la parola più importante delle tre. *Markup* significa "marcatura", e descrive esattamente quello che fa l'HTML: **marca il contenuto con delle etichette** per dire al browser cosa rappresenta ogni pezzo.
+
+È come il lavoro di un correttore di bozze in una redazione. Il correttore non scrive l'articolo, prende invece il testo già scritto dal giornalista e ci aggiunge annotazioni. "Questo è il titolo", "questo è un paragrafo", "questa è una citazione", "qui va un'immagine". Il browser legge queste annotazioni e sa come presentare ogni pezzo al lettore.
+
+```html
+<!-- Il browser non sa cosa fare con solo il testo -->
+La Divina Commedia
+Dante Alighieri
+Nel mezzo del cammin di nostra vita...
+
+<!-- Con la marcatura HTML, ogni pezzo ha un ruolo preciso -->
+<h1>La Divina Commedia</h1>
+<p>Dante Alighieri</p>
+<blockquote>Nel mezzo del cammin di nostra vita...</blockquote>
+```
+
+Questo ci porta a un punto che devi capire subito: **l'HTML non è un linguaggio di programmazione**. Non fa calcoli, non prende decisioni, non esegue logica. Non puoi scrivere "se l'utente ha meno di 18 anni, mostra questo messaggio" in HTML. Quello che puoi fare è descrivere la struttura di un contenuto, proprio come il correttore di bozze descrive la struttura di un articolo.
+
+-----
+
+#### Language (Il Linguaggio Condiviso)
+
+*Language* perché l'HTML è un **insieme di regole condivise** che tutti i browser del mondo capiscono allo stesso modo. Quando scrivi `<h1>`, Chrome, Firefox, Safari e Edge sanno tutti che stai dichiarando un titolo principale. È uno standard mantenuto dal W3C (World Wide Web Consortium) e dal WHATWG, le organizzazioni che decidono quali tag esistono e come devono funzionare.
+
+Questo è il motivo per cui una pagina HTML scritta nel 1999 funziona ancora oggi: il linguaggio è retrocompatibile. I browser nuovi continuano a capire i tag vecchi.
+
+-----
+
+#### Il Trio del Web: HTML, CSS e JavaScript
+
+L'HTML non lavora mai da solo. Ogni pagina web che vedi è il risultato della collaborazione di tre linguaggi, ognuno con un compito preciso.
+
+Pensa alla costruzione di una casa. L'HTML è la **struttura portante**: i muri, le stanze, le porte, le finestre. Dice *cosa c'è* e *dove sta*. Il CSS è la **finitura**: il colore delle pareti, il tipo di pavimento, la forma dei mobili. Dice *come appare*. JavaScript è l'**impianto elettrico e idraulico**: gli interruttori che accendono le luci, i rubinetti che fanno scorrere l'acqua, il termostato che regola la temperatura. Dice *cosa succede* quando interagisci.
+
+```html
+<!-- HTML: la struttura -->
+<button>Invia</button>
+```
+
+```css
+/* CSS: l'aspetto */
+button {
+  background-color: blue;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+```
+
+```javascript
+// JavaScript: il comportamento
+// quando clicchi il bottone, succede qualcosa
+document.querySelector('button').addEventListener('click', function() {
+  alert('Messaggio inviato!');
+});
+```
+
+Se togli l'HTML, non c'è niente da mostrare. Se togli il CSS, il contenuto c'è ma senza stile. Se togli JavaScript, il contenuto c'è ed è gradevole da vedere, ma non reagisce a niente. Ognuno dei tre ha il suo ruolo, e mescolarli è una delle trappole più comuni (ne parleremo nella sezione sugli attributi globali quando affrontiamo il CSS inline).
+
+-----
+
+#### Cosa Succede Quando Apri una Pagina
+
+Capire cosa fa il browser quando apri un sito ti dà una mappa mentale che renderà tutto il resto più chiaro.
+
+Quando digiti un indirizzo nel browser e premi Invio, succede che:
+
+1. Il browser chiede al server il file HTML della pagina
+2. Il server risponde inviando il documento HTML
+3. Il browser legge il documento **dall'alto verso il basso**, riga per riga
+4. Per ogni tag che incontra, crea un *nodo* in una struttura ad albero chiamata **DOM** (Document Object Model)
+5. Se incontra un collegamento a un file CSS, lo scarica e lo applica per definire l'aspetto
+6. Se incontra un collegamento a un file JavaScript, lo scarica e lo esegue per aggiungere il comportamento
+
+Il DOM è la rappresentazione che il browser costruisce del tuo HTML. È come l'albero genealogico del documento: ogni elemento ha un genitore, può avere dei fratelli e può contenere dei figli.
+
+```html
+<html>
+  <body>
+    <header>
+      <h1>Il mio sito</h1>
+      <nav>
+        <a href="#chi-siamo">Chi siamo</a>
+        <a href="#contatti">Contatti</a>
+      </nav>
+    </header>
+    <main>
+      <p>Benvenuto!</p>
+    </main>
+  </body>
+</html>
+```
+
+```
+Il browser costruisce questo albero (DOM):
+
+html
+├── body
+│   ├── header
+│   │   ├── h1 → "Il mio sito"
+│   │   └── nav
+│   │       ├── a → "Chi siamo"
+│   │       └── a → "Contatti"
+│   └── main
+│       └── p → "Benvenuto!"
+...
+```
+
+L'`<html>` è la radice, il `<body>` è il suo figlio diretto, l'`<header>` e il `<main>` sono figli del `<body>` e fratelli tra loro. Questa gerarchia genitore-figlio è il concetto fondamentale dell'HTML: ogni tag vive dentro un altro tag, e la posizione nell'albero determina il suo ruolo nella pagina.
+
+**Regola:** l'HTML descrive *cosa c'è* nella pagina e *come è organizzato*. Non descrive mai come appare (quello è il CSS) né come si comporta (quello è JavaScript).
+
+<br />
+<br />
+<br />
+<br />
+
+### 2. Anatomia di un Tag (Il Mattone dell'HTML)
+
+Se l'HTML è un linguaggio di etichette, il **tag** è la singola etichetta. È l'unità base con cui costruisci qualsiasi pagina, dal sito più semplice alla web app più complessa.
+
+#### Il Tag di Apertura e Chiusura
+
+Ogni tag è composto da tre parti: un'**apertura**, un **contenuto** e una **chiusura**.
+
+```html
+<p>Questo è un paragrafo.</p>
+```
+
+Il `<p>` è il tag di apertura, che dice al browser "qui inizia un paragrafo". Il `</p>` è il tag di chiusura, con la barra `/` che dice "qui finisce". Tutto ciò che sta in mezzo è il contenuto dell'elemento.
+
+È come una coppia di parentesi: se ne apri una, devi chiuderla. Se dimentichi il tag di chiusura, il browser prova a indovinare dove finisce l'elemento, e le sue ipotesi non sono sempre quelle che ti aspetti.
+
+```html
+<!-- ❌ SBAGLIATO, il browser deve "indovinare" dove chiudere il paragrafo -->
+<p>Primo paragrafo
+<p>Secondo paragrafo
+
+<!-- ✅ CORRETTO, ogni elemento ha inizio e fine espliciti -->
+<p>Primo paragrafo</p>
+<p>Secondo paragrafo</p>
+```
+
+Nota che il browser non ti dà un errore: renderizza comunque la pagina, arrangiandosi. Questo è sia un vantaggio (il sito non "crasha" mai) sia una trappola (i bug di layout silenziosi sono i più difficili da trovare). Quindi chiudili sempre.
+
+-----
+
+#### Gli Attributi (Le Specifiche dell'Etichetta)
+
+Un tag da solo dice *cosa* è un elemento. Gli attributi aggiungono *dettagli* su quell'elemento. Vanno sempre nel tag di apertura, mai in quello di chiusura, e seguono la sintassi `nome="valore"`.
+
+```html
+<a href="https://example.com" target="_blank">Visita il sito</a>
+```
+
+In questo esempio, `<a>` dice "questo è un link". L'attributo `href` specifica *dove* porta il link. L'attributo `target` specifica *come* si apre (in una nuova scheda). Senza `href`, il link non porta da nessuna parte. Senza `target`, si apre nella stessa scheda. Il tag definisce il tipo, gli attributi definiscono il comportamento.
+
+Alcuni attributi sono **obbligatori** per il tag a cui appartengono. Un `<img>` senza `src` è un'immagine senza sorgente, quindi non mostra nulla. Un `<a>` senza `href` è un'etichetta senza destinazione. Altri attributi sono opzionali e arricchiscono l'elemento con informazioni aggiuntive.
+
+```html
+<!-- L'attributo src è obbligatorio: senza, non c'è immagine -->
+<img src="foto.jpg" alt="Tramonto sul mare">
+
+<!-- Gli attributi width e height sono opzionali ma raccomandati, 
+     poiché dichiarano le proporzioni native, il browser li usa per 
+     riservare lo spazio ed evitare salti di layout -->
+<img src="foto.jpg" alt="Tramonto sul mare" width="800" height="600">
+```
+
+**Regola:** gli attributi vanno sempre tra virgolette doppie. Tecnicamente il browser accetta anche `<input type=text>` senza virgolette, ma funziona solo finché il valore non contiene spazi o caratteri speciali. Le virgolette eliminano ogni ambiguità, quindi mettile sempre.
+
+-----
+
+#### Il Nesting (Tag Dentro Tag)
+
+I tag possono contenere altri tag. Questo si chiama *nesting* (annidamento), ed è il meccanismo con cui costruisci strutture complesse partendo da pezzi semplici.
+
+```html
+<article>
+  <h2>Ricetta della carbonara</h2>
+  <p>La <strong>vera</strong> carbonara non usa la panna.</p>
+</article>
+```
+
+L'`<article>` contiene un `<h2>` e un `<p>`. Il `<p>` a sua volta contiene uno `<strong>`. Ogni tag figlio è **indentato** (spostato a destra) rispetto al genitore. Il browser ignora questa indentazione visiva, per lui `<article><h2>Titolo</h2></article>` e la versione indentata sono identici. Ma per te e per chiunque leggerà il tuo codice, l'indentazione è la differenza tra un codice leggibile e un muro di testo incomprensibile.
+
+C'è una regola fondamentale nel nesting: i tag si chiudono nell'ordine inverso in cui sono stati aperti. È come togliersi i vestiti, prima la giacca che hai messo per ultima, poi la maglia sotto.
+
+```html
+<!-- ❌ SBAGLIATO, i tag si incrociano -->
+<p>Testo <strong>in grassetto</p></strong>
+
+<!-- ✅ CORRETTO, i tag si chiudono nell'ordine inverso -->
+<p>Testo <strong>in grassetto</strong></p>
+```
+
+Se apri `<p>` poi `<strong>`, devi chiudere prima `</strong>` poi `</p>`. Incrociarli produce HTML invalido e comportamenti imprevedibili.
+
+-----
+
+#### Gli Elementi Void (I Tag Senza Contenuto)
+
+Non tutti i tag hanno bisogno di un contenuto tra apertura e chiusura. Alcuni elementi esistono "da soli", senza avvolgere nulla. Si chiamano *void elements* (elementi vuoti) e non hanno tag di chiusura.
+
+```html
+<!-- Elementi void: non hanno </chiusura> perché non contengono nulla -->
+<img src="foto.jpg" alt="Un gatto che dorme">
+<input type="text" name="email">
+<br>
+<hr>
+```
+
+Un `<img>` è un'immagine: non "contiene" testo o altri elementi, si limita a puntare a un file. Un `<input>` è un campo di inserimento: il valore lo scrive l'utente, non tu nell'HTML. Un `<br>` è un ritorno a capo. Un `<hr>` è una linea di separazione, visivamente è come quelle linee che vedi in questo sito tra una sezione e l'altra.
+
+Potresti incontrare la variante con la barra finale `<br />` o `<img />`. Questa sintassi viene da XHTML, una versione più rigida dell'HTML ormai superata. In HTML5 la barra è opzionale e ignorata dal browser, ma molti sviluppatori la usano ancora per chiarezza visiva (e alcuni framework come React la richiedono nel JSX). Entrambe le forme sono corrette.
+
+-----
+
+#### I Commenti (Le Note Invisibili)
+
+I commenti in HTML sono note che scrivi nel codice sorgente ma che il browser non mostra nella pagina.
+
+```html
+<!-- Questo commento non appare nella pagina -->
+<p>Questo paragrafo sì.</p>
+
+<!-- TODO: aggiungere la sezione contatti -->
+<footer>
+  <!-- Il numero di telefono va aggiornato ogni anno -->
+  <p>Contattaci al 02 1234 5678</p>
+</footer>
+```
+
+I commenti servono a spiegare *perché* hai fatto una scelta, a segnare cose da fare, a lasciare istruzioni per chi leggerà il codice dopo di te (compreso il te stesso di fra tre mesi che avrà dimenticato tutto). Non servono a spiegare *cosa fa* il codice quando il codice è già chiaro da solo.
+
+C'è un dettaglio importante: i commenti sono invisibili nella pagina, **ma visibili nel codice sorgente**. Chiunque può aprire gli strumenti di sviluppo del browser e leggerli. Non mettere mai informazioni sensibili nei commenti HTML, come password, chiavi API o note personali imbarazzanti.
+
+Se vuoi vedere un esempio concreto di come si scrivono commenti che raccontano il *perché*, ispirati allo stile di Salvatore Sanfilippo (il creatore di Redis), dai un'occhiata al <Link to="/docs/path/js-algorithms/roman-numeral-converter">progetto Roman Numeral Converter</Link>.
+
+Un accorgimento pratico: nei file HTML, posiziona i commenti di documentazione dentro il `<head>`, mai prima del `<!DOCTYPE html>`. Come vedremo nella prossima sezione, qualsiasi contenuto posizionato prima del DOCTYPE (anche un commento) rischia di innescare la *Quirks Mode*. I browser moderni spesso tollerano questa pratica, ma è pur sempre un rischio.
+
+```html
+<!-- ❌ SBAGLIATO, il commento prima del DOCTYPE rischia di innescare Quirks Mode -->
+<!-- Pagina principale del sito -->
+<!DOCTYPE html>
+<html lang="it">
+
+<!-- ✅ CORRETTO, i commenti di documentazione vanno nell'head -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+
+<!-- DESIGN
+     ------
+     Layout a griglia, palette colori primaria blu/bianco.
+     Mobile-first con breakpoint a 768px e 1024px. -->
+```
+
+**Regola:** un tag è fatto di apertura, contenuto e chiusura. Gli attributi vanno nell'apertura. I tag si annidano uno dentro l'altro chiudendosi in ordine inverso. Gli elementi void non hanno chiusura. I commenti sono note per gli sviluppatori, non per gli utenti.
+
+<br />
+<br />
+<br />
+<br />
+
+### 3. Struttura del Documento (Le Fondamenta della Casa)
+
+Ogni pagina HTML ha una struttura fissa che il browser si aspetta di trovare. Non importa se stai costruendo un sito di una sola riga o un'applicazione con migliaia di elementi: la struttura di base è sempre la stessa. Funziona come le fondamenta di una casa, senza di esse tutto il resto crolla.
+
+#### Il DOCTYPE (La Dichiarazione d'Identità)
+
+La primissima riga di qualsiasi documento HTML è questa:
+
+```html
+<!DOCTYPE html>
+```
+
+Non è un tag (non ha un `</DOCTYPE>` di chiusura). È una dichiarazione che dice al browser "questo documento è scritto in HTML5". Senza di essa, rischi che il browser entri in *quirks mode*, una modalità di compatibilità con pagine scritte negli anni '90 che interpreta il CSS e il layout in modo diverso da quello moderno.
+
+Non devi capire cosa fa il quirks mode nel dettaglio. Devi solo sapere che la riga `<!DOCTYPE html>` va messa sempre, come prima cosa, senza nulla prima di essa (nemmeno spazi vuoti).
+
+-----
+
+#### L'Elemento Radice (Il Contenitore di Tutto)
+
+Subito dopo il DOCTYPE, il tag `<html>` avvolge l'intero documento. È la radice dell'albero DOM che abbiamo visto nella sezione 1.
+
+```html
+<!DOCTYPE html>
+<html lang="it">
+  <!-- Tutto il resto del documento va qui dentro -->
+</html>
+```
+
+L'attributo `lang="it"` dichiara la lingua del contenuto. Sembra un dettaglio secondario, ma ha conseguenze concrete: gli screen reader (i software che leggono le pagine ad alta voce per le persone non vedenti) cambiano pronuncia in base a questo attributo. Un testo in italiano letto con pronuncia inglese diventa incomprensibile. I motori di ricerca usano `lang` per capire in quale lingua è scritta la pagina e mostrarla nei risultati giusti. I correttori ortografici del browser lo usano per sapere quale dizionario applicare.
+
+-----
+
+#### L'`<head>` (Il Retroscena)
+
+L'`<head>` è la sezione invisibile del documento. Niente di quello che scrivi qui appare nella pagina, ma tutto quello che scrivi qui influenza come la pagina funziona.
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La mia prima pagina</title>
+  <meta name="description" content="Una pagina di esempio per imparare l'HTML">
+  <link rel="stylesheet" href="stile.css">
+</head>
+```
+
+Ogni riga ha un ruolo preciso. `<meta charset="UTF-8">` dichiara la codifica dei caratteri. UTF-8 è lo standard universale che supporta praticamente tutti gli alfabeti del mondo, dagli accenti italiani ai caratteri cinesi alle emoji. Senza questa dichiarazione, il browser potrebbe interpretare i caratteri speciali in modo errato, trasformando "caffè" in "caffÃ¨".
+
+`<meta name="viewport" content="width=device-width, initial-scale=1.0">` è essenziale per i dispositivi mobili. Dice al browser "la larghezza della pagina deve corrispondere alla larghezza dello schermo del dispositivo". Senza questa riga, il telefono mostra la pagina come se fosse su un monitor desktop e poi la rimpicciolisce per farla entrare, rendendo il testo illeggibile.
+
+`<title>` definisce il testo che appare nella linguetta del browser (il tab), nei segnalibri e nei risultati di ricerca di Google. Non è un heading visibile nella pagina, è il *nome* del documento.
+
+`<meta name="description">` è il testo che Google mostra sotto il titolo nei risultati di ricerca. Non influenza il ranking diretto, ma influenza se le persone cliccano o meno sul tuo risultato
+
+`<link rel="stylesheet" href="style.css">` collega un file CSS esterno al documento. Il browser lo scarica e lo applica per definire l'aspetto visivo della pagina.
+
+-----
+
+#### Il `<body>` (Il Palcoscenico)
+
+Il `<body>` è dove vive tutto il contenuto visibile. Ogni testo, immagine, link, pulsante, video, form che l'utente vede e con cui interagisce si trova dentro il `<body>`.
+
+```html
+<body>
+  <header>
+    <h1>Il mio sito</h1>
+    <nav>
+      <a href="#articoli">Articoli</a>
+      <a href="#contatti">Contatti</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <h2>Il mio primo articolo</h2>
+      <p>Contenuto dell'articolo...</p>
+    </article>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Il mio sito</p>
+  </footer>
+</body>
+```
+
+**Regola:** Un solo `<body>` per documento, così come l'`<head>`. Non puoi averne due.
+
+-----
+
+#### Il Documento Completo (Tutto Insieme)
+
+Ecco la struttura completa di un documento HTML5 valido, il minimo indispensabile da cui partire ogni volta che crei una nuova pagina:
+
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Titolo della pagina</title>
+  <meta name="description" content="Descrizione per i motori di ricerca">
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body>
+  <!-- Il contenuto visibile va qui -->
+</body>
+</html>
+```
+
+Questa struttura non cambia mai. Che tu stia costruendo un blog personale, un e-commerce o una web app complessa, parti sempre da qui e non saltare nessun pezzo.
+
+**Regola:** ogni documento HTML inizia con `<!DOCTYPE html>`, ha un `<html lang="...">` con la lingua corretta, un `<head>` con almeno charset, viewport e title, e un `<body>` con il contenuto visibile.
+
+<br />
+<br />
+<br />
+<br />
+
+### 4. Block vs Inline (Due Modi di Occupare lo Spazio)
+
+Ogni elemento HTML occupa spazio nella pagina in due modi possibili. Capire questa distinzione è fondamentale perché determina come gli elementi si dispongono, come interagiscono tra loro e quali combinazioni sono valide.
+
+#### Elementi Block (I Mattoni del Muro)
+
+Un elemento **block** si comporta come un mattone: occupa tutta la larghezza disponibile e va a capo prima e dopo di sé. Non importa quanto è corto il contenuto, l'elemento block si prende tutta la riga.
+
+```html
+<div style="background: lightblue;">Primo blocco</div>
+<p style="background: lightgreen;">Secondo blocco</p>
+<h2 style="background: lightyellow;">Terzo blocco</h2>
+```
+
+```
+Il browser mostra:
+
+[================ Primo blocco ================]
+[============== Secondo blocco ================]
+[============== Terzo blocco ==================]
+
+Ogni elemento occupa tutta la larghezza, uno sotto l'altro.
+```
+
+Gli elementi block più comuni sono: `<div>`, `<p>`, `<h1>`-`<h6>`, `<section>`, `<article>`, `<header>`, `<footer>`, `<main>`, `<nav>`, `<ul>`, `<ol>`, `<li>`, `<form>`, `<table>`, `<blockquote>`, `<figure>`, `<details>`.
+
+-----
+
+#### Elementi Inline (Le Parole nella Frase)
+
+Un elemento **inline** (in questo caso ci sono `<strong>` e `<a>`) si comporta come una parola in una frase: occupa solo lo spazio del suo contenuto e resta nel flusso del testo. Non va a capo, non interrompe nulla.
+
+```html
+<p>
+  Questo è un testo con una parola <strong>importante</strong> e
+  un <a href="#">link</a> nel mezzo della frase.
+</p>
+```
+
+Il browser mostrerà: Questo è un testo con una parola **importante** e un <u>link</u> nel mezzo della frase.
+
+Gli elementi inline restano quindi nella riga, uno accanto all'altro.
+
+Gli elementi inline più comuni sono: `<span>`, `<a>`, `<strong>`, `<em>`, `<img>`, `<input>`, `<button>`, `<code>`, `<br>`, `<abbr>`, `<time>`.
+
+-----
+
+#### Perché Questa Distinzione È Importante
+
+La regola principale è questa: un elemento **block può contenere** sia elementi block che inline. Un elemento **inline può contenere** solo altri elementi inline. Mettere un block dentro un inline non si può fare.
+
+```html
+<!-- ❌ SBAGLIATO, un div (block) dentro uno span (inline) -->
+<span>Testo con <div>un blocco dentro</div> non va bene.</span>
+
+<!-- ✅ CORRETTO, uno span (inline) dentro un div (block) -->
+<div>Testo con <span>un pezzo evidenziato</span> va bene.</div>
+
+<!-- ✅ CORRETTO, uno strong (inline) dentro un p (block) -->
+<p>Questa parola è <strong>importante</strong>.</p>
+
+<!-- ❌ SBAGLIATO, un p (block) dentro uno span (inline) -->
+<span><p>Questo non è valido.</p></span>
+```
+
+È come la regola della valigia: puoi mettere un portafoglio dentro una valigia, ma non puoi mettere una valigia dentro un portafoglio. I contenitori grandi (block) possono contenere quelli piccoli (inline), non il contrario.
+
+C'è un'eccezione: il tag `<a>` è di fatto inline, ma in HTML5 permette di avvolgere elementi block. Questo permette di rendere cliccabile un'intera card o sezione:
+
+```html
+<!-- Valido in HTML5: un link che avvolge un blocco intero -->
+<a href="/articolo">
+  <article>
+    <h2>Titolo dell'articolo</h2>
+    <p>Anteprima del contenuto...</p>
+  </article>
+</a>
+```
+
+**Regola:** gli elementi block vanno a capo e prendono tutta la larghezza. Gli elementi inline restano nel flusso del testo. Non mettere mai un block dentro un inline (tranne `<a>` in HTML5).
+
+<br />
+<br />
+<br />
+<br />
+
+### 5. Elementi di Testo (Il Contenuto della Pagina)
+
+La maggior parte di quello che vedi in una pagina web è testo: titoli, paragrafi, liste, citazioni. HTML offre tag specifici per ognuno di questi tipi, e la scelta del tag giusto determina come il browser, gli screen reader e i motori di ricerca interpretano il tuo contenuto.
+
+#### Gli Heading (La Mappa del Contenuto)
+
+Gli heading vanno da `<h1>` a `<h6>` e rappresentano i titoli del documento, dal più importante al meno importante. Il browser li mostra con dimensioni diverse, ma quello è solo un effetto visivo di default. Il loro scopo reale è definire la **gerarchia di importanza** del contenuto che hanno all'interno. Le dimensioni le controlli con il CSS, qui ti interessa la struttura.
+
+```html
+<h1>La cucina italiana</h1>
+
+  <h2>Primi piatti</h2>
+
+    <h3>Pasta</h3>
+      <p>La pasta è il piatto più iconico...</p>
+
+    <h3>Risotti</h3>
+      <p>Il risotto richiede pazienza...</p>
+
+  <h2>Secondi piatti</h2>
+
+    <h3>Carne</h3>
+      <p>Le carni italiane più pregiate...</p>
+```
+
+Pensa agli heading come all'indice di un libro. L'`<h1>` è il titolo del libro, gli `<h2>` sono i capitoli, gli `<h3>` sono i paragrafi dentro ogni capitolo. Questa struttura non è quindi solo visiva, è funzionale: gli screen reader permettono alle persone non vedenti di navigare la pagina saltando da un heading all'altro, esattamente come tu scorri un indice. Google usa la gerarchia degli heading per capire di cosa parla la pagina e quali sono gli argomenti principali.
+
+**Due regole non negoziabili:**
+1. **Un solo `<h1>` per pagina**.  
+L'`<h1>` è il titolo principale, e come la prima pagina di un giornale ha un solo titolone, la tua pagina ha un solo `<h1>`.
+2. **Non saltare livelli**.  
+Non passare da `<h2>` a `<h4>` perché preferisci la dimensione del font, usa il CSS per quello.
+
+```html
+<!-- ❌ SBAGLIATO, h1 duplicato e salto da h2 a h4 -->
+<h1>Il mio blog</h1>
+<h1>Benvenuto!</h1>
+<h2>Articoli recenti</h2>
+<h4>Come cucinare la pasta</h4>
+
+<!-- ✅ CORRETTO, gerarchia rispettata -->
+<h1>Il mio blog</h1>
+<h2>Articoli recenti</h2>
+<h3>Come cucinare la pasta</h3>
+```
+
+**Riassumendo:** gli heading descrivono la struttura del contenuto, non la dimensione del testo. Un `<h1>` per pagina, nessun livello saltato.
+
+-----
+
+#### I Paragrafi e il Testo Base
+
+Il `<p>` è il tag per i paragrafi di testo. Il browser aggiunge automaticamente una spaziatura sopra e sotto ogni paragrafo per separarli visivamente.
+
+```html
+<p>La pizza napoletana ha origini antichissime. La prima pizzeria
+documentata aprì a Napoli nel 1830.</p>
+
+<p>La vera pizza napoletana segue regole precise: impasto lievitato
+almeno 24 ore, cottura in forno a legna a 485 gradi per 60-90 secondi.</p>
+```
+
+Un dettaglio che forse ti sorprenderà: il browser **ignora gli a capo e gli spazi multipli** nel codice sorgente. Se scrivi tre righe separate dentro un `<p>`, il browser le mostra comunque come un unico blocco di testo continuo, proprio come se le avessi riposte tutte su un unica riga. Per andare a capo dentro un paragrafo devi usare `<br>`, e per separare i paragrafi devi chiudere il `<p>` e aprirne un altro.
+
+```html
+<!-- Questo nel browser viene mostrato tutto su una riga -->
+<p>
+  Prima riga
+  Seconda riga
+  Terza riga
+</p>
+
+<!-- Per andare davvero a capo serve <br> -->
+<p>
+  Prima riga<br>
+  Seconda riga<br>
+  Terza riga
+</p>
+```
+
+-----
+
+#### Enfasi e Importanza (Significato vs Aspetto)
+
+L'HTML ha due coppie di tag per il testo in grassetto e corsivo, e la differenza tra le due è semantica, non visiva.
+
+`<strong>` e `<em>` non sono solo **grassetto** e *corsivo*. Comunicano qualcosa al browser e agli screen reader. Quando scrivi `<strong>`, stai dicendo "**questo testo è importante, fai attenzione**". Quando scrivi `<em>`, stai dicendo "*questa parola va letta con un'intonazione diversa*". Uno screen reader cambierà il tono di voce quando li incontrerà.
+
+`<b>` e `<i>` sono invece puramente **visivi**. Rendono il testo grassetto o corsivo senza aggiungere alcun significato semantico. Uno screen reader li legge normalmente, senza cambiare intonazione.
+
+```html
+<!-- Significato semantico: lo screen reader cambia tono -->
+<p><strong>Attenzione:</strong> il prodotto contiene allergeni.</p>
+<p>La parola chiave è <em>consistenza</em>, non velocità.</p>
+
+<!-- Solo aspetto visivo: lo screen reader non cambia nulla -->
+<p>Il nome scientifico è <i>Canis lupus familiaris</i>.</p>
+<p>Il <b>Capitolo 3</b> tratta di storia medievale.</p>
+```
+
+Nella pratica quotidiana, `<strong>` e `<em>` sono quelli che userai quasi sempre. `<b>` e `<i>` hanno senso in casi specifici, ad esempio: nomi scientifici (*Canis lupus familiaris*), titoli di opere (*La Divina Commedia*, *Dark Side of the Moon*), termini tecnici in lingua straniera (*progressive enhancement*, *layout shift*).
+
+-----
+
+#### Citazioni
+
+Per le citazioni lunghe da fonti esterne, l'HTML offre `<blockquote>` con `<cite>` per attribuire la fonte.
+
+```html
+<blockquote>
+  <p>Il codice è come una barzelletta: se devi spiegarlo, è un cattivo codice.</p>
+  <cite>Cory House</cite>
+</blockquote>
+```
+
+Il `<blockquote>` è un elemento block che il browser mostra con un'indentazione a sinistra. Il `<cite>` identifica la fonte della citazione. Per le citazioni brevi dentro un paragrafo, c'è `<q>` che aggiunge automaticamente le virgolette:
+
+```html
+<p>Come diceva Steve Jobs, <q>il design non è come appare, è come funziona</q>.</p>
+```
+
+-----
+
+#### Codice e Testo Preformattato
+
+Quando scrivi di programmazione, hai bisogno di mostrare codice all'interno del testo. Il tag `<code>` serve per il codice inline, dentro una frase. Il tag `<pre>` serve per blocchi di codice preformattato dove gli spazi e gli a capo devono essere preservati.
+
+```html
+<!-- Codice inline dentro un paragrafo -->
+<p>Per dichiarare una variabile in JavaScript, usa <code>const</code>
+o <code>let</code>.</p>
+
+<!-- Blocco di codice preformattato -->
+<pre><code>
+function saluta(nome) {
+  return "Ciao, " + nome + "!";
+}
+</code></pre>
+```
+
+Il `<pre>` è l'unico elemento che preserva la formattazione originale del codice sorgente: spazi multipli, tabulazioni e ritorni a capo vengono mostrati esattamente come li scrivi. La combinazione `<pre><code>` è il modo standard di mostrare blocchi di codice in HTML.
+
+-----
+
+#### Le Liste (Ordinate e Non Ordinate)
+
+Le liste sono uno degli elementi più usati in HTML, dalla lista della spesa al menu di navigazione.
+
+La **lista non ordinata** `<ul>` mostra gli elementi con un pallino (bullet point). L'ordine degli elementi non ha importanza semantica.
+
+```html
+<ul>
+  <li>Farina</li>
+  <li>Uova</li>
+  <li>Zucchero</li>
+</ul>
+```
+
+La **lista ordinata** `<ol>` mostra gli elementi numerati. L'ordine conta, perché rappresenta una sequenza.
+
+```html
+<ol>
+  <li>Preriscalda il forno a 180°</li>
+  <li>Mescola gli ingredienti secchi</li>
+  <li>Aggiungi le uova e mescola</li>
+  <li>Inforna per 30 minuti</li>
+</ol>
+```
+
+Le liste possono essere **annidate**, mettendo una lista dentro un `<li>` di un'altra lista:
+
+```html
+<ul>
+  <li>Primi piatti
+    <ul>
+      <li>Pasta alla carbonara</li>
+      <li>Risotto ai funghi</li>
+    </ul>
+  </li>
+  <li>Secondi piatti
+    <ul>
+      <li>Pollo arrosto</li>
+      <li>Pesce al forno</li>
+    </ul>
+  </li>
+</ul>
+```
+
+**Regola:** usa `<ul>` quando l'ordine non conta, `<ol>` quando conta. Ogni `<li>` deve stare dentro un `<ul>` o un `<ol>`, mai da solo.
+
+-----
+
+#### La Linea di Separazione Tematica
+
+Il tag `<hr>` crea una separazione tematica tra blocchi di contenuto. Non è una "riga decorativa", è un indicatore semantico che dice "qui cambia argomento".
+
+```html
+<article>
+  <h2>La storia del caffè</h2>
+  <p>Il caffè venne scoperto in Etiopia...</p>
+
+  <hr>
+
+  <h2>Come preparare un espresso perfetto</h2>
+  <p>La temperatura dell'acqua deve essere...</p>
+</article>
+```
+
+**Regola:** l'`<hr>` separa temi diversi dentro uno stesso contesto. Non usarlo come decorazione visiva.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. Contenitori Semantici (Dare un Nome alle Stanze)
+
+Immagina di trasferirti in una casa nuova. Hai decine di scatoloni da sistemare. Se su ogni scatolone c'è scritto "ROBA", impazzisci. Se invece c'è scritto "CUCINA", "BAGNO", "CAMERA DA LETTO", sai esattamente dove mettere le mani e dove portare ogni scatola.
+
+L'HTML funziona allo stesso modo. Puoi costruire un'intera pagina usando solo `<div>` come contenitori generici, e tecnicamente funziona. Ma il risultato è un codice dove tutto è etichettato "ROBA": non comunica nulla sulla struttura della pagina, né a te, né ai motori di ricerca, né alle tecnologie assistive. I **tag semantici** risolvono questo problema dando un nome e un significato preciso a ogni sezione della pagina.
+
+#### Perché la Semantica Conta
+
+La semantica non è un vezzo estetico. Ha tre conseguenze pratiche.
+
+La prima è l'**accessibilità**. Gli screen reader usano i tag semantici per costruire una mappa della pagina. Un non vedente può saltare direttamente al `<nav>` per la navigazione, al `<main>` per il contenuto principale, al `<footer>` per i contatti. Con una pagina fatta di soli `<div>`, questa mappa non esiste.
+
+La seconda è la **SEO**. I motori di ricerca leggono i tag semantici per capire quale parte della pagina è il contenuto principale, qual è la navigazione, qual è un articolo autonomo. Un `<article>` con un `<h2>` dice a Google "questo è un contenuto indipendente con questo titolo". Un `<div>` con un `<div>` non dice nulla.
+
+La terza è la **manutenibilità**. Quando torni sul tuo codice dopo tre mesi, un `<header>` ti dice immediatamente che quella sezione è l'intestazione. Un `<div>`, in mezzo a mille altri, no.
+
+-----
+
+#### `<header>` (L'Insegna)
+
+Il `<header>` contiene l'intestazione della pagina o di una sezione. Di solito include il logo, il titolo del sito e la navigazione principale.
+
+```html
+<header>
+  <img src="logo.svg" alt="Logo del sito">
+  <h1>Il mio ristorante</h1>
+  <nav>
+    <a href="#menu">Menu</a>
+    <a href="#contatti">Contatti</a>
+  </nav>
+</header>
+```
+
+Un `<header>` può apparire più volte nella pagina, non solo in cima. Ogni `<article>` o `<section>` può avere il proprio `<header>`.
+
+-----
+
+#### `<main>` (Il Protagonista)
+
+Il `<main>` contiene il contenuto principale della pagina, quello per cui l'utente è venuto. Tutto ciò che non è navigazione, intestazione o piè di pagina si trova qui dentro.
+
+```html
+<body>
+  <header>...</header>
+
+  <main>
+    <h2>I nostri piatti del giorno</h2>
+    <article>...</article>
+    <article>...</article>
+  </main>
+
+  <footer>...</footer>
+</body>
+```
+
+A differenza dell'`<header>`, il `<main>` deve essere **uno solo per pagina**. Questo ha senso se ci pensi: il contenuto principale è per definizione uno solo. Se ne avessi due, quale sarebbe quello principale?
+
+-----
+
+#### `<footer>` (I Titoli di Coda)
+
+Il `<footer>` contiene le informazioni di chiusura: contatti, copyright, link secondari, policy. Come l'`<header>`, può apparire sia a livello di pagina che dentro singole sezioni.
+
+```html
+<footer>
+  <p>&copy; 2024 Il mio ristorante</p>
+  <address>
+    <a href="mailto:info@ristorante.it">info@ristorante.it</a><br>
+    Via Roma 42, Milano
+  </address>
+</footer>
+```
+
+-----
+
+#### `<nav>` (Il Menu di Navigazione)
+
+Il `<nav>` raggruppa i link di navigazione principali. Non tutti i gruppi di link sono un `<nav>`, solo quelli che rappresentano la navigazione strutturale del sito: il menu principale, il breadcrumb, la navigazione tra sezioni.
+
+```html
+<nav>
+  <a href="/">Home</a>
+  <a href="/prodotti">Prodotti</a>
+  <a href="/chi-siamo">Chi siamo</a>
+  <a href="/contatti">Contatti</a>
+</nav>
+```
+
+Un link nel footer che porta alla privacy policy non ha bisogno di un `<nav>`. Un gruppo di link nel testo nemmeno. Solo la navigazione è `<nav>`, i link sparsi no.
+
+-----
+
+#### `<section>` (Il Capitolo)
+
+Il `<section>` raggruppa contenuti che condividono un tema. Ogni `<section>` dovrebbe avere il proprio heading. Se non riesci ad assegnare un heading sensato a una sezione, probabilmente non devi usare `<section>` ma `<div>`.
+
+```html
+<section>
+  <h2>I nostri servizi</h2>
+  <p>Offriamo consulenza, sviluppo e formazione.</p>
+</section>
+
+<section>
+  <h2>Il nostro team</h2>
+  <p>Un gruppo di professionisti appassionati.</p>
+</section>
+```
+
+-----
+
+#### `<article>` (Il Contenuto Autonomo)
+
+L'`<article>` rappresenta un contenuto che ha senso anche estratto dal contesto della pagina. Il test è semplice: se puoi prendere quel blocco di HTML, pubblicarlo su un social network, e ha senso da solo, allora è un `<article>`.
+
+```html
+<article>
+  <h2>Come preparare il tiramisù</h2>
+  <p>Il tiramisù è uno dei dolci italiani più amati al mondo.
+  Per prepararlo ti servono mascarpone, uova, savoiardi,
+  caffè e cacao amaro.</p>
+  <p>Inizia separando i tuorli dagli albumi...</p>
+</article>
+```
+
+Un post di blog è un `<article>`. Un commento sotto un post è un `<article>`. Una card di prodotto in un e-commerce è un `<article>`. Una sezione "Chi siamo" della homepage probabilmente non lo è, perché fuori contesto non ha molto senso.
+
+-----
+
+#### `<aside>` (La Nota a Margine)
+
+L'`<aside>` contiene informazioni correlate al contenuto principale ma non essenziali. Se lo togli, il contenuto principale deve comunque avere senso completo.
+
+```html
+<article>
+  <h2>La storia del caffè</h2>
+  <p>Il caffè fu scoperto in Etiopia intorno al IX secolo...</p>
+
+  <aside>
+    <h3>Lo sapevi?</h3>
+    <p>In Italia si consumano circa 6 miliardi di tazzine
+    di caffè all'anno.</p>
+  </aside>
+
+  <p>La coltivazione si diffuse poi nella penisola arabica...</p>
+</article>
+```
+
+È come quei box colorati nei libri di scuola: curiosità, approfondimenti, note laterali che arricchiscono senza interrompere il flusso principale.
+
+-----
+
+#### `<details>` e `<summary>` (Il Widget Interattivo Nativo)
+
+Questi due tag creano un elemento espandibile/comprimibile senza bisogno di JavaScript. Il `<summary>` è il testo sempre visibile, il resto del contenuto dentro `<details>` appare solo quando l'utente clicca.
+
+```html
+<details>
+  <summary>Quali metodi di pagamento accettate?</summary>
+  <p>Accettiamo carte di credito (Visa, Mastercard, American Express),
+  PayPal e bonifico bancario. Per ordini superiori a 500€ è disponibile
+  anche il pagamento a rate.</p>
+</details>
+```
+
+È perfetto per le FAQ, per le sezioni di aiuto, per qualsiasi contenuto che vuoi mostrare su richiesta. L'attributo `open` lo rende espanso di default:
+
+```html
+<details open>
+  <summary>Informazioni sulla spedizione</summary>
+  <p>La spedizione standard richiede 3-5 giorni lavorativi.</p>
+</details>
+```
+
+-----
+
+#### `<div>` e `<span>` (I Contenitori Generici)
+
+Il `<div>` è un contenitore block generico. Lo `<span>` è un contenitore inline generico. Nessuno dei due ha significato semantico: esistono puramente come "ganci" per il CSS e JavaScript.
+
+```html
+<!-- div: contenitore block per raggruppare e stilizzare -->
+<div class="card">
+  <h3>Prodotto speciale</h3>
+  <p>Descrizione del prodotto...</p>
+  <button>Acquista</button>
+</div>
+
+<!-- span: contenitore inline per stilizzare una porzione di testo -->
+<p>Il prezzo è <span class="prezzo">€99</span> invece di €150.</p>
+```
+
+La regola è semplice: usa `<div>` e `<span>` **solo quando nessun tag semantico è appropriato**. Se stai per scrivere `<div class="header">`, fermati. Esiste `<header>`. Se stai per scrivere `<div class="navigation">`, esiste `<nav>`. Il `<div>` è l'ultima risorsa, mai la prima scelta.
+
+**Regola:** scegli sempre il tag semantico più specifico disponibile. Il `<div>` è un contenitore senza significato, usalo solo quando nessun altro tag è appropriato.
+
+<br />
+<br />
+<br />
+<br />
+
+### 7. Link (Le Porte del Web)
+
+I link sono il meccanismo che rende il web una rete di documenti interconnessi. Senza link, ogni pagina sarebbe un'isola isolata. Il tag `<a>` (da *anchor*, àncora) è lo strumento con cui crei questi collegamenti.
+
+#### Link Esterni e Interni
+
+Un link nella sua forma più semplice punta a un'altra pagina usando l'attributo `href` (hypertext reference).
+
+```html
+<!-- Link a un altro sito (URL completo) -->
+<a href="https://developer.mozilla.org">Documentazione MDN</a>
+
+<!-- Link a un'altra pagina del tuo sito (percorso relativo) -->
+<a href="/contatti">Vai ai contatti</a>
+```
+
+I link interni alla stessa pagina usano le **ancore**: il link punta a un `id` presente più in basso (o più in alto) nel documento.
+
+```html
+<!-- Il link che porta alla sezione -->
+<a href="#ricette">Vai alle ricette</a>
+
+<!-- La sezione di destinazione, più in basso nella pagina -->
+<section id="ricette">
+  <h2>Le nostre ricette</h2>
+  <p>...</p>
+</section>
+```
+
+Quando l'utente clicca, il browser scrolla automaticamente fino all'elemento con quell'`id`. L'`#` nell'href dice al browser "cerca un id in questa stessa pagina".
+
+-----
+
+#### Link a Email e Telefono
+
+L'HTML permette di creare link che aprono il client di posta o avviano una telefonata, usando protocolli speciali al posto di `https://`.
+
+```html
+<!-- Apre il programma di posta con il destinatario precompilato -->
+<a href="mailto:info@esempio.it">Scrivici una mail</a>
+
+<!-- Avvia la chiamata -->
+<a href="tel:+390212345678">Chiamaci: 02 1234 5678</a>
+```
+
+Il formato del numero di telefono deve includere il prefisso internazionale con il `+`. Questo garantisce che funzioni correttamente indipendentemente dal paese dell'utente.
+
+-----
+
+#### `target="_blank"` e la Sicurezza
+
+L'attributo `target="_blank"` apre il link in una nuova scheda del browser.
+
+```html
+<a href="https://esempio.it" target="_blank" rel="noopener noreferrer">
+  Visita il sito (si apre in una nuova scheda)
+</a>
+```
+
+L'attributo `rel="noopener noreferrer"` è una protezione di sicurezza. Senza di esso, la pagina aperta in una nuova scheda ha un canale di ritorno verso la tua: una pagina malevola potrebbe usarlo per reindirizzare la scheda originale a un sito di phishing mentre l'utente non sta guardando. Questa vulnerabilità si chiama *reverse tabnapping*. Il `noopener` chiude quel canale. Il `noreferrer` fa una cosa in più: impedisce che il sito di destinazione sappia da quale pagina arriva l'utente.
+
+I browser moderni aggiungono automaticamente `noopener` quando usi `target="_blank"`, ma specificarlo esplicitamente è una buona pratica per garantire la compatibilità con i browser più vecchi.
+
+-----
+
+#### Testo Descrittivo nei Link
+
+Il testo di un link deve avere significato anche letto fuori dal contesto della frase. Gli screen reader spesso presentano una lista di tutti i link della pagina, e se tutti dicono "clicca qui" o "leggi di più", l'utente non ha idea di dove portino.
+
+```html
+<!-- ❌ SBAGLIATO, il testo del link non dice nulla -->
+<p>Per vedere il nostro menu, <a href="menu.pdf">clicca qui</a>.</p>
+
+<!-- ✅ CORRETTO, il testo del link descrive la destinazione -->
+<p>Consulta il <a href="menu.pdf">menu completo (PDF)</a>.</p>
+
+<!-- ❌ SBAGLIATO, testo generico ripetuto -->
+<a href="/pizza">Leggi di più</a>
+<a href="/pasta">Leggi di più</a>
+
+<!-- ✅ CORRETTO, ogni link è autodescrittivo -->
+<a href="/pizza">Scopri le nostre pizze</a>
+<a href="/pasta">Scopri i nostri primi piatti</a>
+```
+
+Pensa al testo di un link come a un cartello stradale. "Vai là" non aiuta nessuno. "Stazione Centrale, 2 km" ti dice esattamente cosa aspettarti.
+
+-----
+
+#### Link vs Bottoni (Due Strumenti Diversi)
+
+Una confusione molto comune è quella di usare un link come bottone o un bottone come link. I due elementi hanno ruoli diversi.
+
+Un **link** (`<a>`) serve a **navigare**: porta l'utente in un altro posto (un'altra pagina, un'altra sezione, un altro sito). Un **bottone** (`<button>`) serve a **compiere un'azione**, come: inviare un form, aprire un menu, salvare un dato.
+
+```html
+<!-- ❌ SBAGLIATO, un link usato per un'azione -->
+<a href="#" onclick="salvaDocumento()">Salva</a>
+
+<!-- ✅ CORRETTO, un bottone per le azioni -->
+<button type="button" onclick="salvaDocumento()">Salva</button>
+
+<!-- ❌ SBAGLIATO, un bottone usato per navigare -->
+<button onclick="location.href='/prezzi'">Vedi i prezzi</button>
+
+<!-- ✅ CORRETTO, un link per la navigazione -->
+<a href="/prezzi">Vedi i prezzi</a>
+```
+
+La distinzione non è solo stilistica. I link e i bottoni si comportano diversamente con la tastiera (i link si attivano con Invio, i bottoni con Invio e Spazio), vengono annunciati diversamente dagli screen reader ("link" vs "pulsante"), e hanno significati diversi per i motori di ricerca. Scambiarli crea confusione a tutti i livelli.
+
+**Regola:** se porta da qualche parte, è un `<a>`. Se fa succedere qualcosa, è un `<button>`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. Media (Immagini, Audio e Video)
+
+Il web non è solo testo. Le immagini, i video e l'audio arricchiscono le pagine e spesso sono il contenuto principale. L'HTML offre tag dedicati per ciascun tipo di media, con attributi che controllano come vengono caricati, mostrati e resi accessibili.
+
+#### Le Immagini (`<img>`)
+
+Il tag `<img>` è un elemento void (non ha chiusura) che mostra un'immagine nella pagina.
+
+```html
+<img
+  src="tramonto.jpg"
+  alt="Tramonto arancione sul mare con una barca a vela in primo piano"
+  width="800"
+  height="600"
+  loading="lazy"
+>
+```
+
+Ogni attributo ha un ruolo preciso. `src` è il percorso dell'immagine, senza di esso non c'è nulla da mostrare. `alt` è il testo alternativo che appare quando l'immagine non si carica e che gli screen reader leggono ad alta voce. `width` e `height` dichiarano le dimensioni dell'immagine in pixel, e servono al browser per riservare lo spazio prima che l'immagine sia scaricata (senza di essi, il contenuto "salta" quando l'immagine appare, un fenomeno chiamato *layout shift*). `loading="lazy"` dice al browser di scaricare l'immagine solo quando sta per entrare nell'area visibile, risparmiando banda e velocizzando il caricamento iniziale.
+
+-----
+
+#### L'Alt Text (La Voce dell'Immagine)
+
+L'attributo `alt` merita un approfondimento a parte perché è uno degli aspetti più fraintesi dell'HTML.
+
+L'`alt` non è una didascalia. È una **descrizione testuale che sostituisce l'immagine** quando questa non è disponibile, perchè, ad esempio, non si è caricata, l'utente usa uno screen reader, il browser è in modalità solo testo. Devi descrivere cosa si vede nell'immagine, come se stessi descrivendola al telefono a qualcuno che non può vederla.
+
+```html
+<!-- ❌ SBAGLIATO, non descrive nulla -->
+<img src="team.jpg" alt="Foto">
+
+<!-- ❌ SBAGLIATO, ridondante con il tag stesso -->
+<img src="team.jpg" alt="Immagine del team">
+
+<!-- ✅ CORRETTO, descrive cosa si vede -->
+<img src="team.jpg" alt="Il team di sviluppo in ufficio, sei persone sorridenti attorno a un tavolo con laptop">
+```
+
+C'è un caso speciale: le immagini **puramente decorative**, quelle che non aggiungono informazione al contenuto (un'icona decorativa, uno sfondo astratto). Per queste, usa `alt=""` (alt vuoto), non omettere l'attributo. L'alt vuoto dice allo screen reader "ignora questa immagine, è decorativa". Senza l'attributo alt, lo screen reader legge il nome del file, che è pure peggio.
+
+```html
+<!-- Immagine decorativa: alt vuoto, lo screen reader la salta -->
+<img src="decorazione.svg" alt="">
+
+<!-- Immagine informativa: alt descrittivo -->
+<img src="grafico-vendite.png" alt="Grafico a barre delle vendite 2024, in crescita del 15% rispetto al 2023">
+```
+
+-----
+
+#### `<figure>` e `<figcaption>` (L'Immagine con Didascalia)
+
+Quando un'immagine ha bisogno di una didascalia, il modo semantico di associarle è con `<figure>` e `<figcaption>`.
+
+```html
+<figure>
+  <img src="colosseo.jpg" alt="Il Colosseo di Roma al tramonto">
+  <figcaption>Il Colosseo, completato nell'80 d.C., poteva contenere
+  fino a 80.000 spettatori.</figcaption>
+</figure>
+```
+
+Il `<figure>` non è limitato alle immagini. Può contenere qualsiasi contenuto autonomo che viene referenziato dal testo principale: grafici, diagrammi, tabelle, blocchi di codice. Il `<figcaption>` è la sua didascalia, e può stare prima o dopo il contenuto.
+
+-----
+
+#### Audio e Video
+
+Il tag `<audio>` incorpora contenuti audio nella pagina. L'attributo `controls` mostra i controlli di riproduzione (play, pausa, volume). Il tag `<source>` permette di specificare formati multipli per garantire la compatibilità con tutti i browser.
+
+```html
+<audio controls>
+  <source src="canzone.mp3" type="audio/mpeg">
+  <source src="canzone.ogg" type="audio/ogg">
+  <p>Il tuo browser non supporta l'audio HTML5.
+  <a href="canzone.mp3">Scarica il file audio</a>.</p>
+</audio>
+```
+
+Il browser usa il primo formato che supporta e ignora gli altri. Il contenuto testuale dentro `<audio>` appare solo nei browser che non supportano il tag (ormai rarissimi, ma è buona pratica includerlo).
+
+Il tag `<video>` funziona allo stesso modo, con l'aggiunta dell'attributo `poster` che mostra un'immagine di anteprima prima che il video venga avviato.
+
+```html
+<video controls poster="anteprima.jpg" width="640" height="360">
+  <source src="tutorial.mp4" type="video/mp4">
+  <source src="tutorial.webm" type="video/webm">
+  <p>Il tuo browser non supporta il video HTML5.
+  <a href="tutorial.mp4">Scarica il video</a>.</p>
+</video>
+```
+
+-----
+
+#### `<iframe>` (La Finestra su un Altro Sito)
+
+L'`<iframe>` incorpora un'intera pagina web dentro la tua. È il tag che usi per inserire video YouTube, mappe Google, post social e qualsiasi altro contenuto esterno.
+
+```html
+<iframe
+  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+  width="560"
+  height="315"
+  title="Video tutorial sulle basi dell'HTML"
+  loading="lazy"
+  allowfullscreen
+></iframe>
+```
+
+L'attributo `title` è fondamentale per l'accessibilità: gli screen reader lo leggono per descrivere il contenuto dell'iframe, dato che non possono "vedere" cosa c'è dentro. Un iframe senza `title` è un buco nero per chi naviga con tecnologie assistive.
+
+**Regola:** ogni `<img>` ha un `alt` (descrittivo per le immagini informative, vuoto per le decorative). Ogni `<iframe>` ha un `title`. Gli attributi `width` e `height` sulle immagini prevengono il layout shift.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Tabelle (Organizzare i Dati)
+
+Le tabelle in HTML servono a organizzare **dati tabulari**, informazioni che hanno senso in righe e colonne. Orari dei treni, confronti tra prodotti, classifiche, listini prezzi. Non servono a creare layout di pagina, anche se negli anni '90 era pratica comune. Oggi i layout si fanno con il CSS.
+
+#### La Struttura Base
+
+Una tabella è composta da righe (`<tr>`, table row) e celle. Le celle possono essere **intestazioni** (`<th>`, table header) o **dati** (`<td>`, table data).
+
+```html
+<table>
+  <tr>
+    <th>Prodotto</th>
+    <th>Prezzo</th>
+    <th>Disponibilità</th>
+  </tr>
+  <tr>
+    <td>Pizza Margherita</td>
+    <td>€8</td>
+    <td>Disponibile</td>
+  </tr>
+  <tr>
+    <td>Pizza Diavola</td>
+    <td>€10</td>
+    <td>Esaurita</td>
+  </tr>
+</table>
+```
+
+I `<th>` non sono solo visivamente diversi dai `<td>` (il browser li rende in grassetto e centrati). Hanno un significato semantico: dicono al browser e agli screen reader "questa cella è un'etichetta che descrive le celle sotto di essa (o accanto)". Questo è fondamentale per l'accessibilità.
+
+-----
+
+#### Le Sezioni Semantiche della Tabella
+
+Le tabelle più complesse possono essere divise in tre sezioni semantiche: `<thead>` (intestazione), `<tbody>` (corpo) e `<tfoot>` (piè di tabella).
+
+```html
+<table>
+  <caption>Vendite primo trimestre 2024</caption>
+
+  <thead>
+    <tr>
+      <th>Mese</th>
+      <th>Vendite</th>
+      <th>Obiettivo</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td>Gennaio</td>
+      <td>€12.000</td>
+      <td>€10.000</td>
+    </tr>
+    <tr>
+      <td>Febbraio</td>
+      <td>€15.000</td>
+      <td>€12.000</td>
+    </tr>
+    <tr>
+      <td>Marzo</td>
+      <td>€18.000</td>
+      <td>€15.000</td>
+    </tr>
+  </tbody>
+
+  <tfoot>
+    <tr>
+      <td>Totale</td>
+      <td>€45.000</td>
+      <td>€37.000</td>
+    </tr>
+  </tfoot>
+</table>
+```
+
+Il `<caption>` è il titolo della tabella, e va subito dopo il tag `<table>`. Gli screen reader lo leggono prima dei dati per dare contesto all'utente. Il `<thead>`, `<tbody>` e `<tfoot>` permettono al browser di gestire lo scrolling delle tabelle lunghe (mantenendo l'intestazione fissa) e agli screen reader di annunciare le intestazioni quando l'utente naviga tra le celle.
+
+-----
+
+#### Celle Unite (`colspan` e `rowspan`)
+
+A volte una cella deve occupare più colonne o più righe. Gli attributi `colspan` e `rowspan` lo rendono possibile.
+
+```html
+<table>
+  <tr>
+    <th colspan="3">Orari di apertura</th>
+  </tr>
+  <tr>
+    <th>Giorno</th>
+    <th>Mattina</th>
+    <th>Pomeriggio</th>
+  </tr>
+  <tr>
+    <td>Lunedì</td>
+    <td>9:00 - 13:00</td>
+    <td>14:00 - 18:00</td>
+  </tr>
+  <tr>
+    <td>Sabato</td>
+    <td colspan="2">9:00 - 14:00 (orario continuato)</td>
+  </tr>
+  <tr>
+    <td>Domenica</td>
+    <td colspan="2">Chiuso</td>
+  </tr>
+</table>
+```
+
+Il `colspan="3"` dice "questa cella si estende per 3 colonne". Il `rowspan` funziona allo stesso modo ma in verticale, facendo estendere una cella su più righe.
+
+**Regola:** le tabelle sono per dati tabulari, mai per il layout della pagina. Usa `<th>` per le intestazioni, `<caption>` per il titolo, e `<thead>`/`<tbody>`/`<tfoot>` per le sezioni semantiche.
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Form (Raccogliere Dati dall'Utente)
+
+I form sono il modo in cui l'HTML raccoglie input dall'utente. Ogni campo di login, barra di ricerca, modulo di contatto, checkout di un e-commerce è un form. Sono anche una delle aree più complesse dell'HTML, perché coinvolgono accessibilità, usabilità, validazione e sicurezza.
+
+#### La Struttura del Form
+
+Il tag `<form>` è il contenitore che raggruppa tutti i campi e dice al browser dove e come inviare i dati.
+
+```html
+<form action="/invia-messaggio" method="POST">
+  <!-- I campi vanno qui dentro -->
+  <button type="submit">Invia</button>
+</form>
+```
+
+L'attributo `action` è l'indirizzo a cui il browser invia i dati quando l'utente clicca su invia. Se lo ometti, i dati vengono inviati alla stessa pagina corrente.
+
+L'attributo `method` determina *come* viaggiano quei dati. Con `GET`, i dati vengono aggiunti direttamente all'URL: `/ricerca?termine=pizza&citta=milano`. Li vedi nella barra degli indirizzi, puoi salvarli come segnalibro, condividerli, e il browser li mantiene nella cronologia. È il metodo ideale per le ricerche, dove l'URL con i parametri è qualcosa di utile da condividere o rivisitare. 
+Con `POST`, i dati viaggiano nel corpo della richiesta HTTP e sono invisibili nell'URL. Il browser non li salva nella cronologia, e se premi aggiorna ti chiede conferma prima di reinviarli. È il metodo obbligatorio per dati sensibili come password, per azioni che modificano qualcosa nel server (creare un account, inviare un ordine), e per qualsiasi dato che non ha senso e/o non conviene esporre nell'URL.
+
+-----
+
+#### `<label>` e `<input>` (La Coppia Inseparabile)
+
+Ogni campo di input ha bisogno di un'etichetta che dica all'utente cosa inserire. Il collegamento tra `<label>` e `<input>` avviene attraverso gli attributi `for` e `id`.
+
+```html
+<label for="email">Il tuo indirizzo email:</label>
+<input type="email" id="email" name="email" required>
+```
+
+Il `for="email"` della label punta all'`id="email"` dell'input. Questo collegamento ha due effetti concreti: cliccando sulla label, il cursore si posiziona automaticamente nell'input (molto utile su mobile, dove i campi sono piccoli), e gli screen reader leggono il testo della label quando l'utente seleziona il campo.
+
+```html
+<!-- ❌ SBAGLIATO, input senza label collegata -->
+Email: <input type="email">
+
+<!-- ❌ SBAGLIATO, placeholder non è un sostituto della label -->
+<input type="email" placeholder="La tua email">
+
+<!-- ✅ CORRETTO, label e input collegati -->
+<label for="email">Email:</label>
+<input type="email" id="email" name="email">
+```
+
+Il `placeholder` è il testo grigio che appare dentro il campo e scompare quando inizi a scrivere. Non è un sostituto della label, perché scompare appena l'utente inizia a digitare, e a quel punto non c'è più indicazione di cosa il campo richiede. Il `placeholder` è un suggerimento aggiuntivo come `es. mario@esempio.it`, la label è l'etichetta permanente.
+
+-----
+
+#### I Tipi di Input
+
+L'attributo `type` dell'`<input>` cambia radicalmente il comportamento del campo. Ogni tipo attiva validazioni diverse, mostra interfacce diverse (specialmente su mobile) e comunica informazioni diverse al browser.
+
+```html
+<!-- Testo generico -->
+<input type="text" name="nome">
+
+<!-- Email: il browser valida il formato, in mobile viene mostrata la @ nella tastiera -->
+<input type="email" name="email">
+
+<!-- Password: il testo viene mascherato con pallini -->
+<input type="password" name="password">
+
+<!-- Numero: accetta solo cifre, mostra frecce su/giù -->
+<input type="number" name="quantita" min="1" max="99">
+
+<!-- Range: un cursore scorrevole -->
+<input type="range" name="volume" min="0" max="100" value="50">
+
+<!-- Data: il browser mostra un calendario nativo -->
+<input type="date" name="data-nascita">
+
+<!-- File: permette di caricare documenti -->
+<input type="file" name="documento" accept=".pdf,.doc">
+
+<!-- Colore: mostra un selettore di colore nativo -->
+<input type="color" name="colore-preferito" value="#ff6600">
+```
+
+-----
+
+#### Checkbox e Radio
+
+I checkbox permettono selezioni multiple, i radio button una sola. Prima di guardare il codice, vale la pena capire due attributi che compaiono in entrambi.
+
+`name` è la chiave con cui i dati arrivano al server. Quando l'utente invia il form, il browser manda coppie `nome=valore`: `condimenti=mozzarella`, `condimenti=funghi`, `taglia=M`. Il `name` è la parte sinistra di quella coppia. Nei radio button ha un ruolo in più: tutti gli input con lo stesso `name` formano un gruppo esclusivo, il browser fa sì che solo uno possa essere selezionato alla volta.
+
+`value` è la parte destra: il dato concreto che viene inviato quando quell'input è selezionato.
+
+Il `<fieldset>` e il `<legend>` sono il modo semantico di raggruppare campi correlati. `<fieldset>` disegna un bordo attorno al gruppo, `<legend>` è il titolo di quel gruppo. Non è solo estetico: gli screen reader leggono il `<legend>` prima di ogni campo dentro il `<fieldset>`, così l'utente sa sempre in quale gruppo si trova senza dover tornare su.
+
+```html
+<!-- Checkbox: selezione multipla -->
+<fieldset>
+  <legend>Condimenti preferiti:</legend>
+
+  <input type="checkbox" id="mozzarella" name="condimenti" value="mozzarella">
+  <label for="mozzarella">Mozzarella</label>
+
+  <input type="checkbox" id="funghi" name="condimenti" value="funghi">
+  <label for="funghi">Funghi</label>
+
+  <input type="checkbox" id="olive" name="condimenti" value="olive">
+  <label for="olive">Olive</label>
+</fieldset>
+
+<!-- Radio: scelta singola (qui i name formano un gruppo esclusivo) -->
+<fieldset>
+  <legend>Taglia:</legend>
+
+  <input type="radio" id="small" name="taglia" value="S">
+  <label for="small">Small</label>
+
+  <input type="radio" id="medium" name="taglia" value="M">
+  <label for="medium">Medium</label>
+
+  <input type="radio" id="large" name="taglia" value="L">
+  <label for="large">Large</label>
+</fieldset>
+```
+
+-----
+
+#### `<select>`, `<textarea>` e `<datalist>`
+
+Non tutto si raccoglie con un `<input>`. Quando le opzioni sono predefinite e l'utente deve sceglierne una, si usa il `<select>`. Quando il testo è lungo (un messaggio, una descrizione), si usa il `<textarea>`. Quando vuoi offrire suggerimenti senza vincolare la scelta, c'è il `<datalist>`.
+
+```html
+<!-- Menu a tendina -->
+<label for="paese">Paese:</label>
+<select id="paese" name="paese">
+  <option value="">-- Seleziona --</option>
+  <optgroup label="Europa">
+    <option value="IT">Italia</option>
+    <option value="FR">Francia</option>
+    <option value="ES">Spagna</option>
+  </optgroup>
+  <optgroup label="Americhe">
+    <option value="US">Stati Uniti</option>
+    <option value="BR">Brasile</option>
+  </optgroup>
+</select>
+
+<!-- Area di testo per contenuti lunghi -->
+<label for="messaggio">Messaggio:</label>
+<textarea id="messaggio" name="messaggio" rows="5" cols="40"></textarea>
+
+<!-- Input con suggerimenti (come un autocompletamento) -->
+<label for="linguaggio">Linguaggio preferito:</label>
+<input type="text" id="linguaggio" name="linguaggio" list="linguaggi">
+<datalist id="linguaggi">
+  <option value="JavaScript">
+  <option value="Python">
+  <option value="Java">
+  <option value="C#">
+</datalist>
+```
+
+Il `<select>` mostra un menu a tendina dove ogni `<option>` è una voce selezionabile. La prima opzione con `value=""` è un segnaposto (il classico "-- Seleziona --") che invita l'utente a fare una scelta. L'`<optgroup>` raggruppa le opzioni sotto un'etichetta visiva non selezionabile, utile quando la lista è lunga e ha sottocategorie logiche, come paesi divisi per continente.
+
+Il `<textarea>` è un campo di testo multilinea. Gli attributi `rows` e `cols` definiscono le dimensioni iniziali in righe e caratteri, ma l'utente può ridimensionarlo trascinando l'angolo in basso a destra. Se vuoi controllare le dimensioni in modo preciso, fallo con il CSS.
+
+Il `<datalist>` funziona in coppia con un `<input>`: l'attributo `list` dell'input punta all'`id` del datalist. Il risultato è un campo libero che mostra suggerimenti mentre l'utente scrive, ma senza vincolare la scelta, l'utente può ignorare i suggerimenti e scrivere qualsiasi cosa. È la via di mezzo tra il `<select>` (scelta obbligata) e il `<input type="text">` (campo completamente libero).
+
+-----
+
+#### I Bottoni e la Loro Trappola
+
+Il tag `<button>` ha tre tipi, e il tipo di default è la trappola più comune nei form.
+
+```html
+<!-- submit: invia il form (QUESTO È IL DEFAULT!) -->
+<button type="submit">Invia ordine</button>
+
+<!-- button: non fa nulla da solo, serve per azioni che configurerai in JavaScript -->
+<button type="button">Aggiungi al carrello</button>
+
+<!-- reset: svuota tutti i campi del form -->
+<button type="reset">Cancella tutto</button>
+```
+
+La trappola: se scrivi `<button>Fai qualcosa</button>` senza specificare il `type`, il browser lo tratta come `type="submit"`. Se quel bottone è dentro un `<form>`, cliccarlo invia il form e ricarica la pagina. Se non vuoi far ricaricare la pagina usa `type="button"`.
+
+-----
+
+#### Validazione Nativa
+
+L'HTML offre attributi di validazione che il browser applica automaticamente prima di inviare il form. Non sostituiscono la validazione lato server (che è irrinunciabile per la sicurezza), ma migliorano l'esperienza utente mostrando errori immediati.
+
+```html
+<form action="/registrazione" method="POST">
+  <!-- Campo obbligatorio -->
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" name="nome" required>
+
+  <!-- Lunghezza minima e massima -->
+  <label for="username">Username (3-20 caratteri):</label>
+  <input type="text" id="username" name="username"
+    minlength="3" maxlength="20" required>
+
+  <!-- Numero con range -->
+  <label for="eta">Età:</label>
+  <input type="number" id="eta" name="eta" min="18" max="120">
+
+  <!-- Pattern regex per formato specifico -->
+  <label for="cap">CAP:</label>
+  <input type="text" id="cap" name="cap"
+    pattern="[0-9]{5}" title="Inserisci 5 cifre">
+
+  <button type="submit">Registrati</button>
+</form>
+```
+
+L'attributo `required` impedisce l'invio se il campo è vuoto. `minlength` e `maxlength` controllano la lunghezza del testo. `min` e `max` controllano i valori numerici. `pattern` permette di specificare un'espressione regolare per formati specifici (il `title` fornisce il messaggio di errore).
+
+-----
+
+#### `inputmode` e `autocomplete` (L'Esperienza Mobile)
+
+Questi due attributi migliorano drasticamente l'esperienza su dispositivi mobili.
+
+`inputmode` controlla quale tastiera il telefono mostra all'utente. Non valida nulla, ma rende l'inserimento molto più veloce.
+
+```html
+<!-- Tastiera numerica per il CAP (non mettere type="number" perché aggiunge le frecce) -->
+<input type="text" inputmode="numeric" name="cap">
+
+<!-- Tastiera con punto decimale per i prezzi -->
+<input type="text" inputmode="decimal" name="prezzo">
+
+<!-- Tastiera con @ e .com per le email -->
+<input type="email" inputmode="email" name="email">
+
+<!-- Tastiera ottimizzata per URL -->
+<input type="url" inputmode="url" name="sito">
+
+<!-- Tastierino telefonico -->
+<input type="tel" inputmode="tel" name="telefono">
+
+<!-- Tasto invio diventa "Cerca" -->
+<input type="search" inputmode="search" name="ricerca">
+```
+
+`autocomplete` dice al browser quale tipo di dato il campo si aspetta, permettendogli di suggerire valori salvati in precedenza.
+
+```html
+<input type="text" name="nome" autocomplete="given-name">
+<input type="text" name="cognome" autocomplete="family-name">
+<input type="email" name="email" autocomplete="email">
+<input type="tel" name="telefono" autocomplete="tel">
+<input type="text" name="indirizzo" autocomplete="street-address">
+<input type="text" name="cap" autocomplete="postal-code">
+```
+
+Quando l'utente vede i propri dati suggeriti automaticamente, compilare il form diventa questione di pochi click. Su mobile la differenza è enorme.
+
+**Regola:** ogni input ha una `<label>` collegata con `for`/`id`. Il `placeholder` non sostituisce mai la label. Specifica sempre `type="button"` sui bottoni che non devono inviare il form. Usa `inputmode` e `autocomplete` per migliorare l'esperienza mobile.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Entità HTML e Caratteri Speciali
+
+Alcuni caratteri hanno un significato speciale nella sintassi HTML. Il `<` apre un tag. Il `>` lo chiude. Il `&` inizia un'entità. Se vuoi mostrare questi caratteri come testo nella pagina, devi usare le **entità HTML**, sequenze che il browser traduce nel carattere corrispondente.
+
+#### Perché Esistono le Entità
+
+Immagina di voler scrivere nella pagina la frase "Il tag `<p>` è un paragrafo". Se scrivi direttamente `<p>` nel testo, il browser lo interpreta come un tag di apertura e lo "mangia", senza mostrarlo. Per visualizzare il carattere `<` come testo, devi scrivere `&lt;` (*less than*).
+
+```html
+<!-- ❌ SBAGLIATO, il browser interpreta <p> come un tag -->
+<p>Il tag <p> serve per i paragrafi.</p>
+
+<!-- ✅ CORRETTO, le entità vengono mostrate come testo -->
+<p>Il tag &lt;p&gt; serve per i paragrafi.</p>
+```
+
+Il browser legge `&lt;` e mostra `<`. Legge `&gt;` e mostra `>`. Il lettore della pagina vede i caratteri normali, ma nel codice sorgente usi le entità per evitare che il browser li confonda con la sintassi HTML.
+
+-----
+
+#### Le Entità Più Comuni
+
+```html
+<!-- Caratteri riservati dall'HTML -->
+&lt;     <!-- Mostra: < (less than) -->
+&gt;     <!-- Mostra: > (greater than) -->
+&amp;    <!-- Mostra: & (ampersand) -->
+&quot;   <!-- Mostra: " (virgolette doppie) -->
+
+<!-- Spazi e formattazione -->
+&nbsp;   <!-- Spazio non interrompibile: impedisce l'a capo tra due parole -->
+
+<!-- Simboli comuni -->
+&copy;   <!-- Mostra: © (copyright) -->
+&euro;   <!-- Mostra: € (euro) -->
+&reg;    <!-- Mostra: ® (marchio registrato) -->
+&trade;  <!-- Mostra: ™ (trademark) -->
+```
+
+Lo **spazio non interrompibile** (`&nbsp;`) merita una nota. Il browser tratta gli spazi normali come punti in cui può andare a capo se la riga è troppo lunga. `&nbsp;` impedisce questa rottura: "100&nbsp;km" resterà sempre su una riga, "100 km" potrebbe andare a capo tra il numero e l'unità.
+
+-----
+
+#### Quando Usare le Entità
+
+Nella pratica quotidiana con UTF-8 (che ormai è lo standard), la maggior parte dei caratteri speciali può essere scritta direttamente: é, è, ñ, ü, €, ©. Le entità sono strettamente necessarie solo per i tre caratteri riservati dell'HTML (`<`, `>`, `&`) quando vuoi mostrarli come testo, e per il `&nbsp;` quando hai bisogno di uno spazio non interrompibile.
+
+**Regola:** usa `&lt;`, `&gt;` e `&amp;` quando vuoi mostrare questi caratteri come testo nella pagina. Per tutti gli altri simboli, con UTF-8 puoi scriverli direttamente.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Attributi Globali (Strumenti Universali)
+
+Alcuni attributi possono essere usati su qualsiasi elemento HTML. Si chiamano **attributi globali** e sono gli strumenti che collegano l'HTML al CSS, al JavaScript e all'accessibilità.
+
+#### `id` (L'Identificativo Unico)
+
+L'attributo `id` assegna un nome unico a un elemento. Come un codice fiscale, ogni `id` deve comparire una sola volta nell'intero documento.
+
+```html
+<section id="chi-siamo">
+  <h2>Chi siamo</h2>
+  <p>La nostra storia...</p>
+</section>
+```
+
+L'`id` serve a tre scopi. Il primo: i link interni alla pagina (`<a href="#chi-siamo">`) puntano all'elemento con quell'id. Il secondo: il JavaScript può selezionare quell'elemento specifico con `document.getElementById('chi-siamo')`. Il terzo: il CSS può stilizzare quell'elemento con il selettore `#chi-siamo`. In pratica, l'`id` è il modo per dire "questo specifico elemento, non un altro".
+
+```html
+<!-- ❌ SBAGLIATO, id duplicato nella stessa pagina -->
+<div id="card">Prima card</div>
+<div id="card">Seconda card</div>
+
+<!-- ✅ CORRETTO, id unici -->
+<div id="card-prodotto">Prima card</div>
+<div id="card-servizio">Seconda card</div>
+```
+
+-----
+
+#### `class` (Le Categorie)
+
+L'attributo `class` assegna una o più categorie a un elemento. A differenza dell'`id`, la stessa classe può essere usata su quanti elementi vuoi, ed è l'aggancio principale per il CSS.
+
+```html
+<div class="card">Primo prodotto</div>
+<div class="card in-evidenza">Prodotto speciale</div>
+<div class="card">Terzo prodotto</div>
+```
+
+Un elemento può avere più classi, separate da spazi. Nel CSS, `.card` stilizza tutti gli elementi con quella classe, `.in-evidenza` aggiunge stili solo al prodotto speciale. Questa flessibilità rende le classi lo strumento più usato per collegare HTML e CSS.
+
+-----
+
+#### `style` (Il CSS Inline)
+
+L'attributo `style` permette di scrivere regole CSS direttamente nell'elemento HTML.
+
+```html
+<p style="color: red; font-size: 20px;">Testo rosso e grande</p>
+```
+
+Funziona, ma è una pratica da evitare. Il problema è la manutenibilità: se hai 50 paragrafi rossi e vuoi cambiarli in blu, con il CSS inline devi modificare tutti e 50 gli elementi uno per uno. Con una classe CSS, cambi una riga nel foglio di stile e aggiorni tutto il sito.
+
+```html
+<!-- ❌ SBAGLIATO, stile sparso nell'HTML -->
+<p style="color: red;">Primo avviso</p>
+<p style="color: red;">Secondo avviso</p>
+<p style="color: red;">Terzo avviso</p>
+
+<!-- ✅ CORRETTO, stile centralizzato nel CSS -->
+<p class="avviso">Primo avviso</p>
+<p class="avviso">Secondo avviso</p>
+<p class="avviso">Terzo avviso</p>
+```
+
+```css
+/* Nel file CSS, una sola regola per tutti */
+.avviso {
+  color: red;
+}
+```
+
+L'unico caso in cui il CSS inline ha senso è quando lo stile è generato dinamicamente da JavaScript (per esempio, un colore calcolato in runtime). In tutti gli altri casi, usa le classi.
+
+-----
+
+#### `title` (Il Tooltip)
+
+L'attributo `title` mostra un tooltip (un testo fluttuante) quando l'utente passa il mouse sopra l'elemento.
+
+```html
+<abbr title="Hypertext Markup Language">HTML</abbr>
+
+<p title="Ultima modifica: 10 gennaio 2024">Termini e condizioni</p>
+```
+
+Il caso d'uso più utile è con `<abbr>` (abbreviazione): il `title` rivela il significato completo dell'abbreviazione al passaggio del mouse. Per gli altri elementi, il `title` è un'informazione supplementare, non un sostituto di un buon testo visibile.
+
+-----
+
+#### `data-*` (Gli Attributi Custom)
+
+Gli attributi che iniziano con `data-` sono spazi liberi dove puoi salvare dati personalizzati negli elementi HTML. Non influenzano l'aspetto né il comportamento nativo, ma il JavaScript può leggerli.
+
+```html
+<article data-categoria="tecnologia" data-autore="mario-rossi" data-id="42">
+  <h2>Come funziona l'HTML</h2>
+  <p>...</p>
+</article>
+```
+
+In JavaScript, accedi a questi valori con `element.dataset`:
+
+```javascript
+const articolo = document.querySelector('article');
+console.log(articolo.dataset.categoria);  // "tecnologia"
+console.log(articolo.dataset.autore);     // "mario-rossi"
+console.log(articolo.dataset.id);         // "42"
+```
+
+I `data-*` sono il ponte tra l'HTML e il JavaScript quando hai bisogno di associare informazioni a un elemento senza usare classi o id.
+
+-----
+
+#### `hidden` e `tabindex`
+
+L'attributo `hidden` nasconde un elemento dalla pagina. L'elemento esiste nel DOM ma non viene renderizzato, come se avesse `display: none` nel CSS.
+
+```html
+<!-- Questo paragrafo non viene mostrato -->
+<p hidden>Questo contenuto è nascosto.</p>
+```
+
+L'attributo `tabindex` controlla l'ordine di navigazione da tastiera. Quando premi Tab, il browser passa da un elemento interattivo al successivo (link, bottoni, campi di input). Con `tabindex` puoi modificare questo comportamento.
+
+```html
+<!-- tabindex="0": aggiunge l'elemento alla sequenza Tab naturale -->
+<div tabindex="0">Questo div è raggiungibile con Tab</div>
+
+<!-- tabindex="-1": raggiungibile solo via JavaScript, non con Tab -->
+<div tabindex="-1">Focusabile solo da codice</div>
+```
+
+Non usare mai valori positivi per `tabindex` (come `tabindex="1"`, `tabindex="2"`). Creano un ordine di navigazione personalizzato che diventa impossibile da mantenere e che rompe le aspettative dell'utente.
+
+**Regola:** usa `id` per elementi unici, `class` per categorie riutilizzabili, `data-*` per dati custom letti da JavaScript. Evita il CSS inline. Non usare `tabindex` con valori positivi.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. Accessibilità (Scrivere per Tutti)
+
+L'accessibilità non è un extra opzionale da aggiungere "se c'è tempo". È parte integrante della scrittura di HTML corretto. Una pagina inaccessibile è una pagina rotta per una porzione significativa di utenti: persone non vedenti che usano screen reader, persone con mobilità ridotta che navigano da tastiera, persone daltoniche, persone con disabilità cognitive.
+
+La buona notizia è che la maggior parte del lavoro di accessibilità l'hai già fatto leggendo le sezioni precedenti. L'HTML semantico è il primo e più potente strumento di accessibilità.
+
+#### L'HTML Semantico Come Fondamenta
+
+Ogni tag semantico che hai usato correttamente è già un contributo all'accessibilità. Gli screen reader costruiscono una mappa della pagina basata sui tag, non sull'aspetto visivo.
+
+Un `<nav>` dice "qui c'è la navigazione" e lo screen reader lo annuncia. Un `<main>` dice "qui c'è il contenuto principale" e l'utente può saltarci direttamente. Un `<h2>` dice "questo è un titolo di secondo livello" e l'utente può navigare tra i titoli per farsi un'idea della struttura. Un `<button>` dice "questo è un pulsante" e l'utente sa che può premerlo con Invio o Spazio.
+
+Se usi `<div>` con un `onclick` al posto di un `<button>`, lo screen reader non annuncia nulla. L'utente da tastiera non può raggiungerlo con Tab. L'utente non vedente non sa nemmeno che esiste. Hai creato un bottone visivo che funziona solo per chi usa il mouse.
+
+```html
+<!-- ❌ SBAGLIATO, div con onclick non è accessibile -->
+<div onclick="salva()">Salva</div>
+
+<!-- ✅ CORRETTO, un vero bottone è accessibile nativamente -->
+<button type="button" onclick="salva()">Salva</button>
+```
+
+Tutto ciò che abbiamo visto nelle sezioni precedenti contribuisce: la gerarchia degli heading (sezione 5), i tag semantici (sezione 6), il testo descrittivo nei link (sezione 7), l'`alt` sulle immagini e il `title` sugli iframe (sezione 8), il `<label>` collegato all'`<input>` nei form (sezione 10).
+
+-----
+
+#### `lang` (La Lingua del Documento)
+
+Come abbiamo visto nella sezione 3, l'attributo `lang` su `<html>` dichiara la lingua del documento. Ma `lang` può essere usato anche su singoli elementi quando una porzione di testo è in una lingua diversa.
+
+```html
+<html lang="it">
+<body>
+  <p>Il principio fondamentale del design web è il
+  <span lang="en">progressive enhancement</span>.</p>
+
+  <blockquote lang="en">
+    <p>The web is for everyone.</p>
+    <cite>Tim Berners-Lee</cite>
+  </blockquote>
+</body>
+</html>
+```
+
+Lo screen reader cambia pronuncia in base al `lang`. Senza questo attributo, leggerebbe "progressive enhancement" con accento italiano, rendendolo incomprensibile.
+
+-----
+
+#### Gli Attributi ARIA (Quando l'HTML Non Basta)
+
+ARIA (*Accessible Rich Internet Applications*) è un insieme di attributi che aggiungono informazioni di accessibilità dove l'HTML semantico non è sufficiente. La regola fondamentale è: **se puoi risolvere il problema con l'HTML nativo, non usare ARIA**. Un `<button>` è meglio di un `<div role="button">`.
+
+`aria-label` fornisce un'etichetta invisibile che lo screen reader legge al posto del contenuto visibile (o in aggiunta).
+
+```html
+<!-- Il bottone mostra solo "X", lo screen reader legge "Chiudi finestra" -->
+<button aria-label="Chiudi finestra">X</button>
+
+<!-- L'icona del menu hamburger non ha testo visibile -->
+<button aria-label="Apri menu di navigazione">
+  <span class="icona-hamburger"></span>
+</button>
+```
+
+`aria-labelledby` collega un elemento a un'etichetta visibile già esistente nella pagina.
+
+```html
+<h2 id="titolo-sezione">I nostri servizi</h2>
+<section aria-labelledby="titolo-sezione">
+  <p>Offriamo consulenza, sviluppo e formazione...</p>
+</section>
+```
+
+`aria-hidden="true"` nasconde un elemento dagli screen reader senza nasconderlo visivamente. Utile per decorazioni che non aggiungono informazione.
+
+```html
+<!-- L'icona è decorativa, lo screen reader la ignora -->
+<span aria-hidden="true">🎨</span>
+<span>Design</span>
+```
+
+-----
+
+#### La Navigazione da Tastiera
+
+Non tutti gli utenti usano il mouse. Alcune persone navigano interamente da tastiera, usando Tab per spostarsi tra gli elementi interattivi e Invio o Spazio per attivarli. Tutti gli elementi HTML nativi interattivi (link, bottoni, input) sono già raggiungibili da tastiera. I problemi nascono quando crei elementi interattivi custom con `<div>` e `<span>`.
+
+Lo **skip link** è un pattern di accessibilità che permette agli utenti da tastiera di saltare la navigazione e andare direttamente al contenuto principale. Senza di esso, ogni volta che l'utente carica una pagina deve premere Tab decine di volte per superare il menu prima di raggiungere il contenuto.
+
+```html
+<body>
+  <!-- Lo skip link è il primo elemento focusabile della pagina -->
+  <a href="#contenuto-principale" class="skip-link">
+    Salta al contenuto principale
+  </a>
+
+  <nav>
+    <!-- 20 link di navigazione che l'utente da tastiera dovrebbe altrimenti
+    attraversare uno per uno ad ogni caricamento della pagina -->
+    <a href="/">Home</a>
+    <a href="/prodotti">Prodotti</a>
+    <!-- ... -->
+  </nav>
+
+  <main id="contenuto-principale">
+    <h1>Benvenuto</h1>
+    <!-- Il contenuto principale -->
+  </main>
+</body>
+```
+
+```css
+/* Lo skip link è nascosto visivamente ma accessibile da tastiera.
+Appare solo quando riceve il focus con Tab */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+}
+.skip-link:focus {
+  top: 0;
+}
+```
+
+-----
+
+#### Colore e Informazione
+
+L'informazione non deve mai dipendere **solo** dal colore. Circa l'8% degli uomini e lo 0.5% delle donne sono daltonici. Se il tuo unico indicatore di errore in un form è il bordo rosso del campo, una persona daltonica potrebbe non vederlo.
+
+```html
+<!-- ❌ SBAGLIATO, l'errore è comunicato solo dal colore (nel CSS) -->
+<input type="email" class="errore">
+
+<!-- ✅ CORRETTO, l'errore ha anche un messaggio testuale -->
+<input type="email" class="errore" aria-describedby="errore-email">
+<span id="errore-email" class="messaggio-errore">
+  Inserisci un indirizzo email valido.
+</span>
+```
+
+L'attributo `aria-describedby` collega l'input al messaggio di errore: lo screen reader legge il messaggio quando il campo riceve il focus.
+
+-----
+
+#### L'Effetto Rampa (Il Curb Cut Effect)
+
+L'accessibilità non è un favore che fai a "qualcun altro". C'è un concetto chiamato *curb cut effect* (effetto rampa): le rampe per le sedie a rotelle sui marciapiedi sono state progettate per le persone con disabilità, ma le usano tutti, dai genitori con il passeggino ai corrieri con il carrello. Lo stesso vale per l'accessibilità web.
+
+I sottotitoli nei video aiutano chi è sordo, ma anche chi è in un ambiente rumoroso. Il testo alternativo sulle immagini aiuta chi è non vedente, ma anche chi ha una connessione lenta. I link descrittivi aiutano chi usa gli screen reader, ma anche chi scansiona velocemente la pagina con gli occhi. Le etichette chiare nei form aiutano tutti.
+
+**Regola:** usa l'HTML semantico come primo strumento di accessibilità. Aggiungi ARIA solo quando l'HTML nativo non basta. L'informazione non deve mai dipendere solo dal colore.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (HTML in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Cos'è l'HTML | Descrive struttura, non aspetto né comportamento | Confonderlo con un linguaggio di programmazione |
+| Anatomia del tag | Apertura, contenuto, chiusura. Attributi nell'apertura | Dimenticare il tag di chiusura o incrociare i tag |
+| Attributi | Sempre tra virgolette doppie, sintassi `nome="valore"` | Omettere le virgolette e avere bug con valori con spazi |
+| Struttura del documento | DOCTYPE, html con lang, head con charset/viewport/title, body | Dimenticare il viewport e avere una pagina illeggibile su mobile |
+| Block vs Inline | Block prende tutta la larghezza, inline resta nel flusso | Mettere un elemento block dentro un inline |
+| Heading | Un solo h1, gerarchia senza salti, struttura non dimensione | Usare h4 perché "è della dimensione giusta" |
+| Semantica | Scegliere il tag più specifico disponibile | Usare div per tutto quando esistono header, nav, main, article |
+| Link | Testo descrittivo, href per navigare | Scrivere "clicca qui" o usare un link come bottone |
+| Alt text | Descrittivo per le informative, vuoto per le decorative | Omettere l'alt o scrivere "immagine" |
+| Tabelle | Solo per dati tabulari, con thead/tbody e caption | Usare le tabelle per il layout della pagina |
+| Form | Ogni input ha una label collegata con for/id | Usare il placeholder come sostituto della label |
+| Bottoni | Specificare sempre il type | Dimenticare `type="button"` e inviare il form per errore |
+| Entità HTML | Usare &lt; &gt; &amp; per i caratteri riservati | Scrivere `<` nel testo e far sparire il contenuto |
+| CSS inline | Evitare, usare classi CSS esterne | Mettere style="" su ogni elemento e poi non riuscire a mantenere nulla |
+| Accessibilità | L'HTML semantico è il primo strumento, ARIA solo se non basta | Creare bottoni con div che non funzionano da tastiera |
+| target="_blank" | Aggiungere sempre rel="noopener noreferrer" | Aprire link esterni senza protezione dal reverse tabnapping |
