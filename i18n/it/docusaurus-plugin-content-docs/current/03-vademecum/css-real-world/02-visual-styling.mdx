@@ -1,0 +1,1120 @@
+---
+sidebar_position: 2
+title: Stile Visivo
+description: Tipografia, colori, sfondi, bordi, ombre, variabili CSS, filtri e trasformazioni.
+---
+
+import Link from '@docusaurus/Link';
+
+# Parte II: Lo Stile Visivo
+
+Ora che conosci le fondamenta, il box model e le unità di misura, è il momento di trasformare le scatole grigie del browser in qualcosa che le persone vogliano guardare. Questa parte copre tutto ciò che riguarda l'aspetto visivo concreto: testo, colori, sfondi, ombre ed effetti.
+
+---
+
+## Lo Stile Visivo
+
+### 9. Tipografia (Dare Voce al Testo)
+
+La maggior parte del contenuto di qualsiasi pagina web è testo: titoli, paragrafi, link, bottoni, etichette. Controllare come quel testo appare è ciò di cui ci occuperemo in questa sezione.
+
+#### Font Esterni (Google Fonts)
+
+I browser hanno a disposizione solo i font installati sul sistema operativo dell'utente. Ad esempio Windows ha Arial e Times New Roman, macOS ha San Francisco e Helvetica, Linux ha Ubuntu, Cantarell, DejaVu. Il problema è che non sono gli stessi: la tua pagina appare con un font diverso su ogni sistema. Per avere un aspetto coerente e usare font professionali personalizzati, devi importarli da una fonte esterna.
+
+Google Fonts è il servizio più usato: offre centinaia di font gratuiti. Li importi con un tag `<link>` nel `<head>` del documento HTML, prima del tuo foglio di stile (così il font è già disponibile quando il CSS lo richiede).
+
+```html
+<!-- Nell'<head> del documento HTML, prima del foglio di stile -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Raleway:wght@700&display=swap" rel="stylesheet">
+```
+
+Il link qui sopra è un esempio. Nella pratica, vai su Google Fonts, scegli il font che ti piace, selezioni i pesi che ti servono, e la piattaforma ti genera il `<link>` pronto da copiare nel tuo `<head>`.
+I numeri dopo `wght@` indicano i pesi: 400 è il normale, 700 è il grassetto, 300 è il leggero. Importa solo quelli che usi davvero, perché ogni peso è un file in più da scaricare.
+
+```css
+body {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Raleway', 'Helvetica Neue', sans-serif;
+}
+```
+
+I nomi dopo il font importato (`Arial`, `sans-serif`) sono i **fallback**: se il font esterno non si carica, il browser usa il secondo disponibile nella lista e così via. L'ultimo valore è sempre una **famiglia generica**: `serif` (con grazie, come Times New Roman), `sans-serif` (senza grazie, come Arial) o `monospace` (a larghezza fissa, come Courier, perfetto per il codice).
+
+```css
+/* ❌ SBAGLIATO, nessun fallback: se il font non si carica, il browser usa il suo default */
+body {
+  font-family: 'Open Sans';
+}
+
+/* ✅ CORRETTO, catena di fallback con famiglia generica finale */
+body {
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+```
+
+Il parametro `display=swap` nell'URL di Google Fonts è importante: dice al browser di mostrare subito il testo con un font di fallback e poi sostituirlo quando il font esterno è pronto. Senza `display=swap`, il browser potrebbe nascondere il testo finché il font non è caricato, lasciando l'utente a fissare una pagina vuota.
+
+-----
+
+#### Le Icone nel Web
+
+Le icone si aggiungono al sito principalmente in due modi: come **SVG** (il modo più flessibile) o tramite **librerie di icone** come Font Awesome.
+
+Un file SVG è un'immagine vettoriale che puoi inserire direttamente nell'HTML. Il vantaggio è il controllo totale: puoi cambiarne il colore con il CSS, le dimensioni scalano senza perdere qualità, e non devi caricare una libreria esterna. Se usi un tool di design come Figma, puoi esportare le icone in SVG e incollarle nel codice.
+
+```html
+<!-- SVG inline: controllo totale con CSS -->
+<button>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+    <polyline points="17 21 17 13 7 13 7 21"/>
+  </svg>
+  Salva
+</button>
+```
+
+`stroke="currentColor"` fa sì che l'icona segua il colore del testo, come abbiamo visto con `currentColor` nella <a href="#10-colori-la-tavolozza-del-web">sezione 10</a>.
+
+Se non hai bisogno di manipolare l'icona con il CSS (cambiarle colore al hover, animarla), puoi anche salvarla come file `.svg` nella cartella del progetto (di solito nella cartella "assets") e usarla come un'immagine normale:
+
+```html
+<!-- SVG come file esterno: più pulito nell'HTML, meno controllo CSS -->
+<img src="assets/icone/salva.svg" alt="Salva" width="20" height="20">
+```
+
+SVG inline quando vuoi controllarlo con il CSS, SVG come file quando è un'immagine statica che non devi manipolare.
+
+Un'altra strada possibile è **Font Awesome**, una libreria che offre migliaia di icone usabili tramite classi CSS. La incontrerai in molti tutorial e progetti esistenti.
+
+```html
+<!-- Nel <head> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+```
+
+```html
+<i class="fab fa-facebook-f"></i>    <!-- Logo Facebook -->
+<i class="fas fa-heart"></i>         <!-- Cuore pieno -->
+<i class="far fa-heart"></i>         <!-- Cuore vuoto -->
+```
+
+Le classi `fab` (Brands), `fas` (Solid) e `far` (Regular) indicano lo stile dell'icona. Font Awesome è comoda per prototipare velocemente, ma ha un limite: molte icone sono nel piano a pagamento, e carichi un'intera libreria anche se usi solo 5 icone. Con gli SVG, carichi solo quello che ti serve.
+
+Indipendentemente dal metodo che scegli, il dettaglio di accessibilità è lo stesso: se l'icona è decorativa (accanto a un testo che già comunica il significato), nascondila allo screen reader. Se è l'unico contenuto di un bottone, dagli un'etichetta.
+
+```html
+<!-- Icona decorativa: lo screen reader la ignora -->
+<button><i class="fas fa-save" aria-hidden="true"></i> Salva</button>
+
+<!-- Icona senza testo: serve un'etichetta -->
+<button aria-label="Salva"><i class="fas fa-save"></i></button>
+```
+
+-----
+
+#### Le Proprietà del Font
+
+```css
+.titolo {
+  font-size: 2.5rem;        /* Dimensione del testo */
+  font-weight: 700;         /* Spessore: da 100 (sottilissimo) a 900 (nerissimo) */
+  font-style: italic;       /* Corsivo. Valori: normal, italic. Se non aggiungi questa proprietà viene applicato normal di default */
+  font-variant: small-caps; /* Maiuscoletto */
+}
+```
+
+I valori numerici di `font-weight` corrispondono a nomi che potresti avere già incontrato: 100 è *Thin*, 300 è *Light*, 400 è *Normal* (il default), 500 è *Medium*, 600 è *Semi-Bold*, 700 è *Bold*, 900 è *Heavy*. Non tutti i font supportano tutti i pesi: se chiedi un peso che non esiste, il browser usa il più vicino disponibile.
+
+Esiste una shorthand che combina tutto in una riga. L'ordine è rigido: `font: style weight size/line-height family`.
+
+```css
+.titolo {
+  font: italic 700 2.4rem/1.2 'Raleway', sans-serif;
+}
+```
+
+La shorthand è compatta ma meno leggibile. Le proprietà separate sono più chiare, specialmente quando non devi impostare tutti i valori.
+
+-----
+
+#### `line-height` (Lo Spazio che Fa Respirare il Testo)
+
+Il `line-height` controlla lo spazio tra una riga di testo e la successiva. È una delle proprietà più sottovalutate, ma ha un impatto enorme sulla leggibilità.
+
+```css
+/* Testo corrente: 1.5-1.6 è lo standard di leggibilità */
+p {
+  line-height: 1.6;
+}
+
+/* Titoli: 1.1-1.2 è sufficiente (righe corte, poco bisogno di spazio) */
+h1 {
+  line-height: 1.1;
+}
+```
+
+Il valore `1.6` significa "1.6 volte la dimensione del font". Se il font è 16px, lo spazio tra le righe è 25.6px. Nota come il valore **non ha unità**. Un `line-height: 1.6` (senza unità) scala proporzionalmente con il font-size dell'elemento e dei suoi figli. Un `line-height: 24px` (con unità) è fisso, e se un figlio ha un font-size diverso, lo spazio tra le righe non si adatta.
+
+```css
+/* ❌ Con unità fissa: se un figlio ha font-size più grande, le righe si sovrappongono */
+.contenitore {
+  font-size: 16px;
+  line-height: 24px; /* 24px fissi */
+}
+.contenitore h2 {
+  font-size: 32px; /* Il testo è grande ma le righe restano a 24px: si sovrappone */
+}
+
+/* ✅ Senza unità: il line-height scala con ogni elemento */
+.contenitore {
+  font-size: 16px;
+  line-height: 1.5; /* Per il testo base: 16 * 1.5 = 24px */
+}
+.contenitore h2 {
+  font-size: 32px; /* Il line-height scala: 32 * 1.5 = 48px */
+}
+```
+
+Perché 1.5-1.6 e non 1.0 o 2.0? Un `line-height: 1.0` fa toccare le righe tra loro, rendendo il testo claustrofobico e difficile da leggere. Un `line-height: 2.0` crea troppo spazio e l'occhio fatica a trovare la riga successiva. La zona 1.5-1.6 è il punto dove l'occhio segue il testo senza sforzo, ed è lo standard usato da giornali, libri e siti professionali.
+
+-----
+
+#### Proprietà del Testo
+
+Oltre al font, il CSS controlla come il testo si comporta nella pagina.
+
+```css
+.articolo {
+  color: #333;                  /* Colore del testo */
+  text-align: justify;          /* Allineamento: left, center, right, justify */
+  text-decoration: none;        /* Rimuove la sottolineatura (utile sui link) */
+  text-transform: uppercase;    /* Trasforma: uppercase, lowercase, capitalize */
+  letter-spacing: 0.05em;       /* Spaziatura tra le lettere */
+  word-spacing: 0.1em;          /* Spaziatura tra le parole */
+  text-indent: 1.5em;           /* Indentazione della prima riga di un paragrafo */
+}
+```
+
+`text-align: justify` allinea il testo su entrambi i bordi, come nei giornali stampati. Sul web però è sconsigliato per paragrafi stretti (su mobile) perché crea spazi irregolari tra le parole che rendono il testo più difficile da leggere, soprattutto per le persone con dislessia. `text-align: left` è quasi sempre la scelta migliore.
+
+`letter-spacing` aggiunge (o toglie, con valori negativi) spazio tra le lettere. Piccoli valori positivi (0.02-0.05em) migliorano la leggibilità del testo in maiuscolo, che altrimenti appare troppo compresso. Valori più alti (0.1em+) creano un effetto decorativo utile per loghi e sottotitoli.
+
+```css
+/* Il testo in maiuscolo beneficia di un po' di letter-spacing */
+.etichetta {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+```
+
+-----
+
+#### `text-shadow` (L'Ombra sul Testo)
+
+`text-shadow` aggiunge un'ombra dietro il testo. La sintassi è: offset orizzontale, offset verticale, sfocatura, colore.
+
+```css
+/* Ombra leggera per dare profondità */
+.titolo {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Testo luminoso (effetto neon) */
+.neon {
+  color: #fff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff; /* #0ff corrisponde al ciano */
+}
+
+/* Testo leggibile su immagine di sfondo */
+.testo-su-foto {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+```
+
+L'ultimo esempio è un caso d'uso reale molto comune: quando hai testo bianco sopra una foto, l'ombra scura garantisce la leggibilità anche sulle parti chiare dell'immagine.
+
+-----
+
+#### Testo che Trabocca
+
+Quando il testo è troppo lungo per il suo contenitore, puoi troncarlo con i puntini di sospensione. Il pattern classico richiede tre proprietà che lavorano insieme, e se ne manca anche solo una, non funziona.
+
+```css
+/* Troncare su una singola riga */
+.titolo-card {
+  white-space: nowrap;       /* Non andare a capo */
+  overflow: hidden;          /* Nascondi ciò che esce */
+  text-overflow: ellipsis;   /* Aggiungi ... alla fine */
+}
+```
+
+```
+Senza il pattern: "Questo titolo è molto lungo e non sta nella card"
+Con il pattern:   "Questo titolo è molto lungo e n..."
+```
+
+È il comportamento che vedi nei messaggi di WhatsApp nella lista delle chat: il testo viene tagliato con i puntini perché non c'è spazio per mostrarlo tutto.
+
+```css
+/* ❌ Non funziona: manca overflow: hidden */
+.titolo-card {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /* Il testo esce dal contenitore senza puntini */
+}
+
+/* ❌ Non funziona: manca white-space: nowrap */
+.titolo-card {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Il testo va a capo normalmente, nessun troncamento */
+}
+```
+
+Per troncare dopo un numero specifico di righe (non una sola), c'è un pattern diverso:
+
+```css
+/* Troncare dopo 3 righe */
+.anteprima {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+```
+
+La sintassi con i prefissi `-webkit-` è datata, ma è l'unico modo attualmente supportato da tutti i browser per il troncamento multiriga.
+
+-----
+
+#### Colonne di Testo
+
+Per i testi lunghi, il CSS permette di disporre il contenuto su più colonne, come in un giornale o una rivista.
+
+```css
+.articolo-lungo {
+  column-width: 25rem;  /* Larghezza ideale di ogni colonna */
+  column-gap: 2rem;     /* Spazio tra le colonne */
+  column-rule: 1px solid #e0e0e0; /* Linea divisoria tra le colonne */
+}
+```
+
+Il browser calcola automaticamente quante colonne servono in base alla larghezza disponibile. Su uno schermo largo mostra due o tre colonne, su mobile si riduce a una sola. Non serve nessuna media query, il comportamento è di natura responsive.
+
+**Regola:** importa solo i pesi dei font che usi. Usa `line-height` senza unità (1.5-1.6 per il testo, 1.1-1.2 per i titoli). Il fallback nella `font-family` è obbligatorio: termina sempre con una famiglia generica (`serif`, `sans-serif`, `monospace`).
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Colori (La Tavolozza del Web)
+
+Il colore è lo strumento visivo più immediato che hai a disposizione. Può comunicare gerarchia (colori primari per le azioni importanti, grigi per il secondario), stato (verde per successo, rosso per errore), e identità del brand. Il CSS offre diversi formati per esprimere i colori, ognuno con vantaggi specifici.
+
+#### I Formati dei Colori
+
+```css
+/* Nomi: 147 colori con nome riconosciuto. Utili per prototipare, limitati per il design */
+color: red;
+color: orangered;
+color: rebeccapurple;
+
+/* HEX: il formato più diffuso. Ogni coppia di cifre è un canale (RR GG BB) */
+color: #ff6600;    /* rosso=ff, verde=66, blu=00 → arancione */
+color: #f60;       /* Shorthand: ogni cifra viene raddoppiata → #ff6600 */
+color: #1a1a2e;    /* Blu molto scuro, quasi nero */
+
+/* RGB: gli stessi tre canali espressi in decimale (0-255) */
+color: rgb(255, 102, 0);    /* Lo stesso arancione di #ff6600 */
+
+/* RGBA: RGB con canale alpha per la trasparenza (0 = trasparente, 1 = opaco) */
+color: rgba(255, 102, 0, 0.5);  /* Arancione al 50% di opacità */
+
+/* HSL: Hue (colore 0-360°), Saturation (0-100%), Lightness (0-100%) */
+color: hsl(24, 100%, 50%);      /* Lo stesso arancione */
+
+/* HSLA: HSL con trasparenza */
+color: hsla(24, 100%, 50%, 0.5);
+```
+
+#### Come Scegliere il Formato Giusto
+
+**HEX** è il formato che incontrerai ovunque: nei design tools (ad esempio Figma), negli editor di codice (IDE), e via dicendo. È compatto e universale, ma è difficile da modificare a occhio.
+
+**HSL** è il formato più intuitivo per gli esseri umani, e il migliore per costruire palette coerenti. La H (hue) è la posizione sulla ruota dei colori: 0° è rosso, 60° è giallo, 120° è verde, 180° è ciano, 240° è blu, 300° è magenta. La S (saturation) controlla la vivacità: 100% è pieno colore, 0% è grigio. La L (lightness) controlla la luminosità: 50% è il colore puro, 0% è nero, 100% è bianco.
+
+Il vantaggio di HSL diventa evidente quando devi creare varianti di un colore. Se il tuo colore primario è `hsl(220, 80%, 50%)` (un blu vivace), puoi creare una versione più chiara cambiando solo la L: `hsl(220, 80%, 70%)`. Una versione più scura: `hsl(220, 80%, 30%)`. Una versione pastello: `hsl(220, 40%, 80%)`. Con HEX dovresti indovinare o usare un tool esterno.
+
+```css
+/* Costruire una palette coerente con HSL partendo da un singolo colore */
+:root {
+  /* Il colore base */
+  --primario: hsl(220, 80%, 50%);
+
+  /* Varianti: cambia solo la luminosità e la saturazione */
+  --primario-chiaro: hsl(220, 80%, 70%);
+  --primario-chiarissimo: hsl(220, 80%, 95%); /* Sfondo tenue */
+  --primario-scuro: hsl(220, 80%, 35%);
+  --primario-pastello: hsl(220, 40%, 85%);
+}
+```
+
+Nei progetti reali, queste varianti si organizzano spesso con una scala numerica (da 50 a 950, dove 50 è il più chiaro e 950 il più scuro), seguendo la convenzione di design system come Tailwind CSS. `--primario-chiaro` diventa `--primario-200`, `--primario-scuro` diventa `--primario-800`. Qui usiamo nomi descrittivi per rendere evidente cosa cambia nella L di HSL.
+
+**RGBA e HSLA** aggiungono un quarto valore per la trasparenza, il canale alpha, che va da 0 (completamente trasparente) a 1 (completamente opaco). `rgba(0, 0, 0, 0.5)` è un nero al 50% di trasparenza, `hsla(220, 80%, 50%, 0.3)` è il nostro blu primario al 30%.
+
+
+-----
+
+#### `opacity` vs Canale Alpha
+
+Entrambi rendono qualcosa trasparente, ma in modi molto diversi. Confonderli è un errore comune.
+
+`opacity` rende trasparente **l'intero elemento**, compresi tutti i suoi figli, il testo, le immagini, tutto.
+
+Il canale alpha (la `a` in `rgba` e `hsla`) rende trasparente **solo quel colore specifico**. Il resto dell'elemento resta opaco.
+
+```css
+/* ❌ Con opacity: anche il testo diventa trasparente */
+.overlay-sbagliato {
+  background-color: black;
+  color: white;
+  opacity: 0.7;
+  /* Risultato: sfondo grigio, testo grigio. Tutto è al 70% */
+}
+
+/* ✅ Con rgba: solo lo sfondo è trasparente, il testo resta leggibile */
+.overlay-corretto {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  /* Risultato: sfondo nero semitrasparente, testo bianco pieno */
+}
+```
+
+Questo caso si presenta ogni volta che vuoi un overlay sopra un'immagine con del testo leggibile, come la hero section di un sito o una card con immagine di sfondo.
+
+-----
+
+#### `currentColor`
+
+`currentColor` è una variabile speciale del CSS che vale sempre quanto il `color` dell'elemento.
+
+```css
+/* ❌ Senza currentColor: devi aggiornare il bordo manualmente */
+.link-decorato {
+  color: #0066cc;
+  border-bottom: 2px solid #0066cc;
+  text-decoration: none;
+}
+
+.link-decorato:hover {
+  color: #cc0000;
+  border-bottom-color: #cc0000; /* Devi ricordarti di cambiare anche questo */
+}
+
+/* ✅ Con currentColor: il bordo segue il colore del testo automaticamente */
+.link-decorato {
+  color: #0066cc;
+  border-bottom: 2px solid currentColor;
+  text-decoration: none;
+}
+
+.link-decorato:hover {
+  color: #cc0000;
+  /* Il bordo diventa rosso da solo, senza aggiungere nient'altro */
+}
+```
+
+Il vantaggio diventa evidente quando usi lo stesso componente con colori diversi: cambi solo il `color` e tutto il resto si adatta. Funziona con `border`, `box-shadow`, `outline`, e anche con `fill` e `stroke` nelle icone SVG inline che abbiamo visto nella sezione sulla tipografia.
+
+**Regola:** usa HSL per costruire palette coerenti (cambia solo L e S per creare varianti). Usa `rgba`/`hsla` quando ti serve trasparenza su un colore singolo. Usa `opacity` solo quando vuoi rendere trasparente l'intero elemento con tutto il suo contenuto.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Sfondi (Oltre il Colore Piatto)
+
+Lo sfondo di un elemento può essere molto più di un colore piatto: immagini, gradienti, combinazioni stratificate. È uno degli strumenti più versatili del CSS.
+
+#### `background-color` e `background-image`
+
+```css
+/* Colore di sfondo piatto */
+.sezione-chiara {
+  background-color: #f5f5f5;
+}
+
+/* Immagine di sfondo */
+.hero {
+  background-image: url("assets/immagini/hero.jpg");
+}
+```
+
+-----
+
+#### Controllare l'Immagine di Sfondo
+
+Quando usi un'immagine come sfondo, devi controllare come si comporta: quanto è grande, dove è posizionata, se si ripete.
+
+```css
+/* ❌ Solo background-image, senza controllo */
+.hero {
+  background-image: url("assets/immagini/hero.jpg");
+  /* Se l'immagine è più piccola del contenitore, 
+     il browser ripete l'immagine come piastrelle 
+     per riempire lo spazio. Raramente è quello che vuoi. */
+}
+
+/* ✅ Immagine controllata */
+.hero {
+  background-image: url("assets/immagini/hero.jpg");
+  background-size: cover;          /* Copre tutto il contenitore */
+  background-position: center;     /* Centra l'immagine */
+  background-repeat: no-repeat;    /* Non ripetere */
+  background-attachment: fixed;    /* Non scrolla con la pagina (effetto parallax) */
+}
+```
+
+La differenza tra `cover` e `contain` è fondamentale e vale la pena visualizzarla con un esempio.
+
+```
+L'immagine è 800x600 (orizzontale). Il contenitore è 400x400 (quadrato).
+
+Con background-size: cover:
+  ┌──────────────────────┐
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  L'immagine riempie tutto.
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  I bordi laterali vengono
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  tagliati perché non entrano
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  nel quadrato.
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  └──────────────────────┘
+← tagliato        tagliato →
+
+Con background-size: contain:
+  ┌──────────────────────┐
+  │                      │
+  │                      │  Spazio vuoto
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  L'immagine è tutta visibile
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  ma non riempie il contenitore.
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │                      │  Spazio vuoto
+  │                      │
+  └──────────────────────┘
+```
+
+`cover` è la scelta giusta quando l'immagine è decorativa e deve riempire l'area (hero section, sfondo di card). `contain` è la scelta giusta quando ogni parte dell'immagine è importante e non vuoi perderne pezzi (un logo, un diagramma).
+
+Tutto può essere condensato in una sola shorthand:
+
+```css
+.hero {
+  background: url("assets/immagini/hero.jpg") center / cover no-repeat fixed;
+}
+```
+
+-----
+
+#### I Gradienti
+
+I gradienti creano transizioni fluide tra due o più colori, senza bisogno di file immagine. Sono generati dal browser, quindi sono molto leggeri da processare, scalano a qualsiasi risoluzione e non richiedono download aggiuntivi.
+
+Il **gradiente lineare** va da un punto a un altro in linea retta.
+
+```css
+/* Da sinistra a destra */
+.barra {
+  background: linear-gradient(to right, #ff6600, #0066ff);
+}
+
+/* Con angolo personalizzato */
+.diagonale {
+  background: linear-gradient(45deg, #ff6600, #0066ff);
+}
+
+/* Più colori con posizioni precise (gradient stops) */
+.bandiera-italiana {
+  background: linear-gradient(
+    to right,
+    #009246 0%,
+    #009246 33%,
+    #ffffff 33%,
+    #ffffff 66%,
+    #ce2b37 66%,
+    #ce2b37 100%
+  );
+}
+```
+
+Il **gradiente radiale** parte dal centro e si espande verso l'esterno, come un sasso lanciato nell'acqua.
+
+```css
+/* Cerchio luminoso */
+.cerchio-luminoso {
+  background: radial-gradient(circle, #ffd700, #ff6600, transparent);
+}
+
+/* Luce posizionata in un angolo (effetto riflesso) */
+.luce-angolo {
+  background: radial-gradient(
+    circle at top right,
+    rgba(255, 255, 255, 0.3),
+    transparent 60%
+  );
+}
+```
+
+Il **gradiente conico** gira attorno a un punto centrale, come le lancette di un orologio. È perfetto per creare grafici a torta con puro CSS.
+
+```css
+.grafico-torta {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #ff6600 0deg 120deg,    /* 33% arancione */
+    #0066cc 120deg 240deg,  /* 33% blu */
+    #28a745 240deg 360deg   /* 33% verde */
+  );
+}
+```
+
+I gradienti possono essere **sovrapposti** come livelli trasparenti. Ogni gradiente è separato da una virgola, e il primo della lista è quello più in alto (più vicino all'utente).
+
+```css
+/* Testo leggibile su immagine: gradiente scuro sopra la foto */
+.hero {
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
+    url("assets/immagini/hero.jpg") center / cover no-repeat;
+}
+```
+
+Questo pattern (gradiente scuro sopra un'immagine) è parecchio usato nel web design per garantire che il testo bianco sia leggibile indipendentemente dal contenuto della foto.
+
+-----
+
+#### `object-fit` (Cover e Contain per le Immagini `<img>`)
+
+`background-size: cover` e `contain` funzionano per le immagini di sfondo. Ma quando usi un tag `<img>` con dimensioni fisse (una griglia di avatar, una galleria, ma anche semplicemente una card con immagine), e l'immagine ha proporzioni diverse dal contenitore, si deforma. `object-fit` risolve questo problema.
+
+```css
+/* ❌ Senza object-fit: l'immagine si deforma per entrare nel contenitore */
+.avatar {
+  width: 100px;
+  height: 100px;
+  /* Se la foto è rettangolare, la faccia appare schiacciata */
+}
+
+/* ✅ Con object-fit: cover: l'immagine mantiene le proporzioni e riempie il contenitore */
+.avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover; /* Ritaglia i bordi ma non deforma */
+  border-radius: 50%; /* Cerchio perfetto */
+}
+```
+
+I valori sono gli stessi di `background-size`:
+
+```css
+object-fit: cover;   /* Riempie il contenitore, taglia se serve (il più usato) */
+object-fit: contain; /* Mostra tutta l'immagine, può lasciare spazio vuoto */
+object-fit: fill;    /* Deforma l'immagine per riempire (il default, quasi mai quello che vuoi) */
+object-fit: none;    /* Dimensione originale, può debordare */
+```
+
+`object-position` controlla quale parte dell'immagine resta visibile quando `cover` taglia i bordi. Di default è centrata, ma per una foto di una persona potresti voler mantenere visibile la parte alta (il viso):
+
+```css
+.foto-profilo {
+  object-fit: cover;
+  object-position: top center; /* Mantieni visibile la parte alta */
+}
+```
+
+**Regola:** `cover` e `contain` per `background-image`, `object-fit: cover` e `contain` per `<img>`. I gradienti sono sfondi, non colori, quindi usano `background` e non `background-color`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Bordi, Ombre ed Effetti Visivi
+
+Bordi e ombre aggiungono profondità e separazione visiva agli elementi. I filtri permettono effetti che prima richiedevano software esterni di editing grafico. Insieme, sono gli strumenti con cui un layout piatto diventa un'interfaccia con dimensione e gerarchia.
+
+#### Box Shadow (L'Ombra della Scatola)
+
+`box-shadow` aggiunge un'ombra alla scatola dell'elemento. È lo strumento principale per dare l'illusione di elevazione, come se un elemento fosse sollevato rispetto alla pagina.
+
+La sintassi è: offset orizzontale, offset verticale, sfocatura, espansione, colore.
+
+```css
+/* Ombra sottile per dare leggera elevazione (il pattern più usato) */
+.scheda {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+```
+
+Ogni valore controlla un aspetto dell'ombra. L'offset orizzontale sposta l'ombra a destra (positivo) o a sinistra (negativo). L'offset verticale la sposta in basso (positivo) o in alto (negativo). La sfocatura rende i bordi dell'ombra morbidi. L'espansione allarga o restringe l'ombra rispetto all'elemento.
+
+```css
+/* Effetti diversi cambiando i valori */
+
+/* Ombra in basso a destra, poco sfocata (luce in alto a sinistra) */
+.luce-alto-sinistra {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Ombra diffusa tutto intorno (come un alone) */
+.alone {
+  box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+}
+
+/* Ombra interna (l'elemento sembra scavato) */
+.campo-input {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ombre multiple per un effetto più realistico */
+.scheda-elevata {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),   /* Ombra vicina, definita */
+    0 8px 24px rgba(0, 0, 0, 0.08);  /* Ombra lontana, diffusa */
+}
+```
+
+Un pattern molto usato: l'ombra che cresce al passaggio del mouse, dando l'impressione che la card si sollevi.
+
+```css
+.scheda {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.scheda:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px); /* Si alza leggermente */
+}
+```
+
+Un trucco utile: puoi usare `box-shadow` per creare un anello colorato attorno a un elemento, impostando gli offset e la sfocatura a 0 e usando solo l'espansione. È il modo più comune per creare un indicatore di focus accessibile personalizzato.
+
+```css
+.bottone:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.5); /* Anello di focus */
+}
+```
+
+-----
+
+#### Filtri CSS
+
+La proprietà `filter` applica effetti grafici direttamente agli elementi, come i filtri in un app di foto.
+
+```css
+/* Immagine in bianco e nero */
+.foto-storica {
+  filter: grayscale(100%);
+}
+
+/* Ridurre la luminosità (scurire) */
+.sfondo-scurito {
+  filter: brightness(0.7);
+}
+
+/* Sfocatura */
+.sfondo-sfocato {
+  filter: blur(5px);
+}
+
+/* Combinazione di filtri */
+.foto-artistica {
+  filter: contrast(120%) saturate(130%) brightness(110%);
+}
+```
+
+I filtri possono essere animati con le transizioni, creando effetti interattivi:
+
+```css
+.foto {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.foto:hover {
+  filter: grayscale(0%); /* La foto torna a colori al passaggio del mouse */
+}
+```
+
+I filtri disponibili sono: `blur()`, `brightness()`, `contrast()`, `grayscale()`, `saturate()`, `sepia()`, `hue-rotate()`, `invert()`, `drop-shadow()`, `opacity()`. Si possono quindi combinare in una singola dichiarazione, separati da spazi.
+
+-----
+
+#### `backdrop-filter` (L'Effetto Vetro Smerigliato)
+
+`backdrop-filter` applica filtri non all'elemento stesso, ma a **tutto ciò che si vede dietro** di esso. È lo strumento per creare l'effetto vetro smerigliato (glassmorphism).
+
+```css
+.barra-navigazione {
+  background-color: rgba(255, 255, 255, 0.7);   /* Sfondo semitrasparente */
+  backdrop-filter: blur(10px);                  /* Sfoca ciò che sta dietro */
+}
+```
+
+`backdrop-filter` sfoca tutto ciò che si trova dietro l'elemento. Ma per vedere lo sfondo sfocato, devi poterci guardare attraverso. Se lo sfondo dell'elemento è bianco pieno (`#fff`), copre tutto quello che c'è dietro, e non c'è niente da sfocare. Se lo sfondo è bianco al 70% (`rgba(255, 255, 255, 0.7)`), il 30% di trasparenza ti permette di intravedere (sfocato) il contenuto che scrolla sotto.
+
+```css
+/* ❌ Non funziona: lo sfondo è completamente opaco */
+.barra {
+  background-color: white;
+  backdrop-filter: blur(10px); /* L'effetto c'è, ma non si vede */
+}
+
+/* ✅ Funziona: lo sfondo è semitrasparente */
+.barra {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px); /* L'effetto è visibile */
+}
+```
+
+-----
+
+#### `mix-blend-mode`
+
+`mix-blend-mode` controlla come i colori di un elemento si combinano con i colori di ciò che sta sotto. Normalmente un elemento con sfondo copre completamente quello che c'è dietro. Con `mix-blend-mode`, i due colori si mescolano tra loro in modi diversi. Se hai usato i metodi di fusione in Figma (blend modes) o Photoshop, è lo stesso concetto.
+
+```css
+.titolo-sovrapposto {
+  color: white;
+  mix-blend-mode: difference; /* Inverte i colori dove si sovrappone allo sfondo */
+}
+
+.immagine-artistica {
+  mix-blend-mode: multiply; /* Si fonde con lo sfondo, scurendo */
+}
+```
+
+I valori più usati sono `multiply` (scurisce), `screen` (schiarisce), `overlay` (aumenta il contrasto), `difference` (inversione).
+
+**Regola:** usa ombre sottili e diffuse per dare elevazione, non ombre pesanti che distraggono. `backdrop-filter` richiede uno sfondo semitrasparente per funzionare. I filtri CSS sono performanti, ma combinarne troppi può rallentare il rendering.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. Variabili CSS (Un Valore, Mille Usi)
+
+Le variabili CSS (dette anche *custom properties*) ti permettono di salvare un valore una volta, riusarlo ovunque, e quando devi cambiarlo farlo in un solo punto.
+
+Immagina di aver usato il colore `#0066cc` in 50 posti diversi nel tuo css: bottoni, link, bordi, sfondi. Il cliente ti chiede di cambiarlo in verde. Senza variabili, apri il CSS, fai "cerca e sostituisci" e speri di non aver rotto nulla. Con le variabili, cambi una riga.
+
+#### Dichiarare e Usare le Variabili
+
+Una variabile si dichiara con il prefisso `--` e si usa con la funzione `var()`.
+
+```css
+/* Dichiarare le variabili in :root (accessibili ovunque nel documento) */
+:root {
+  --colore-primario: #0066cc;
+  --colore-secondario: #ff6600;
+  --colore-testo: #333;
+  --colore-sfondo: #f5f5f5;
+  --colore-errore: #dc3545;
+  --colore-successo: #28a745;
+  --spaziatura-base: 1rem;
+  --raggio-bordo: 8px;
+  --ombra-scheda: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --font-titoli: 'Raleway', sans-serif;
+  --font-testo: 'Open Sans', Arial, sans-serif;
+}
+
+/* Usare le variabili */
+.bottone-primario {
+  background-color: var(--colore-primario);
+  color: white;
+  padding: var(--spaziatura-base);
+  border-radius: var(--raggio-bordo);
+  font-family: var(--font-titoli);
+}
+
+.bottone-secondario {
+  background-color: var(--colore-secondario);
+  color: white;
+  padding: var(--spaziatura-base);
+  border-radius: var(--raggio-bordo);
+}
+
+.link {
+  color: var(--colore-primario);
+}
+
+.messaggio-errore {
+  color: var(--colore-errore);
+  border-left: 4px solid var(--colore-errore);
+}
+
+.scheda {
+  background: white;
+  border-radius: var(--raggio-bordo);
+  box-shadow: var(--ombra-scheda);
+}
+```
+
+Se domani il colore primario deve cambiare da blu a verde, modifichi una sola riga (`--colore-primario: #28a745`) e ogni bottone, link, bordo e sfondo che usa quella variabile si aggiorna automaticamente.
+
+La funzione `var()` accetta un secondo argomento come **fallback**: se la variabile non esiste, usa quel valore.
+
+```css
+.elemento {
+  color: var(--colore-accento, #ff6600); /* Se --colore-accento non esiste, usa #ff6600 */
+}
+```
+
+Il fallback è utile quando crei componenti che devono funzionare anche senza che qualcuno abbia definito la variabile. Per il tuo CSS quotidiano, se usi variabili dichiarate in `:root`, il fallback non ti serve perché le variabili esistono sempre.
+
+-----
+
+#### Variabili Locali (Scoping)
+
+Le variabili dichiarate in `:root` sono globali e accessibili da qualsiasi elemento. Ma puoi anche dichiarare variabili su un selettore specifico: saranno accessibili solo dentro quell'elemento e i suoi figli, come le variabili locali in un linguaggio di programmazione.
+
+```css
+.scheda-premium {
+  --colore-accento: gold;
+  --sfondo-scheda: #1a1a2e;
+}
+
+.scheda-base {
+  --colore-accento: #0066cc;
+  --sfondo-scheda: white;
+}
+
+/* Lo stesso CSS, comportamento diverso in base al contesto */
+.scheda-premium .prezzo,
+.scheda-base .prezzo {
+  color: var(--colore-accento);
+}
+```
+
+-----
+
+#### Temi con le Variabili (Dark Mode)
+
+Le variabili CSS combinate con la media query `prefers-color-scheme` rendono il cambio di tema elegante e manutenibile.
+
+```css
+:root {
+  --colore-testo: #1a1a2e;
+  --colore-sfondo: #ffffff;
+  --colore-superficie: #f5f5f5;
+  --colore-bordo: #e0e0e0;
+  --colore-primario: #0066cc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --colore-testo: #e0e0e0;
+    --colore-sfondo: #1a1a2e;
+    --colore-superficie: #2a2a3e;
+    --colore-bordo: #3a3a4e;
+    --colore-primario: #4da6ff;
+  }
+}
+
+/* Gli stili restano identici. Cambiano solo le variabili */
+body {
+  color: var(--colore-testo);
+  background-color: var(--colore-sfondo);
+}
+
+.scheda {
+  background-color: var(--colore-superficie);
+  border: 1px solid var(--colore-bordo);
+}
+
+.link {
+  color: var(--colore-primario);
+}
+```
+
+L'intero sito passa dal tema chiaro a quello scuro ridefinendo poche variabili. Nessuna regola CSS deve essere duplicata o riscritta.
+
+-----
+
+#### Variabili e `calc()`
+
+Le variabili possono essere combinate con `calc()` per creare sistemi di spaziatura coerenti e scalabili.
+
+```css
+:root {
+  --spazio: 1rem;
+}
+
+.spaziatura-piccola { 
+  padding: calc(var(--spazio) * 0.5); /* 0.5rem */
+}
+
+.spaziatura-media { 
+  padding: var(--spazio);             /* 1rem */
+}
+
+.spaziatura-grande { 
+  padding: calc(var(--spazio) * 2);   /* 2rem */
+}
+
+.spaziatura-enorme { 
+  padding: calc(var(--spazio) * 4);   /* 4rem */
+}
+```
+
+Cambiando il valore di `--spazio`, l'intero sistema di spaziatura scala proporzionalmente. Se passi da `1rem` a `1.25rem`, tutti i padding si aggiornano mantenendo le proporzioni.
+
+**Regola:** dichiara le variabili globali in `:root` e dai nomi che parlano della funzione (`--colore-primario`), non del valore (`--blu`). Una variabile chiamata `--blu` che poi diventa verde è confusione pura.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Trasformazioni (Muovere, Ruotare, Scalare)
+
+La proprietà `transform` modifica la posizione, la dimensione, la rotazione e la forma di un elemento **senza influenzare il layout circostante**. È come spostare un adesivo su un foglio: l'adesivo si muove, ma il testo e gli altri adesivi restano fermi. L'elemento trasformato occupa ancora lo spazio originale nel flusso del documento, ma viene disegnato nella nuova posizione.
+
+#### Le Funzioni di Transform
+
+```css
+/* Spostare un elemento */
+.spostato {
+  transform: translateX(50px);       /* 50px a destra */
+  transform: translateY(-20px);      /* 20px verso l'alto */
+  transform: translate(50px, -20px); /* Entrambi insieme */
+}
+
+/* Ruotare */
+.ruotato {
+  transform: rotate(45deg);   /* 45 gradi in senso orario */
+  transform: rotate(-10deg);  /* 10 gradi in senso antiorario */
+}
+
+/* Scalare (ingrandire/rimpicciolire) */
+.ingrandito {
+  transform: scale(1.5);      /* 150% della dimensione originale */
+  transform: scale(0.8);      /* 80% della dimensione originale */
+
+  transform: scaleX(2);       /* Largo il doppio, altezza invariata */
+  transform: scaleY(2);       /* Alto il doppio, larghezza invariata */
+  transform: scale(2, 0.5);   /* Largo il doppio, alto la metà */
+}
+
+/* Distorcere */
+.distorto {
+  transform: skewX(10deg);    /* Inclinazione orizzontale */
+}
+```
+
+Le trasformazioni si possono combinare in una singola dichiarazione, separate da spazi. L'ordine conta, perché ogni trasformazione si applica partendo dall'ultima verso la prima.
+
+```css
+.combinata {
+  transform: translateX(100px) rotate(45deg) scale(1.2);
+}
+```
+
+-----
+
+#### `transform-origin` (Il Punto di Ancoraggio)
+
+Quando ruoti o scali un elemento, la trasformazione avviene attorno a un punto preciso. Per default è il **centro**. Con `transform-origin` puoi spostarlo.
+
+Un caso concreto: un menu dropdown che si apre scendendo dalla navbar. Vuoi quindi che cresca dall'alto verso il basso, non dal centro.
+
+```css
+/* ❌ Senza transform-origin: il menu appare "esplodendo" dal centro */
+.menu-dropdown {
+  transform: scaleY(0);       /* Nascosto */
+  transition: transform 0.2s ease;
+}
+.nav-item:hover .menu-dropdown {
+  transform: scaleY(1);       /* Il menu cresce dal centro, effetto strano */
+}
+
+/* ✅ Con transform-origin: il menu scende dalla navbar naturalmente */
+.menu-dropdown {
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+.nav-item:hover .menu-dropdown {
+  transform: scaleY(1);       /* Il menu cresce dall'alto verso il basso */
+}
+```
+
+Lo stesso principio vale per una barra di progresso che si riempie da sinistra (`transform-origin: left center` con `scaleX`), o un tooltip che appare dal punto in cui è collegato.
+
+-----
+
+#### Perché Transform è Speciale (Performance)
+
+Le trasformazioni hanno un vantaggio tecnico fondamentale rispetto a proprietà come `margin`, `top`, `left` o `width`: **non causano reflow**.
+
+Quando cambi la `width` o il `margin` di un elemento, il browser deve ricalcolare la posizione e la dimensione di tutti gli elementi circostanti (un processo chiamato *reflow* o *layout*), poi ridisegnare tutto (il *paint*). Questo è costoso, e se succede molte volte al secondo durante un'animazione, la pagina rallenta visibilmente.
+
+Quando usi `transform`, il browser gestisce l'elemento in modo più efficiente, senza ricalcolare il layout degli altri elementi. Questo rende `transform` (insieme a `opacity`) la scelta migliore per le animazioni.
+
+```css
+/* ❌ Animare con proprietà che causano reflow */
+.scheda:hover {
+  margin-top: -10px; /* Il browser ricalcola il layout della pagina */
+}
+
+/* ✅ Animare con transform */
+.scheda:hover {
+  transform: translateY(-10px); /* Nessun reflow */
+}
+```
+
+Una nota su `top` e `left`: su elementi con `position: absolute` o `fixed`, non causano reflow dell'intera pagina (l'elemento è fuori dal flusso), ma causano comunque *paint* (il browser deve ridisegnare). `transform` salta anche il paint, quindi resta la scelta più performante.
+
+La differenza si nota soprattutto su dispositivi mobili e pagine complesse con molti elementi animati contemporaneamente.
+
+**Regola:** per spostare un elemento visivamente, usa `transform: translate()` e non `top`/`left`/`margin`. Per le animazioni, `transform` e `opacity` sono le proprietà più performanti.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (Stile Visivo in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Font esterni | Importa solo i pesi che usi, fallback obbligatorio con famiglia generica | Importare 10 pesi di un font e rallentare il caricamento |
+| `line-height` | Senza unità (1.5-1.6 per il testo, 1.1-1.2 per i titoli) | Usare un valore con unità fissa che non scala con il font-size |
+| Testo che trabocca | `nowrap` + `overflow: hidden` + `text-overflow: ellipsis` (tutte e tre obbligatorie) | Usare solo `text-overflow: ellipsis` e chiedersi perché non funziona |
+| Formati colore | HSL per creare palette coerenti, RGBA/HSLA per la trasparenza | Usare `opacity` per lo sfondo e rendere trasparente anche il testo |
+| Sfondi | `cover` riempie (può tagliare), `contain` mostra tutto (può lasciare spazio) | Dimenticare `background-repeat: no-repeat` |
+| Gradienti | Sono `background`, non `background-color`. Si sovrappongono come livelli | Usare `background-color` con un gradiente |
+| Box shadow | Ombre sottili e diffuse per elevazione. Più ombre = più realismo | Ombre troppo scure e grandi che distraggono dal contenuto |
+| `backdrop-filter` | Richiede sfondo semitrasparente per essere visibile | Usare `backdrop-filter` con sfondo opaco e non vedere l'effetto |
+| Variabili CSS | Nomi funzionali (`--colore-primario`), dichiarate in `:root` | Chiamare `--blu` una variabile che poi diventa verde |
+| Dark mode | Ridefinire le variabili in `@media (prefers-color-scheme: dark)` | Duplicare tutte le regole CSS invece di cambiare solo le variabili |
+| Transform | `translate`, `rotate`, `scale` sono le proprietà più performanti per le animazioni | Animare `margin` o `top` invece di `transform` |
+| Performance | `transform` e `opacity` saltano reflow e paint | Animare `width` o `height` e avere rallentamenti su mobile |

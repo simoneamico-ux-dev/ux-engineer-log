@@ -1,0 +1,1596 @@
+---
+sidebar_position: 3
+title: Layout e Responsive
+description: Display, position, flexbox, grid, media queries, animazioni e transizioni.
+---
+
+import Link from '@docusaurus/Link';
+
+# Parte III: Layout e Responsive
+
+Finora hai stilizzato singoli elementi: colori, font, bordi, ombre. Ora è il momento di organizzare quegli elementi nella pagina. Il layout è dove il CSS diventa architettura: non stai più decorando una stanza, stai progettando la planimetria di un edificio intero.
+
+---
+
+## Layout e Responsive
+
+### 15. Display (Come gli Elementi Occupano lo Spazio)
+
+Nella <Link to="/docs/vademecum/html-real-world-vademecum#4-block-vs-inline-due-modi-di-occupare-lo-spazio">sezione 4 dell'HTML vademecum</Link> abbiamo visto che ogni elemento HTML nasce con un comportamento predefinito: i `<div>` e i `<p>` sono block (occupano tutta la larghezza, vanno a capo), gli `<a>` e gli `<span>` sono inline (restano nel flusso del testo). Quel comportamento non è in realtà fisso. La proprietà `display` del CSS ti permette di cambiarlo: puoi trasformare un elemento block in inline, un inline in block, o usare valori ibridi.
+
+```css
+/* Trasforma un link (normalmente inline) in un elemento block */
+a {
+  display: block;
+  padding: 1rem;
+  /* Ora il link occupa tutta la larghezza e accetta padding su tutti i lati */
+}
+
+/* Trasforma un div (normalmente block) in un elemento inline */
+div {
+  display: inline;
+  /* Ora il div sta nella riga del testo e non va più a capo */
+}
+```
+
+#### I Valori più Usati
+
+I valori di `display` che userai nella pratica sono quattro:
+
+```css
+/* Block: occupa tutta la larghezza disponibile, va a capo prima e dopo */
+display: block;
+
+/* Inline: occupa solo lo spazio del contenuto, resta nella riga */
+display: inline;
+
+/* Inline-block: sta nella riga come inline, ma accetta width e height come block */
+display: inline-block;
+
+/* None: l'elemento scompare completamente dal layout */
+display: none;
+```
+
+-----
+
+#### `inline-block` (L'Ibrido)
+
+Il caso più comune: vuoi elementi che stiano in riga (come inline) ma che accettino dimensioni e padding (come block). È il caso di etichette, badge, bottoni in riga, link di navigazione. `display: inline` non accetta `width`, `height`, `margin-top` e `margin-bottom`, il browser li ignora. `display: inline-block` li accetta tutti.
+
+```css
+.etichetta {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+```
+
+```html
+<p>Questo prodotto è <span class="etichetta">Novità</span> e anche
+<span class="etichetta">In offerta</span> questa settimana.</p>
+```
+
+Le etichette stanno nella riga del testo, ma hanno padding, sfondo e border-radius. Con `display: inline` queste proprietà non funzionerebbero correttamente.
+
+Un altro caso reale: un menu orizzontale fatto con `<a>` (che sono inline per default). Vuoi che i link stiano in riga ma con padding e altezza uniformi.
+
+```css
+/* ❌ Con display: inline, padding-top e padding-bottom non funzionano come ti aspetti */
+nav a {
+  display: inline;
+  padding: 1rem 1.5rem;
+  /* Il padding orizzontale funziona, ma quello verticale non sposta gli elementi vicini */
+}
+
+/* ✅ Con inline-block, tutto funziona */
+nav a {
+  display: inline-block;
+  padding: 1rem 1.5rem;
+  /* I link stanno in riga E hanno padding corretto su tutti i lati */
+}
+```
+
+-----
+
+#### `display: none` vs `visibility: hidden`
+
+Entrambi nascondono un elemento, ma con una differenza importante.
+
+`display: none` rimuove l'elemento dal layout. Gli altri elementi si riposizionano come se non esistesse, come togliere un libro da uno scaffale: i libri accanto scivolano per chiudere il vuoto. `visibility: hidden` lo rende invisibile ma lo spazio resta occupato, come togliere il libro e lasciare il vuoto sullo scaffale.
+
+```css
+.nascosto {
+  display: none;      /* L'elemento non esiste nel layout */
+}
+
+.invisibile {
+  visibility: hidden; /* L'elemento è invisibile ma lo spazio resta */
+}
+```
+
+Nella pratica: `display: none` per elementi che non devono esistere nel layout (un menu mobile quando sei su desktop). `visibility: hidden` quando vuoi nascondere un elemento temporaneamente senza che il layout si sposti. Per esempio, un elemento che deve apparire con un'animazione: se usi `display: none` e poi lo mostri, gli elementi intorno "saltano" per fargli spazio. Con `visibility: hidden` lo spazio è già riservato, e quando lo rendi visibile il layout resta fermo.
+
+-----
+
+#### `float` (Il Testo che Avvolge le Immagini)
+
+`float` è una proprietà storica del CSS che oggi si usa quasi esclusivamente per far scorrere il testo attorno a un'immagine, come nei layout di giornali e riviste.
+
+```css
+.foto-articolo {
+  float: left;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+  width: 300px;
+}
+```
+
+```html
+<article>
+  <img src="foto.jpg" alt="..." class="foto-articolo">
+  <p>Il testo dell'articolo scorre attorno all'immagine,
+  avvolgendola sul lato destro. Quando il testo supera
+  l'altezza dell'immagine, torna a occupare tutta la
+  larghezza del contenitore.</p>
+</article>
+```
+
+Prima di Flexbox e Grid (diventati stabili e ampiamente supportati rispettivamente intorno al 2013–2015 e nel 2017), `float` era l'unico modo per creare layout a colonne, e richiedeva trucchi come il "clearfix" per evitare che i contenitori collassassero. Oggi non c'è più nessun motivo per usare `float` per il layout. Flexbox e Grid fanno tutto meglio. L'unico caso rimasto è il testo che avvolge un'immagine, perché né Flexbox né Grid possono replicare quell'esatto comportamento.
+
+-----
+
+#### `aspect-ratio` (Mantenere le Proporzioni)
+
+Nella <Link to="/docs/vademecum/css-real-world/foundations#8-unità-di-misura-parlare-la-lingua-giusta">sezione 8</Link> abbiamo visto il vecchio trucco del `padding-bottom: 56.25%` per forzare le proporzioni 16:9. La proprietà `aspect-ratio` lo rende inutile.
+
+```css
+/* Un contenitore video sempre in 16:9, qualsiasi sia la larghezza */
+.video-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+}
+
+/* Un quadrato perfetto */
+.avatar {
+  width: 100px;
+  aspect-ratio: 1; /* 1/1, larghezza = altezza */
+  border-radius: 50%;
+}
+
+/* Card con proporzioni fisse */
+.card-immagine {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+```
+
+Basta dichiarare una dimensione (la larghezza) e `aspect-ratio` calcola l'altra automaticamente. Se la larghezza cambia (perché il contenitore si restringe su mobile), l'altezza si adatta per mantenere le proporzioni. È uno strumento responsive di natura.
+
+**Regola:** `display` controlla come un elemento partecipa al layout. `inline-block` è l'ibrido tra inline e block. `display: none` rimuove dal flusso, `visibility: hidden` nasconde ma mantiene lo spazio. `float` solo per testo che avvolge immagini. `aspect-ratio` per mantenere le proporzioni dichiarando una sola dimensione.
+
+<br />
+<br />
+<br />
+<br />
+
+### 16. Position (Posizionare gli Elementi)
+
+La proprietà `position` determina come un elemento viene posizionato nella pagina. Nel flusso normale, gli elementi si dispongono uno dopo l'altro come parole in un libro. `position` ti permette di rompere questo flusso e piazzare un elemento esattamente dove vuoi.
+
+Le proprietà `top`, `right`, `bottom` e `left` specificano lo spostamento, ma funzionano **solo se `position` ha un valore diverso da `static`**.
+
+#### I Cinque Valori
+
+**`static`** è il default: l'elemento segue il flusso normale del documento. Le proprietà `top`, `right`, `bottom`, `left` non hanno alcun effetto.
+
+-----
+
+**`relative`** mantiene l'elemento nel flusso normale, ma permette di **spostarlo rispetto alla sua posizione originale**. Lo spazio che occupava resta riservato, come se l'elemento ci fosse ancora.
+
+```css
+.spostato {
+  position: relative;
+  top: 10px;    /* Si sposta 10px verso il basso rispetto a dove sarebbe stato */
+  left: 20px;   /* Si sposta 20px verso destra */
+}
+```
+
+L'elemento si sposta visivamente, ma è come se gli altri elementi non si accorgessero dello spostamento. Per fare un'analogia, è come se il fantasma dell'elemento occupasse ancora la posizione originale. Nella pratica, `relative` si usa raramente per spostare un elemento. Il suo uso principale è fare da **punto di riferimento** per i figli `absolute`.
+
+-----
+
+**`absolute`** rimuove l'elemento dal flusso. Gli altri elementi si comportano come se non esistesse. Si posiziona rispetto al **primo "antenato" che ha `position` diversa da `static`**. Se nessun antenato è posizionato, si posiziona rispetto alla pagina intera.
+
+```css
+.contenitore {
+  position: relative; /* Diventa il punto di riferimento */
+  width: 300px;
+  height: 200px;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  /* Si posiziona nell'angolo in alto a destra del contenitore */
+}
+```
+
+La combinazione `position: relative` sul genitore e `position: absolute` sul figlio è uno dei pattern più utilizzati nel CSS. Il genitore fa da riferimento senza spostarsi di un pixel, il figlio si posiziona liberamente al suo interno.
+
+```css
+/* ❌ Senza position: relative sul genitore */
+.contenitore {
+  /* position: static (default) */
+}
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Il badge si posiziona nell'angolo della PAGINA, non del contenitore */
+}
+
+/* ✅ Con position: relative sul genitore */
+.contenitore {
+  position: relative;
+}
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Il badge si posiziona nell'angolo del CONTENITORE */
+}
+```
+
+-----
+
+**`fixed`** rimuove l'elemento dal flusso e lo posiziona rispetto alla **finestra del browser**. Non si muove quando l'utente scrolla.
+
+```css
+.navbar-fissa {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bottone-torna-su {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+}
+```
+
+Gli usi classici: navbar che resta in cima durante lo scroll, bottone "torna su" fisso in basso a destra, barra dei cookie in fondo alla pagina. In questo stesso sito puoi osservare, in questo momento, i primi due esempi azione.
+
+-----
+
+**`sticky`** è l'ibrido tra `relative` e `fixed`. L'elemento si comporta come `relative` (sta nel flusso) finché non raggiunge una soglia specificata durante lo scroll, poi si "attacca" e si comporta come `fixed`.
+
+```css
+.intestazione-tabella {
+  position: sticky;
+  top: 0; /* Si attacca quando il suo bordo superiore raggiunge il top della finestra */
+  background-color: white;
+  z-index: 10;
+}
+```
+
+L'intestazione di una tabella che resta visibile mentre scorri i dati, una sidebar che segue lo scroll fino a un certo punto, una sezione di filtri che si attacca quando arrivi a scorrerla: sono tutti casi perfetti per `sticky`.
+
+Un dettaglio importante: `sticky` funziona solo finché ci si trova all'interno del genitore. L'elemento si attacca quando raggiunge la soglia specificata, ma smette di seguire lo scroll nel momento in cui il genitore finisce. Se il genitore è alto esattamente quanto l'elemento `sticky`, cioè lo avvolge strettamente senza spazio aggiuntivo, non c'è nessun margine di scroll all'interno del genitore, e l'elemento non si attaccherà mai. Lo stesso problema si verifica se il genitore ha `overflow: hidden`, che impedisce il comportamento sticky del tutto. Quando sticky non funziona, queste sono le prime due cose da controllare.
+
+-----
+
+#### `z-index` (I Piani Sovrapposti)
+
+Quando gli elementi si sovrappongono (perché posizionati con `absolute`, `fixed` o `sticky`), `z-index` controlla quale appare davanti. Valori più alti sono più vicini all'utente, come i piani di un palazzo.
+
+```css
+.sfondo    { z-index: 1; }
+.contenuto { z-index: 10; }
+.modale    { z-index: 100; }
+.tooltip   { z-index: 1000; }
+```
+
+`z-index` funziona **solo su elementi posizionati** (con `position` diversa da `static`). Su un elemento `static`, viene silenziosamente ignorato.
+
+Un concetto che causa molti grattacapi è il **contesto di stacking**. Uno `z-index` alto su un figlio non lo porta "fuori" dal contesto del genitore. Se il genitore ha `z-index: 1`, tutti i suoi figli, anche con `z-index: 9999`, restano dietro a un fratello del genitore con `z-index: 2`.
+
+```css
+/* La modale ha z-index altissimo, ma il suo genitore ha z-index: 1 */
+.pannello-laterale { 
+  position: relative; 
+  z-index: 1; 
+}
+.pannello-laterale .modale { 
+  position: absolute; 
+  z-index: 9999; 
+}
+
+/* Questo header con z-index: 2 apparirà SOPRA la modale */
+.header { 
+  position: fixed; 
+  z-index: 2; 
+}
+```
+
+È come un condominio: se il tuo appartamento è al primo piano, puoi salire sul tavolo fino al punto di toccare il soffitto, ma sarai sempre sotto l'appartamento del secondo piano.
+
+Per evitare problemi, usa valori distanziati (1, 10, 100, 1000) e crea una scala ordinata per il tuo progetto. Non usare mai 9999 come scorciatoia sperando di "vincere".
+
+**Regola:** `relative` + `absolute` è il pattern per posizionare un figlio dentro il genitore. `fixed` per elementi che non scrollano. `sticky` per elementi che si attaccano. `z-index` funziona solo su elementi posizionati, e i figli non "escono" dal contesto di stacking del genitore.
+
+<br />
+<br />
+<br />
+<br />
+
+### 17. Flexbox (Layout in Una Dimensione)
+
+Flexbox è lo strumento di layout più usato nel CSS moderno. Risolve problemi che per anni hanno richiesto hack e workaround: centrare un elemento verticalmente, distribuire lo spazio equamente, allineare elementi di altezze diverse.
+
+#### Il Concetto Base
+
+Senza Flexbox, tre `<div>` si dispongono uno sotto l'altro perché sono elementi block. Con `display: flex` sul contenitore, i figli si affiancano orizzontalmente.
+
+```html
+<div class="contenitore">
+  <div>Uno</div>
+  <div>Due</div>
+  <div>Tre</div>
+</div>
+```
+
+```
+Senza display: flex:        Con display: flex:
+┌─────────────────┐         ┌─────────────────┐
+│       Uno       │         │ Uno │ Due │ Tre │
+├─────────────────┤         └─────────────────┘
+│       Due       │
+├─────────────────┤
+│       Tre       │
+└─────────────────┘
+```
+
+```css
+.contenitore {
+  display: flex;
+}
+```
+
+Flexbox lavora con due attori: il **contenitore** (flex container) e i suoi **figli diretti** (flex items). Quando attivi `display: flex`, i figli si dispongono lungo un asse chiamato **main axis** (asse principale), che per default è orizzontale. L'asse perpendicolare si chiama **cross axis** (asse trasversale).
+
+Flexbox ragiona in **una sola dimensione alla volta**: riga O colonna. Non gestisce righe e colonne contemporaneamente. Per quello c'è Grid (lo vedremo nella prossima sezione).
+
+-----
+
+#### Proprietà del Contenitore
+
+Il contenitore flex ha tre proprietà principali: la **direzione** in cui disporre i figli, il **comportamento** quando non c'è spazio, e lo **spazio** tra gli elementi.
+
+```css
+.contenitore {
+  display: flex;
+
+  /* Direzione dell'asse principale */
+  flex-direction: row;            /* → orizzontale (default) */
+  flex-direction: column;         /* ↓ verticale */
+  flex-direction: row-reverse;    /* ← orizzontale invertito */
+  flex-direction: column-reverse; /* ↑ verticale invertito */
+
+  /* Comportamento quando non c'è spazio */
+  flex-wrap: nowrap;  /* Comprime tutto su una riga (default) */
+  flex-wrap: wrap;    /* Va a capo su più righe se necessario */
+
+  /* Spazio tra gli elementi */
+  gap: 1rem;
+}
+```
+
+`gap` è la proprietà più pulita per creare spazio tra gli elementi flex. Prima di `gap`, bisognava usare `margin` sui figli e ma poi andare a togliere il margine dal primo o dall'ultimo per evitare spazio extra ai bordi. Con `gap`, lo spazio esiste solo *tra* gli elementi, mai ai lati esterni.
+
+-----
+
+#### Allineamento sul Main Axis (`justify-content`)
+
+Immagina di avere cinque elementi in una riga, ma la riga è più larga di quanto gli elementi hanno bisogno. `justify-content` decide cosa fare con lo spazio in eccesso: concentrare gli elementi a sinistra, centrarli, distribuirli uniformemente.
+
+```css
+justify-content: flex-start;    /* |■ ■ ■          | (default) */
+justify-content: center;        /* |     ■ ■ ■     | */
+justify-content: flex-end;      /* |          ■ ■ ■| */
+justify-content: space-between; /* |■      ■      ■| */
+justify-content: space-around;  /* |  ■    ■    ■  | */
+justify-content: space-evenly;  /* | ■   ■   ■   ■ | */
+```
+
+`space-between` è quello che usi per una navbar con il logo a sinistra e i link a destra: il primo e l'ultimo elemento si attaccano ai bordi, lo spazio si distribuisce al centro. `space-evenly` distribuisce lo spazio in modo perfettamente uniforme, compresi i bordi, ed è più prevedibile di `space-around` (che dà metà dello spazio ai bordi).
+
+-----
+
+#### Allineamento sul Cross Axis (`align-items`)
+
+`align-items` controlla cosa succede nell'altra direzione. `justify-content` gestisce lo spazio lungo la riga (orizzontale), `align-items` gestisce come i figli si posizionano nell'altezza del contenitore (verticale).
+
+Il caso più comune: hai tre card in riga, ma una ha più testo delle altre ed è più alta. Le altre due si stirano per raggiungerla? Restano in alto? Si centrano? È `align-items` che ti permette di deciderlo.
+
+```css
+/* stretch (default): tutte le card diventano alte come la più alta */
+align-items: stretch;
+
+/* flex-start: ogni card mantiene la sua altezza, attaccate al bordo superiore */
+align-items: flex-start;
+
+/* center: ogni card mantiene la sua altezza, centrate nel mezzo */
+align-items: center;
+
+/* flex-end: ogni card mantiene la sua altezza, attaccate al bordo inferiore */
+align-items: flex-end;
+
+/* baseline: i testi delle card si allineano sulla stessa linea,
+   utile quando le card hanno padding o font-size diversi */
+align-items: baseline;
+```
+
+`stretch` è il valore più assurdo: pur non avendo chiesto alle card di avere la stessa altezza, con questo valore ce l'hanno. Se vuoi che ogni card sia alta quanto il suo contenuto, usa `flex-start`.
+
+Finora abbiamo visto come allineare gli elementi dentro una singola riga. Quando `flex-wrap: wrap` è attivo e quindi gli elementi vanno su più righe man mano che il contenitore si riempie, nasce un altro problema: come distribuire le righe stesse nell'altezza del contenitore. `align-content` risolve questo e accetta gli stessi valori di `justify-content`.
+
+-----
+
+#### Proprietà dei Figli (Flex Items)
+
+I figli di un contenitore flex hanno proprietà che controllano come crescono, si comprimono e si allineano individualmente.
+
+`flex-grow` determina quanto un elemento **cresce** per riempire lo spazio disponibile. Il valore 0 (default) significa "non crescere". Il valore 1 significa "prendi tutto lo spazio disponibile". Se due elementi hanno entrambi `flex-grow: 1`, si dividono lo spazio equamente. Se uno ha `flex-grow: 2` e l'altro `flex-grow: 1`, il primo prende il doppio dello spazio.
+
+`flex-shrink` determina quanto un elemento **si comprime** quando manca spazio. Il valore 0 significa "non comprimermi mai". Il valore 1 (default) significa "comprimimi proporzionalmente".
+
+`flex-basis` è la **dimensione iniziale** dell'elemento prima che `flex-grow` e `flex-shrink` entrino in azione. È come dire "parti da questa dimensione, poi cresci o comprimiti secondo le regole".
+
+```css
+.figlio {
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-basis: 200px;
+
+  /* La shorthand: grow shrink basis */
+  flex: 1 0 200px;
+}
+```
+
+I pattern più comuni:
+
+```css
+.cresce-equamente { flex: 1; }         /* Tutti i figli con flex: 1 prendono lo stesso spazio */
+.dimensione-fissa { flex: 0 0 300px; } /* 300px esatti, non cresce, non si comprime */
+.cresce-doppio    { flex: 2; }         /* Cresce il doppio rispetto a flex: 1 */
+```
+
+`align-self` permette a un singolo figlio di sovrascrivere l'`align-items` del contenitore:
+
+```css
+.contenitore {
+  display: flex;
+  align-items: flex-start; /* Tutti i figli in alto */
+}
+
+.figlio-speciale {
+  align-self: flex-end; /* Questo specifico figlio in basso */
+}
+```
+
+-----
+
+#### Errori Comuni con Flexbox
+
+```css
+/* ❌ "Perché i miei elementi non vanno a capo?" */
+.contenitore {
+  display: flex;
+  /* flex-wrap è nowrap di default: tutto viene compresso su una riga */
+}
+/* ✅ Aggiungi flex-wrap: wrap */
+.contenitore {
+  display: flex;
+  flex-wrap: wrap; /* Ora gli elementi vanno a capo quando non c'è spazio */
+  gap: 1rem;
+}
+
+/* ❌ "Perché le mie card hanno altezze diverse?" */
+.griglia-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start; /* Ogni card è alta quanto il suo contenuto */
+}
+/* ✅ Usa stretch (il default) per ottenere card di altezza identica */
+.griglia-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch; /* Tutte le card si allungano alla stessa altezza */
+}
+
+/* ❌ "Perché justify-content non funziona?" */
+.contenitore {
+  display: flex;
+  justify-content: center;
+}
+.figlio {
+  flex-grow: 1; /* Il figlio prende TUTTO lo spazio disponibile */
+}
+/* Non c'è spazio da distribuire, quindi justify-content non ha effetto.
+   ✅ Togli flex-grow se vuoi che justify-content funzioni. */
+```
+
+-----
+
+#### Pattern Pratici con Flexbox
+
+```css
+/* CENTRATURA PERFETTA (verticale e orizzontale) */
+.centro-perfetto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+/* Prima di Flexbox, centrare un div verticalmente richiedeva hack complicati.
+   Ora sono quattro righe. */
+
+/* NAVBAR: logo a sinistra, link a destra */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+/* FOOTER SEMPRE IN FONDO, anche se il contenuto è poco */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+main {
+  flex-grow: 1; /* Il main cresce per riempire tutto lo spazio */
+}
+/* Il footer viene spinto in fondo naturalmente */
+
+/* CARD CON IL BOTTONE SEMPRE IN FONDO */
+.scheda {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* La card riempie il suo contenitore */
+}
+.scheda .corpo {
+  flex-grow: 1; /* Il corpo della card cresce, spingendo il bottone in basso */
+}
+
+.scheda .azioni {
+  margin-top: auto; /* Alternativa a flex-grow: 1: il margine automatico spinge in basso */
+}
+```
+
+**Regola:** flexbox lavora in una dimensione (riga o colonna). `justify-content` distribuisce sul main axis, `align-items` allinea sul cross axis. Usa `gap` per gli spazi tra elementi. Per centrare: `display: flex; justify-content: center; align-items: center`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 18. Grid (Layout in Due Dimensioni)
+
+Flexbox organizza gli elementi in una direzione: riga o colonna. Ma quando hai bisogno di controllare righe e colonne **contemporaneamente**, serve Grid. Una griglia di card prodotto, il layout di una pagina con header, sidebar, contenuto e footer, una galleria di immagini con dimensioni diverse.
+
+#### Il Concetto Base
+
+La differenza concreta: con Flexbox, se gli elementi vanno a capo, ogni riga è indipendente dall'altra. Con Grid, le colonne si allineano su tutte le righe, come le celle di una tabella.
+
+```css
+.griglia {
+  display: grid;
+  grid-template-columns: 250px 1fr 250px;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem;
+}
+```
+
+Questo codice crea una griglia con tre colonne: la prima e la terza sono larghe 250px (fisse, simmetriche), la colonna centrale occupa tutto lo spazio rimanente. È il layout classico con sidebar sinistra, contenuto centrale e sidebar destra. La prima colonna occupa i primi 250px a sinistra, l'ultima gli ultimi 250px a destra, e `1fr` al centro prende tutto ciò che resta.
+
+Le righe funzionano allo stesso modo. `auto` significa "alta quanto il contenuto che contieni": l'header e il footer occupano solo lo spazio necessario. La riga centrale (`1fr`) prende tutto lo spazio verticale restante. Se al posto di `auto` usassi `1fr 1fr 1fr`, le tre righe si dividerebbero lo spazio equamente, e avresti un header e un footer enormi su schermi alti.
+
+L'unità `fr` (*fraction*) è specifica di Grid e distribuisce lo spazio disponibile proporzionalmente. `1fr 2fr` significa "la seconda colonna è il doppio della prima". `1fr 1fr 1fr` divide lo spazio in tre parti uguali.
+
+-----
+
+#### Definire la Griglia
+
+```css
+/* Tre colonne uguali */
+grid-template-columns: 1fr 1fr 1fr;
+
+/* Lo stesso con repeat(), più compatto */
+grid-template-columns: repeat(3, 1fr);
+
+/* Sidebar fissa a sinistra + contenuto flessibile. Due colonne totali. */
+grid-template-columns: 250px 1fr;
+
+/* Colonne con dimensione minima e massima */
+grid-template-columns: repeat(3, minmax(200px, 1fr));
+```
+
+Il pattern più potente di Grid è la **griglia responsive senza media query**:
+
+```css
+.galleria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+```
+
+`auto-fit` dice al browser "crea quante colonne servono per riempire lo spazio". `minmax(250px, 1fr)` dice "ogni colonna è larga almeno 250px, e se c'è spazio in più distribuiscilo equamente". Il risultato:
+
+```
+Desktop (1200px):  [card] [card] [card] [card]     → 4 colonne
+
+Tablet (768px):    [card] [card] [card]            → 3 colonne
+                   [card]
+
+Mobile (400px):    [card]                          → 1 colonna
+                   [card]
+                   [card]
+                   [card]
+
+Tutto automatico, senza una singola media query.
+```
+
+La differenza tra `auto-fit` e `auto-fill`: `auto-fit` allarga le colonne per riempire lo spazio residuo, `auto-fill` mantiene la dimensione minima delle colonne e lascia spazio vuoto a destra. Nella stragrande maggior parte dei casi, `auto-fit` è quello che vuoi.
+
+-----
+
+#### Posizionare gli Elementi nella Griglia
+
+Per default, gli elementi si dispongono in ordine automatico nel primo spazio disponibile. Ma puoi posizionarli esplicitamente.
+
+Per farlo devi pensare alle **linee** della griglia, non alle colonne. Le linee sono i bordi tra una colonna e l'altra. Una griglia con 3 colonne ha 4 linee:
+
+```
+linea:  1      2      3      4
+        │  C1  │  C2  │  C3  │
+```
+
+`grid-column: 1 / 3` significa "parti dalla linea 1 e arriva alla linea 3", quindi occupa le prime 2 colonne (C1 e C2). Non la terza, perché 3 è la linea di arrivo, non il numero di colonne.
+
+```css
+.elemento-largo {
+  grid-column: 1 / 3; /* Dalla linea 1 alla linea 3, occupa 2 colonne */
+}
+```
+
+Se non vuoi contare le linee, puoi usare `span` che dice semplicemente "occupa N colonne dalla posizione corrente":
+
+```css
+.elemento-largo {
+  grid-column: span 2; /* Occupa 2 colonne, non importa da dove parte */
+}
+
+.elemento-alto {
+  grid-row: span 3;    /* Occupa 3 righe */
+}
+```
+
+-----
+
+#### Grid Template Areas (Il Layout con i Nomi)
+
+Per layout complessi, `grid-template-areas` è il modo più leggibile di definire una griglia. Assegni un nome a ogni area e poi disegni la griglia visivamente nel codice.
+
+```css
+.pagina {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header  header"
+    "sidebar main"
+    "footer  footer";
+  min-height: 100vh;
+  gap: 1rem;
+}
+
+header  { grid-area: header; }
+aside   { grid-area: sidebar; }
+main    { grid-area: main; }
+footer  { grid-area: footer; }
+```
+
+Qui usiamo direttamente i selettori di tipo (`header`, `aside`, `main`, `footer`) invece delle classi, perché in un layout di pagina quei tag HTML semantici sono già unici. Se hai letto la <Link to="/docs/vademecum/html-real-world-vademecum#6-contenitori-semantici-dare-un-nome-alle-stanze">sezione 6 dell'HTML vademecum</Link> sui contenitori semantici, riconosci subito la struttura.
+
+Il codice "disegna" questo layout:
+
+```
+Desktop:
+┌──────────────────────────────────┐
+│              header              │
+├──────────┬───────────────────────┤
+│          │                       │
+│ sidebar  │         main          │
+│          │                       │
+├──────────┴───────────────────────┤
+│              footer              │
+└──────────────────────────────────┘
+```
+
+Le stringhe nel template *sono* il layout: `"header header"` significa che l'header occupa entrambe le colonne, `"sidebar main"` mette la sidebar a sinistra e il contenuto a destra. Per rendere il layout responsive, basta ridefinire le aree in una media query:
+
+```css
+@media (max-width: 768px) {
+  .pagina {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "main"
+      "sidebar"
+      "footer";
+  }
+}
+```
+
+```
+Mobile:
+┌──────────────────┐
+│      header      │
+├──────────────────┤
+│                  │
+│       main       │
+│                  │
+├──────────────────┤
+│      sidebar     │
+├──────────────────┤
+│      footer      │
+└──────────────────┘
+```
+
+Con tre righe hai trasformato un layout a due colonne in un layout a colonna singola. Nota come su mobile il contenuto principale (`main`) viene prima della sidebar. Questo perché tipicamente la sidebar contiene contenuti secondari: link di navigazione, filtri, widget, pubblicità, mentre `main` contiene il motivo per cui l'utente è sulla tua pagina.
+
+-----
+
+#### Allineamento nella Griglia
+
+Grid ha due livelli di allineamento, ed è importante distinguerli.
+
+Il primo livello è l'allineamento degli **elementi dentro le loro celle**. Ogni cella della griglia è un rettangolo, e l'elemento dentro può essere più piccolo della cella. `justify-items` lo posiziona orizzontalmente dentro la cella, `align-items` verticalmente.
+
+```css
+.griglia {
+  justify-items: center;  /* Ogni elemento centrato orizzontalmente nella sua cella */
+  align-items: center;    /* Ogni elemento centrato verticalmente nella sua cella */
+  place-items: center;    /* Shorthand per entrambi */
+}
+```
+
+Il secondo livello è l'allineamento della **griglia intera dentro il suo contenitore**. Se la griglia non occupa tutto lo spazio del contenitore (per esempio, tre colonne da 200px in un contenitore da 1000px), puoi decidere dove posizionare la griglia. `justify-content` la posiziona orizzontalmente, `align-content` verticalmente.
+
+```css
+.griglia {
+  justify-content: center;  /* La griglia centrata orizzontalmente nel contenitore */
+  align-content: center;    /* La griglia centrata verticalmente nel contenitore */
+  place-content: center;    /* Shorthand per entrambi */
+}
+```
+
+Avendo già imparato Flexbox, `justify-content` e `align-items` ti saranno familiari. La novità di Grid è `justify-items` e `place-items`, che non esistono in Flexbox, proprio perché quest'ultimo non ha celle.
+
+-----
+
+#### Errori Comuni con Grid
+
+```css
+/* ❌ "Le mie colonne non si adattano allo schermo" */
+.griglia {
+  display: grid;
+  grid-template-columns: 300px 300px 300px; /* Tre colonne fisse */
+}
+/* Su schermi sotto 900px le colonne debordano. */
+
+/* ✅ Usa fr o auto-fit + minmax per la flessibilità */
+.griglia {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+
+/* ❌ "Ho spazio vuoto a destra nella mia griglia" */
+.griglia {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+/* auto-fill mantiene la dimensione delle colonne e lascia spazio vuoto. */
+
+/* ✅ Se vuoi che le colonne si espandano per riempire, usa auto-fit */
+.griglia {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+
+/* ❌ "Grid-template-areas non funziona" */
+.pagina {
+  grid-template-areas:
+    "intestazione intestazione"
+    "laterale main"
+    "piede piede";
+}
+header { grid-area: header; }
+/* Il template dice "intestazione", grid-area dice "header": non combaciano */
+
+/* ✅ I nomi devono essere identici tra template e assegnazione */
+.pagina {
+  grid-template-areas:
+    "header header"
+    "sidebar main"
+    "footer footer";
+}
+header { grid-area: header; }
+```
+
+-----
+
+#### Quando Usare Grid vs Flexbox
+
+Questa è la domanda che ti farai più spesso: uso Flexbox o Grid?. La risposta dipende da quante direzioni devi controllare.
+
+**Flexbox** ragiona in una direzione alla volta. Metti gli elementi in riga e controlli come si distribuiscono orizzontalmente. Oppure li metti in colonna e controlli come si distribuiscono verticalmente. Ma non entrambe le cose contemporaneamente. Se gli elementi vanno a capo con `flex-wrap`, ogni riga è indipendente dall'altra: le colonne non si allineano tra le righe.
+
+**Grid** ragiona in due direzioni contemporaneamente. Definisci righe e colonne, e ogni elemento si posiziona in una cella precisa. Le colonne si allineano su tutte le righe.
+
+Un esempio concreto: quattro card prodotto.
+
+```css
+/* Con Flexbox: le card si distribuiscono in riga e vanno a capo */
+.lista-prodotti {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.lista-prodotti .card {
+  flex: 1 1 250px; /* Cresce, si comprime, minimo 250px */
+}
+/* Problema: se nella seconda riga c'è una sola card,
+   si espande per tutta la larghezza. Le colonne non si allineano. */
+
+/* Con Grid: le card si dispongono in una griglia regolare */
+.griglia-prodotti {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+/* Ogni card ha la stessa larghezza. Le colonne sono allineate.
+   Anche l'ultima riga rispetta la griglia. */
+```
+
+La regola pratica è: **Flexbox per i componenti e Grid per i layout di pagina e le griglie di elementi**. Una navbar è una lista di link in riga → Flexbox. Un gruppo di bottoni → Flexbox. Il layout con header, sidebar e contenuto → Grid. Una galleria di card → Grid.
+
+I due non si escludono. Un layout di pagina fatto con Grid può contenere una navbar fatta con Flexbox, che a sua volta contiene card il cui interno è organizzato con Flexbox. Nella pratica li userai insieme costantemente.
+
+**Regola:** se devi controllare una sola direzione (riga O colonna), usa Flexbox. Se devi controllare righe E colonne insieme, usa Grid.
+
+<br />
+<br />
+<br />
+<br />
+
+### 19. Responsive Design (Un Sito per Tutti gli Schermi)
+
+Un sito responsive si adatta a qualsiasi dimensione dello schermo, dal telefono al monitor ultrawide. Non è un extra, è un requisito: la maggior parte del traffico web viene da dispositivi mobili.
+
+#### L'Approccio Mobile-First
+
+Mobile-first significa scrivere prima il CSS per schermi piccoli, poi aggiungere complessità per schermi più grandi con le media query. È come costruire una casa: parti dalle fondamenta (il layout semplice, una colonna) e poi aggiungi piani sopra (colonne, sidebar, griglie complesse). Il contrario, partire dal layout desktop e cercare di semplificarlo per mobile, è come partire dal tetto e cercare di incastrarci le fondamenta sotto.
+
+```css
+/* Stile base: mobile (nessuna media query, è il punto di partenza) */
+.griglia-prodotti {
+  display: grid;
+  grid-template-columns: 1fr; /* Una sola colonna su mobile */
+  gap: 1rem;
+}
+
+/* Da 768px in su: tablet */
+@media (min-width: 768px) {
+  .griglia-prodotti {
+    grid-template-columns: repeat(2, 1fr); /* Due colonne */
+  }
+}
+
+/* Da 1024px in su: desktop */
+@media (min-width: 1024px) {
+  .griglia-prodotti {
+    grid-template-columns: repeat(3, 1fr); /* Tre colonne */
+    max-width: 1200px;
+    margin: 0 auto; /* Centrata con larghezza massima */
+  }
+}
+```
+
+`min-width` è l'operatore mobile-first: "a partire da questa larghezza, applica queste regole". `max-width` è l'approccio desktop-first: "fino a questa larghezza, applica queste regole". Scegli un approccio e mantienilo per tutto il progetto. Mescolarli ti creerà confusione perché l'ordine delle media query e la cascata interagiscono in modi non sempre prevedibili.
+
+Una precisazione importante: mobile-first è il consiglio di default perché la maggior parte dei siti ha traffico prevalentemente mobile. Ma non è un dogma. Se stai costruendo un'applicazione pensata per essere usata su desktop (un tool di sviluppo, una dashboard di analisi, un editor di contenuti e via dicendo), partire da mobile per poi adattare a desktop potrebbe significare costruire due volte lo stesso layout. In quel caso, desktop-first con un fallback per mobile è una scelta consapevole e legittima. La regola non è "sempre mobile-first", è "parti dal dispositivo che i tuoi utenti useranno di più".
+
+
+-----
+
+#### Breakpoint
+
+I breakpoint sono le soglie a cui il layout cambia. Non fissarti sui dispositivi specifici ("iPhone 17 è largo 393px"), perché i dispositivi cambiano ogni anno e le risoluzioni sono infinite. Ragiona invece per **dove il tuo layout si rompe**: se una riga di card diventa troppo stretta a 700px, quello è il tuo breakpoint.
+
+I breakpoint di riferimento più comuni:
+
+```css
+@media (min-width: 480px)  { /* Mobile grande / piccolo tablet */ }
+@media (min-width: 768px)  { /* Tablet */ }
+@media (min-width: 1024px) { /* Laptop */ }
+@media (min-width: 1200px) { /* Desktop */ }
+```
+
+-----
+
+#### Media Query Oltre la Larghezza
+
+Le media query non servono solo per la larghezza dello schermo. Ci sono preferenze dell'utente che puoi e devi rispettare.
+
+```css
+/* Dark mode: segue le preferenze di sistema dell'utente */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --colore-testo: #dcdcdc;
+    --colore-sfondo: #1f1f1f;
+  }
+}
+
+/* Animazioni ridotte: per utenti con disturbi vestibolari o epilessia */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Orientamento del dispositivo */
+@media (orientation: landscape) {
+  .hero { height: 50vh; }
+}
+```
+
+`prefers-reduced-motion` è una media query di accessibilità che non puoi ignorare. Alcuni utenti hanno impostato nel sistema operativo la preferenza per ridurre le animazioni perché queste possono causare nausea, vertigini o crisi epilettiche. Rispettare questa preferenza non è opzionale.
+
+-----
+
+#### Responsive Senza Media Query
+
+Molte tecniche CSS moderne rendono il layout responsive senza bisogno di media query esplicite. Spesso sono la soluzione più elegante.
+
+```css
+/* Grid con auto-fit (visto nella precedente sezione) */
+.galleria {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Flexbox con wrap: gli elementi vanno a capo quando non c'è spazio */
+.lista-tag {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Tipografia fluida con clamp() (visto nella sezione 8) */
+h1 {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+/* Immagini che non debordano mai dal contenitore */
+img {
+  max-width: 100%;
+  height: auto;
+}
+```
+
+Il pattern `img { max-width: 100%; height: auto; }` è così fondamentale che dovrebbe far parte di ogni reset CSS. Senza di esso, un'immagine larga 1200px deborda dal suo contenitore su schermi più piccoli, creando scroll orizzontale.
+
+-----
+
+#### Container Query (Il Responsive dei Componenti)
+
+Immagina di aver creato una card autore con la foto a sinistra e il testo a destra. Nel contenuto principale funziona bene perché ha spazio. E se vuoi riutilizzare la stessa card in una sidebar, o in un widget "Chi scrive", o in una colonna più stretta? Con le media query non puoi: la media query guarda la finestra del browser, non lo spazio che la card ha a disposizione. Se la finestra è larga (desktop), la media query applica il layout orizzontale anche se la card è incastrata in uno spazio di 300px. Il risultato: la card è schiacciata e illeggibile.
+
+Le **container query** risolvono questo problema. Invece di chiedersi "quanto è larga la finestra?", si chiedono "quanto è largo il mio contenitore?".
+
+```css
+/* Dici al browser: questi elementi sono contenitori da monitorare */
+.sidebar {
+  container-type: inline-size;
+}
+
+.contenuto-principale {
+  container-type: inline-size;
+}
+
+/* La card si adatta allo spazio che ha, non alla finestra */
+@container (min-width: 400px) {
+  .scheda-autore {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+@container (max-width: 399px) {
+  .scheda-autore {
+    text-align: center;
+  }
+  .scheda-autore img {
+    margin: 0 auto 1rem;
+  }
+}
+```
+
+La stessa `.scheda-autore` mostra un layout orizzontale nel contenuto principale (dove ha spazio) e un layout verticale nella sidebar (dove lo spazio è stretto). Abbiamo quindi lo stesso componente e stesso CSS ma con un comportamento diverso in base allo spazio a disposizione.
+
+**Regola:** parti da mobile e aggiungi complessità con `min-width`. Rispetta `prefers-reduced-motion`. Prima di aggiungere una media query, verifica se `auto-fit`, `flex-wrap` o `clamp()` risolvono il problema senza.
+
+<br />
+<br />
+<br />
+<br />
+
+### 20. Transizioni (Cambiamenti Graduali)
+
+Senza transizione, i cambiamenti di stile sono istantanei: il colore cambia di colpo, l'ombra appare dal nulla. Con una transizione, il cambiamento diventa graduale: il colore sfuma, l'ombra cresce fluidamente. Le transizioni sono lo strumento per dare *feedback* all'utente, per comunicargli "hai interagito con questo elemento e qualcosa è successo".
+
+#### La Proprietà `transition`
+
+La sintassi è: `transition: proprietà durata timing-function ritardo`.
+
+```css
+.bottone {
+  background-color: #0066cc;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.bottone:hover {
+  background-color: #004499;
+}
+```
+
+Al passaggio del mouse, il colore sfuma da `#0066cc` a `#004499` in 0.3 secondi. Senza `transition`, il cambio sarebbe istantaneo e quindi brusco.
+
+Un dettaglio fondamentale: `transition` va dichiarata **sullo stato base** dell'elemento, non sullo stato `:hover`. Questo perché la transizione deve funzionare sia all'andata (quando il mouse entra) che al ritorno (quando il mouse esce).
+
+```css
+/* ❌ SBAGLIATO: la transizione è solo sul :hover */
+.bottone:hover {
+  background-color: #004499;
+  transition: background-color 0.3s ease;
+  /* La sfumatura funziona solo all'entrata del mouse.
+     All'uscita, il colore torna istantaneamente. */
+}
+
+/* ✅ CORRETTO: la transizione è sull'elemento base */
+.bottone {
+  background-color: #0066cc;
+  transition: background-color 0.3s ease;
+}
+.bottone:hover {
+  background-color: #004499;
+  /* La sfumatura funziona sia all'entrata che all'uscita */
+}
+```
+
+Per animare più proprietà, separale con virgola:
+
+```css
+.scheda {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scheda:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+```
+
+`transition: all 0.3s ease` anima qualsiasi proprietà che cambia. È comodo ma meno performante, perché il browser deve monitorare tutte le proprietà. Quando sai quali cambieranno, elencale esplicitamente.
+
+-----
+
+#### Le Timing Function
+
+La timing function controlla la *velocità* dell'animazione durante il suo corso. Non tutte le animazioni devono avere la stessa accelerazione.
+
+```css
+transition: transform 0.3s ease;        /* Lento → veloce → lento (default, naturale) */
+transition: transform 0.3s linear;      /* Velocità costante (meccanico) */
+transition: transform 0.3s ease-in;     /* Lento all'inizio, accelera */
+transition: transform 0.3s ease-out;    /* Veloce all'inizio, rallenta */
+transition: transform 0.3s ease-in-out; /* Lento all'inizio e alla fine */
+```
+
+`ease` è il default e funziona bene nella maggior parte dei casi. `ease-out` è la scelta migliore per animazioni di ingresso (un elemento che appare): l'elemento arriva veloce e rallenta dolcemente. `linear` è per barre di progresso e rotazioni continue dove una velocità costante ha senso.
+
+In linea di massima le durate ideali per le interazioni sono tra **0.2s e 0.4s**. Sotto 0.15s l'animazione è così veloce che non la percepisci. Sopra 0.5s l'interfaccia sembra lenta.
+
+Per curve personalizzate, `cubic-bezier()` accetta quattro valori che definiscono la forma dell'accelerazione. Se usi Figma o un altro tool di design, le curve di animazione che imposti lì si traducono direttamente in CSS:
+
+```css
+/* La curva personalizzata che hai creato in Figma */
+transition: transform 800ms cubic-bezier(0.87, 0, 0.24, 0.99);
+```
+
+```
+In Figma               In CSS                     Comportamento
+───────────────────────────────────────────────────────────────
+Linear                 linear                     Velocità costante
+Ease                   ease                       Naturale
+Ease In                ease-in                    Accelera
+Ease Out               ease-out                   Rallenta
+Ease In and Out        ease-in-out                Fluido
+Custom Bezier          cubic-bezier(a, b, c, d)   La tua curva personalizzata
+```
+
+-----
+
+#### Pattern Pratici con le Transizioni
+
+```css
+/* BOTTONE con feedback completo: colore + elevazione + pressione */
+.bottone {
+  background-color: #0066cc;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  transform: translateY(0);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.bottone:hover {
+  background-color: #004499;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.bottone:active {
+  transform: translateY(0); /* Si schiaccia quando premi */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* INPUT che evidenzia il focus */
+.campo {
+  border: 2px solid #e0e0e0;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.campo:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+  outline: none;
+}
+
+/* LINK con sottolineatura che appare gradualmente */
+.link-elegante {
+  text-decoration: none;
+  color: #0066cc;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+.link-elegante:hover {
+  border-bottom-color: currentColor;
+}
+```
+
+**Regola:** metti la `transition` sullo stato base, non su `:hover`. Specifica le proprietà animate invece di usare `all`. Durate tra 0.2s e 0.4s per le interazioni. Usa `ease-out` per gli elementi che appaiono o entrano in scena (un menu dropdown che si apre, un modale che appare, un elemento che scende dall'alto).
+
+<br />
+<br />
+<br />
+<br />
+
+### 21. Animazioni (Movimenti Complessi)
+
+Le transizioni animano il passaggio tra due stati (A → B). Le animazioni CSS permettono invece sequenze con più passaggi (A → B → C → D), ripetizioni, cicli e controllo preciso sui fotogrammi intermedi.
+
+#### `@keyframes` e `animation`
+
+Un'animazione si definisce in due passaggi: prima dichiari i **fotogrammi chiave** con `@keyframes`, poi li applichi a un elemento con `animation`.
+
+```css
+/* Passo 1: definisci i fotogrammi */
+@keyframes comparsa {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Passo 2: applica l'animazione */
+.elemento-animato {
+  animation: comparsa 0.5s ease-out;
+}
+```
+
+L'elemento parte invisibile e spostato 20px verso il basso, poi sfuma in vista salendo alla sua posizione naturale. Questo pattern di "fade in from below" è uno dei più usati nel web design per dare vita ai contenuti quando appaiono nella pagina.
+
+Per animazioni con più passaggi, usi le **percentuali** al posto di `from`/`to`, ad esempio:
+
+```css
+@keyframes rimbalzo {
+  0%   { transform: translateY(0); }
+  25%  { transform: translateY(-30px); }
+  50%  { transform: translateY(0); }
+  75%  { transform: translateY(-15px); }
+  100% { transform: translateY(0); }
+}
+
+.pallina {
+  animation: rimbalzo 1s ease-in-out;
+}
+```
+
+-----
+
+#### Le Proprietà dell'Animazione
+
+Una volta definiti i keyframes, controlli *come* l'animazione si comporta: quanto dura, quante volte si ripete, se mantiene lo stato finale.
+
+```css
+.elemento {
+  animation-name: comparsa;            /* Il nome dei @keyframes */
+  animation-duration: 0.5s;            /* Quanto dura */
+  animation-timing-function: ease-out; /* Curva di velocità */
+  animation-delay: 0.2s;               /* Attesa prima di iniziare */
+  animation-iteration-count: 1;        /* Quante volte (infinite per un loop) */
+  animation-direction: normal;         /* normal, reverse, alternate */
+  animation-fill-mode: forwards;       /* Mantiene lo stato finale */
+
+  /* Shorthand (lo stesso, in una riga) */
+  animation: comparsa 0.5s ease-out 0.2s 1 normal forwards;
+}
+```
+
+`animation-fill-mode: forwards` è fondamentale. Senza di esso, alla fine dell'animazione l'elemento torna di colpo al suo stato originale (ad esempio, torna invisibile). Con `forwards`, l'elemento mantiene l'aspetto dell'ultimo fotogramma. È quasi sempre quello che vuoi.  
+L'unica eccezione è quando usi `animation-iteration-count: infinite`: in quel caso `forwards` non ha nessun effetto ed è inutile aggiungerlo, perché un'animazione in loop non raggiunge mai uno stato finale su cui agire.
+
+`animation-direction: alternate` fa andare l'animazione avanti e indietro, perfetto per effetti di pulsazione:
+
+```css
+@keyframes pulsazione {
+  from { transform: scale(1); }
+  to   { transform: scale(1.05); }
+}
+
+.cuore {
+  animation: pulsazione 0.8s ease-in-out infinite alternate;
+  /* Cresce, poi torna, poi cresce, all'infinito */
+}
+```
+
+-----
+
+#### Animazioni e Accessibilità
+
+Non tutti gli utenti possono guardare animazioni senza conseguenze. Persone con disturbi vestibolari, epilessia o sensibilità al movimento possono avere reazioni fisiche concrete: nausea, vertigini, crisi. La media query `prefers-reduced-motion` ti permette di rispettare le loro preferenze di sistema.
+
+```css
+.elemento-animato {
+  animation: comparsa 0.5s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elemento-animato {
+    animation: none;
+    opacity: 1; /* Mostra l'elemento direttamente, senza animazione */
+  }
+}
+```
+
+-----
+
+#### Animazioni Performanti
+
+Come abbiamo visto nella <Link to="/docs/vademecum/css-real-world/visual-styling#14-trasformazioni-muovere-ruotare-scalare">sezione 14</Link>, animare `width`, `height`, `top`, `left` o `margin` costringe il browser a ricalcolare il layout ad ogni fotogramma. `transform` e `opacity` sono le proprietà più performanti perché saltano reflow e paint.
+
+```css
+/* ❌ Costoso: reflow ad ogni fotogramma */
+@keyframes sposta-male {
+  from { left: 0; }
+  to   { left: 200px; }
+}
+
+/* ✅ Performante: nessun reflow */
+@keyframes sposta-bene {
+  from { transform: translateX(0); }
+  to   { transform: translateX(200px); }
+}
+```
+
+La proprietà `will-change` suggerisce al browser di prepararsi in anticipo per un elemento che sta per essere animato. Usala con parsimonia: applicarla a troppi elementi spreca memoria.
+
+```css
+.scheda {
+  will-change: transform;
+  transition: transform 0.3s ease;
+}
+```
+
+**Regola:** `@keyframes` per sequenze con più passaggi. `animation-fill-mode: forwards` per mantenere lo stato finale. `transform` e `opacity` sono le proprietà più performanti da animare. Rispetta sempre tutti gli utenti con `prefers-reduced-motion`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 22. Overflow e Scrolling Avanzato
+
+L'overflow si verifica quando il contenuto di un elemento è più grande del suo contenitore. Il CSS offre diversi modi per gestirlo, dal nascondere il contenuto in eccesso al creare aree scrollabili personalizzate e slider nativi senza JavaScript.
+
+#### La Proprietà `overflow`
+
+Quando il contenuto non entra nel suo contenitore (un testo troppo lungo per un box a altezza fissa, un'immagine più larga del suo wrapper), devi decidere cosa succede al contenuto in eccesso. La proprietà `overflow` ti dà quattro opzioni:
+
+```css
+overflow: visible;  /* Il contenuto esce dal contenitore (default) */
+overflow: hidden;   /* Il contenuto in eccesso viene tagliato */
+overflow: scroll;   /* Scrollbar sempre visibile, anche se non serve */
+overflow: auto;     /* Scrollbar solo quando serve (la scelta migliore) */
+```
+
+Puoi controllare i due assi separatamente con `overflow-x` e `overflow-y`:
+
+```css
+.galleria-orizzontale {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;   /* Scroll orizzontale quando serve */
+  overflow-y: hidden;  /* Nessun scroll verticale */
+}
+```
+
+-----
+
+#### Scroll Fluido
+
+`scroll-behavior: smooth` rende lo scrolling graduale quando l'utente clicca un link interno alla pagina (quelli con `href="#sezione"`).
+
+```css
+html {
+  scroll-behavior: smooth;
+}
+```
+
+Senza questa proprietà, cliccando `<a href="#contatti">` il browser salta istantaneamente alla sezione. Con `smooth`, ci scorre gradualmente. Come per tutte le animazioni, rispetta chi preferisce ridurre il movimento:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto; /* Torna al salto istantaneo */
+  }
+}
+```
+
+-----
+
+#### Scroll Snap (Slider Nativi Senza JavaScript)
+
+Lo scroll snap "aggancia" lo scroll a posizioni predefinite, creando l'effetto di uno slider o carosello con puro CSS. La proprietà `scroll-snap-type` richiede due informazioni: l'asse su cui agganciare (`x` per orizzontale, `y` per verticale) e la forza dello snap (`mandatory` forza l'aggancio, `proximity` lo attiva solo se l'utente è vicino a un punto).
+
+```css
+.carosello {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory; /* Aggancio obbligatorio sull'asse orizzontale */
+  gap: 1rem;
+  /* Nasconde la scrollbar ma mantiene lo scroll */
+  scrollbar-width: none;
+}
+.carosello::-webkit-scrollbar {
+  display: none;
+}
+
+.carosello .slide {
+  flex: 0 0 100%;         /* Ogni slide occupa tutta la larghezza */
+  scroll-snap-align: start; /* Si aggancia all'inizio del contenitore */
+}
+```
+
+Il vantaggio rispetto a un carosello JavaScript: zero dipendenze, zero kilobyte di JS, performance nativa del browser, funziona anche se l'utente ha JavaScript disabilitato.
+
+-----
+
+#### Scrollbar Personalizzate
+
+Le scrollbar di default del browser sono funzionali, ma se vuoi adeguarle allo stile del sito devi personalizzarle.
+
+```css
+/* Standard moderno */
+.pannello {
+  scrollbar-width: thin;
+  scrollbar-color: #0066cc #f0f0f0; /* colore cursore  colore traccia */
+}
+
+/* WebKit/Chromium (versioni precedenti) */
+.pannello::-webkit-scrollbar {
+  width: 8px;
+}
+.pannello::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+.pannello::-webkit-scrollbar-thumb {
+  background: #0066cc;
+  border-radius: 4px;
+}
+.pannello::-webkit-scrollbar-thumb:hover {
+  background: #004499;
+}
+```
+
+**Regola:** usa `overflow: auto` (non `scroll`) per mostrare la scrollbar solo quando serve. `scroll-snap` crea caroselli nativi senza JavaScript. Rispetta `prefers-reduced-motion` per `scroll-behavior: smooth`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 23. Feature Detection e Performance
+
+#### `@supports` (Il CSS Capisce Se Stesso)
+
+`@supports` testa se il browser supporta una proprietà prima di usarla. È il modo sicuro di adottare funzionalità CSS nuove fornendo un fallback per i browser più vecchi.
+
+```css
+/* Layout base per tutti */
+.griglia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Se il browser supporta Grid, lo preferisce */
+@supports (display: grid) {
+  .griglia {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+/* Effetto vetro solo dove supportato */
+@supports (backdrop-filter: blur(10px)) {
+  .barra-navigazione {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+  }
+}
+```
+
+Puoi anche testare l'assenza di supporto:
+
+```css
+@supports not (scroll-snap-type: x mandatory) {
+  .carosello {
+    /* Fallback senza snap */
+    overflow-x: auto;
+  }
+}
+```
+
+-----
+
+#### Performance CSS
+
+Il browser segue un processo in quattro fasi per disegnare la pagina: **Style** (calcola le regole), **Layout** (calcola posizioni e dimensioni), **Paint** (disegna i pixel) e **Composite** (combina i livelli).
+
+Cambiare `width`, `height`, `margin`, `padding`, `top`, `left` attiva tutte e quattro le fasi. Cambiare `color`, `background-color`, `box-shadow` salta il Layout ma richiede Paint. Cambiare `transform` e `opacity` arriva direttamente al Composite, saltando Layout e Paint.
+
+| Proprietà | Fasi attivate | Costo |
+|----------|--------------|-----------------|
+| width, margin | Style+Layout+Paint+Composite | Alto (reflow completo) |
+| top, left | Style+Layout+Paint+Composite | Alto se su elementi in flusso, medio su `absolute`/`fixed`
+| color, background | Style+Paint+Composite | Medio |
+| transform, opacity | Style+Composite | Basso (se l'elemento è su un layer separato) |
+
+Nei browser moderni `transform` e `opacity` vengono quasi sempre gestiti direttamente dal compositor (il componente del motore di rendering del browser che esegue la fase di Composite) durante le animazioni, ma se vuoi garantirlo esplicitamente puoi usare `will-change: transform`, che dice al browser di preparare in anticipo un layer separato per quell'elemento
+
+Queste due proprietà diventano rilevanti quando noti rallentamenti concreti. Se la tua pagina scrolla in modo fluido e le animazioni non scattano, non hai bisogno di aggiungerle.
+
+Se invece hai una pagina lunga con decine di sezioni e noti che lo scroll rallenta, `content-visibility: auto` dice al browser "non calcolare le sezioni che l'utente non sta vedendo". È diverso dal lazy loading delle immagini (che ritarda solo il *download* del file): `content-visibility` fa un passo prima e dice al browser di non calcolare nemmeno il *layout* delle sezioni fuori schermo. Il problema è che non sa quanto sono alte. È quindi come se quella porzione di pagina non esistesse finché non ti avvicini scrollando.
+
+Se hai un widget complesso che si aggiorna spesso (un grafico, una chat, un feed in tempo reale) e il resto della pagina rallenta quando il widget si aggiorna, `contain: layout style` dice al browser "le modifiche dentro questo elemento non influenzano il resto della pagina, non ricalcolare tutto".
+
+```css
+/* Pagina lunga con molte sezioni: il browser renderizza solo quelle visibili */
+.sezione {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px; /* Altezza stimata, poi il browser ricorda quella reale */
+}
+
+/* Widget che si aggiorna spesso: le modifiche restano isolate */
+.widget-chat {
+  contain: layout style;
+}
+```
+
+`contain-intrinsic-size` è necessario con `content-visibility`: dato che il browser non calcola le sezioni fuori schermo (non ne conosce ancora l'altezza). Senza un'altezza stimata, la scrollbar salterebbe ogni volta che una sezione entra nello schermo. Il valore `auto` prima di `500px` fa si che la prima volta il browser utilizzi 500px come stima, ma una volta che l'utente scrolla fino a quella sezione e il browser ne calcola l'altezza reale, se la ricordi. Pertanto, negli scroll successivi il browser userà l'altezza reale e non la stima.
+
+-----
+
+#### CSS Counters (Numerazione Automatica)
+
+I CSS counters creano numerazione automatica senza JavaScript e senza modificare l'HTML. Sono utili per liste personalizzate, capitoli, note.
+
+```css
+body {
+  counter-reset: sezione; /* Inizializza il contatore a 0 */
+}
+
+h2::before {
+  counter-increment: sezione; /* +1 ad ogni h2 */
+  content: counter(sezione) ". "; /* Mostra il numero prima del testo */
+  color: #0066cc;
+  font-weight: 700;
+}
+```
+
+Ogni `<h2>` mostra automaticamente "1. Titolo", "2. Titolo", "3. Titolo" senza numeri scritti nell'HTML. Se riordini le sezioni, i numeri si aggiornano da soli.
+
+**Regola:** usa `@supports` per adottare funzionalità nuove senza rompere browser vecchi. Anima solo `transform` e `opacity`. `content-visibility: auto` velocizza le pagine lunghe.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (Layout e Responsive in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| `display` | `inline-block` per elementi in riga con dimensioni controllabili | Confondere `display: none` (rimuove dal flusso) con `visibility: hidden` (nasconde ma mantiene lo spazio) |
+| `float` | Solo per testo che avvolge immagini, mai per il layout | Usare `float` per creare colonne (usa Flexbox o Grid) |
+| `relative` + `absolute` | Il pattern per posizionare un figlio dentro il genitore | Dimenticare `position: relative` sul genitore |
+| `position: sticky` | Si attacca quando raggiunge la soglia specificata | Genitore troppo piccolo o con `overflow: hidden` |
+| `z-index` | Solo su elementi posizionati. Valori distanziati (1, 10, 100) | I figli non escono dal contesto di stacking del genitore |
+| Flexbox | Una dimensione. `justify-content` sul main, `align-items` sul cross | Cercare di fare una griglia 2D con flexbox (serve Grid) |
+| `flex: 1` | L'elemento cresce per riempire lo spazio disponibile | Non capire la differenza tra `flex-grow`, `flex-shrink` e `flex-basis` |
+| Grid | Due dimensioni: righe e colonne insieme | Usare Grid per un semplice allineamento in riga (Flexbox basta) |
+| `auto-fit` + `minmax()` | Griglia responsive senza media query | Confondere `auto-fit` (allarga le colonne) con `auto-fill` (lascia spazio vuoto) |
+| Grid linee vs `span` | Le linee sono i bordi tra le colonne, non le colonne | `grid-column: 1 / 3` occupa 2 colonne, non 3 |
+| `grid-template-areas` | Layout leggibile con nomi. Le stringhe *sono* il layout | Nomi diversi tra template e `grid-area` |
+| Grid vs Flexbox | Una direzione → Flexbox. Due direzioni → Grid | Usare Flexbox per una griglia dove le colonne devono allinearsi |
+| Mobile-first | `min-width` per aggiungere complessità da mobile a desktop | Mescolare `min-width` e `max-width` nello stesso progetto |
+| `prefers-reduced-motion` | Rispetta chi chiede meno animazioni | Ignorare questa preferenza (è una questione di salute) |
+| Container query | Si adattano al contenitore, non alla finestra | Dimenticare `container-type: inline-size` sul genitore |
+| Transizioni | `transition` sullo stato base, durate 0.2-0.4s | Mettere `transition` su `:hover` (funziona solo in una direzione) |
+| Timing function | Figma → CSS: stesse curve, stessi nomi | Non conoscere `cubic-bezier()` per curve personalizzate |
+| `animation-fill-mode` | `forwards` mantiene lo stato finale. Inutile con `infinite` | L'elemento torna allo stato iniziale senza `forwards` |
+| Scroll snap | `scroll-snap-type: x mandatory` per slider nativi | Dimenticare `mandatory` e avere uno snap che non si attiva |
+| `@supports` | Testare il supporto prima di usare funzionalità nuove | Non fornire fallback per browser che non supportano la proprietà |
+| `content-visibility` | Diverso dal lazy loading: non calcola nemmeno il layout | Dimenticare `contain-intrinsic-size` e avere scrollbar che saltano |
+| Performance | `transform` e `opacity` saltano reflow e paint | Animare proprietà costose e avere rallentamenti su mobile |

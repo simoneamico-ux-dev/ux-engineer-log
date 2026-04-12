@@ -1,0 +1,1120 @@
+---
+sidebar_position: 2
+title: Visual Styling
+description: Typography, colors, backgrounds, borders, shadows, CSS variables, filters, and transformations.
+---
+
+import Link from '@docusaurus/Link';
+
+# Part II: Visual Styling
+
+Now that you know the fundamentals, the box model, and units of measurement, it's time to transform the browser's gray boxes into something people actually want to look at. This part covers everything related to concrete visual appearance: text, colors, backgrounds, shadows, and effects.
+
+---
+
+## Visual Styling
+
+### 9. Typography (Giving Voice to Text)
+
+Most of the content on any web page is text: headings, paragraphs, links, buttons, labels. Controlling how that text looks is what we'll cover in this section.
+
+#### External Fonts (Google Fonts)
+
+Browsers only have access to the fonts installed on the user's operating system. For example, Windows has Arial and Times New Roman, macOS has San Francisco and Helvetica, Linux has Ubuntu, Cantarell, DejaVu. The problem is they're not the same: your page shows up with a different font on every system. To have a consistent look and use custom professional fonts, you need to import them from an external source.
+
+Google Fonts is the most widely used service: it offers hundreds of free fonts. You import them with a `<link>` tag in the `<head>` of your HTML document, before your stylesheet (so the font is already available when the CSS requests it).
+
+```html
+<!-- In the <head> of the HTML document, before the stylesheet -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Raleway:wght@700&display=swap" rel="stylesheet">
+```
+
+The link above is an example. In practice, you go to Google Fonts, pick the font you like, select the weights you need, and the platform generates the `<link>` ready to copy into your `<head>`.
+The numbers after `wght@` indicate the weights: 400 is regular, 700 is bold, 300 is light. Only import the ones you actually use, because each weight is an extra file to download.
+
+```css
+body {
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Raleway', 'Helvetica Neue', sans-serif;
+}
+```
+
+The names after the imported font (`Arial`, `sans-serif`) are the **fallbacks**: if the external font doesn't load, the browser uses the next one available in the list, and so on. The last value is always a **generic family**: `serif` (with serifs, like Times New Roman), `sans-serif` (without serifs, like Arial), or `monospace` (fixed-width, like Courier, perfect for code).
+
+```css
+/* ❌ WRONG, no fallback: if the font doesn't load, the browser uses its default */
+body {
+  font-family: 'Open Sans';
+}
+
+/* ✅ CORRECT, fallback chain with final generic family */
+body {
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+}
+```
+
+The `display=swap` parameter in the Google Fonts URL is important: it tells the browser to immediately show the text with a fallback font and then swap it when the external font is ready. Without `display=swap`, the browser might hide the text until the font is loaded, leaving the user staring at a blank page.
+
+-----
+
+#### Icons on the Web
+
+Icons are added to a site mainly in two ways: as **SVG** (the most flexible way) or through **icon libraries** like Font Awesome.
+
+An SVG file is a vector image that you can insert directly into the HTML. The advantage is total control: you can change its color with CSS, dimensions scale without losing quality, and you don't need to load an external library. If you use a design tool like Figma, you can export icons as SVG and paste them into the code.
+
+```html
+<!-- Inline SVG: total control with CSS -->
+<button>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+    <polyline points="17 21 17 13 7 13 7 21"/>
+  </svg>
+  Save
+</button>
+```
+
+`stroke="currentColor"` makes the icon follow the text color, as we'll see with `currentColor` in <a href="#10-colors-the-webs-palette">section 10</a>.
+
+If you don't need to manipulate the icon with CSS (change its color on hover, animate it), you can also save it as a `.svg` file in your project folder (usually in the "assets" folder) and use it like a regular image:
+
+```html
+<!-- SVG as external file: cleaner HTML, less CSS control -->
+<img src="assets/icons/save.svg" alt="Save" width="20" height="20">
+```
+
+Inline SVG when you want to control it with CSS, SVG as a file when it's a static image you don't need to manipulate.
+
+Another possible route is **Font Awesome**, a library that offers thousands of icons usable through CSS classes. You'll encounter it in many tutorials and existing projects.
+
+```html
+<!-- In the <head> -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+```
+
+```html
+<i class="fab fa-facebook-f"></i>    <!-- Facebook Logo -->
+<i class="fas fa-heart"></i>         <!-- Filled heart -->
+<i class="far fa-heart"></i>         <!-- Empty heart -->
+```
+
+The classes `fab` (Brands), `fas` (Solid), and `far` (Regular) indicate the icon style. Font Awesome is convenient for quick prototyping, but it has a limitation: many icons are on the paid plan, and you load an entire library even if you only use 5 icons. With SVGs, you load only what you need.
+
+Regardless of the method you choose, the accessibility detail is the same: if the icon is decorative (next to text that already communicates the meaning), hide it from the screen reader. If it's the only content in a button, give it a label.
+
+```html
+<!-- Decorative icon: the screen reader ignores it -->
+<button><i class="fas fa-save" aria-hidden="true"></i> Save</button>
+
+<!-- Icon without text: needs a label -->
+<button aria-label="Save"><i class="fas fa-save"></i></button>
+```
+
+-----
+
+#### Font Properties
+
+```css
+.heading {
+  font-size: 2.5rem;        /* Text size */
+  font-weight: 700;         /* Weight: from 100 (thinnest) to 900 (heaviest) */
+  font-style: italic;       /* Italic. Values: normal, italic. If you don't add this property, normal is applied by default */
+  font-variant: small-caps; /* Small caps */
+}
+```
+
+The numeric values of `font-weight` correspond to names you may have already encountered: 100 is *Thin*, 300 is *Light*, 400 is *Normal* (the default), 500 is *Medium*, 600 is *Semi-Bold*, 700 is *Bold*, 900 is *Heavy*. Not all fonts support all weights: if you request a weight that doesn't exist, the browser uses the nearest available one.
+
+There's a shorthand that combines everything into one line. The order is strict: `font: style weight size/line-height family`.
+
+```css
+.heading {
+  font: italic 700 2.4rem/1.2 'Raleway', sans-serif;
+}
+```
+
+The shorthand is compact but less readable. Separate properties are clearer, especially when you don't need to set all the values.
+
+-----
+
+#### `line-height` (The Space That Lets Text Breathe)
+
+`line-height` controls the space between one line of text and the next. It's one of the most underrated properties, but it has a huge impact on readability.
+
+```css
+/* Body text: 1.5-1.6 is the readability standard */
+p {
+  line-height: 1.6;
+}
+
+/* Headings: 1.1-1.2 is enough (short lines, little need for spacing) */
+h1 {
+  line-height: 1.1;
+}
+```
+
+The value `1.6` means "1.6 times the font size". If the font is 16px, the space between lines is 25.6px. Notice how the value **has no unit**. A `line-height: 1.6` (without units) scales proportionally with the font-size of the element and its children. A `line-height: 24px` (with units) is fixed, and if a child has a different font-size, the line spacing doesn't adapt.
+
+```css
+/* ❌ With fixed units: if a child has a larger font-size, lines overlap */
+.container {
+  font-size: 16px;
+  line-height: 24px; /* Fixed 24px */
+}
+.container h2 {
+  font-size: 32px; /* The text is large but lines stay at 24px: they overlap */
+}
+
+/* ✅ Without units: line-height scales with each element */
+.container {
+  font-size: 16px;
+  line-height: 1.5; /* For body text: 16 * 1.5 = 24px */
+}
+.container h2 {
+  font-size: 32px; /* Line-height scales: 32 * 1.5 = 48px */
+}
+```
+
+Why 1.5-1.6 and not 1.0 or 2.0? A `line-height: 1.0` makes lines touch each other, making text claustrophobic and hard to read. A `line-height: 2.0` creates too much space and the eye struggles to find the next line. The 1.5-1.6 range is the sweet spot where the eye follows the text effortlessly, and it's the standard used by newspapers, books, and professional websites.
+
+-----
+
+#### Text Properties
+
+Beyond the font, CSS controls how text behaves on the page.
+
+```css
+.article {
+  color: #333;                  /* Text color */
+  text-align: justify;          /* Alignment: left, center, right, justify */
+  text-decoration: none;        /* Removes underline (useful on links) */
+  text-transform: uppercase;    /* Transform: uppercase, lowercase, capitalize */
+  letter-spacing: 0.05em;       /* Spacing between letters */
+  word-spacing: 0.1em;          /* Spacing between words */
+  text-indent: 1.5em;           /* First line indent of a paragraph */
+}
+```
+
+`text-align: justify` aligns text on both edges, like in printed newspapers. On the web, however, it's discouraged for narrow paragraphs (on mobile) because it creates irregular spaces between words that make text harder to read, especially for people with dyslexia. `text-align: left` is almost always the better choice.
+
+`letter-spacing` adds (or removes, with negative values) space between letters. Small positive values (0.02-0.05em) improve readability of uppercase text, which otherwise looks too compressed. Higher values (0.1em+) create a decorative effect useful for logos and subtitles.
+
+```css
+/* Uppercase text benefits from a bit of letter-spacing */
+.label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+```
+
+-----
+
+#### `text-shadow` (The Shadow on Text)
+
+`text-shadow` adds a shadow behind the text. The syntax is: horizontal offset, vertical offset, blur, color.
+
+```css
+/* Light shadow to add depth */
+.heading {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Glowing text (neon effect) */
+.neon {
+  color: #fff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff; /* #0ff corresponds to cyan */
+}
+
+/* Readable text on background image */
+.text-on-photo {
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+```
+
+The last example is a very common real-world use case: when you have white text over a photo, the dark shadow guarantees readability even on the lighter parts of the image.
+
+-----
+
+#### Overflowing Text
+
+When text is too long for its container, you can truncate it with an ellipsis. The classic pattern requires three properties working together, and if even one is missing, it doesn't work.
+
+```css
+/* Truncate on a single line */
+.card-title {
+  white-space: nowrap;       /* Don't wrap */
+  overflow: hidden;          /* Hide what overflows */
+  text-overflow: ellipsis;   /* Add ... at the end */
+}
+```
+
+```
+Without the pattern: "This title is very long and doesn't fit in the card"
+With the pattern:    "This title is very long and doe..."
+```
+
+It's the behavior you see in WhatsApp messages in the chat list: the text gets cut off with an ellipsis because there's no room to show it all.
+
+```css
+/* ❌ Doesn't work: missing overflow: hidden */
+.card-title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /* Text overflows the container without ellipsis */
+}
+
+/* ❌ Doesn't work: missing white-space: nowrap */
+.card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Text wraps normally, no truncation */
+}
+```
+
+To truncate after a specific number of lines (not just one), there's a different pattern:
+
+```css
+/* Truncate after 3 lines */
+.preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+```
+
+The syntax with `-webkit-` prefixes is dated, but it's the only way currently supported by all browsers for multi-line truncation.
+
+-----
+
+#### Text Columns
+
+For long texts, CSS allows you to arrange content across multiple columns, like in a newspaper or magazine.
+
+```css
+.long-article {
+  column-width: 25rem;  /* Ideal width of each column */
+  column-gap: 2rem;     /* Space between columns */
+  column-rule: 1px solid #e0e0e0; /* Dividing line between columns */
+}
+```
+
+The browser automatically calculates how many columns are needed based on the available width. On a wide screen it shows two or three columns, on mobile it reduces to just one. No media queries needed, the behavior is responsive by nature.
+
+**Rule:** only import the font weights you use. Use `line-height` without units (1.5-1.6 for body text, 1.1-1.2 for headings). The fallback in `font-family` is mandatory: always end with a generic family (`serif`, `sans-serif`, `monospace`).
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Colors (The Web's Palette)
+
+Color is the most immediate visual tool at your disposal. It can communicate hierarchy (primary colors for important actions, grays for secondary ones), state (green for success, red for error), and brand identity. CSS offers several formats for expressing colors, each with specific advantages.
+
+#### Color Formats
+
+```css
+/* Names: 147 named colors. Useful for prototyping, limited for design */
+color: red;
+color: orangered;
+color: rebeccapurple;
+
+/* HEX: the most common format. Each pair of digits is a channel (RR GG BB) */
+color: #ff6600;    /* red=ff, green=66, blue=00 → orange */
+color: #f60;       /* Shorthand: each digit gets doubled → #ff6600 */
+color: #1a1a2e;    /* Very dark blue, almost black */
+
+/* RGB: the same three channels expressed in decimal (0-255) */
+color: rgb(255, 102, 0);    /* The same orange as #ff6600 */
+
+/* RGBA: RGB with alpha channel for transparency (0 = transparent, 1 = opaque) */
+color: rgba(255, 102, 0, 0.5);  /* Orange at 50% opacity */
+
+/* HSL: Hue (color 0-360°), Saturation (0-100%), Lightness (0-100%) */
+color: hsl(24, 100%, 50%);      /* The same orange */
+
+/* HSLA: HSL with transparency */
+color: hsla(24, 100%, 50%, 0.5);
+```
+
+#### How to Choose the Right Format
+
+**HEX** is the format you'll encounter everywhere: in design tools (like Figma), in code editors (IDEs), and so on. It's compact and universal, but hard to modify by eye.
+
+**HSL** is the most intuitive format for humans, and the best one for building consistent palettes. The H (hue) is the position on the color wheel: 0° is red, 60° is yellow, 120° is green, 180° is cyan, 240° is blue, 300° is magenta. The S (saturation) controls vibrancy: 100% is full color, 0% is gray. The L (lightness) controls brightness: 50% is the pure color, 0% is black, 100% is white.
+
+The advantage of HSL becomes evident when you need to create variations of a color. If your primary color is `hsl(220, 80%, 50%)` (a vivid blue), you can create a lighter version by changing only the L: `hsl(220, 80%, 70%)`. A darker version: `hsl(220, 80%, 30%)`. A pastel version: `hsl(220, 40%, 80%)`. With HEX you'd have to guess or use an external tool.
+
+```css
+/* Building a consistent palette with HSL starting from a single color */
+:root {
+  /* The base color */
+  --primary: hsl(220, 80%, 50%);
+
+  /* Variants: only change lightness and saturation */
+  --primary-light: hsl(220, 80%, 70%);
+  --primary-lightest: hsl(220, 80%, 95%); /* Subtle background */
+  --primary-dark: hsl(220, 80%, 35%);
+  --primary-pastel: hsl(220, 40%, 85%);
+}
+```
+
+In real projects, these variants are often organized with a numeric scale (from 50 to 950, where 50 is the lightest and 950 the darkest), following the convention of design systems like Tailwind CSS. `--primary-light` becomes `--primary-200`, `--primary-dark` becomes `--primary-800`. Here we use descriptive names to make it obvious what changes in the L of HSL.
+
+**RGBA and HSLA** add a fourth value for transparency, the alpha channel, which goes from 0 (completely transparent) to 1 (completely opaque). `rgba(0, 0, 0, 0.5)` is black at 50% transparency, `hsla(220, 80%, 50%, 0.3)` is our primary blue at 30%.
+
+
+-----
+
+#### `opacity` vs Alpha Channel
+
+Both make something transparent, but in very different ways. Confusing them is a common mistake.
+
+`opacity` makes **the entire element** transparent, including all its children, text, images, everything.
+
+The alpha channel (the `a` in `rgba` and `hsla`) makes **only that specific color** transparent. The rest of the element stays opaque.
+
+```css
+/* ❌ With opacity: the text also becomes transparent */
+.overlay-wrong {
+  background-color: black;
+  color: white;
+  opacity: 0.7;
+  /* Result: gray background, gray text. Everything is at 70% */
+}
+
+/* ✅ With rgba: only the background is transparent, the text stays readable */
+.overlay-correct {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  /* Result: semi-transparent black background, full white text */
+}
+```
+
+This case comes up every time you want an overlay on top of an image with readable text, like a website's hero section or a card with a background image.
+
+-----
+
+#### `currentColor`
+
+`currentColor` is a special CSS variable that always equals the element's `color` value.
+
+```css
+/* ❌ Without currentColor: you have to update the border manually */
+.decorated-link {
+  color: #0066cc;
+  border-bottom: 2px solid #0066cc;
+  text-decoration: none;
+}
+
+.decorated-link:hover {
+  color: #cc0000;
+  border-bottom-color: #cc0000; /* You have to remember to change this too */
+}
+
+/* ✅ With currentColor: the border follows the text color automatically */
+.decorated-link {
+  color: #0066cc;
+  border-bottom: 2px solid currentColor;
+  text-decoration: none;
+}
+
+.decorated-link:hover {
+  color: #cc0000;
+  /* The border turns red on its own, without adding anything else */
+}
+```
+
+The advantage becomes evident when you use the same component with different colors: you only change the `color` and everything else adapts. It works with `border`, `box-shadow`, `outline`, and also with `fill` and `stroke` in inline SVG icons as we saw in the typography section.
+
+**Rule:** use HSL to build consistent palettes (change only L and S to create variants). Use `rgba`/`hsla` when you need transparency on a single color. Use `opacity` only when you want to make the entire element transparent along with all its content.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Backgrounds (Beyond Flat Color)
+
+An element's background can be much more than a flat color: images, gradients, layered combinations. It's one of CSS's most versatile tools.
+
+#### `background-color` and `background-image`
+
+```css
+/* Flat background color */
+.light-section {
+  background-color: #f5f5f5;
+}
+
+/* Background image */
+.hero {
+  background-image: url("assets/images/hero.jpg");
+}
+```
+
+-----
+
+#### Controlling the Background Image
+
+When you use an image as a background, you need to control how it behaves: how big it is, where it's positioned, whether it repeats.
+
+```css
+/* ❌ Just background-image, without control */
+.hero {
+  background-image: url("assets/images/hero.jpg");
+  /* If the image is smaller than the container, 
+     the browser repeats the image like tiles 
+     to fill the space. Rarely what you want. */
+}
+
+/* ✅ Controlled image */
+.hero {
+  background-image: url("assets/images/hero.jpg");
+  background-size: cover;          /* Covers the entire container */
+  background-position: center;     /* Centers the image */
+  background-repeat: no-repeat;    /* Don't repeat */
+  background-attachment: fixed;    /* Doesn't scroll with the page (parallax effect) */
+}
+```
+
+The difference between `cover` and `contain` is fundamental and worth visualizing with an example.
+
+```
+The image is 800x600 (landscape). The container is 400x400 (square).
+
+With background-size: cover:
+  ┌──────────────────────┐
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  The image fills everything.
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  The side edges get
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  cropped because they don't
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  fit in the square.
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  └──────────────────────┘
+← cropped          cropped →
+
+With background-size: contain:
+  ┌──────────────────────┐
+  │                      │
+  │                      │  Empty space
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  The image is fully visible
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│  but doesn't fill the container.
+  │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+  │                      │  Empty space
+  │                      │
+  └──────────────────────┘
+```
+
+`cover` is the right choice when the image is decorative and needs to fill the area (hero section, card background). `contain` is the right choice when every part of the image is important and you don't want to lose any of it (a logo, a diagram).
+
+Everything can be condensed into a single shorthand:
+
+```css
+.hero {
+  background: url("assets/images/hero.jpg") center / cover no-repeat fixed;
+}
+```
+
+-----
+
+#### Gradients
+
+Gradients create smooth transitions between two or more colors, without needing image files. They're generated by the browser, so they're very lightweight to process, scale to any resolution, and require no additional downloads.
+
+The **linear gradient** goes from one point to another in a straight line.
+
+```css
+/* From left to right */
+.bar {
+  background: linear-gradient(to right, #ff6600, #0066ff);
+}
+
+/* With custom angle */
+.diagonal {
+  background: linear-gradient(45deg, #ff6600, #0066ff);
+}
+
+/* Multiple colors with precise positions (gradient stops) */
+.italian-flag {
+  background: linear-gradient(
+    to right,
+    #009246 0%,
+    #009246 33%,
+    #ffffff 33%,
+    #ffffff 66%,
+    #ce2b37 66%,
+    #ce2b37 100%
+  );
+}
+```
+
+The **radial gradient** starts from the center and expands outward, like a stone thrown into water.
+
+```css
+/* Glowing circle */
+.glowing-circle {
+  background: radial-gradient(circle, #ffd700, #ff6600, transparent);
+}
+
+/* Light positioned in a corner (reflection effect) */
+.corner-light {
+  background: radial-gradient(
+    circle at top right,
+    rgba(255, 255, 255, 0.3),
+    transparent 60%
+  );
+}
+```
+
+The **conic gradient** rotates around a central point, like the hands of a clock. It's perfect for creating pie charts with pure CSS.
+
+```css
+.pie-chart {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #ff6600 0deg 120deg,    /* 33% orange */
+    #0066cc 120deg 240deg,  /* 33% blue */
+    #28a745 240deg 360deg   /* 33% green */
+  );
+}
+```
+
+Gradients can be **layered** like transparent layers. Each gradient is separated by a comma, and the first one in the list is the topmost (closest to the user).
+
+```css
+/* Readable text on image: dark gradient over the photo */
+.hero {
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7)),
+    url("assets/images/hero.jpg") center / cover no-repeat;
+}
+```
+
+This pattern (dark gradient over an image) is widely used in web design to ensure that white text is readable regardless of the photo's content.
+
+-----
+
+#### `object-fit` (Cover and Contain for `<img>` Images)
+
+`background-size: cover` and `contain` work for background images. But when you use an `<img>` tag with fixed dimensions (an avatar grid, a gallery, or simply a card with an image), and the image has different proportions than the container, it gets distorted. `object-fit` solves this problem.
+
+```css
+/* ❌ Without object-fit: the image gets distorted to fit the container */
+.avatar {
+  width: 100px;
+  height: 100px;
+  /* If the photo is rectangular, the face appears squished */
+}
+
+/* ✅ With object-fit: cover: the image maintains proportions and fills the container */
+.avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover; /* Crops the edges but doesn't distort */
+  border-radius: 50%; /* Perfect circle */
+}
+```
+
+The values are the same as `background-size`:
+
+```css
+object-fit: cover;   /* Fills the container, crops if needed (the most used) */
+object-fit: contain; /* Shows the entire image, may leave empty space */
+object-fit: fill;    /* Distorts the image to fill (the default, almost never what you want) */
+object-fit: none;    /* Original size, may overflow */
+```
+
+`object-position` controls which part of the image stays visible when `cover` crops the edges. By default it's centered, but for a photo of a person you might want to keep the top part visible (the face):
+
+```css
+.profile-photo {
+  object-fit: cover;
+  object-position: top center; /* Keep the top part visible */
+}
+```
+
+**Rule:** `cover` and `contain` for `background-image`, `object-fit: cover` and `contain` for `<img>`. Gradients are backgrounds, not colors, so they use `background` and not `background-color`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Borders, Shadows, and Visual Effects
+
+Borders and shadows add depth and visual separation to elements. Filters enable effects that previously required external graphic editing software. Together, they're the tools that turn a flat layout into an interface with dimension and hierarchy.
+
+#### Box Shadow (The Box's Shadow)
+
+`box-shadow` adds a shadow to the element's box. It's the main tool for creating the illusion of elevation, as if an element were lifted above the page.
+
+The syntax is: horizontal offset, vertical offset, blur, spread, color.
+
+```css
+/* Subtle shadow for slight elevation (the most used pattern) */
+.card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+```
+
+Each value controls an aspect of the shadow. The horizontal offset moves the shadow to the right (positive) or left (negative). The vertical offset moves it down (positive) or up (negative). The blur softens the shadow's edges. The spread widens or shrinks the shadow relative to the element.
+
+```css
+/* Different effects by changing the values */
+
+/* Shadow to the bottom right, slightly blurred (light from top left) */
+.light-top-left {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Diffused shadow all around (like a halo) */
+.halo {
+  box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+}
+
+/* Inner shadow (the element looks carved in) */
+.input-field {
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Multiple shadows for a more realistic effect */
+.elevated-card {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.1),   /* Close shadow, defined */
+    0 8px 24px rgba(0, 0, 0, 0.08);  /* Far shadow, diffused */
+}
+```
+
+A widely used pattern: the shadow that grows on mouse hover, giving the impression that the card is lifting up.
+
+```css
+.card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px); /* Lifts slightly */
+}
+```
+
+A useful trick: you can use `box-shadow` to create a colored ring around an element by setting the offsets and blur to 0 and using only the spread. It's the most common way to create a custom accessible focus indicator.
+
+```css
+.button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.5); /* Focus ring */
+}
+```
+
+-----
+
+#### CSS Filters
+
+The `filter` property applies graphic effects directly to elements, like filters in a photo app.
+
+```css
+/* Black and white image */
+.historic-photo {
+  filter: grayscale(100%);
+}
+
+/* Reduce brightness (darken) */
+.darkened-background {
+  filter: brightness(0.7);
+}
+
+/* Blur */
+.blurred-background {
+  filter: blur(5px);
+}
+
+/* Filter combination */
+.artistic-photo {
+  filter: contrast(120%) saturate(130%) brightness(110%);
+}
+```
+
+Filters can be animated with transitions, creating interactive effects:
+
+```css
+.photo {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.photo:hover {
+  filter: grayscale(0%); /* The photo returns to color on mouse hover */
+}
+```
+
+The available filters are: `blur()`, `brightness()`, `contrast()`, `grayscale()`, `saturate()`, `sepia()`, `hue-rotate()`, `invert()`, `drop-shadow()`, `opacity()`. They can be combined in a single declaration, separated by spaces.
+
+-----
+
+#### `backdrop-filter` (The Frosted Glass Effect)
+
+`backdrop-filter` applies filters not to the element itself, but to **everything visible behind** it. It's the tool for creating the frosted glass effect (glassmorphism).
+
+```css
+.navigation-bar {
+  background-color: rgba(255, 255, 255, 0.7);   /* Semi-transparent background */
+  backdrop-filter: blur(10px);                  /* Blurs what's behind */
+}
+```
+
+`backdrop-filter` blurs everything behind the element. But to see the blurred background, you need to be able to look through. If the element's background is solid white (`#fff`), it covers everything behind it, and there's nothing to blur. If the background is white at 70% (`rgba(255, 255, 255, 0.7)`), the 30% transparency lets you glimpse (blurred) the content scrolling underneath.
+
+```css
+/* ❌ Doesn't work: the background is completely opaque */
+.bar {
+  background-color: white;
+  backdrop-filter: blur(10px); /* The effect is there, but you can't see it */
+}
+
+/* ✅ Works: the background is semi-transparent */
+.bar {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px); /* The effect is visible */
+}
+```
+
+-----
+
+#### `mix-blend-mode`
+
+`mix-blend-mode` controls how an element's colors combine with the colors of what's underneath. Normally an element with a background completely covers what's behind it. With `mix-blend-mode`, the two colors blend together in different ways. If you've used blend modes in Figma or Photoshop, it's the same concept.
+
+```css
+.overlapping-title {
+  color: white;
+  mix-blend-mode: difference; /* Inverts colors where it overlaps the background */
+}
+
+.artistic-image {
+  mix-blend-mode: multiply; /* Blends with the background, darkening */
+}
+```
+
+The most used values are `multiply` (darkens), `screen` (lightens), `overlay` (increases contrast), `difference` (inversion).
+
+**Rule:** use subtle and diffused shadows for elevation, not heavy shadows that distract. `backdrop-filter` requires a semi-transparent background to work. CSS filters are performant, but combining too many can slow down rendering.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. CSS Variables (One Value, A Thousand Uses)
+
+CSS variables (also called *custom properties*) let you save a value once, reuse it everywhere, and when you need to change it, do it in a single place.
+
+Imagine you've used the color `#0066cc` in 50 different places in your CSS: buttons, links, borders, backgrounds. The client asks you to change it to green. Without variables, you open the CSS, do "find and replace" and hope you haven't broken anything. With variables, you change one line.
+
+#### Declaring and Using Variables
+
+A variable is declared with the `--` prefix and used with the `var()` function.
+
+```css
+/* Declare variables in :root (accessible everywhere in the document) */
+:root {
+  --color-primary: #0066cc;
+  --color-secondary: #ff6600;
+  --color-text: #333;
+  --color-background: #f5f5f5;
+  --color-error: #dc3545;
+  --color-success: #28a745;
+  --spacing-base: 1rem;
+  --border-radius: 8px;
+  --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --font-headings: 'Raleway', sans-serif;
+  --font-body: 'Open Sans', Arial, sans-serif;
+}
+
+/* Use the variables */
+.primary-button {
+  background-color: var(--color-primary);
+  color: white;
+  padding: var(--spacing-base);
+  border-radius: var(--border-radius);
+  font-family: var(--font-headings);
+}
+
+.secondary-button {
+  background-color: var(--color-secondary);
+  color: white;
+  padding: var(--spacing-base);
+  border-radius: var(--border-radius);
+}
+
+.link {
+  color: var(--color-primary);
+}
+
+.error-message {
+  color: var(--color-error);
+  border-left: 4px solid var(--color-error);
+}
+
+.card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+}
+```
+
+If tomorrow the primary color needs to change from blue to green, you modify a single line (`--color-primary: #28a745`) and every button, link, border, and background that uses that variable updates automatically.
+
+The `var()` function accepts a second argument as a **fallback**: if the variable doesn't exist, it uses that value.
+
+```css
+.element {
+  color: var(--color-accent, #ff6600); /* If --color-accent doesn't exist, use #ff6600 */
+}
+```
+
+The fallback is useful when you create components that need to work even without someone having defined the variable. For your everyday CSS, if you use variables declared in `:root`, the fallback isn't needed because the variables always exist.
+
+-----
+
+#### Local Variables (Scoping)
+
+Variables declared in `:root` are global and accessible from any element. But you can also declare variables on a specific selector: they'll be accessible only inside that element and its children, like local variables in a programming language.
+
+```css
+.premium-card {
+  --color-accent: gold;
+  --card-background: #1a1a2e;
+}
+
+.basic-card {
+  --color-accent: #0066cc;
+  --card-background: white;
+}
+
+/* Same CSS, different behavior based on context */
+.premium-card .price,
+.basic-card .price {
+  color: var(--color-accent);
+}
+```
+
+-----
+
+#### Theming with Variables (Dark Mode)
+
+CSS variables combined with the `prefers-color-scheme` media query make theme switching elegant and maintainable.
+
+```css
+:root {
+  --color-text: #1a1a2e;
+  --color-background: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-border: #e0e0e0;
+  --color-primary: #0066cc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: #e0e0e0;
+    --color-background: #1a1a2e;
+    --color-surface: #2a2a3e;
+    --color-border: #3a3a4e;
+    --color-primary: #4da6ff;
+  }
+}
+
+/* The styles stay identical. Only the variables change */
+body {
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.link {
+  color: var(--color-primary);
+}
+```
+
+The entire site switches from light theme to dark theme by redefining a few variables. No CSS rule needs to be duplicated or rewritten.
+
+-----
+
+#### Variables and `calc()`
+
+Variables can be combined with `calc()` to create consistent and scalable spacing systems.
+
+```css
+:root {
+  --space: 1rem;
+}
+
+.spacing-small { 
+  padding: calc(var(--space) * 0.5); /* 0.5rem */
+}
+
+.spacing-medium { 
+  padding: var(--space);             /* 1rem */
+}
+
+.spacing-large { 
+  padding: calc(var(--space) * 2);   /* 2rem */
+}
+
+.spacing-huge { 
+  padding: calc(var(--space) * 4);   /* 4rem */
+}
+```
+
+By changing the value of `--space`, the entire spacing system scales proportionally. If you go from `1rem` to `1.25rem`, all paddings update while maintaining their proportions.
+
+**Rule:** declare global variables in `:root` and give names that describe the function (`--color-primary`), not the value (`--blue`). A variable called `--blue` that later becomes green is pure confusion.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Transforms (Move, Rotate, Scale)
+
+The `transform` property modifies an element's position, size, rotation, and shape **without affecting the surrounding layout**. It's like moving a sticker on a sheet of paper: the sticker moves, but the text and other stickers stay put. The transformed element still occupies its original space in the document flow, but is drawn in the new position.
+
+#### Transform Functions
+
+```css
+/* Move an element */
+.moved {
+  transform: translateX(50px);       /* 50px to the right */
+  transform: translateY(-20px);      /* 20px upward */
+  transform: translate(50px, -20px); /* Both together */
+}
+
+/* Rotate */
+.rotated {
+  transform: rotate(45deg);   /* 45 degrees clockwise */
+  transform: rotate(-10deg);  /* 10 degrees counterclockwise */
+}
+
+/* Scale (enlarge/shrink) */
+.enlarged {
+  transform: scale(1.5);      /* 150% of original size */
+  transform: scale(0.8);      /* 80% of original size */
+
+  transform: scaleX(2);       /* Twice as wide, height unchanged */
+  transform: scaleY(2);       /* Twice as tall, width unchanged */
+  transform: scale(2, 0.5);   /* Twice as wide, half as tall */
+}
+
+/* Skew */
+.skewed {
+  transform: skewX(10deg);    /* Horizontal skew */
+}
+```
+
+Transforms can be combined in a single declaration, separated by spaces. Order matters, because each transform is applied from last to first.
+
+```css
+.combined {
+  transform: translateX(100px) rotate(45deg) scale(1.2);
+}
+```
+
+-----
+
+#### `transform-origin` (The Anchor Point)
+
+When you rotate or scale an element, the transformation happens around a specific point. By default it's the **center**. With `transform-origin` you can move it.
+
+A concrete case: a dropdown menu that opens descending from the navbar. You want it to grow from top to bottom, not from the center.
+
+```css
+/* ❌ Without transform-origin: the menu appears "exploding" from the center */
+.menu-dropdown {
+  transform: scaleY(0);       /* Hidden */
+  transition: transform 0.2s ease;
+}
+.nav-item:hover .menu-dropdown {
+  transform: scaleY(1);       /* The menu grows from the center, weird effect */
+}
+
+/* ✅ With transform-origin: the menu descends from the navbar naturally */
+.menu-dropdown {
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 0.2s ease;
+}
+.nav-item:hover .menu-dropdown {
+  transform: scaleY(1);       /* The menu grows from top to bottom */
+}
+```
+
+The same principle applies to a progress bar that fills from the left (`transform-origin: left center` with `scaleX`), or a tooltip that appears from the point where it's attached.
+
+-----
+
+#### Why Transform is Special (Performance)
+
+Transforms have a fundamental technical advantage over properties like `margin`, `top`, `left`, or `width`: **they don't cause reflow**.
+
+When you change an element's `width` or `margin`, the browser has to recalculate the position and size of all surrounding elements (a process called *reflow* or *layout*), then redraw everything (the *paint*). This is expensive, and if it happens many times per second during an animation, the page visibly slows down.
+
+When you use `transform`, the browser handles the element more efficiently, without recalculating the layout of other elements. This makes `transform` (along with `opacity`) the best choice for animations.
+
+```css
+/* ❌ Animating with properties that cause reflow */
+.card:hover {
+  margin-top: -10px; /* The browser recalculates the page layout */
+}
+
+/* ✅ Animating with transform */
+.card:hover {
+  transform: translateY(-10px); /* No reflow */
+}
+```
+
+A note on `top` and `left`: on elements with `position: absolute` or `fixed`, they don't cause reflow of the entire page (the element is out of the flow), but they still cause *paint* (the browser has to redraw). `transform` skips paint as well, so it remains the most performant choice.
+
+The difference is especially noticeable on mobile devices and complex pages with many elements animating simultaneously.
+
+**Rule:** to visually move an element, use `transform: translate()` instead of `top`/`left`/`margin`. For animations, `transform` and `opacity` are the most performant properties.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Summary (Visual Styling at a Glance)
+
+| Concept | Key rule | Common trap |
+|---------|----------|-------------|
+| External fonts | Only import the weights you use, mandatory fallback with generic family | Importing 10 weights of a font and slowing down loading |
+| `line-height` | Without units (1.5-1.6 for body text, 1.1-1.2 for headings) | Using a fixed unit value that doesn't scale with font-size |
+| Overflowing text | `nowrap` + `overflow: hidden` + `text-overflow: ellipsis` (all three mandatory) | Using only `text-overflow: ellipsis` and wondering why it doesn't work |
+| Color formats | HSL for building consistent palettes, RGBA/HSLA for transparency | Using `opacity` for the background and making the text transparent too |
+| Backgrounds | `cover` fills (may crop), `contain` shows everything (may leave space) | Forgetting `background-repeat: no-repeat` |
+| Gradients | They're `background`, not `background-color`. They layer like levels | Using `background-color` with a gradient |
+| Box shadow | Subtle and diffused shadows for elevation. More shadows = more realism | Shadows too dark and large that distract from the content |
+| `backdrop-filter` | Requires semi-transparent background to be visible | Using `backdrop-filter` with opaque background and not seeing the effect |
+| CSS variables | Functional names (`--color-primary`), declared in `:root` | Calling `--blue` a variable that later becomes green |
+| Dark mode | Redefine variables in `@media (prefers-color-scheme: dark)` | Duplicating all CSS rules instead of only changing the variables |
+| Transform | `translate`, `rotate`, `scale` are the most performant properties for animations | Animating `margin` or `top` instead of `transform` |
+| Performance | `transform` and `opacity` skip reflow and paint | Animating `width` or `height` and getting slowdowns on mobile |

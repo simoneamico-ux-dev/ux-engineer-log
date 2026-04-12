@@ -1,0 +1,1261 @@
+---
+sidebar_position: 1
+title: Foundations
+description: What CSS is, how to link it to HTML, selectors, cascade, specificity, box model, and units of measurement.
+---
+
+import Link from '@docusaurus/Link';
+
+# CSS Real World Vademecum
+
+# Part I: Foundations
+
+Before writing a single style rule, you need to understand how CSS works under the hood.
+
+---
+
+## CSS Foundations
+
+### 1. What is CSS (The Language of Style)
+
+As we did with HTML, let's start from the name. **CSS** stands for *Cascading Style Sheets*, and each of these three words tells you something specific.
+
+#### Style Sheets
+
+Let's start from the end because it's the most intuitive part. A *style sheet* is a document that contains the instructions for a page's visual appearance: colors, sizes, fonts, spacing, positions. These instructions live in a file separate from HTML (with the `.css` extension) and are linked to the HTML document with a `<link>` tag (don't worry, we'll see how to do it in the next section).
+
+If in the <Link to="/docs/vademecum/html-real-world-vademecum">HTML Real World Vademecum</Link> we saw how HTML describes *what's on* the page, here we'll see how CSS describes *how it looks*. HTML is the skeleton, CSS is the skin, the clothes, and the makeup.
+
+-----
+
+#### Cascading
+
+"Cascading" means that style rules **overlap with a priority order**: when two rules conflict on the same element, CSS has a precise system to decide which one wins. It's not random and not unpredictable, it's a mechanism with clear rules that we'll see in detail in <a href="#6-the-cascade-specificity-and-inheritance-the-three-laws-of-css">in section 6</a>.
+
+The name *Cascading* was chosen intentionally: rules flow down like water in a waterfall, and those that come later can override those that came first.
+
+-----
+
+#### What Happens When the Browser Encounters CSS
+
+In <Link to="/docs/vademecum/html-real-world-vademecum#1-what-is-html-the-language-of-labels">section 1 of the HTML vademecum</Link> we saw what the browser does when it opens a page: it downloads the HTML, reads it, and builds the DOM. With CSS the process extends.
+
+When the browser encounters a `<link rel="stylesheet" href="style.css">` in the `<head>`, it downloads the CSS file and parses it building a structure called the **CSSOM** (CSS Object Model), the equivalent of the DOM but for style rules. Then it combines the DOM and the CSSOM to create the **Render Tree**, the final structure the browser uses to draw the page on the screen.
+
+```
+HTML → DOM (what's there)
+CSS  → CSSOM (how it looks)
+DOM  + CSSOM → Render Tree → the page you see
+```
+
+This means CSS is a language the browser analyzes with the same seriousness as HTML. It's not an optional decoration, it's a structural part of the rendering process.
+
+-----
+
+#### Before CSS (A Brief Historical Reminder)
+
+Before 1996, the year CSS was introduced, styling was done directly in HTML. Tags like `<font color="red" size="5">` and attributes like `bgcolor` on the `<body>` element were the only way to change a page's appearance. Layout was built with nested HTML tables.
+
+The problem was obvious: structure and presentation were mixed in the same file. Changing the color of all headings on a 50-page site meant modifying 50 files by hand. CSS solved this problem by separating responsibilities: HTML describes what's there, CSS describes how it looks, and the two live in separate files.
+
+**Rule:** CSS describes the page's visual appearance. It doesn't touch the structure (that's HTML) or behavior (that's JavaScript). If you find yourself changing content with CSS, you're mixing responsibilities.
+
+<br />
+<br />
+<br />
+<br />
+
+### 2. How to Link CSS to HTML (Three Roads, Only One Right)
+
+There are three ways to apply CSS to an HTML document. All three work, but only one is the correct choice in everyday practice.
+
+#### External CSS (The Right Way)
+
+A separate `.css` file, linked to HTML with a `<link>` tag in the `<head>`.
+
+```html
+<!-- In the HTML file -->
+<head>
+  <link rel="stylesheet" href="style.css">
+</head>
+```
+
+```css
+/* In the style.css file */
+body {
+  font-family: 'Open Sans', Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #1a1a2e;
+}
+```
+
+External CSS has three concrete advantages. The first is **reusability**: the same stylesheet can be linked to 100 different pages, and a change propagates everywhere. The second is **browser caching**: after the first load, the browser saves the CSS file in memory and doesn't download it again on subsequent pages, speeding up navigation. The third is **separation of responsibilities**: the HTML stays clean, the CSS stays organized, and whoever works on the structure doesn't have to search for styles among the tags.
+
+-----
+
+#### Internal CSS (The Compromise)
+
+CSS rules written inside a `<style>` tag in the `<head>` of the HTML document.
+
+```html
+<head>
+  <style>
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      color: #333;
+    }
+  </style>
+</head>
+```
+
+It works, but the rules live inside the HTML file. You can't reuse them on other pages without copying them, and the browser can't cache them separately. It makes sense for quick prototypes or isolated pages where it's not worth creating a separate file: a promotional landing page, a "coming soon" page.
+
+-----
+
+#### Inline CSS (The Last Resort)
+
+The style written directly on the element through the `style` attribute.
+
+```html
+<p style="color: red; font-size: 20px;">Red and large text</p>
+```
+
+As we saw in <Link to="/docs/vademecum/html-real-world-vademecum#12-global-attributes-universal-tools">section 12 of the HTML vademecum</Link>, inline CSS is a practice to avoid. It has the highest specificity of all (we'll see in <a href="#6-the-cascade-specificity-and-inheritance-the-three-laws-of-css">section 6</a> what that means), so it's hard to override. Also, it's not reusable and makes HTML unreadable. The only legitimate case is when the style is dynamically generated by JavaScript.
+
+**Rule:** always use external CSS. Internal CSS for isolated cases. Inline CSS only when generated by JavaScript.
+
+<br />
+<br />
+<br />
+<br />
+
+### 3. Anatomy of a CSS Rule (The Selector and the Declaration)
+
+A CSS rule is made of two parts: the **selector**, which says *to whom* the style applies, and the **declaration block**, which says *how* it should look.
+
+```css
+/* Anatomy of a CSS rule */
+h1 {
+  color: #1a1a2e;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+```
+
+`h1` is the **selector**: it indicates that this rule applies to all `<h1>` elements on the page. The curly braces `{ }` enclose the **declaration block**. Each line inside the block is a **declaration**, composed of a **property** (what you want to change) and a **value** (how you want to change it), separated by a colon and terminated with a semicolon.
+
+The semicolon after each declaration is mandatory. If you forget it, the browser ignores the next declaration (and often also the one without the semicolon), without giving you any error. CSS never "crashes", it simply ignores what it doesn't understand and moves on. This is convenient (the site doesn't break) but also insidious (bugs are silent).
+
+```css
+/* ❌ WRONG, missing semicolon after color */
+h1 {
+  color: red
+  font-size: 2rem;
+}
+/* The browser ignores BOTH declarations */
+
+/* ✅ CORRECT */
+h1 {
+  color: red;
+  font-size: 2rem;
+}
+```
+
+Comments in CSS use the `/* comment */` syntax. As in HTML, they're for explaining the why of choices, not the what.
+
+```css
+/* Added extra space below headings to give breathing room to the text that follows */
+h1 {
+  margin-bottom: 2rem;
+}
+```
+
+**Rule:** every declaration ends with a semicolon. If you forget it, CSS won't warn you, it simply stops working at that point.
+
+<br />
+<br />
+<br />
+<br />
+
+### 4. Selectors (Aiming with Precision)
+
+Selectors are the mechanism with which you tell CSS *which* page elements you want to style. The power of CSS lies in the ability to aim precisely: you can select all paragraphs, only those inside an article, only the first one, only those with a certain class.
+
+#### The Universal Selector `*`
+
+The `*` selector selects **all** elements on the page, none excluded.
+
+```css
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+```
+
+In practice it's used almost exclusively in the **initial reset**: zeroing out the browser's default margins and padding and setting `box-sizing: border-box` on all elements (we'll see in <a href="#7-the-box-model-every-element-is-a-box">section 7</a> why). The complete pattern also includes pseudo-elements (virtual elements that CSS can create, we'll see them in <a href="#5-pseudo-classes-and-pseudo-elements-selecting-the-invisible">section 5</a>):
+
+```css
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+```
+
+-----
+
+#### The Type Selector (Tag)
+
+Selects all HTML elements of a certain type.
+
+```css
+/* All paragraphs on the page */
+p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* All links */
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+```
+
+It's useful for defining the site's base styles (paragraph font, link color, heading size), but it's too generic for specific styles. If you want to change only *one* paragraph, the type selector changes *all* paragraphs.
+
+-----
+
+#### The Class Selector `.name`
+
+The class selector is the main tool you'll use daily. It selects all elements that have that class in the `class` attribute.
+
+```css
+.warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 1rem;
+  border-radius: 4px;
+}
+```
+
+```html
+<p class="warning">Attention: scheduled maintenance tomorrow.</p>
+<div class="warning">This is another warning, on a different element.</div>
+```
+
+An element can have **multiple classes** (separated by spaces in HTML), and the same class can be used on **as many elements as you want**. This flexibility is why classes dominate CSS: you can create reusable styles and combine them freely.
+
+```html
+<!-- An element with three classes -->
+<div class="card product featured">...</div>
+```
+
+-----
+
+#### The ID Selector `#name`
+
+Selects the element with that `id`. Since each `id` is unique on the page, this selector always points to a single element.
+
+```css
+#main-header {
+  background-color: #1a1a2e;
+  color: white;
+  padding: 2rem;
+}
+```
+
+In practice, ID selectors are rarely used for styling. The reason is **specificity**: an ID has a much higher specificity than a class, and this makes rules harder to override when needed (we'll go deeper in <a href="#6-the-cascade-specificity-and-inheritance-the-three-laws-of-css">section 6</a>). The convention is to use classes for styling and reserve IDs for internal page links (`href="#section"`) and for JavaScript.
+
+-----
+
+#### Combining Selectors
+
+Selectors can be combined to create more precise selections.
+
+```css
+/* NO SPACE: the element must have BOTH classes */
+.card.featured {
+  border: 2px solid gold;
+}
+/* Selects: <div class="card featured"> */
+
+/* WITH COMMA: applies to EACH selector */
+h1, h2, h3 {
+  font-family: 'Raleway', sans-serif;
+}
+/* Selects: all h1s, all h2s, all h3s */
+```
+
+The **descendant combinator** (space) selects an element that is inside another, at any depth level. It's useful when you want to style elements only in a certain context.
+
+```css
+/* All <p> inside an <article>, even deeply nested ones */
+article p {
+  text-indent: 1.5em;
+}
+```
+
+The **direct child combinator** (`>`) is more precise: it selects only immediate children, not deeper descendants. Concrete scenario: you have a navigation menu with a nested dropdown. You want to style only the first-level links, not those inside the dropdown.
+
+```css
+/* Only the direct links of the nav, not those inside a nested submenu */
+nav > a {
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+}
+
+/* Without >, the dropdown links would also receive the style */
+```
+
+You might wonder: why not always use `>`? Because the descendant combinator (space) is needed when you want to select elements at *any* depth. If you want all paragraphs inside an article to have the same `line-height`, regardless of how deeply nested they are, you need `article p`, not `article > p`.
+
+```html
+<article>
+  <p>Direct child: article > p selects it, article p also</p>
+  <blockquote>
+    <p>Grandchild: article > p does NOT select it, article p DOES</p>
+  </blockquote>
+</article>
+```
+
+Always using `>` would force you to write selectors for every nesting level, and if the HTML structure changes, those selectors break. Space is inclusive (all descendants), `>` is surgical (only the first level). Choose based on what you need.
+
+The two combinators we've seen so far (space and `>`) go down the tree, from parent to children. The next two (`+` and `~`) move horizontally: they select **siblings**, elements at the same level.
+
+The **adjacent sibling combinator** (`+`) selects the element that comes immediately after another, at the same level. A classic use case: the first paragraph after a heading has a slightly larger font (the "lead paragraph" of articles).
+
+```css
+/* The first paragraph right after h2 is larger */
+h2 + p {
+  font-size: 1.1rem;
+  color: #555;
+}
+```
+
+The **general sibling combinator** (`~`) selects all siblings that come after, not just the first.
+
+```css
+/* All paragraphs that come after the hr (separator) are lighter */
+hr ~ p {
+  color: #777;
+}
+```
+
+-----
+
+#### Attribute Selectors
+
+They allow you to select elements based on their HTML attributes, not just the class or type.
+
+```css
+/* Any element with the required attribute */
+[required] {
+  border-color: #cc0000;
+}
+
+/* Email type input */
+[type="email"] {
+  padding-left: 2rem;
+}
+
+/* Links that start with https (external links) */
+[href^="https"] {
+  padding-right: 1.2em;
+}
+
+/* Links that end with .pdf */
+[href$=".pdf"]::after {
+  content: " (PDF)";
+  font-size: 0.8em;
+}
+```
+
+Attribute selectors are particularly useful for styling forms based on input type and for adding visual cues to external links or downloads.
+
+**Rule:** use classes as the main tool for styling. Type selectors for base styles. IDs for internal links and JavaScript, not for CSS. Combinators for relationships between elements.
+
+<br />
+<br />
+<br />
+<br />
+
+### 5. Pseudo-classes and Pseudo-elements (Selecting the Invisible)
+
+The selectors we've seen so far point to concrete elements present in the HTML. Pseudo-classes and pseudo-elements allow you to select something that isn't in the HTML code: a state (the mouse over a button), a position (the first child), a part of an element (the first letter).
+
+#### State Pseudo-classes
+
+State pseudo-classes select an element based on *what's happening* at that moment. For links, there's a precise order in which they should be written: **L-V-H-A** (Link, Visited, Hover, Active). If you write them in a different order, some rules may be unintentionally overridden by the cascade.
+
+```css
+/* L - Link: the link not yet visited */
+a:link {
+  color: #0066cc;
+}
+
+/* V - Visited: the link already visited */
+a:visited {
+  color: #551a8b;
+}
+
+/* H - Hover: the mouse is over the link */
+a:hover {
+  color: #cc0000;
+  text-decoration: underline;
+}
+
+/* A - Active: the link while being clicked */
+a:active {
+  color: #990000;
+}
+```
+
+State pseudo-classes don't only apply to links. `:focus` and `:active` also apply to other interactive elements.
+
+```css
+/* Focus: the element is selected by keyboard or click on an input */
+input:focus {
+  outline: 2px solid #0066cc;
+  background-color: #f0f8ff;
+}
+
+/* Active on a button: activates when you press */
+button:active {
+  transform: scale(0.97);
+}
+```
+
+A very useful modern pseudo-class is `:focus-visible`. Unlike `:focus` which activates both with click and keyboard, `:focus-visible` activates **only when the user is navigating by keyboard**. This allows showing the focus outline for those navigating with Tab without showing it for those clicking with the mouse.
+
+```css
+/* The outline appears only when the user navigates by keyboard */
+button:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+```
+
+-----
+
+#### Structural Pseudo-classes
+
+Structural pseudo-classes select an element based on its **position** among siblings.
+
+```css
+/* The first child */
+li:first-child {
+  font-weight: bold;
+}
+
+/* The last child */
+li:last-child {
+  border-bottom: none;
+}
+
+/* The third child */
+li:nth-child(3) {
+  color: red;
+}
+
+/* Even rows (for zebra-striped tables) */
+tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+/* Odd rows */
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+/* The first element of that type inside the parent */
+p:first-of-type {
+  font-size: 1.2rem;
+}
+```
+
+The `:not()` pseudo-class excludes elements from the selection.
+
+```css
+/* All paragraphs except those with class .intro */
+p:not(.intro) {
+  text-indent: 1.5em;
+}
+
+/* All inputs except disabled ones */
+input:not(:disabled) {
+  cursor: pointer;
+}
+```
+
+-----
+
+#### Form Pseudo-classes
+
+CSS can react to the validation state of form fields, connecting directly to the HTML attributes we saw in <Link to="/docs/vademecum/html-real-world-vademecum#12-global-attributes-universal-tools">section 12 of the HTML vademecum</Link>.
+
+```css
+/* Required field */
+input:required {
+  border-left: 3px solid #cc0000;
+}
+
+/* Optional field */
+input:optional {
+  border-left: 3px solid #ccc;
+}
+
+/* The entered value is valid */
+input:valid {
+  border-color: #28a745;
+}
+
+/* The entered value is not valid */
+input:invalid {
+  border-color: #dc3545;
+}
+
+/* Checked checkbox or radio */
+input:checked + label {
+  font-weight: bold;
+  color: #0066cc;
+}
+
+/* Disabled field */
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+```
+
+-----
+
+#### Modern Pseudo-classes
+
+CSS has introduced three more pseudo-classes that simplify code significantly.
+
+`:is()` allows grouping selectors avoiding repetition.
+
+```css
+/* ❌ Without :is(), very repetitive */
+article h1:hover,
+article h2:hover,
+article h3:hover {
+  color: #0066cc;
+}
+
+/* ✅ With :is(), a single line */
+article :is(h1, h2, h3):hover {
+  color: #0066cc;
+}
+```
+
+`:where()` works like `:is()` but with a crucial difference: it has **zero specificity**. Let's see it with a concrete example.
+
+```html
+<article>
+  <p class="highlighted">This paragraph, what color is it?</p>
+</article>
+```
+
+```css
+/* With :is() */
+:is(article) p { color: gray; }     /* Specificity: (0, 0, 0, 2) */
+.highlighted { color: black; }       /* Specificity: (0, 0, 1, 0) */
+/* .highlighted wins → black. The class beats two types. So far so normal. */
+
+/* Now replace :is() with :where() */
+:where(article) p { color: gray; }  /* Specificity: (0, 0, 0, 1) → where adds zero */
+p { color: black; }                  /* Specificity: (0, 0, 0, 1) */
+/* Same specificity → the last declared wins → black.
+   With :is() you would have needed a class to override.
+   With :where() a simple type selector is enough. */
+```
+
+In short: `:where()` makes your rules *intentionally weak*, so anyone can override them effortlessly. It's useful when you write base styles meant to be customized.
+
+`:has()` is the most revolutionary pseudo-class of recent years. It allows selecting an element **based on what it contains**. Before `:has()`, CSS could only go down the tree (from parent to child), never back up.
+
+```css
+/* Style the card IF IT CONTAINS an image */
+.card:has(> img) {
+  padding: 0;
+}
+
+/* Style the form IF IT CONTAINS an invalid input */
+form:has(input:invalid) {
+  border: 2px solid #dc3545;
+}
+
+/* Style the body IF IT CONTAINS an open dialog */
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+```
+
+-----
+
+#### Pseudo-elements
+
+Pseudo-elements create **virtual elements** that don't exist in the HTML. The syntax uses double colons `::` (pseudo-classes use a single `:`).
+
+`::before` and `::after` insert decorative content before and after an element's content. The `content` property is mandatory, even if empty.
+
+```css
+/* Adds an icon before every external link */
+a[href^="https"]::before {
+  content: "🔗 ";
+}
+
+/* Creates a decoration after the heading */
+h2::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #0066cc;
+  margin-top: 0.5rem;
+}
+```
+
+Other useful pseudo-elements:
+
+```css
+/* First letter of the paragraph (decorative initial) */
+.article p:first-of-type::first-letter {
+  font-size: 3rem;
+  float: left;
+  margin-right: 0.5rem;
+  line-height: 1;
+  color: #1a1a2e;
+}
+
+/* Text selected by the user */
+::selection {
+  background-color: #ffd700;
+  color: #1a1a2e;
+}
+
+/* Input placeholder */
+::placeholder {
+  color: #999;
+  font-style: italic;
+}
+```
+
+**Rule:** pseudo-classes (`:hover`, `:first-child`) select a *state* or a *position*. Pseudo-elements (`::before`, `::first-letter`) create a *virtual element*. The double `::` visually distinguishes the two types.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. The Cascade, Specificity, and Inheritance (The Three Laws of CSS)
+
+This is the most important section of this entire CSS Vademecum. If you don't understand these three concepts, CSS will seem like an unpredictable language where "things don't work" for no reason. In reality CSS follows precise rules, and when a rule "doesn't work" it's almost always because another rule is overriding it through one of these three mechanisms.
+
+#### The Cascade (The Order of Arrival)
+
+When two rules with the same specificity target the same element and the same property, **the last one declared wins**. This is the cascade in its simplest form.
+
+```css
+p {
+  color: blue;
+}
+
+/* This rule comes later, so it wins */
+p {
+  color: red;
+}
+/* All paragraphs will be red */
+```
+
+The cascade is not just about the order of rules in your stylesheet. It's about the order of all style sources that the browser combines:
+
+1. **Browser styles** (user agent stylesheet): every browser has default styles (links are blue and underlined, `<h1>` elements are large, `<p>` elements have margins)
+2. **Your styles** (author stylesheet): the rules you write
+3. **Styles with `!important`**: rules marked as priority (we'll see them shortly)
+
+Each level overrides the previous one. Your styles override the browser's, and `!important` overrides everything.
+
+-----
+
+#### Specificity (The Power Hierarchy)
+
+The cascade decides who wins when specificity is equal. But when two rules have different specificity, **the one with higher specificity wins**, regardless of order.
+
+Specificity is calculated as a four-digit score, where each digit corresponds to a type of selector:
+
+```
+Inline style                        →  (1, 0, 0, 0)
+ID                                  →  (0, 1, 0, 0)
+Class / pseudo-class / attribute    →  (0, 0, 1, 0)
+Type / pseudo-element               →  (0, 0, 0, 1)
+```
+
+The higher the digit on the left, the more power the rule has. A single ID beats a hundred classes. A single inline style beats any selector in the stylesheet.
+
+```css
+/* Specificity: (0, 0, 0, 1) (a type selector) */
+p {
+  color: blue;
+}
+
+/* Specificity: (0, 0, 1, 0) (a class selector) */
+.intro {
+  color: green;
+}
+
+/* Specificity: (0, 1, 0, 0) (an ID selector) */
+#first-paragraph {
+  color: red;
+}
+```
+
+```html
+<p id="first-paragraph" class="intro">What color am I?</p>
+<!-- Answer: red. The ID has the highest specificity -->
+```
+
+This is why classes are preferred over IDs for styling: classes have a manageable specificity. If all your CSS uses classes, specificity is flat and the order of arrival (the cascade) becomes the deciding factor, which makes code much more predictable.
+
+Let's see how specificity is calculated with combined selectors. You add up the scores of each part of the selector:
+
+| Selector | Specificity | Explanation |
+|---|---|---|
+| `p` | `(0, 0, 0, 1)` | 1 type |
+| `.intro` | `(0, 0, 1, 0)` | 1 class |
+| `p.intro` | `(0, 0, 1, 1)` | 1 class + 1 type |
+| `#sidebar .link` | `(0, 1, 1, 0)` | 1 ID + 1 class |
+| `nav#main .link:hover` | `(0, 1, 2, 1)` | 1 ID + 2 pseudo/classes + 1 type |
+| `style="color: red"` | `(1, 0, 0, 0)` | inline, beats everything |
+
+The rule is: compare digits from left to right. The first different digit decides the winner. `(0, 1, 0, 0)` beats `(0, 0, 15, 3)` because the second digit (ID) counts more than any number of classes or types. It's like a tournament with tiers: the higher tier always wins, regardless of how many points you accumulate in the lower tier.
+
+Let's do an example with combined selectors:
+
+```css
+/* (0, 0, 1, 1) = one class + one type */
+article .title {
+  color: blue;
+}
+
+/* (0, 0, 2, 0) = two classes */
+.content .title {
+  color: green;
+}
+
+/* (0, 0, 2, 1) = two classes + one type */
+article .content .title {
+  color: red;
+}
+/* Red wins: it has the highest specificity */
+```
+
+-----
+
+#### `!important` (The Nuclear Option)
+
+Adding `!important` to a declaration makes it take priority over any normal rule, regardless of specificity.
+
+```css
+p {
+  color: red !important;
+}
+
+#special-paragraph {
+  color: blue;  /* Loses, even though the ID has higher specificity */
+}
+```
+
+The problem is that the only way to beat an `!important` is another `!important` with equal or higher specificity. This creates a spiral: you start with one `!important`, then you need more to override it, and eventually the code becomes a battlefield where every rule screams louder than the others.
+
+```css
+/* ❌ The !important spiral */
+.button {
+  background: blue !important;
+}
+
+/* To override, you need a more specific selector WITH !important */
+.container .button {
+  background: red !important;
+}
+
+/* And to override that, you need an even more specific one... */
+#main-section .container .button {
+  background: green !important;
+}
+```
+
+There are very few legitimate cases for `!important`: overriding styles from external libraries you can't modify, or utility styles that must always win (like `.hidden { display: none !important; }`). In all other cases, if you feel the need to use `!important`, the real problem is a CSS architecture that needs rethinking.
+
+-----
+
+#### Inheritance (The Family Genes)
+
+Some CSS properties are automatically transmitted from parent to children, like genes in a family. If you set `color: blue` on the `<body>`, all elements inside the `<body>` inherit that color (unless they have their own rule that overrides it).
+
+**Properties that are inherited** (almost all text-related ones):
+`color`, `font-family`, `font-size`, `font-weight`, `line-height`, `text-align`, `letter-spacing`, `word-spacing`, `visibility`, `cursor`
+
+**Properties that are NOT inherited** (almost all box-related ones):
+`margin`, `padding`, `border`, `background`, `width`, `height`, `display`, `position`, `overflow`
+
+The logic is intuitive: it makes sense for all text inside a `<body>` to inherit the same font (you don't want to specify it on every element), but it doesn't make sense for a `<p>` to inherit the `border` of the `<div>` that contains it.
+
+```css
+body {
+  font-family: 'Open Sans', sans-serif;  /* Inherited: all text uses this font */
+  color: #333;                            /* Inherited: all text is dark gray */
+  border: 1px solid red;                  /* NOT inherited: only the body has the border */
+  padding: 2rem;                          /* NOT inherited: only the body has the padding */
+}
+```
+
+If you need to force or block inheritance, CSS offers three special values:
+
+```css
+.child {
+  color: inherit;   /* Forces inheritance (take the parent's value) */
+  border: initial;  /* Returns to the browser's default value */
+  margin: unset;    /* If the property is inheritable, inherit. Otherwise, return to the browser's default */
+}
+```
+
+**Rule:** when a CSS rule "doesn't work", the cause is almost always one of these three: another rule overrides it by cascade, another rule has higher specificity, or the value is inherited from the parent. Check these three mechanisms before adding `!important`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 7. The Box Model (Every Element is a Box)
+
+Every HTML element, whether it's a heading, a paragraph, an image, or a button, is rendered by the browser as a **rectangular box**. This box has four layers, and understanding how they work will help you control the spacing and dimensions of elements.
+
+#### The Four Layers
+
+Imagine a painting hanging on a wall. The painting itself is the **content**. The mat, the white space between the painting and the frame, is the **padding** (internal space). The frame is the **border**. The space on the wall between one frame and another is the **margin** (external space).
+
+```
+┌────────────────────────── margin ─────────────────────────┐
+│                                                           │
+│   ┌────────────────────── border ─────────────────────┐   │
+│   │                                                   │   │
+│   │   ┌───────────────── padding ─────────────────┐   │   │
+│   │   │                                           │   │   │
+│   │   │             ┌─── content ───┐             │   │   │
+│   │   │             │   Text here   │             │   │   │
+│   │   │             └───────────────┘             │   │   │
+│   │   │                                           │   │   │
+│   │   └───────────────────────────────────────────┘   │   │
+│   │                                                   │   │
+│   └───────────────────────────────────────────────────┘   │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
+```
+
+The **content** is the text, image, or whatever the element contains. The **padding** is the space between the content and the border, and it has the element's background color. The **border** is the visible line around the element. The **margin** is the transparent space between the element and its neighbors.
+
+-----
+
+#### `box-sizing` (The Rule that Improves Everything)
+
+When you write `width: 200px` on an element, what do those 200 pixels refer to? The answer depends on the value of `box-sizing`.
+
+With `box-sizing: content-box` (the browser default), the 200px refer **only to the content**. Padding and border are added on top.
+
+```css
+/* content-box (default) */
+.box {
+  width: 200px;
+  padding: 20px;
+  border: 2px solid black;
+}
+/* Total width: 200 + 20 + 20 + 2 + 2 = 244px */
+```
+
+With `box-sizing: border-box`, the 200px **include** padding and border. The content shrinks to make room for them.
+
+```css
+/* border-box */
+.box {
+  box-sizing: border-box;
+  width: 200px;
+  padding: 20px;
+  border: 2px solid black;
+}
+/* Total width: 200px (the content occupies 156px) */
+```
+
+`border-box` is much more intuitive: if you say "this box is 200 pixels wide", it's 200 pixels wide. Period. This is why the universal reset is always used:
+
+```css
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+```
+
+-----
+
+#### Margin, Padding, and the Value Shorthand
+
+Both `margin` and `padding` use the same shorthand syntax. The number of values determines which sides they apply to:
+
+```css
+/* 1 value: all 4 sides */
+padding: 20px;
+
+/* 2 values: vertical | horizontal */
+padding: 10px 20px;
+
+/* 3 values: top | sides | bottom */
+padding: 10px 20px 30px;
+
+/* 4 values: clockwise (top | right | bottom | left) */
+padding: 5px 10px 15px 20px;
+```
+
+To horizontally center a block element with a defined width, you use `margin: 0 auto`. The `auto` value tells the browser "distribute the available space equally", and if you apply it to left and right, the result is centering.
+
+```css
+.container {
+  width: 800px;
+  margin: 0 auto; /* horizontally centered */
+}
+```
+
+-----
+
+#### Margin Collapse
+
+There's a CSS behavior that surprises everyone the first time: when two vertical margins touch, **they don't add up**. The browser uses only the larger of the two. This phenomenon is called *margin collapse*.
+
+```css
+h2 {
+  margin-bottom: 20px;
+}
+
+p {
+  margin-top: 15px;
+}
+```
+
+```
+What you expect:
+
+[    h2    ]
+      ↕ 20px (margin-bottom of h2)
+      ↕ 15px (margin-top of p)
+      = 35px of total space
+[    p     ]
+
+What actually happens:
+
+[    h2    ]
+      ↕ 20px (the larger margin wins)
+[    p     ]
+```
+
+The space between the `<h2>` and the `<p>` is **20px**, not 35px. The two margins "collapse" into one, the larger of the two.
+
+Margin collapse happens only vertically, never horizontally. And it happens only between margins that touch directly. If there's a border, padding, or content between the two elements, the collapse doesn't happen because the margins are no longer adjacent.
+
+```css
+/* ❌ Here margin collapse happens: the margins touch */
+.first { margin-bottom: 20px; }
+.second { margin-top: 15px; }
+/* Resulting space: 20px */
+
+/* ✅ Here it does NOT happen: the parent's border separates the margins */
+.container {
+  border: 1px solid transparent; /* Even a transparent border blocks the collapse */
+}
+```
+
+Margin collapse is not a bug, it's a CSS design choice. Without it, two paragraphs with `margin: 1rem 0` would have 2rem of space between them but only 1rem above the first and below the last, creating inconsistent spacing. With collapse, the space is always 1rem, uniform.
+
+-----
+
+#### Border, Border-Radius, and Outline
+
+The `border` uses a shorthand with three values: thickness, style, and color.
+
+```css
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px; /* rounded corners */
+}
+
+/* A perfect circle */
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+/* Different corners */
+.tag {
+  border-radius: 8px 8px 0 0; /* rounded at top-left and top-right, square at bottom-right and bottom-left */
+}
+```
+
+The `outline` is similar to `border` but with a fundamental difference: **it doesn't take up space** in the layout. The outline is drawn on top of the element without shifting anything. That's why it's the tool used by the browser for keyboard focus, and why you should never remove it without providing a visual alternative.
+
+```css
+/* ❌ WRONG, removes the focus indicator without an alternative */
+button:focus {
+  outline: none;
+}
+
+/* ✅ CORRECT, replaces the outline with a custom style */
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.5);
+}
+```
+
+**Rule:** use `border-box` on all elements. Padding is the internal space, margin is the external space. Vertical margins collapse: the largest wins. Never remove the focus outline without providing a visual alternative.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. Units of Measurement (Speaking the Right Language)
+
+CSS offers various units for expressing dimensions.
+
+#### Absolute Units: `px`
+
+The pixel is the most direct unit: 16px are 16 pixels on the screen, regardless of any context.
+
+```css
+.thin-border {
+  border: 1px solid #ccc;
+}
+
+.light-shadow {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+```
+
+Pixels are perfect for details that must stay fixed: borders, shadows, small decorative spacings. They're not the best choice for font-size and general spacing. The reason is accessibility: in browsers there's a setting that allows the user to increase the default text size (from 16px to 20px, for example), often used by visually impaired people. If your font-size is in `px`, that preference is ignored. If it's in `rem`, all text scales proportionally.
+
+-----
+
+#### Font-Relative Units: `rem` and `em`
+
+`rem` (*root em*) is relative to the `font-size` of the `<html>` element. 16px is the default value in browsers, what you find if it hasn't been modified by either the user or CSS, so `1rem = 16px`, `2rem = 32px`, `0.5rem = 8px`.
+
+```css
+h1 {
+  font-size: 2.5rem;    /* 40px with the browser default */
+  margin-bottom: 1rem;  /* 16px */
+}
+
+p {
+  font-size: 1rem;      /* 16px */
+  line-height: 1.6;     /* 1.6 times the font-size = 25.6px */
+}
+```
+
+The advantage of `rem` for accessibility is concrete: if a visually impaired user increases the browser's font-size from 16px to 20px, everything using `rem` scales proportionally. With `px`, nothing changes.
+
+A widespread trick to simplify mental calculations is:
+
+```css
+html {
+  font-size: 62.5%; /* 62.5% of 16px = 10px → now 1rem = 10px */
+}
+
+/* Now calculations are immediate */
+h1 { font-size: 3.2rem; } /* 32px */
+h2 { font-size: 2.4rem; } /* 24px */
+p  { font-size: 1.6rem; } /* 16px */
+```
+
+Since it's a percentage and not a fixed value, the trick doesn't compromise accessibility: if the user has set a different font-size in the browser, the 62.5% will be calculated on that value, and everything will continue to scale proportionally.
+
+`em` is relative to the `font-size` of the current element. It seems convenient, but it becomes unpredictable when you nest elements: each level multiplies the previous one.
+
+```css
+.parent { font-size: 1.5em; }                  /* 1.5 × 16px = 24px */
+.parent .child { font-size: 1.5em; }           /* 1.5 × 24px = 36px */
+.parent .child .grandchild { font-size: 1.5em; }   /* 1.5 × 36px = 54px! */
+```
+
+With `rem` this doesn't happen, because the reference is always the root's font-size, regardless of nesting. The only case where `em` makes sense is for properties like `padding` or `margin` that you want to scale with the font-size *of that specific element*:
+
+```css
+.button {
+  font-size: 1rem;
+  padding: 0.5em 1em; /* Padding scales with the button's font-size */
+}
+
+.button-large {
+  font-size: 1.5rem;
+  padding: 0.5em 1em; /* Same ems, but larger padding because the font is larger */
+}
+```
+
+The same nesting trap applies to `%` when you use it on `font-size`, we'll see it soon but you just need to know that: `font-size: 120%` refers to the parent's font-size, and if you nest three levels at 120%, the text grows exponentially (120% x 120% x 120% = 172%). For `width`, `padding`, and `margin`, `%` works well because it refers to the parent in a predictable way. For `font-size`, use `rem` instead.
+
+**Rule:** use `rem` as default. Reserve `em` only for padding and margin that need to be proportional to the local font-size. Never use `em` or `%` for `font-size` itself.
+
+-----
+
+#### Viewport-Relative Units: `vw`, `vh`, and `dvh`
+
+`vw` and `vh` are percentages of the browser window. `1vw` = 1% of the window width, `1vh` = 1% of the height.
+
+```css
+/* A hero section that takes up the entire screen */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Font-size that scales with screen width */
+.large-title {
+  font-size: 5vw;
+}
+```
+
+There's a known problem with `100vh` on mobile devices: the browser's address bar changes height during scroll (it hides when you scroll down and reappears when you scroll up). Since `100vh` refers to the height with the bar hidden, when the bar is visible the content gets cut off at the bottom. The `dvh` unit (*dynamic viewport height*) solves this problem by adapting to the actual height at every moment.
+
+```css
+/* Better than 100vh on mobile */
+.hero {
+  height: 100dvh;
+}
+```
+
+-----
+
+#### Percentage `%`
+
+The percentage, like `em`, is relative to the **parent**. `width: 50%` means "half the width of my parent".
+
+```css
+.column {
+  width: 50%; /* Half the container's width */
+}
+```
+
+There's a quirk in CSS worth knowing: percentage values for `padding` always refer to the **parent's width**, even when you apply them vertically. `padding-top: 50%` is not 50% of the parent's height, it's 50% of its width.  
+It seems like a bug, but before the `aspect-ratio` property arrived, developers exploited this quirk to create elements that always maintained the same proportions (for example a 16:9 video that would resize without distorting). Today `aspect-ratio: 16 / 9` solves the problem directly, but if you encounter an old project with an apparently senseless `padding-bottom: 56.25%`, now you know why it's there: 56.25% is 9 divided by 16, the height/width ratio of the 16:9 format, and it was the way to force a video's proportions.
+
+-----
+
+#### Size Functions
+
+CSS offers functions that allow calculations and conditional choices between values. They're the tool for creating layouts that adapt without needing media queries (the CSS rules that change styles based on screen size, we'll see them in <Link to="/docs/vademecum/css-real-world/layout-responsive#19-responsive-design-one-site-for-all-screens">section 19</Link>).
+
+**`calc()`** performs mathematical operations and, most importantly, can mix different units. You want content that takes up the full width minus a fixed 300px sidebar? With normal units you can't do it, because `100%` and `300px` are incompatible units. With `calc()` you can.
+
+```css
+.content {
+  width: calc(100% - 300px);
+}
+```
+
+**`min()`** compares the values you give it and uses the smallest. The browser recalculates them on every window resize.
+
+```css
+.sidebar {
+  width: min(300px, 100%);
+}
+```
+
+```
+Wide screen (1200px of available space):
+  min(300px, 100%) → min(300px, 1200px) → 300px wins (it's the smallest)
+
+Narrow screen (250px of available space):
+  min(300px, 100%) → min(300px, 250px) → 250px wins (it's the smallest)
+```
+
+The result: the sidebar is 300px wide when there's space, but automatically shrinks on small screens instead of overflowing.
+
+**`max()`** does the opposite: compares values and uses the largest. Useful for guaranteeing a minimum size.
+
+```css
+.section {
+  height: max(400px, 50vh);
+}
+```
+
+```
+Tall monitor (1000px):
+  max(400px, 50vh) → max(400px, 500px) → 500px wins (it's the largest)
+
+Short monitor (600px):
+  max(400px, 50vh) → max(400px, 300px) → 400px wins (it's the largest)
+```
+
+The result: the section is at least 400px tall, even on short screens where 50vh would be too little.
+
+**`clamp()`** combines `min()` and `max()` in a single function. It accepts three values in order: minimum, ideal, maximum. The browser uses the ideal value, but clamps it if it drops below the minimum or rises above the maximum.
+
+```css
+.title {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  /*               ↑        ↑      ↑
+            minimum: 24px  ideal  maximum: 48px  */
+}
+```
+
+The ideal value `4vw` means "4% of the window width". As the screen gets wider, that value grows. But `clamp()` keeps it between the two limits:
+
+```
+Mobile (400px wide):
+  4% of 400px = 16px → it's below the minimum (24px) → the browser uses 24px
+
+Tablet (800px wide):
+  4% of 800px = 32px → it's between 24px and 48px → the browser uses 32px
+
+Desktop (1200px wide):
+  4% of 1200px = 48px → it's at the maximum (48px) → the browser uses 48px
+
+Ultrawide (2000px wide):
+  4% of 2000px = 80px → it's above the maximum → the browser uses 48px
+```
+
+The result: the text grows gradually with the screen without ever becoming too small to be readable or too large to be disproportionate. All without media queries.
+
+**Rule:** use `rem` as the main unit for font-size and spacing. `px` for borders and shadows. `vw`/`dvh` for full-screen layouts. `%` for dimensions relative to the parent. `clamp()` for values that need to adapt with limits.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Summary (Foundations in Brief)
+
+| Concept | Key rule | Common trap |
+|---------|----------|-------------|
+| What is CSS | Describes visual appearance, separate from HTML | Mixing style and structure in the same file |
+| Linking CSS to HTML | External CSS with `<link>`, always | Using inline CSS for convenience and then being unable to maintain anything |
+| Rule anatomy | Selector + declarations inside `{ }`, semicolon mandatory | Forgetting the `;` and having rules that silently stop working |
+| Selectors | Classes as the main tool, IDs for JS and links | Using IDs everywhere and then being unable to override specificity |
+| Pseudo-classes | `:hover`, `:focus-visible`, `:is()`, `:has()` for states and context | Forgetting the LVHA order on links |
+| Pseudo-elements | `::before`/`::after` with mandatory `content` | Forgetting `content: ""` and seeing nothing |
+| Cascade | With equal specificity, the last declared rule wins | Not understanding why a rule written earlier is ignored |
+| Specificity | Inline > ID > class > type. Avoid `!important` | Entering the `!important` spiral to override other `!important`s |
+| Inheritance | Text properties are inherited, box properties are not | Wondering why the parent's `padding` doesn't propagate to children |
+| Box model | Content + padding + border + margin. Use `border-box` | Writing `width: 200px` and ending up with a 244px wide element |
+| Margin collapse | Adjacent vertical margins don't add up, the larger wins | Adding 20px + 15px and expecting 35px of space |
+| Units of measurement | `rem` for most things, `px` for details, `clamp()` for fluid | Using only `px` and having a site that doesn't scale with user preferences |
