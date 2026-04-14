@@ -26,6 +26,30 @@
 */
 
 
+/* ANDROID ASCII ART FALLBACK (Missing Glyphs Fix)
+   * Android's default system monospace font (e.g., Roboto Mono) often lacks 
+   * geometric Box Drawing characters (like ┌, ─, │), causing ASCII diagrams to collapse.
+   * I use a System Font Stack (monospace) as the primary choice for zero-latency loading 
+   * and native OS feel, and specifically to avoid typographic ligatures. Modern developer 
+   * fonts visually merge characters (e.g., turning HTML comments like <!-- and --> into 
+   * single connected arrows). Since this log is educational, users must clearly see the exact, 
+   * discrete keystrokes to replicate the code. For this reason, I extensively tested and 
+   * rejected the following fonts as primary options: JetBrains Mono, Fira Code, Space Mono, 
+   * Source Code Pro and Inconsolata.
+   *
+   * I inject Fira Code as a silent fallback. The browser will only use 
+   * Fira Code's characters when the native font fails to render the Box Drawings,
+   * ensuring perfect diagram alignment across all devices.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&display=swap');
+
+code,
+pre,
+.theme-code-block {
+  font-family: monospace, 'Fira Code';
+}
+
+
 /* UNIVERSAL & LIGHT MODE (Default Variables) */
 
 :root {
