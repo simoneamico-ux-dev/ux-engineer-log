@@ -1,0 +1,586 @@
+---
+sidebar_position: 1
+title: Fondamenta e Percezione
+description: Cos'è la UX/UI, percezione, affordance, feedback, legge di Jakob, mapping, vincoli, gerarchia visiva, spazio bianco, tipografia UI e colore.
+---
+
+import Link from '@docusaurus/Link';
+
+# UX & UI Real World Vademecum
+
+# Parte I: Fondamenta e Percezione
+
+Prima di disegnare un singolo componente a schermo, devi capire come il cervello dell'utente organizza, scansiona e decifra tutto ciò che vede.
+
+---
+
+## Le Fondamenta
+
+La UX/UI non è "fare cose belle". È costruire prodotti che le persone riescono a usare senza frustrazioni, senza dover pensare e senza dover chiedere aiuto.
+
+---
+
+### 1. UX e UI (Due Discipline, Un Obiettivo)
+
+La confusione più comune nel settore è trattare UX e UI come sinonimi. Non lo sono. Lavorano certamete insieme, ma fanno cose diverse.
+
+#### La Differenza
+
+La **UX** (User Experience) è l'esperienza complessiva dell'utente con il prodotto. Include la ricerca per capire cosa serve, i flussi per organizzare il percorso, l'architettura dell'informazione per strutturare i contenuti e i test per verificare che tutto funzioni. La UX si occupa del *percorso*, non dell'aspetto.
+
+La **UI** (User Interface) è l'interfaccia visiva con cui l'utente interagisce. Colori, tipografia, bottoni, spaziature, icone, animazioni. La UI si occupa dell'*aspetto*, non del percorso.
+
+Pensa a un ristorante. La UX è il servizio: come ti accolgono, quanto aspetti per sederti, se il menu è organizzato in modo che trovi subito quello che cerchi, se il cameriere ti porta il conto senza fartelo chiedere tre volte. La UI è l'impiattamento: come appare il piatto quando arriva al tavolo. Un ristorante con un servizio perfetto ma piatti presentati male perde clienti. Un ristorante con piatti bellissimi ma dove aspetti un'ora per ordinare perde anch'esso clienti. Servono entrambi.
+
+-----
+
+#### L'Aesthetic-Usability Effect
+
+C'è un fenomeno documentato nella ricerca: i prodotti più belli esteticamente vengono percepiti come più facili da usare, anche quando non lo sono. Si chiama *Aesthetic-Usability Effect*. Gli utenti perdonano piccoli problemi di usabilità se l'interfaccia è gradevole, e danno recensioni migliori della navigazione se il design è curato.
+
+Questo non significa che l'estetica sostituisca l'usabilità. Significa che sono complici: investire tutto in UX (ricerca, flussi, test) e trascurare la UI è un lavoro sprecato, perché l'utente percepirà il prodotto come meno funzionale di quanto in realtà è. Investire tutto in UI (colori, animazioni, grafica) e trascurare la UX è altrettanto sprecato, perché il prodotto sarà bello ma frustrante.
+
+**Regola:** UX e UI sono discipline diverse che lavorano insieme. La UX progetta il percorso, la UI progetta l'aspetto. Nessuna delle due funziona senza l'altra.
+
+<br />
+<br />
+<br />
+<br />
+
+### 2. Come l'Utente Vede Davvero la Tua Pagina
+
+Quando progettiamo un'interfaccia, immaginiamo un utente attento che legge ogni parola, valuta ogni opzione e sceglie la migliore. La realtà è molto diversa.
+
+#### L'Utente Scansiona, Non Legge
+
+Uno dei fatti più documentati sull'utilizzo del web è che le persone dedicano pochissimo tempo alla lettura. Scansionano la pagina cercando parole o frasi che corrispondono a quello che stanno cercando, esattamente come scansioniamo i titoli di un giornale per trovare l'articolo che ci interessa. Se non lo trovano in pochi secondi, se ne vanno.
+
+Quando creiamo un sito, pensiamo che l'utente leggerà ogni parola con attenzione, apprezzerà la struttura dei paragrafi e valuterà ogni opzione prima di cliccare. La realtà è molto più vicina a un cartellone pubblicitario visto da un'auto a 100km/h. L'utente scansiona, trova (o non trova) quello che cerca, e va avanti.
+
+Le ragioni sono tre. La prima: l'utente è in missione. Sta cercando di fare qualcosa, di solito in fretta. Non ha il tempo di leggere più del necessario. La seconda: sa che non deve leggere tutto, perché è interessato solo alla frazione di contenuto che corrisponde al suo obiettivo. Il resto è irrilevante. La terza: scansionare è un'abilità che ha praticato tutta la vita, con giornali, riviste e social. Sa che funziona.
+
+Implicazione pratica: non progettare per la lettura, progetta per la scansione. Titoli chiari, testo evidenziato nei punti chiave, aree visivamente distinte. Se il tuo design fosse un cartellone visto da un'auto a 100km/h, l'utente capirebbe cosa fare?
+
+Una nota importante: questo principio, come tutti quelli che troverai in questo vademecum, non è un dogma. Dipende dal contesto. Questo stesso sito che stai leggendo, per esempio, non segue molte delle regole che vedremo, e lo fa intenzionalmente dato che è un vademecum tecnico rivolto a chi studia, non un prodotto che deve catturare l'attenzione di un utente di passaggio. Il target è diverso, quindi le scelte di design sono diverse. Lo stesso ragionamento vale per il mobile-first che abbiamo visto nella <Link to="/docs/vademecum/css-real-world/layout-responsive#19-responsive-design-un-sito-per-tutti-gli-schermi">sezione 19 del CSS Vademecum</Link>: è il consiglio di default, ma se il tuo prodotto vive su desktop, partire da desktop è la scelta giusta. Non prendere per massime né ciò che trovi qui né i concetti osannati là fuori. Mettili in discussione caso per caso, perché il design è fatto di sfumature e "dipende", non di regole assolute.
+
+-----
+
+#### Satisficing (La Prima Soluzione Ragionevole)
+
+Le persone non scelgono l'opzione migliore. Scelgono la prima che sembra ragionevole. Il termine tecnico è *satisficing*, una fusione di "satisfying" e "sufficing".
+
+Immagina di atterrare su un e-commerce cercando cuffie bluetooth. La pagina mostra una griglia di prodotti, un menu laterale con filtri, una barra di ricerca e un banner promozionale. L'utente non scansiona tutti i 48 prodotti, non legge tutti i filtri, non valuta tutte le opzioni. Vede il primo prodotto che sembra quello giusto, lo clicca. Se non è quello, preme "indietro" e prova il secondo. Il pulsante "indietro" è il bottone più usato nei browser, e questo dice tutto sul comportamento reale degli utenti.
+
+Implicazione pratica: metti l'azione più importante dove l'utente la troverà per prima durante la scansione. Non dove ha "più senso logico" nella tua architettura dell'informazione, ma dove l'occhio la incontra naturalmente.
+
+-----
+
+#### "Ci Arrangiamo" (Nessuno Legge le Istruzioni)
+
+Una delle cose che diventano evidenti non appena fai un test di usabilità è la misura in cui le persone usano le cose senza capire come funzionano. Di fronte a qualsiasi tipo di tecnologia, pochissime persone si prendono il tempo di leggere le istruzioni. Procedono da sole e si arrangiano, talvolta inventando storie vagamente plausibili su cosa stanno facendo e perché funziona.
+
+Una volta che trovano qualcosa che funziona, per quanto strano e complesso come procedimento, tendono a non cercare un modo migliore. Useranno un modo migliore se ne trovano uno per caso, ma raramente lo cercano attivamente.
+
+Questo ha un'implicazione importantissima: se l'utente "capisce" la tua interfaccia, sarà più probabile che scopra tutte le funzionalità, che si senta in controllo, e che torni. Puoi farcela con un sito dove la gente si arrangia a fatica (sopratutto se il tuo prodotto è raro), ma funziona solo fino a quando qualcuno non ne costruisce uno migliore che li fa **sentire più intelligenti**.
+
+-----
+
+#### Auto-evidente vs Auto-esplicativo
+
+Il livello più alto di chiarezza è l'**auto-evidenza**: guardi l'interfaccia e capisci cosa fare. Nessuno sforzo mentale. La maggior parte delle interazioni quotidiane dovrebbe essere a questo livello.
+
+Quando stai facendo qualcosa di originale, innovativo o intrinsecamente complesso, puoi accettare l'**auto-esplicativo**: serve un piccolo sforzo per "capirla", ma ci arrivi subito. La combinazione di dimensioni, colori, layout e piccole quantità di testo ben strutturato crea comprensione quasi immediata.
+
+Se la tua interfaccia non è nemmeno auto-esplicativa, hai un problema. L'utente non si fermerà a cercare di capire. Se ne andrà e incolperà se stesso ("non sono abbastanza bravo con la tecnologia"), anche se la colpa è del design (quindi tua).
+
+-----
+
+#### I Principi Gestalt (Come il Cervello Organizza Ciò che Vede)
+
+Il cervello umano non vede pixel. Vede pattern. I principi della Gestalt descrivono come il cervello raggruppa e organizza gli elementi visivi.
+
+La **prossimità** è il più potente: elementi vicini vengono percepiti come un gruppo, anche senza bordi o linee di separazione. Nella pratica, questo significa che puoi raggruppare informazioni avvicinandole e separare sezioni aumentando lo spazio. Non servono box o linee divisorie. Una card prodotto con titolo, prezzo e bottone "Aggiungi al carrello" vicini tra loro viene percepita come un blocco unico, anche senza un contenitore visibile. Se però il prezzo è lontano dal titolo quanto dal bottone sotto, il cervello esita perché non sa a quale dei due appartiene. Lo stesso vale per i form: un'etichetta deve essere più vicina al suo campo che al campo precedente, altrimenti l'utente deve fermarsi a capire quale etichetta va con quale input.
+
+La **similitudine** fa percepire come correlati gli elementi che si assomigliano visivamente per forma, colore o dimensione. Nella pratica, questo significa che la coerenza visiva crea significato. Se tutte le azioni principali del tuo sito sono bottoni blu con angoli arrotondati, l'utente impara in fretta che "blu arrotondato = posso cliccare". Ma il principio va oltre i bottoni: se tutti i prezzi sono in verde e bold, l'utente li individua a colpo d'occhio in qualsiasi punto della pagina senza doverli cercare. Se tutte le card prodotto hanno la stessa struttura (immagine sopra, titolo sotto, prezzo in basso a destra), l'occhio sa già dove guardare dalla seconda card in poi. La similitudine è il motivo per cui un design system funziona: elementi che fanno la stessa cosa devono sembrare uguali, elementi che fanno cose diverse devono sembrare diversi.
+
+La **chiusura** fa completare al cervello le forme incomplete. Non abbiamo bisogno di vedere ogni dettaglio di un oggetto per riconoscerlo, il cervello riempie i vuoti da solo. Nella pratica, le icone delle interfacce funzionano su questo principio. Una lente d'ingrandimento disegnata con poche linee essenziali suggerisce "cerca" perché il cervello completa la forma. Un cerchio con un triangolo al centro dice "play" anche se non assomiglia a nessun oggetto reale. Questo spiega perché le icone minimaliste funzionano meglio di quelle troppo dettagliate: meno dettagli dai, più veloce è il riconoscimento, perché il cervello usa i pattern che già conosce invece di dover elaborare informazioni nuove. Lo stesso principio si applica ai layout. In un carosello, l'ultima card visibile è tagliata dal bordo dello schermo. Il cervello la completa e capisce che c'è altro contenuto oltre il bordo, il che invita allo scroll orizzontale senza bisogno di frecce o istruzioni. È un pattern che vedi su Netflix, Airbnb e negli app store, ed è pura chiusura applicata alla UI.
+
+La **figura-sfondo** fa separare automaticamente il primo piano dallo sfondo. Il cervello decide in ogni momento cosa è "l'oggetto" e cosa è "lo spazio dietro", e concentra l'attenzione sull'oggetto. Nella pratica, questo principio guida ogni decisione di contrasto nella tua interfaccia. Una modale con sfondo bianco che appare sopra un overlay scuro semitrasparente emerge come "la cosa su cui concentrarsi", mentre il resto della pagina diventa sfondo. Un bottone colorato su una toolbar neutra salta all'occhio proprio perché il cervello lo interpreta come figura e tutto il resto come sfondo. Quando un'interfaccia sembra "piatta" e nulla emerge, spesso il problema è che figura e sfondo non hanno abbastanza contrasto: tutto sembra sullo stesso piano e il cervello non sa cosa guardare per primo.
+
+La **continuità** fa seguire all'occhio linee e curve naturali. Quando gli elementi sono disposti lungo una direzione coerente, l'occhio li percorre senza sforzo, è come seguire un sentiero. Nella pratica, questo spiega perché un form con i campi allineati verticalmente su un unico asse si compila più fluidamente di uno con campi disposti a zig-zag. Spiega perché una timeline orizzontale (step 1 → step 2 → step 3) comunica progressione meglio di tre blocchi separati. E spiega perché spezzare la direzione di lettura ha un costo cognitivo: se una pagina scorre verticalmente ma a un certo punto compare una gallery a scroll orizzontale incastrata nel mezzo, l'utente deve cambiare direzione, capire che lì si scrolla di lato, poi tornare a scorrere in giù. Il flusso si interrompe e l'utente rallenta. Se il percorso è chiaro, l'utente lo segue senza pensarci.
+
+**Regola:** l'utente scansiona, non legge. Sceglie la prima opzione ragionevole, non la migliore. Il tuo design deve essere auto-evidente o, come minimo, auto-esplicativo. Usa la prossimità per raggruppare, la similitudine per creare coerenza, il contrasto per far emergere ciò che conta.
+
+<br />
+<br />
+<br />
+<br />
+
+### 3. Affordance (La Maniglia della Porta)
+
+Il termine *affordance* viene da Don Norman e descrive la qualità di un oggetto che suggerisce come va usato, senza bisogno di istruzioni.
+
+#### Il Concetto
+
+Quando vedi una maniglia su una porta, il cervello dice "tira". Quando vedi una placca piatta, dice "spingi". Non devi leggerlo e nemmeno pensarci. La forma dell'oggetto comunica l'azione. Se qualcuno mette una maniglia su una porta che va spinta, ha creato una trappola cognitiva (le *Norman Doors*). Una volta che impari a riconoscerle le vedi ovunque.
+
+Le forbici sono un esempio perfetto di affordance. I fori dicono "metti le dita qui". La dimensione dei fori dice quante dita. L'angolazione delle lame dice in che direzione tagliare. Nessuna istruzione necessaria.
+
+-----
+
+#### Affordance nel Design Digitale
+
+Nel digitale, l'affordance si costruisce con segnali visivi. Un bottone deve *sembrare* premibile: ombra leggera, colore di contrasto, bordi definiti. Un campo di testo deve *sembrare* pronto a ricevere input: bordo sottile, sfondo leggermente diverso, cursore che lampeggia. Un link deve *sembrare* cliccabile: colore diverso dal testo, sottolineatura o cambio di aspetto al passaggio del mouse. Un toggle switch *sembra* qualcosa che scorre avanti e indietro. Uno slider *sembra* qualcosa che si trascina.
+
+Se l'utente deve leggere un'etichetta per capire se un elemento è interattivo, l'affordance è assente.
+
+-----
+
+#### Il Disastro del Proiettore Leitz
+
+Norman usa un esempio che è diventato leggendario. Il proiettore per diapositive Leitz aveva un solo bottone che faceva tre cose diverse: andare avanti tra le diapositive, andare indietro e far uscire le diapositive dal caricatore. Non c'era nessun indicatore di quale funzione fosse attiva in quel momento. Il risultato: le diapositive cadevano per terra nel bel mezzo della presentazione.
+
+Tradotto per le tue interfacce: Evita un bottone che fa cose diverse in base al contesto senza che l'utente sappia in quale contesto si trova. Mai azioni distruttive che sembrano identiche alle azioni normali. Ma soprattutto mai eleganza a scapito della chiarezza.
+
+-----
+
+#### Scenari Concreti
+
+❌ Un e-commerce dove "Aggiungi al carrello" è un testo grigio senza sfondo, senza bordo e senza ombra. Sembra un'etichetta, non un bottone. L'utente non ci clicca perché non percepisce che sia un'azione possibile.  
+↓  
+✅ Lo stesso "Aggiungi al carrello" con sfondo colorato, bordi arrotondati e leggera ombra. L'utente sa immediatamente che può premerlo.
+
+❌ Un'app dove l'icona del cestino e l'icona di condivisione sono grigie, piccole e vicine nella toolbar. L'utente clicca "elimina" pensando di condividere. Due azioni di natura opposta (distruttiva e costruttiva) che si assomigliano visivamente.  
+↓  
+✅ L'icona di eliminazione è rossa e separata dalle altre azioni. L'icona di condivisione è blu e vicina alle altre azioni costruttive. Colore, posizione e distanza comunicano la natura di ogni azione.
+
+**Regola:** l'affordance fa capire come usare un oggetto senza spiegazioni. Nel digitale, costruiscila con ombra, colore, forma e contrasto. Se devi spiegare che qualcosa è cliccabile, il design ha fallito. Se due azioni opposte si assomigliano, hai creato una trappola.
+
+<br />
+<br />
+<br />
+<br />
+
+### 4. Feedback di Sistema (La Conversazione Muta)
+
+Ogni volta che l'utente compie un'azione, ha bisogno di sapere che è stata ricevuta e cosa sta succedendo. Il silenzio è il nemico più grande di un'interfaccia.
+
+#### Perché il Feedback è Essenziale
+
+Pensa a un interruttore della luce. Premi, la luce si accende. Feedback immediato. Ora immagina di premere l'interruttore e non succede nulla per 3 secondi. Penseresti che è rotto e lo premeresti altre 5 volte. Quel momento di incertezza ("ha funzionato o no?") è esattamente ciò che succede nell'interfaccia quando manca il feedback.
+
+Per un approfondimento su come il feedback si integra nel ciclo di azione completo di Norman, nella pagina dedicata a <Link to="/docs/bookshelf/the-design-of-everyday-things">The Design of Everyday Things</Link> trovi un componente Button progettato per attraversare cinque stadi distinti: riposo, intenzione, azione, attesa e conferma.
+
+-----
+
+#### I Tempi Critici
+
+Il software deve rispondere entro **100 millisecondi** per essere percepito come istantaneo. Entro **1 secondo** è accettabile, ma serve un indicatore visivo (un cambio di colore del bottone, uno spinner). Oltre **1 secondo** serve una barra di progresso o uno skeleton screen. L'utente non deve mai chiedersi "l'ho cliccato o no?".
+
+Lo *skeleton screen* (quella struttura grigia che vedi spesso sui social, e non solo, mentre il contenuto carica) è spesso migliore dello spinner perché comunica "il contenuto sta arrivando e avrà questa forma", mentre lo spinner comunica solo "sto lavorando".
+
+Un esempio di feedback che fa la differenza: clicchi "Invia ordine" su un e-commerce. Con feedback scadente, il bottone non cambia aspetto, la pagina sembra ferma, non sai se il click è andato a buon fine, e dopo 3 secondi la clicchi di nuovo (rischiando un ordine doppio). Con feedback eccellente, il bottone cambia colore immediatamente, compare uno spinner al suo interno, il testo diventa "Invio in corso...", e dopo 2 secondi la pagina mostra "Ordine confermato!" con un'animazione di conferma. L'utente non ha mai dubitato che il sistema stesse lavorando.
+
+-----
+
+#### Feedback Sonoro
+
+Bill Gaver, che ha studiato l'uso del suono nel design, sottolinea un punto che spesso dimentichiamo: il suono ci informa quando la nostra attenzione visiva è altrove. Sai che l'acqua bolle dal rumore, non perché la fissi. Sai che la macchina ha un problema dal suono del motore.
+
+Un suono di successo ("ding!") o di errore ("buzz!") comunica lo stato del sistema senza costringere l'utente a guardare lo schermo. È particolarmente utile in ambienti dove l'attenzione è divisa.
+
+Attenzione alla *tolleranza ripetitiva*: un suono soddisfacente la prima volta diventa insopportabile alla centesima. Più un suono si ripete frequentemente, più deve essere breve, discreto e "caldo".
+
+**Regola:** ogni azione dell'utente riceve una risposta. Entro 100ms per le azioni dirette. Skeleton screen o spinner per le attese. L'utente non deve mai chiedersi se il sistema ha ricevuto il suo input.
+
+<br />
+<br />
+<br />
+<br />
+
+### 5. Legge di Jakob (La Forza dell'Abitudine)
+
+Gli utenti passano il 99% del loro tempo su siti e app che non sono i tuoi. Si sono costruiti aspettative precise su come funzionano le cose, e si aspettano che il tuo prodotto rispetti quelle aspettative.
+
+#### Le Convenzioni che Non Si Toccano
+
+Il carrello è in alto a destra. Il logo riporta alla home. La lente d'ingrandimento significa "cerca". Il menu hamburger (se lo usi) è in alto a sinistra o a destra. L'azione primaria è il bottone più evidente della pagina. Il tasto indietro è a sinistra. Il tasto avanti è a destra.
+
+Queste non sono regole arbitrarie. Sono modelli mentali che miliardi di persone hanno interiorizzato. Infrangerle è come progettare un'auto con il freno a destra e l'acceleratore a sinistra perché "è più innovativo".
+
+-----
+
+#### La Visione a Z
+
+Nelle culture occidentali, l'occhio scansiona la pagina seguendo un pattern a Z: parte dall'alto a sinistra (dove di solito c'è il logo), si sposta in alto a destra (dove spesso c'è il profilo o il carrello), scende in basso a sinistra (dove trova il contenuto principale), e termina in basso a destra (dove c'è l'azione secondaria o la navigazione).
+
+Questo pattern è il risultato del modo in cui leggiamo. Posizionare gli elementi rispettando questo flusso rende la scansione naturale. Posizionarli contro il flusso crea attrito.
+
+-----
+
+#### Quando Innovare
+
+L'innovazione nella UI va dosata con il contagocce. Innova solo se il cambiamento migliora *drasticamente* l'efficienza o l'esperienza. In tutti gli altri casi, rispetta le convenzioni. Il tuo utente non vuole imparare un sistema nuovo per ogni sito che visita.
+
+Questo non significa che ogni sito debba sembrare uguale. Significa che le convenzioni di interazione (dove trovare le cose, come funzionano i controlli) restano familiari, mentre il visual design (colori, tipografia, personalità) differenzia.
+
+**Regola:** la familiarità batte la creatività nella maggior parte dei casi. Innova nel visual design, non nelle convenzioni di interazione. Se l'utente deve "imparare" la tua interfaccia è un problema.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. Mapping Naturale (I Fornelli e l'Interruttore)
+
+Il *mapping* è la relazione spaziale tra un comando e l'oggetto che controlla. Quando questa relazione è naturale, l'utente non deve pensare. Quando è arbitraria, l'utente deve ricordare (o indovinare).
+
+#### Il Caso dei Fornelli
+
+L'esempio classico di Norman: una cucina con 4 fornelli disposti due sopra e due sotto, ma le manopole sono tutte in fila orizzontale sotto il piano cottura. Quale manopola accende quale fornello? Devi leggere le etichette, o peggio, provare a caso. Ora immagina le manopole disposte a coppie, ognuna subito sotto il suo fornello. Zero dubbi, zero etichette.
+
+```
+❌ Fornelli in quadrato, manopole in fila:
+
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+      ○  ○  ○  ○       ← quale controlla quale?
+
+✅ Fornelli e manopole nella stessa disposizione:
+
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+      ○       ○
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+      ○       ○        ← nessun dubbio
+```
+
+Se per capire quale comando controlla quale elemento servono etichette, il design è difettoso. Le etichette sono un cerotto su un problema di mapping, mai una soluzione.
+
+-----
+
+#### Mapping nel Software
+
+Nel software, il mapping si traduce in vicinanza e disposizione. Il pulsante "Elimina" deve stare vicino all'elemento da eliminare, non in fondo alla pagina. I passaggi di un processo devono essere disposti nell'ordine in cui vengono eseguiti (step 1 in alto, step 2 sotto, mai il contrario). Un flusso che va da sinistra a destra rispetta il modo in cui leggiamo.
+
+Un esempio pratico: in un editor di testo, i controlli di formattazione (grassetto, corsivo, allineamento) sono nella toolbar subito sopra il testo. Non in un menu nascosto, non in una sidebar a destra. Sono dove l'utente guarda mentre scrive.
+
+Un altro esempio: gli interruttori di casa. Il modo più intuitivo di disporli è riflettere la posizione delle luci che controllano. Se le luci sono a sinistra, al centro e a destra, gli interruttori seguono lo stesso ordine.
+
+**Regola:** la posizione del comando deve riflettere la posizione di ciò che controlla. Se servono etichette per capire cosa controlla cosa, il mapping è sbagliato.
+
+<br />
+<br />
+<br />
+<br />
+
+### 7. Vincoli (Impedire gli Errori Prima che Accadano)
+
+Un vincolo è un limite progettuale che restringe le azioni disponibili, lasciando visibili o praticabili solo quelle corrette. L'utente non deve scegliere quella giusta tra tante opzioni, perché quelle sbagliate non esistono.
+
+#### I Quattro Tipi di Vincoli
+
+I **vincoli fisici** rendono impossibile l'azione sbagliata. La vecchia USB-A entrava in un solo verso ma la forma non comunicava quale, costringendoti a provare e riprovare (la USB-C ha risolto il problema poiché entra in entrambi i versi, rendendo impossibile l'errore). Un bottone disabilitato non si può cliccare. Un campo numerico che non accetta lettere. In questo modo non servono istruzioni, l'errore è strutturalmente impossibile.
+
+I **vincoli semantici** usano il significato per guidare. Il rosso significa stop, pericolo, errore. Il verde significa successo, conferma. Questi significati sono talmente radicati che violarli (un bottone verde per cancellare, un rosso per confermare) crea confusione immediata.
+
+I **vincoli culturali** sfruttano le convenzioni condivise. Leggiamo da sinistra a destra. L'icona dell'ingranaggio significa impostazioni. Il floppy disk significa salva (anche se nessuno under 25 ne ha mai visto uno reale). Violare questi vincoli costringe l'utente a imparare un sistema nuovo.
+
+I **vincoli logici** usano la coerenza del contesto per eliminare le opzioni che non hanno senso. Se hai selezionato "Italia" come paese, il campo successivo mostra solo le province italiane. Se il carrello è vuoto, il bottone "Procedi al pagamento" non compare. Se uno step di un processo richiede il completamento del precedente, lo step successivo resta inaccessibile finché non hai finito. L'utente non deve ragionare su cosa è valido e cosa no, il contesto lo fa per lui.
+
+-----
+
+#### Prevenzione dell'Errore (Euristica di Nielsen #5)
+
+La prevenzione è sempre meglio del recupero. Invece di mostrare "Formato data errato" dopo che l'utente ha digitato, mostra un calendario in cui si possono selezionare solo le date valide. Invece di permettere di inviare un form vuoto e poi mostrare 5 errori, disabilita il bottone "Invia" finché i campi obbligatori non sono compilati.
+
+L'obiettivo è che l'utente non possa fare la cosa sbagliata, non che venga punito per averla fatta.
+
+**Regola:** i vincoli fisici rendono l'errore impossibile. I vincoli semantici usano il significato per guidare. I vincoli culturali sfruttano le convenzioni. I vincoli logici usano la struttura. Il design migliore è quello in cui l'utente non *può* sbagliare.
+
+<br />
+
+### Riepilogo (Fondamenta in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| UX vs UI | La UX progetta il percorso, la UI progetta l'aspetto. Servono entrambe | Trattarle come sinonimi o investire su una sola |
+| Scansione | L'utente scansiona, non legge. Progetta per la scansione | Scrivere pagine dense di testo che nessuno leggerà |
+| Satisficing | L'utente sceglie la prima opzione ragionevole, non la migliore | Mettere l'azione importante dove ha "senso logico" ma non dove l'occhio la trova |
+| Auto-evidenza | L'interfaccia deve comunicare da sola cosa fare | Richiedere istruzioni per le interazioni base |
+| Gestalt | Prossimità per raggruppare, similitudine per coerenza, contrasto per enfasi | Non raggruppare visivamente gli elementi correlati |
+| Affordance | L'oggetto deve suggerire come si usa senza spiegazioni | Elementi interattivi che non sembrano cliccabili |
+| Feedback | Ogni azione riceve una risposta entro 100ms | Il silenzio dopo un click, l'utente non sa se ha funzionato |
+| Legge di Jakob | Rispetta le convenzioni, l'utente si aspetta che funzioni come gli altri siti | Reinventare la navigazione per essere "creativi" |
+| Mapping | La posizione del comando riflette ciò che controlla | Etichette come sostituto di un mapping naturale |
+| Vincoli | Impedisci l'errore prima che accada, non dopo | Permettere l'errore e poi mostrare un messaggio |
+
+<br />
+<br />
+<br />
+<br />
+
+## La Gerarchia Visiva
+
+La gerarchia visiva è lo strumento con cui guidi l'occhio dell'utente senza costringerlo a pensare.
+
+---
+
+### 8. Gerarchia Visiva (Non Urlare Tutto)
+
+Immagina una pagina dove ogni titolo è grande, ogni testo è in grassetto, ogni bottone è colorato e ogni sezione ha un bordo. Nulla emerge perché tutto compete per l'attenzione. L'esempio è estremo ma serve per farti capire che la gerarchia visiva esiste per evitare tutto questo: decide cosa l'utente deve vedere per primo, per secondo e per ultimo.
+
+La gerarchia visiva si crea soltanto con la dimensione del testo. Si crea con la combinazione di quattro strumenti: **contrasto** (chiaro vs scuro), **peso** (bold vs regular), **colore** (saturo vs neutro) e **posizione** (in alto vs in basso, a sinistra vs a destra). Un testo piccolo ma nero e in grassetto cattura l'occhio più di un testo grande ma grigio chiaro e sottile.
+
+#### Due Dimensioni di Font Bastano
+
+Uno degli errori più comuni è usare 8-10 dimensioni diverse di testo nella stessa interfaccia. In realtà, come suggerisce Refactoring UI, puoi creare tutta la gerarchia necessaria con solo due dimensioni: una per il testo base (400-500 di weight) e una per i testi più grandi (600-700 di weight). La differenziazione la fai con il colore e il peso.
+
+- **Primario**: nero, bold. È il titolo, l'informazione che l'occhio deve trovare per prima
+- **Secondario**: grigio scuro, regular. È il contenuto di supporto, il paragrafo che approfondisce
+- **Terziario**: grigio chiaro, small. È la nota, il timestamp, l'informazione meno importante
+
+Hai appena creato gerarchia senza cambiare la dimensione del font nemmeno di un pixel.
+
+Per vedere questi principi applicati nella pratica, nella pagina dedicata a <Link to="/docs/bookshelf/refactoring-ui">Refactoring UI</Link> trovi i concetti chiave del libro in azione.
+
+-----
+
+#### Le Etichette Sono l'Ultima Risorsa
+
+Un errore diffuso è mettere etichette ovunque: "Nome:", "Prezzo:", "Email:", "Ruolo:". Nella maggior parte dei casi, il contesto fa capire di cosa si tratta. Se vedi "Mario Rossi" sopra una foto profilo, non hai bisogno dell'etichetta "Nome:". Se vedi "€49.99" sotto un prodotto, non hai bisogno di "Prezzo:".
+
+Se un dato non è chiaro senza etichetta, spesso puoi chiarificarlo riformulando. Invece di "In stock: 12" scrivi "12 left in stock". L'informazione è la stessa, ma il contesto è integrato nel valore.
+
+L'unico caso in cui l'etichetta va enfatizzata è nelle schede tecniche, dove l'utente sta proprio cercando l'etichetta per trovare il dato ("Processore: M5 Pro", "RAM: 64GB"). In quel contesto, l'etichetta è ciò che l'utente scansiona, quindi va in evidenza. 
+
+-----
+
+#### Emphasize by De-emphasizing
+
+Se vuoi dare più enfasi a un elemento e stai spingendo sempre più forte (più grande, più grassetto, più colorato), fermati. Prova il contrario: de-enfatizza tutto il resto. Quando abbassi il volume degli elementi secondari, il primario emerge senza dover urlare.
+
+Un esempio concreto: hai una dashboard dove hai una tabella di dati e sopra una riga di controlli per restringere i risultati (per data, per categoria, per stato). Quei controlli hanno bordi marcati, sfondo colorato e testo in bold, e finiscono per attirare più attenzione della tabella stessa, che è il contenuto che l'utente è venuto a consultare. Invece di ingrandire la tabella o aggiungere bordi più spessi alle righe, togli peso ai controlli: bordi sottili, sfondo trasparente, testo in regular grigio. La tabella emerge da sola.
+
+Lo stesso principio si applica ai pulsanti. Se hai due azioni e non riesci a far capire quale è la principale enfatizzandola, prova a de-enfatizzare l'altra. Togli il bordo, togli lo sfondo, riducila a solo testo. La primaria emergerà da sola.
+
+-----
+
+#### Bilanciare Peso e Contrasto
+
+Icone grandi, bordi spessi, elementi visivamente "pesanti" catturano l'attenzione. Se un'icona è già grande e prominente di natura (come un'icona di navigazione) ma non dovrebbe dominare la gerarchia, abbassa il suo contrasto: grigio invece di nero, opacità ridotta. Il peso visivo (dimensione) viene bilanciato dal contrasto ridotto (colore più chiaro).
+
+Lo stesso vale per le linee di separazione tra sezioni. Se le fai troppo scure ottieni un design "duro", con bordi che saltano all'occhio più del contenuto. Se le fai troppo chiare ottieni un design "molle" dove le sezioni si confondono. La soluzione: mantieni un basso contrasto (grigio chiaro) ma aumenta leggermente lo spessore. Un bordo di 2px grigio al 15% separa meglio di un bordo di 1px grigio al 40%.
+
+-----
+
+#### La Gerarchia dei Pulsanti nella Pratica
+
+La gerarchia non riguarda solo il testo. Ogni interfaccia ha azioni di importanza diversa, e i pulsanti devono riflettere questa importanza. Concentrati sulla frequenza con cui un'azione viene compiuta per determinare la sua posizione nella gerarchia.
+
+❌ Una pagina di un'app bancaria con 5 bottoni blu identici in fila: "Trasferisci", "Paga", "Ricarica", "Investi", "Impostazioni". L'utente non sa quale cliccare per primo, l'occhio rimbalza tra tutti. L'azienda probabilmente ha pensato "il blu è il nostro colore, facciamoli tutti blu!". Ma la domanda giusta è: "Qual è l'azione che l'utente farà più spesso?".
+
+✅ In seguito ad una fase di ricerca scopri che "Trasferisci" deve essere il primario (sfondo blu pieno), "Paga" e "Ricarica" secondari (outline blu), "Investi" e "Impostazioni" terziari (solo testo). L'utente sa immediatamente dove guardare.
+
+**Regola:** la gerarchia si costruisce de-enfatizzando il secondario, non enfatizzando il primario. Bilancia peso e contrasto. Due dimensioni di font + peso e colore creano gerarchia sufficiente. Le etichette sono l'ultima risorsa.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Spazio Bianco (L'Ossigeno dell'Interfaccia)
+
+Pensa a un museo d'arte. I quadri non sono appiccicati uno all'altro come gli articoli nei volantini al supermercato. Hanno metri di muro vuoto attorno. Quello spazio non è "sprecato", è ciò che dà valore al quadro e permette di concentrarsi su uno alla volta. È lo stesso principio che nel design industriale guida gli spazi espositivi, dove il buon design agisce per sottrazione: l'oggetto respira, e il vuoto attorno comunica importanza. Nella UI funziona allo stesso modo.
+
+#### Parti con Troppo Spazio
+
+L'approccio istintivo è mettere tutti gli elementi e poi aggiungere spazio dove sembra affollato. L'approccio corretto è il contrario: parti con margini esagerati, poi riduci gradualmente finché non trovi l'equilibrio. È più facile togliere lo spazio successivamente piuttosto che aggiungerlo, poiché togliendolo vedi immediatamente quando lo spazio diventa insufficiente. Aggiungendolo, rischi di fermarti al "minimo indispensabile" invece di arrivare all'"ottimale".
+
+-----
+
+#### Non Devi Riempire Tutta la Schermata
+
+Se il tuo contenuto ha bisogno di 450px di larghezza, usa 450px anche se lo schermo ne ha 1400. La navbar può essere larga quanto lo schermo, ma il contenuto no. Un paragrafo che si estende da bordo a bordo su un monitor da 27 pollici è illeggibile, come guardare una partita di tennis dagli spalti: l'occhio fa avanti e indietro e dopo 5 minuti hai mal di testa.
+
+Se hai difficoltà a progettare per schermi grandi, riduci le dimensioni del canvas. O ancora meglio, progetta prima per mobile, poi adatta. Scoprirai che non sempre serve cambiare molto.
+
+-----
+
+#### La Dashboard è l'Eccezione
+
+C'è un caso in cui la densità alta è corretta: la dashboard. L'utente di una dashboard vuole tutte le informazioni a portata di mano, in una sola schermata, senza dover scrollare. Qui lo spazio bianco va ridotto (non eliminato), e la gerarchia si crea con colore, peso e separatori sottili.
+
+-----
+
+#### Spaziature Ambigue
+
+Un errore subdolo: se un titolo è equidistante dal paragrafo sopra e da quello sotto, il cervello non sa a quale dei due appartiene. Lo spazio tra un titolo e il suo contenuto deve essere minore dello spazio tra quel contenuto e la sezione successiva. La prossimità (Gestalt) deve rendere evidente la relazione.
+
+❌ 24px sopra il titolo, 24px sotto il titolo. A quale paragrafo appartiene?
+
+✅ 48px sopra il titolo, 16px sotto. Il titolo è chiaramente collegato a ciò che segue.
+
+**Regola:** parti con troppo spazio bianco e riduci gradualmente. Non riempire tutta la larghezza disponibile. Lo spazio non è vuoto, è struttura.
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Allineamento e Griglia
+
+L'occhio umano ama tracciare linee immaginarie. Se un elemento è spostato di 2 pixel rispetto a quello sopra, l'utente non dirà "è disallineato", dirà "questo sito non mi ispira fiducia". L'allineamento è un segnale inconscio di qualità e affidabilità.
+
+#### La Scala di Spaziatura
+
+Invece di scegliere valori a caso (13px qui, 17px là, 22px là), definisci una scala di valori predefiniti e usa solo quelli. La scala più diffusa parte da 16px (la dimensione font default dei browser) e cresce con salti progressivamente più ampi:
+
+```
+4px - 8px - 12px - 16px - 24px - 32px - 48px - 64px - 96px - 128px
+```
+
+I salti non sono lineari, e questo è intenzionale. Tra 4px e 8px la differenza è del 100%, perfettamente percepibile. Tra 40px e 48px la differenza è solo del 20%, quasi impercettibile. Per questo la scala salta da 32 a 48 (non passa per 40): la differenza deve essere sempre abbastanza grande da essere riconoscibile.
+
+-----
+
+#### Progettazione per Eliminazione
+
+Quando usi una scala predefinita, il processo decisionale si semplifica. Devi spaziare due elementi? Prova 16px. Sembra troppo poco? Prova 24px. Troppo? Torna a 16px. Così facendo non ti troverai mai a decidere tra 18px e 19px, perché quei valori non esistono nella tua scala.
+
+Questo approccio ha un vantaggio nascosto: anche senza saperlo esplicitamente, l'utente percepisce una coerenza sottile nel design, come quando tutti i mobili di casa sono della stessa linea. Non sa esattamente perché, ma "funziona".
+
+**Regola:** usa una scala di spaziatura predefinita (basata su 16px) per tutte le decisioni. Progetta per eliminazione: scegli tra pochi valori distinti. L'allineamento è un segnale inconscio di qualità.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Tipografia per la UI (Gerarchia Senza Dimensioni)
+
+Questa sezione non riguarda le proprietà CSS del testo (quelle le trovi nella <Link to="/docs/vademecum/css-real-world/visual-styling">Parte II del CSS Real World Vademecum</Link>). Qui parliamo delle scelte di design tipografico che determinano come l'utente legge e scansiona il tuo contenuto.
+
+#### Font per Titoli vs Font per Testo
+
+I font non sono tutti uguali, anche quelli che "si assomigliano". Un font progettato per i titoli (come Anton) ha lettere più strette e compatte, perfette per catturare l'attenzione in poco spazio. Un font progettato per il testo corrente (come Roboto) ha lettere più larghe e una x-height (l'altezza delle minuscole) maggiore, che rende la lettura lunga più confortevole.
+
+Se usi un font da titolo per paragrafi lunghi, il testo sarà faticoso da leggere. Se usi un font da testo per titoli grandi, perderanno impatto.
+
+-----
+
+#### Lunghezza della Riga
+
+Il limite ideale è tra **50 e 80 caratteri** per riga (le stesse linee guida WCAG raccomandano righe inferiori agli 80 caratteri). Se la riga è più lunga, l'occhio fa fatica a trovare l'inizio della riga successiva quando torna indietro. I giornali e i libri usano colonne strette per questo motivo. Nel CSS, usa `max-width` per contenere i paragrafi anche su schermi larghi.
+
+-----
+
+#### Line-Height Proporzionale
+
+L'altezza della riga e la larghezza del paragrafo devono essere proporzionali. Un testo stretto può usare un line-height di 1.5. Un testo largo (che si estende molto in orizzontale) ha bisogno di un line-height più alto, fino a 2, perché l'occhio deve "saltare" una distanza maggiore per tornare all'inizio della riga successiva.
+
+Anche la dimensione del font influisce: con un font piccolo serve più aria (line-height più alto) perché le righe sono vicine e si confondono. Con un font grande (titoli), serve meno aria (line-height 1.1-1.2) perché le righe sono poche e uno spazio eccessivo spezza il blocco visivo.
+
+-----
+
+#### Non Centrare Testi Lunghi
+
+Se un testo supera le 2-3 righe, non centrarlo. L'allineamento centrale funziona per titoli e sottotitoli brevi, dove l'occhio abbraccia l'intera riga in un colpo. Per i paragrafi, l'allineamento a sinistra è quasi sempre la scelta migliore perché crea un bordo sinistro costante che l'occhio usa come guida per trovare la riga successiva.
+
+Ad esempio, se hai più feature section e una di queste ha una riga in più, riformulare il testo per avere la stessa lunghezza in tutte, garantisce un design più coerente.
+
+**Regola:** 50-80 caratteri per riga. Line-height proporzionale alla larghezza. Non centrare testi lunghi.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Colore Funzionale (Non Dipingere, Segnala)
+
+Il colore nel design della UI deve essere prima di tutto funzionale, e non solo estetico. Il rosso di un semaforo non è lì perché sta bene con il paesaggio, è lì perché il cervello umano è cablato per vederlo come "stop" o "pericolo".
+
+#### Il Sistema 60-30-10
+
+Una regola collaudata per distribuire il colore nell'interfaccia:
+
+- **60% Neutro**: bianco, grigi, sfondi. È la tela su cui tutto il resto si appoggia
+- **30% Secondario**: il colore del brand. Identità visiva, intestazioni, elementi strutturali
+- **10% Accento**: call to action, stati di errore, conferme di successo. È il laser che guida l'occhio verso le azioni importanti
+
+Se il colore di accento è ovunque, perde il suo potere. Se il 60% neutro manca, l'interfaccia sembra un circo.
+
+-----
+
+#### La Trappola del Brand
+
+Se il colore del brand è rosso, non usare il rosso per i bottoni di conferma. L'utente lo percepirà come un'azione distruttiva o pericolosa. In quel caso, il brand fa un passo indietro rispetto alla funzione. Lo stesso vale al contrario: Spotify usa il verde del brand ovunque, ma un'azione distruttiva come "Elimina playlist" non dovrebbe essere verde. Il colore funzionale (rosso = pericolo, verde = successo) prevale sempre sul colore del brand quando c'è un conflitto.
+
+Un esempio reale: Feltrinelli usa il rosso come colore del brand. Nella loro interfaccia, il rosso è presente ma sui bottoni, come "Aggiungi al carrello", è stato usato il verde. Se avessero utilizzato il rosso quell'"Aggiungi al carrello" avrebbe assunto una connotazione da azione distruttiva che avrebbe confuso l'utente.
+
+-----
+
+#### Hai Bisogno di Molti Colori
+
+Pensare che bastino 3-5 colori è un errore comune. Un'interfaccia complessa ha in realtà bisogno di:
+
+- **Grigi**: 5-10 varianti, dal quasi-bianco al quasi-nero. La maggior parte dell'interfaccia è grigia
+- **Colore primario**: 5-10 varianti, dal chiarissimo (sfondi di avvisi) allo scurissimo (testo su sfondo chiaro)
+- **Colori di accento**: rosso per errori, verde per successi, giallo per avvisi, blu per informazioni. Ognuno con le proprie varianti
+
+-----
+
+#### Mai Grigio Puro
+
+Un grigio con saturazione 0% (nessun colore) crea un'interfaccia piatta e "da manuale". Aggiungere anche solo un lieve sottotono cromatico dà personalità. Un sottotono freddo (blu) crea un'atmosfera professionale e tech. Un sottotono caldo (giallo/arancione) crea un'atmosfera accogliente. Il sottotono deve essere coerente in tutta l'interfaccia: non mischiare grigi freddi e caldi.
+
+-----
+
+#### Non Affidarti al Solo Colore
+
+Il daltonismo colpisce circa l'8% degli uomini e lo 0,5% delle donne. Se l'unica differenza tra "successo" e "errore" è verde vs rosso, una persona daltonica non la vedrà. Aggiungi sempre un secondo canale di informazione: un'icona (↑ per positivo, ↓ per negativo), un testo ("Inviato con successo"), una texture o un pattern nei grafici.
+
+Combinazioni particolarmente problematiche: verde/rosso, verde/marrone, blu/viola, verde/blu, verde/nero.
+
+Un test rapido è quello di mettere l'interfaccia in scala di grigi. Se capisci ancora tutto, il tuo design non dipende dal colore.
+
+-----
+
+#### La Psicologia del Colore
+
+La psicologia del colore non è una tabella di corrispondenze fisse. Il blu comunica sicurezza e familiarità, ed è il colore dominante nel tech e nella finanza, ma non perché qualcuno l'ha deciso a tavolino. Il blu è il colore più presente in natura (cielo, acqua), il cervello lo associa a stabilità, e a differenza del rosso o del giallo non provoca attivazione fisiologica. È il colore che non disturba nessuno, per questo funziona come scelta "sicura" per chi non sa da dove partire.
+
+Il rosso è il suo opposto fisiologico: accelera il battito cardiaco, attira l'attenzione prima di qualsiasi altro colore, e porta con sé un significato di urgenza che nel digitale lo rende perfetto per errori e azioni distruttive, ma rischioso come colore primario del brand (come abbiamo visto con Feltrinelli). Il verde è radicato nella crescita e nella natura, e nel digitale si è consolidato come segnale di successo e conferma. Il giallo cattura l'attenzione quasi quanto il rosso ma stanca più in fretta, per questo funziona per avvisi e warning ma non per grandi superfici.
+
+Le sfumature contano più del colore in sé. Un verde salvia comunica calma e artigianalità, un verde neon comunica energia e tech. Un blu navy trasmette autorevolezza, un azzurro pastello trasmette leggerezza. Tutto questo per dire che due prodotti possono usare il blu e comunicare personalità opposte. La scelta non è quindi solo il colore, è la sua tonalità specifica.
+
+Il contesto culturale aggiunge un ulteriore livello: il bianco in Occidente è purezza e pulizia, in diverse culture asiatiche è il colore del lutto. Il rosso in Occidente è pericolo, in Cina è fortuna e prosperità. Se il tuo prodotto ha un pubblico internazionale, queste associazioni vanno assolutamente verificate.
+
+**Regola:** 60% neutro, 30% brand, 10% accento. Il colore funzionale prevale sul brand. Non affidarti al solo colore per comunicare informazioni. I grigi con sottotono cromatico danno personalità.
+
+<br />
+
+### Riepilogo (Gerarchia Visiva in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Gerarchia | De-enfatizza il secondario, non enfatizzare il primario | Tutto grande, tutto grassetto, tutto colorato |
+| Dimensioni font | 2 dimensioni + peso e colore bastano | Usare 8-10 dimensioni diverse nella stessa interfaccia |
+| Etichette | Ultima risorsa: il contesto chiarisce quasi sempre | "Nome:", "Prezzo:", "Email:" su ogni campo |
+| Spazio bianco | Parti con troppo e riduci. Non riempire tutta la schermata | Aggiungere spazio dopo, "il minimo indispensabile" |
+| Spaziature ambigue | Il titolo deve essere più vicino al suo contenuto che alla sezione precedente | Equidistanza sopra e sotto i titoli |
+| Scala spaziatura | Basata su 16px, salti non lineari, progettazione per eliminazione | Valori a caso (13px, 17px, 22px) |
+| Lunghezza riga | 50-80 caratteri. Usare max-width | Testo da bordo a bordo su schermi larghi |
+| Line-height | Proporzionale alla larghezza: 1.5 per stretto, 2 per largo | Un valore unico per tutto |
+| Allineamento testo | Baseline tra testi diversi, sinistra per paragrafi, centro solo per titoli brevi | Centrare testi lunghi |
+| Colore 60-30-10 | 60% neutro, 30% brand, 10% accento | Colore di accento ovunque che perde il suo potere |
+| Brand vs funzione | Il colore funzionale prevale sul brand in caso di conflitto | Rosso del brand usato per bottoni di conferma |
+| Accessibilità | Non affidarti al solo colore. Test in scala di grigi | Verde/rosso come unico indicatore di successo/errore |
+| Grigi | Sottotono caldo o freddo, mai grigio puro | Grigi con saturazione 0% che rendono l'interfaccia piatta |

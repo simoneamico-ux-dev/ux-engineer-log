@@ -1,0 +1,518 @@
+---
+sidebar_position: 2
+title: Design System e Componenti
+description: Scale di spaziatura, tipografia, colori, ombre, border-radius, personalità, pulsanti, card, navigazione, form e pattern UI.
+---
+
+import Link from '@docusaurus/Link';
+
+# UX & UI Real World Vademecum
+
+# Parte II: Design System e Componenti
+
+Ora che sai come l'occhio percepisce un'interfaccia, è il momento di costruire fisicamente i pezzi per realizzarla. Questa parte copre tutto ciò che ti serve per scalare il design senza creare caos.
+
+---
+
+## Il Design System
+
+Un design system è l'insieme di regole, scale e componenti che rendono il tuo design coerente e veloce da produrre. Invece di prendere ogni decisione da zero, hai un kit di valori predefiniti coerenti tra loro.
+
+---
+
+### 13. Cos'è un Design System (E Perché Ti Serve)
+
+Ogni volta che scegli una dimensione di font, un colore, un margine o un'ombra, stai prendendo una decisione. In un progetto complesso, queste decisioni si accumulano a centinaia. Senza un sistema, ognuna viene presa in modo indipendente, e il risultato è un'interfaccia dove i margini variano da 11px a 17px a 23px senza una logica, dove ci sono 14 sfumature di grigio leggermente diverse e dove ogni bottone ha un padding diverso.
+
+Un design system risolve questo problema definendo in anticipo un set limitato di valori per ogni proprietà. Non scegli più tra infinite opzioni, scegli tra 8-12 valori predefiniti coerenti tra loro. Il lavoro difficile lo fai una volta sola (scegliere i valori iniziali), e poi ogni decisione futura è rapida.
+
+#### Cosa Include un Design System
+
+Un design system completo comprende diversi livelli. Il **visual style** definisce il linguaggio visivo del brand. La **tipografia** stabilisce le scale di dimensioni e pesi. La **palette colori** include tutte le varianti di ogni colore, non solo il colore base. L'**iconografia** garantisce che tutte le icone abbiano lo stesso stile, spessore e proporzioni. Le **definizioni di griglia** fissano le colonne e i breakpoint. Le **guidelines** coprono sia le regole di design che quelle di implementazione (come tradurre il design in codice). I **pattern UI** documentano come si comportano gli elementi ricorrenti. I **componenti base** (pulsanti, card, input, modali) sono pronti per essere riutilizzati. I **template** mostrano come i componenti si combinano in layout completi.
+
+Non devi definire tutto prima di iniziare. Costruisci il sistema man mano che prendi decisioni. La regola è: se ti trovi a fare la stessa scelta per la seconda volta, trasformala in una regola del sistema. Se stai decidendo "quale grigio uso per il testo secondario?" e l'hai già fatto ieri (e il risultato ti convince), è il momento di fissare quel grigio.
+
+-----
+
+#### I Design System da Studiare
+
+I design system più noti sono Material Design (Google), Human Interface Guidelines (Apple), Polaris (Shopify), Fluent (Microsoft) e Carbon (IBM). Sono tutti pubblici e consultabili online. Noterai che tutti seguono lo stesso schema: partono dalle fondamenta (colori, tipografia, spaziatura), poi definiscono i componenti, poi mostrano come combinarli in pattern e template.
+
+Un approccio pratico per iniziare il tuo: crea una pagina in Figma (la *sticker sheet*) dove raccogli tutti i componenti che usi, con i loro diversi stati (default, hover, active, disabled). Ogni volta che crei un nuovo componente, aggiungilo alla sticker sheet. Col tempo diventa il tuo design system.
+
+**Regola:** un design system è un investimento che ripaga in velocità e coerenza. Non definire tutto subito, trasforma ogni decisione ripetuta in una regola del sistema.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Scale di Spaziatura
+
+La spaziatura è il collante invisibile dell'interfaccia. Se è incoerente, il design sembra amatoriale anche con colori e font perfetti.
+
+#### La Scala Basata su 16px
+
+La scala più diffusa parte da 16px (la dimensione font default dei browser) e cresce con moltiplicatori progressivi:
+
+```
+4px   (16 × 0.25)
+8px   (16 × 0.5)
+12px  (16 × 0.75)
+16px  (16 × 1)      ← BASE
+24px  (16 × 1.5)
+32px  (16 × 2)
+48px  (16 × 3)
+64px  (16 × 4)
+96px  (16 × 6)
+128px (16 × 8)
+```
+
+I moltiplicatori non sono lineari. I salti piccoli (0.25, 0.5, 0.75) servono per i dettagli interni ai componenti (padding di un bottone, spazio tra un'icona e il testo). I salti medi (1.5, 2, 3) per le separazioni tra elementi. I salti grandi (4, 6, 8) per le separazioni tra sezioni.
+
+-----
+
+#### Perché Non la Regola degli 8px
+
+La regola degli 8px (dove tutto è multiplo di 8) è un buon punto di partenza ma ha un difetto: i salti tra valori alti diventano troppo piccoli per essere percepiti. La differenza tra 40px e 48px è solo il 20%, quasi impercettibile. La scala sopra risolve questo problema: i salti sono sempre abbastanza grandi da essere riconoscibili, perché segue una progressione dove il rapporto tra valori adiacenti resta significativo.
+
+-----
+
+#### Il Workflow Veloce
+
+Quando devi spaziare due elementi, il processo è: prova un valore dalla scala. Non basta? Prendi il successivo. Troppo? Prendi il precedente. Così facendo non ti troverai mai a decidere tra 37px e 39px, perché quei valori non esistono. Questa limitazione è una vera e propria liberazione, non una restrizione.
+
+Nel CSS, puoi implementare la scala con variabili:
+
+```css
+:root {
+  --spazio-1: 4px;
+  --spazio-2: 8px;
+  --spazio-3: 12px;
+  --spazio-4: 16px;
+  --spazio-5: 24px;
+  --spazio-6: 32px;
+  --spazio-7: 48px;
+  --spazio-8: 64px;
+  --spazio-9: 96px;
+}
+```
+
+**Regola:** definisci una scala di spaziatura e usa solo quei valori. La scala basata su 16px con salti non lineari è attualmente lo standard industriale.
+
+<br />
+<br />
+<br />
+<br />
+
+### 15. Scale di Tipografia
+
+#### La Scala Pratica
+
+Come per la spaziatura, definire in anticipo le dimensioni del testo evita l'anarchia dei pixel:
+
+```
+12px - 14px - 16px - 18px - 20px - 24px - 30px - 36px - 48px - 60px - 72px
+```
+
+Questa scala non segue un rapporto matematico puro (come il "perfect fifth" 1.5×), ma è stata selezionata per funzionare nella pratica. I valori sono tutti distinti a sufficienza da creare gerarchia visibile, e sono abbastanza fitti nelle dimensioni piccole (dove le differenze contano di più) e più distanziati nelle grandi (dove una differenza di 2px è impercettibile).
+
+-----
+
+#### Gli Elementi Non Scalano Uniformemente
+
+Un errore comune è pensare che se un titolo è 2.5× il testo base su desktop, debba essere 2.5× anche su mobile. Non funziona. Se il testo base su desktop è 18px, il titolo a 2.5× è 45px, perfetto. Su mobile il testo base scende a 14px, e 2.5× sarebbe 35px, troppo grande per uno schermo piccolo. La dimensione giusta su mobile è circa 22px, che è 1.6× il testo base. Pertanto, le proporzioni cambiano tra breakpoint.
+
+Questo è il motivo per cui `em` è sempre sconsigliato per le scale tipografiche: mantiene lo stesso rapporto su tutti gli schermi, ma i rapporti che funzionano su desktop sono sbagliati su mobile. Meglio dichiarare dimensioni esplicite per breakpoint.
+
+**Regola:** definisci una scala tipografica (12-72px) e usa solo quei valori. Le proporzioni tra dimensioni cambiano tra desktop e mobile.
+
+<br />
+<br />
+<br />
+<br />
+
+### 16. Scale di Colore
+
+#### Costruire la Palette
+
+Non basta scegliere un colore e usarlo. Come abbiamo già visto, nella pratica, ogni colore ha bisogno di **varianti**: una versione chiarissima per gli sfondi di avvisi e badge, una scura per il testo su sfondo chiaro, e tutto ciò che sta in mezzo. Se il tuo colore primario è un blu e lo usi solo nella versione base, la prima volta che devi fare uno sfondo blu tenue per un avviso informativo e non hai nulla di pronto, ti ritroverai ad inventare un colore al volo. Dopo dieci volte, hai dieci blu leggermente diversi nell'interfaccia.
+
+Il processo per costruire una scala coerente:
+
+1. Parti dal **colore base** (il 500): quello che userai per i bottoni e la CTA principale. Sceglilo testando se funziona come sfondo di un bottone con testo bianco sopra. Se il contrasto è sufficiente e il colore rappresenta il tuo brand, è il tuo punto di partenza
+2. Crea la variante **più scura** (900): quasi nero ma con la tonalità del colore ancora percepibile. E la **più chiara** (100): quasi bianco con un soffio del colore
+3. Riempi i gradini centrali: il 700 e il 300 sono i compromessi a metà strada. Poi 800, 600, 400, 200
+
+Il risultato è una scala di 9 varianti. Puoi chiamarle con numeri (100-900) come fa Tailwind CSS, così il nome comunica la luminosità: 100 è chiaro, 900 è scuro, senza ambiguità.
+
+-----
+
+#### Compensare la Perdita di Saturazione
+
+Quando schiarisci un colore aumentando la luminosità (L in HSL), il colore sembra sbiadito. Non basta aggiungere luce, devi anche aumentare la saturazione per compensare. Un blu a `hsl(210, 80%, 50%)` diventa spento e privo di intensità a `hsl(210, 80%, 80%)`. Compensando la saturazione con `hsl(210, 95%, 80%)` il colore resta vivido.
+
+Lo stesso vale quando scurisci: il colore diventa fangoso se riduci solo la luminosità. Aumenta leggermente la saturazione anche in quel caso.
+
+-----
+
+#### Ruotare la Tonalità per Cambiare Luminosità
+
+Un trucco avanzato: invece di schiarire un colore aggiungendo bianco (che lo desatura), puoi ruotare la tonalità verso un colore che il cervello percepisce come naturalmente più chiaro. I colori vicini a giallo (60°), ciano (180°) e magenta (300°) sono percepiti come più chiari. I colori vicini a rosso (0°), verde (120°) e blu (240°) sono percepiti come più scuri.
+
+Questo è particolarmente utile per il giallo: se scurisci il giallo riducendo la luminosità, ottieni un marrone spento. Se invece ruoti verso l'arancione mentre scurisci, ottieni un giallo dorato pieno di intensità.
+
+-----
+
+#### Grigi Caldi e Freddi
+
+I grigi con saturazione 0% tendono ad apparire piatti e inespressivi. Aggiungendo anche solo un 5–15% di saturazione, con una tonalità calda (giallo/arancione, hue ≈ 40°) o fredda (blu, hue ≈ 210°), il grigio acquista carattere. Un sito tech guadagna autorevolezza con grigi freddi; uno di cucina risulta più accogliente con grigi caldi. L'unica regola: la temperatura deve restare coerente in tutta l'interfaccia.
+
+**Regola:** ogni colore ha bisogno di 5-10 varianti (da 100 a 900). Compensa la saturazione quando cambi luminosità. I grigi con sottotono cromatico danno personalità.
+
+<br />
+<br />
+<br />
+<br />
+
+### 17. Scale di Ombre e Border-Radius
+
+#### I 5 Livelli di Ombra
+
+Come i colori e le spaziature, anche le ombre vanno sistematizzate. Creare un'ombra diversa per ogni elemento porta allo stesso caos dei colori scelti al volo. 5 livelli fissi coprono tutti i casi che incontrerai:
+
+- **Livello 1**: appena percepibile. Per card informative non interattive, separazioni sottili tra sezioni. L'utente non la nota consciamente, ma il cervello percepisce che l'elemento è "leggermente sollevato"
+- **Livello 2**: leggera elevazione. Per card cliccabili e bottoni nello stato default. Comunica "puoi interagire con me"
+- **Livello 3**: media elevazione. Per dropdown aperti, tooltip, menu contestuali. L'elemento è chiaramente sopra il contenuto della pagina
+- **Livello 4**: alta elevazione. Per modali, dialog, overlay. L'elemento cattura l'attenzione e oscura il resto
+- **Livello 5**: massima elevazione. Per notifiche urgenti, elementi che devono dominare tutto
+
+Nella <Link to="/docs/vademecum/css-real-world/visual-styling#12-bordi-ombre-ed-effetti-visivi">sezione 12 del CSS Real World Vademecum</Link> abbiamo visto come implementare le ombre con `box-shadow`. Qui il punto è diverso: nel design system, definisci i 5 livelli una volta sola e poi ogni volta che serve un'ombra scegli il livello. Non inventi valori nuovi.
+
+Le ombre migliori sono composte da due strati. Il primo simula la luce diretta: è morbido, grande, con offset verticale marcato. Il secondo simula l'ombra sotto l'oggetto dove la luce ambientale non arriva: è piccolo, più scuro, con offset ridotto. Insieme creano un effetto molto più realistico di un'ombra singola.
+
+Nelle interazioni, l'ombra è parte del feedback. Hover: l'ombra cresce di un livello e l'elemento sembra sollevarsi. Click/pressed: l'ombra si riduce o scompare e l'elemento sembra premuto verso il basso. Rilascio: torna al livello originale. Questo ciclo comunica fisicamente lo stato dell'interazione.
+
+-----
+
+#### Border-Radius Coerente
+
+Definisci un sistema di arrotondamenti e usalo ovunque:
+
+- **0px**: design sharp, formale, minimale
+- **4-8px**: arrotondamento standard, il più comune
+- **12-16px**: arrotondamento pronunciato, più giocoso come effetto
+- **Pill (999px)**: completamente arrotondato, per badge e tag
+
+La regola fondamentale: non mischiare angoli quadrati e arrotondati nella stessa interfaccia. Se le card sono arrotondate, anche i bottoni, gli input e i badge devono esserlo. La coerenza è più importante della scelta specifica.
+
+-----
+
+#### Raggi Concentrici (La Formula di Apple)
+
+Quando un elemento arrotondato contiene un altro elemento arrotondato (un bottone dentro una card), i raggi devono essere concentrici. Significa che la curva interna e quella esterna devono correre parallele, come due corsie di una pista da corsa: la corsia interna ha un raggio più stretto di quella esterna, ma la distanza tra le due resta costante. La formula è semplice: **raggio dell'elemento interno = raggio dell'elemento esterno - padding tra i due**.
+
+Se la card ha un raggio di 16px e il bottone è a 8px dal bordo, il bottone deve avere un raggio di 8px (16 - 8). Se invece dai lo stesso raggio a entrambi, lo spazio tra le due curve non è uniforme: si assottiglia negli angoli e si allarga sui lati. L'occhio percepisce qualcosa di storto senza sapere cosa, e il design perde quella sensazione di "fatto bene". Apple applica questa regola ovunque, dalle icone delle app ai bordi delle finestre, ed è uno dei motivi per cui i loro prodotti trasmettono una coerenza visiva ossessiva.
+
+**Regola:** 5 livelli di ombra fissi, ombre a due strati per realismo. Border-radius coerente in tutta l'interfaccia. Raggi concentrici per elementi annidati.
+
+<br />
+<br />
+<br />
+<br />
+
+### 18. Personalità del Design
+
+Ogni interfaccia comunica una personalità. La scelta del font, dei colori, degli arrotondamenti e del linguaggio racconta il prodotto stesso.
+
+#### Gli Strumenti della Personalità
+
+La **tipografia** è il segnale più forte. Un font serif (con grazie) comunica eleganza e tradizione. Un sans-serif arrotondato comunica giocosità. Un sans-serif geometrico comunica modernità e tech. Un monospace comunica tecnicismo.
+
+Il **colore** definisce il tono emotivo. Il blu è sicuro e familiare. Il rosa è divertente. L'oro comunica lusso. Il nero comunica eleganza minimalista.
+
+Il **border-radius** contribuisce più di quanto pensi. Angoli a 0px sono formali e seri. Angoli grandi (16px+) sono giocosi e amichevoli.
+
+Il **linguaggio** dell'interfaccia chiude il cerchio. "Thank you, Mr. Benson, your reservation has been confirmed" è formale e professionale. "Sweet, thanks Steve! You're all set!" è informale e amichevole. Le parole sono ovunque in un'interfaccia, e scegliere il tono giusto è tanto importante quanto scegliere il colore giusto.
+
+-----
+
+#### Come Decidere la Personalità
+
+Se non sai da dove partire, guarda cosa usano le persone che vuoi raggiungere. Se il loro mondo è serio e professionale, sii serio e professionale. Se è giocoso e informale, segui quella direzione. Non copiare i competitor diretti (non vuoi sembrare una copia), è ispirandoti al tono del settore che ti posizionerai correttamente.
+
+**Regola:** la personalità del design emerge da tipografia, colore, arrotondamenti e linguaggio. Deve essere coerente e intenzionale, non accidentale.
+
+<br />
+
+### Riepilogo (Design System in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Design system | Definisci le regole una volta, applica sempre | Prendere ogni decisione da zero, ogni volta |
+| Scala spaziatura | Basata su 16px, salti non lineari | Valori casuali (13px, 17px, 22px) |
+| Scala tipografica | 12-72px predefiniti. Proporzioni diverse su mobile | Mantenere lo stesso rapporto su tutti i breakpoint |
+| Scala colore | 9 varianti per colore, da 100 a 900 | Un solo colore senza varianti |
+| Compensazione saturazione | Quando schiarisci, aumenta anche la saturazione | Schiarire e ottenere colori slavati |
+| Grigi | Sottotono caldo o freddo, coerente in tutta l'interfaccia | Grigi puri (saturazione 0%) |
+| Ombre | 5 livelli fissi, due strati per realismo | Ombre ad hoc per ogni elemento |
+| Border-radius | Sistema coerente, raggi concentrici per elementi annidati | Mischiare angoli quadrati e arrotondati |
+| Personalità | Font + colore + arrotondamenti + linguaggio | Personalità incoerente o accidentale |
+
+<br />
+<br />
+<br />
+<br />
+
+## I Componenti
+
+I componenti sono i mattoni dell'interfaccia. Ogni bottone, card, menu e campo di input ha regole precise che, se rispettate, rendono l'interazione naturale. Se ignorate, creano attrito.
+
+---
+
+### 19. Pulsanti (La Gerarchia delle Azioni)
+
+La regola più importante sui pulsanti: **una sola call to action primaria per pagina**. Il tuo compito è decidere quale azione è la più importante e darle il posto d'onore.
+
+#### La Gerarchia dei Pulsanti
+
+I pulsanti si dividono in tre livelli gerarchici.
+
+Il **primario** è l'azione principale, quella che vuoi che l'utente compia. Colore pieno, contrasto alto, posizione prominente. Ce n'è uno solo per schermata.
+
+Il **secondario** è l'alternativa. Outline (bordo senza sfondo) o colore attenuato. Presente solo se c'è un primario accanto, il secondario da solo difficilmente ha senso.
+
+Il **terziario** è l'azione meno importante. Solo testo, senza box. Puoi averne quanti ne vuoi nella stessa schermata.
+
+❌ Tre bottoni blu della stessa dimensione in fila. Quale è la CTA? Non si capisce.
+
+✅ Un bottone primario blu, un secondario outline, un terziario solo testo. La gerarchia è immediata.
+
+-----
+
+#### Il Pulsante Distruttivo
+
+Il pulsante distruttivo ("Elimina", "Cancella account") non deve essere sempre rosso e in evidenza. Dipende dal contesto. Se non è l'azione principale della schermata, trattalo come un secondario o terziario con testo rosso. Rendilo primario rosso solo se è effettivamente la CTA della pagina (come in una schermata di conferma eliminazione).
+
+Scenario reale: il totem del McDonald's ha un pulsante per annullare l'ordine posizionato come semplice terziario tra le altre opzioni. Sembra innocuo, ma l'utente potrebbe premerlo per sbaglio perché non si distingue visivamente dalle azioni "normali". L'opposto è il caso di Spotify: il bottone "Chiudi l'account ed elimina i miei dati" è verde e invitante, lo stesso verde del brand. Il colore comunica "azione positiva" quando in realtà è un'azione che probabilmente non vuoi compiere di impulso.
+
+Abbiamo già visto come Feltrinelli utilizzi saggiamente il verde per la CTA rispetto al rosso, nonostante sia il colore del brand. Il rosso comunica "pericolo" o "distruzione" nel linguaggio universale della UI. L'utente esiterebbe davanti a un bottone rosso "Aggiungi al carrello" perché il colore dice una cosa e il testo ne dice un'altra.
+
+-----
+
+#### Padding, Dimensioni e Allineamento
+
+Il rapporto ideale di padding nei pulsanti è circa **1:2 tra altezza e lunghezza**. Se il padding verticale è 12px, quello orizzontale deve essere di circa 24px. Questo crea un bottone che appare agli occhi equilibrato.
+
+Definisci **massimo 3 dimensioni** di pulsanti nel design system (small, medium, large). Tre dimensioni coprono tutti i contesti: small per gli spazi compatti come toolbar e tabelle, medium per l'uso generale, large per le CTA che devono dominare la schermata.
+
+I pulsanti devono allinearsi alla larghezza del contenuto soprastante. Se un'immagine è larga 300px, il pulsante sotto è largo 300px. Questo crea continuità visiva e il design "suona bene" anche senza che l'utente capisca perché.
+
+-----
+
+#### Gli Stati dei Pulsanti
+
+Ogni pulsante ha 5 stati visivi: **default** (come appare normalmente), **hover** (il mouse è sopra, leggero cambio di colore o elevazione), **active/pressed** (l'utente sta cliccando, il bottone si "preme"), **disabled** (grigio, opacità ridotta, non cliccabile) e **focus** (selezionato da tastiera, con outline per accessibilità). Questi sono gli stati che definisci nel design system e implementi in CSS, le proprietà statiche del componente. Quello che succede *dopo* il click (l'attesa, la conferma, il feedback visivo che accompagna l'utente fino al risultato) è comportamento dell'interazione, e lo abbiamo approfondito nella <Link to="/docs/vademecum/ux-ui-real-world/foundations-and-perception#4-feedback-di-sistema-la-conversazione-muta">sezione 4 sul Feedback di Sistema</Link>.
+
+**Regola:** un primario per pagina. Il distruttivo non è sempre rosso. Rapporto padding 1:2. Max 3 dimensioni nel sistema. Ogni pulsante ha 5 stati.
+
+<br />
+<br />
+<br />
+<br />
+
+### 20. Card (Raggruppare e Invitare)
+
+Le card sono contenitori visivi che raggruppano informazioni correlate. Sono uno dei pattern più usati nelle interfacce moderne, dai feed social ai cataloghi prodotti.
+
+#### Ombra Solo se Cliccabile
+
+Se la card è cliccabile (porta a un dettaglio, apre un prodotto), aggiungi un'ombra leggera. L'ombra comunica "puoi interagire con me". Se la card serve solo a raggruppare informazioni senza interazione, usa solo uno stroke (bordo sottile) o un colore per la card leggermente diverso rispetto allo sfondo della pagina. L'ombra su una card non cliccabile crea un'aspettativa di interazione che al click si traduce in frustrazione.
+
+-----
+
+#### Clusterizzazione
+
+Se una card ha molte informazioni (ad esempio titolo, sottotitolo, prezzo, disponibilità, rating, bottone), il cervello dell'utente deve scansionare 6 elementi separati. Sono troppi. Raggruppali in blocchi visivi usando lo spazio bianco: meno spazio tra gli elementi di uno stesso blocco, più spazio tra blocchi diversi. Titolo e sottotitolo diventano un blocco. Prezzo e disponibilità diventano un altro. Rating e bottone un terzo. Ora l'utente scansiona 3 blocchi, non 6 elementi.
+
+Il concetto è lo stesso della Law of Common Region (uno dei principi della Gestalt che abbiamo già visto): gli elementi che condividono una regione visiva vengono percepiti come un gruppo. Non servono bordi o linee, basta la prossimità.
+
+-----
+
+#### Immagini nelle Card
+
+L'approccio moderno è portare l'immagine fino al bordo della card (edge-to-edge), senza padding tra immagine e bordo. Crea un aspetto più pulito e minimal rispetto all'immagine incastrata con margini interni. Se paragoni le card di Airbnb (immagine a bordo pieno) con quelle di un sito vecchio stile (immagine con 16px di margine interno), la differenza di modernità è evidente.
+
+-----
+
+#### Overlap Cognitivo
+
+Se la card ha un carosello interno (immagini scrollabili), non aggiungere ombra alla card. Se l'ombra comunica "questa card è cliccabile", il carosello comunica "scorri per vedere le altre immagini". Due interazioni possibili sullo stesso elemento: l'utente non sa se toccando la card aprirà il dettaglio o scorrerà il carosello. Questo si chiama *overlap cognitivo* e crea confusione.
+
+La soluzione: se vuoi il carosello, togli l'ombra (la card non è cliccabile come unità). Se vuoi la card cliccabile, togli il carosello (mostra una sola immagine). Non cercare di fare entrambe le cose sullo stesso elemento.
+
+Lo stesso principio vale per qualsiasi interazione doppia: una card con un bottone dentro E l'intera card cliccabile crea ambiguità. L'utente non sa se il click sulla card farà la stessa cosa del click sul bottone o qualcosa di diverso.
+
+-----
+
+#### Raggi Concentrici
+
+Come abbiamo visto in <a href="#raggi-concentrici-la-formula-di-apple">Raggi Concentrici (La Formula di Apple)</a>, le curve degli elementi annidati devono correre in parallelo.
+
+**Regola:** ombra solo se cliccabile. Clusterizza le informazioni in blocchi visivi. Immagine edge-to-edge. Raggi concentrici tra card e elementi interni.
+
+<br />
+<br />
+<br />
+<br />
+
+### 21. Navigazione (Guidare Senza Confondere)
+
+La navigazione è come la segnaletica in un edificio. Se è chiara, l'utente trova la strada senza pensarci. Se è confusa o assente, l'utente si perde e se ne va (se trova la strada).
+
+#### Tab Bar (Mobile)
+
+La tab bar in basso sullo schermo è il pattern di navigazione più comune per le app mobile. Le regole: **minimo 3 voci, massimo 5**. Meno di 3 non giustificano una tab bar (usa altri pattern). Oltre le 5 voci il cervello non riesce più a trattarle come un insieme unitario, deve scansionarle una per una come una lista, e la tab bar perde il suo valore di ancoraggio visivo sempre disponibile. Il numero ideale è 3-4.
+
+Per la voce selezionata: icona **riempita** + testo al 100% di opacità. Per le altre: icona **outline** + testo al 40-50% di opacità. Non fare tutta la barra colorata con l'icona selezionata in evidenza, a meno che il colore di sfondo non sia abbastanza neutro da non creare confusione.
+
+La Home va tendenzialmente a sinistra perché leggiamo da sinistra a destra e la prima voce di una sequenza orizzontale è il punto di partenza naturale.
+
+-----
+
+#### Hamburger Menu
+
+L'hamburger menu (le tre linee orizzontali) è in declino come navigazione principale nelle app mobile, dove è stato sostituito dalla tab bar in basso che è sempre visibile e non nasconde le voci. Il problema dell'hamburger è che "seppellisce" la navigazione: dietro l'icona l'utente non sa cosa troverà, e quello che non si vede viene usato molto meno. Se decidi di usarlo, posizionalo in alto a sinistra o in alto a destra.
+
+Un trend parallelo riguarda le impostazioni: stanno migrando dall'icona dell'ingranaggio (o dall'hamburger) dentro il menu del profilo in alto a destra. Il profilo comunica "le tue cose" meglio di un ingranaggio generico, e accorpa account e configurazione in un unico punto.
+Puoi vedere questo trend in azione nel progetto <Link to="/docs/featured/mosaic-ui-concept">Mosaic</Link>.
+
+-----
+
+#### Mega Menu vs Dropdown
+
+Il **dropdown classico** è una lista verticale di voci che si apre al passaggio del mouse o al click. Funziona bene quando le voci sono poche (5-10) e omogenee: "Prodotti, Prezzi, Documentazione, Blog" di una SaaS, oppure un menu "Account" con 4-5 opzioni. Oltre le 10 voci diventa una lista lunga da scorrere, e l'utente fatica a tenere a mente cosa ha visto mentre scrolla.
+
+Il **mega menu** è un pannello ampio che appare sotto la voce di navigazione e mostra decine di opzioni organizzate in colonne tematiche. È il pattern standard per gli e-commerce con molte categorie: cliccando su "Abbigliamento" vedi subito "Uomo / Donna / Bambino" in colonne, e ognuna con le sue sottocategorie. L'utente vede l'intera struttura in un colpo d'occhio, sceglie dove andare senza aprire menu annidati e senza scorrere una lista infinita.
+
+La regola è semplice: se le tue voci stanno comodamente in una lista di 5-10 elementi omogenei, usa il dropdown. Se hai decine di voci che si raggruppano logicamente in categorie, usa il mega menu. Forzare un dropdown su un catalogo ricco costringe l'utente a scrollare e ricordare; forzare un mega menu su un sito con poche voci lo rende visivamente sovradimensionato.
+
+-----
+
+#### Altri Pattern di Navigazione
+
+Le **breadcrumb** (ad esempio: Home > Documentazione > API > Autenticazione) sono una traccia che mostra all'utente dove si trova nella gerarchia del sito e gli permette di risalire di un livello con un click. Hanno senso solo quando esiste una gerarchia profonda con almeno tre livelli: siti di documentazione, un gestionale con sezioni e sottosezioni, un sito istituzionale con cartelle annidate. Su un sito piatto, dove tutte le pagine sono allo stesso livello, le breadcrumb mostrerebbero sempre "Home > Pagina corrente" e non aggiungerebbero nulla.
+
+La **sticky navbar** resta fissa in cima allo schermo mentre l'utente scorre la pagina. È utile quando la pagina è lunga e l'utente potrebbe voler cambiare sezione a metà lettura senza tornare in cima: landing page con molte sezioni, articoli lunghi, applicazioni dove la navigazione deve essere sempre a portata di click. Su pagine corte che stanno in una o due schermate è superflua e ruba spazio verticale prezioso, soprattutto su mobile.
+
+La **sidebar verticale** è una colonna di navigazione sul lato sinistro (o destro) dello schermo, sempre visibile. È lo standard per dashboard, pannelli di amministrazione e applicazioni complesse dove le voci di navigazione sono troppe per stare in un header orizzontale e l'utente passa da una sezione all'altra decine di volte al giorno. La sidebar può essere collassabile (si riduce a sole icone per liberare spazio) oppure espansa di default. Su mobile si trasforma quasi sempre in un hamburger menu, perché una colonna fissa occuperebbe metà schermo.  
+Questo pattern puoi osservarlo in questo sito stesso. Se stai leggendo da desktop, hai una sidebar a sinistra con le sezioni del sito e una a destra con l'indice della pagina corrente. Se stai leggendo da mobile, entrambe sono state collassate in un hamburger menu in alto a sinistra per liberare lo schermo.
+
+**Regola:** 3-5 voci nella tab bar mobile. Hamburger menu solo se necessario. Mega menu per siti con molte categorie. Nessun pattern è universalmente migliore, dipende dal prodotto e dagli utenti.
+
+<br />
+<br />
+<br />
+<br />
+
+### 22. Form e Input (Raccogliere Senza Frustrare)
+
+I form sono il punto in cui chiedi qualcosa all'utente. Ogni campo, ogni label, ogni messaggio di errore è un momento di potenziale frustrazione. Meno attrito crei, più form vengono completati.
+
+#### Raggruppare per Categoria
+
+Quando un form ha più di 6 input, raggruppali in categorie visive. "Dati personali", "Indirizzo", "Pagamento" sono sezioni che il cervello elabora come tre blocchi, non come 15 campi. Usa `<fieldset>` e `<legend>` nell'HTML (come visto nella <Link to="/docs/vademecum/html-real-world-vademecum#10-form-raccogliere-dati-dallutente">sezione 10 dell'HTML vademecum</Link>) e separatori visivi nel design.
+
+-----
+
+#### Auto-formattazione e Aiuti
+
+Il campo del numero di telefono con i trattini che si inseriscono automaticamente. La valuta già presente a sinistra/destra nel campo prezzo. La data che si formatta da sola mentre digiti. Ogni aiuto che risparmi all'utente di pensare alla formattazione è un passo verso il completamento del form.
+
+Includi inoltre l'icona dell'occhio nel campo password per mostrare/nascondere il testo, poiché è diventata uno standard.
+
+-----
+
+#### Validazione Inline
+
+Non aspettare il submit per mostrare gli errori. Valida mentre l'utente compila: una spunta verde quando il campo è corretto, una X rossa quando non lo è, con il messaggio di errore *sotto* il campo (non in un alert in cima alla pagina che l'utente deve collegare mentalmente al campo).
+
+Il messaggio di errore non deve solo dire cosa è sbagliato, deve dire come risolvere. Non "Formato non valido" ma "L'email deve contenere @ e un dominio (es. `mario@esempio.it`)".
+
+-----
+
+#### Chiedere il Minimo
+
+Ogni campo del form è un ostacolo tra l'utente e l'iscrizione. Chiedi solo ciò che ti serve davvero per far partire il servizio. I dati extra (numero di telefono, indirizzo, preferenze), sempre se strettamente necessari, chiedili dopo la registrazione, quando l'utente ha già creato l'account.
+
+**Regola:** raggruppa oltre 6 input in categorie. Auto-formattazione dove possibile. Validazione inline con messaggio che spiega come risolvere. Chiedi il minimo indispensabile.
+
+<br />
+<br />
+<br />
+<br />
+
+### 23. Modali, Toast, Tooltip e Pattern UI
+
+#### Modale
+
+La modale è un overlay che blocca l'interazione con il resto della pagina. Si usa per conferme importanti ("Sei sicuro di voler eliminare?"), azioni che richiedono attenzione completa (compilare un mini-form), o avvisi critici. Deve **sempre** avere una via d'uscita: la X in alto a destra, un bottone "Annulla", il click sullo sfondo scuro. Intrappolare l'utente in una modale senza uscita viola l'euristica di Nielsen #3 (Controllo e libertà dell'utente).
+
+-----
+
+#### Toast
+
+Il toast è un avviso non bloccante che appare brevemente per confermare un'azione completata. "Elemento salvato", "Email inviata", "Copiato negli appunti". Compare in un angolo (di solito in basso o in alto), resta visibile 3-5 secondi e scompare. Non richiede interazione dall'utente. Non usare il toast per errori importanti (quelli richiedono la modale o un messaggio inline, cioè un testo di errore che appare direttamente sotto il campo o l'elemento che ha generato il problema).
+
+-----
+
+#### Tooltip
+
+Il tooltip è un'informazione che appare al passaggio del mouse (o al tap prolungato su mobile). Serve per dettagli che non servono sempre ma che qualcuno potrebbe cercare. L'icona del punto interrogativo accanto a un campo form che spiega perché chiediamo quel dato è un esempio classico.
+
+-----
+
+#### Accordion
+
+L'accordion espande e comprime sezioni di contenuto. La freccia indica la direzione: verso il basso = si espande verso il basso. Non inventare direzioni diverse. L'accordion è perfetto per le FAQ, dove l'utente cerca una domanda specifica e non vuole vedere tutte le risposte contemporaneamente.
+
+-----
+
+#### Toggle, Checkbox, Radio
+
+Il **toggle** (switch) rappresenta uno stato binario che ha effetto immediato: attivi il dark mode e lo schermo cambia subito, disattivi le notifiche e il sistema smette di inviarle. L'utente lo tocca e la modifica è già applicata, senza bisogno di confermare.
+
+Il **checkbox** ti permette di spuntare più opzioni di una lista contemporaneamente, senza che una escluda l'altra. Scegli i condimenti della pizza (mozzarella, funghi e olive tutti insieme), spunti i termini e le condizioni, selezioni più file in un gestionale. A differenza del toggle, il checkbox di solito richiede un'azione successiva per applicare la selezione (un bottone "Conferma" o "Salva").
+
+Il **radio button** serve per scegliere una sola opzione tra più alternative, dove selezionarne una esclude automaticamente le altre. Scegli la taglia di una maglietta (S oppure M oppure L), il metodo di pagamento, il piano di abbonamento.
+
+Confondere questi tre controlli rompe le aspettative dell'utente. Un toggle al posto di un checkbox fa pensare che la modifica sia già salvata quando invece non lo è. Un checkbox al posto di un radio button fa credere di poter selezionare più opzioni quando il sistema ne accetta una sola. Un radio al posto di un toggle costringe l'utente a cliccare "Conferma" per un'azione che dovrebbe essere istantanea. Ogni controllo porta con sé un'aspettativa di comportamento, e violarla genera attrito.
+
+-----
+
+#### Chips, FAB, Onboarding
+
+Le **chips** sono piccoli elementi arrotondati, a forma di pillola, che l'utente può cliccare o selezionare per filtrare, categorizzare o rappresentare una scelta. Le trovi ad esempio nelle app di email come Gmail quando inserisci un destinatario e il nome viene racchiuso in una pillola con una x per rimuoverlo, oppure nei filtri di prenotazione di Airbnb e Booking ("Wi-Fi", "Piscina", "Animali ammessi") dove ogni opzione attiva diventa una chip visibile. Sono piccole e compatte per stare in riga senza occupare troppo spazio, e la forma arrotondata le distingue dal testo normale comunicando che sono interattive.
+
+Il **FAB** (Floating Action Button) è un bottone circolare fisso in basso a destra che rappresenta l'azione principale dell'app. Google lo ha introdotto con Material Design. È sempre visibile indipendentemente dallo scroll, il che lo rende perfetto per la CTA più importante (comporre email in Gmail, aggiungere un evento nel calendario). È stata scelta come posizione quella in basso a destra poiché è la zona più comoda da raggiungere con il pollice mentre si tiene il telefono con una sola mano. La posizione di default in basso a destra si è consolidata perché la maggior parte degli utenti è destrimano, ma non è, fortunatamente, sempre un vincolo: molte app permettono di personalizzare la posizione nelle impostazioni di accessibilità.
+
+L'**onboarding** è il flusso di introduzione all'app. Le regole: poche schermate (3-5), funzionalità principali (non tutto), possibilità di saltarlo. L'utente vuole usare l'app, non leggere un manuale. Ricordi il paragrafo <Link to="/docs/vademecum/ux-ui-real-world/foundations-and-perception#ci-arrangiamo-nessuno-legge-le-istruzioni">"Ci Arrangiamo" (Nessuno Legge le Istruzioni)</Link>?
+
+**Regola:** modale per conferme importanti, sempre con via d'uscita. Toast per conferme leggere. Tooltip per dettagli on-demand. Toggle = on/off, checkbox = multiplo, radio = esclusivo.
+
+<br />
+
+### Riepilogo (Componenti in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Pulsanti | Un primario per pagina. Gerarchia: primario > secondario > terziario | Tutti i bottoni dello stesso colore e dimensione |
+| Distruttivo | Non sempre rosso. Primario rosso solo se è la vera CTA | Bottone "Elimina" rosso e grande su ogni schermata |
+| Card | Ombra solo se cliccabile. Clusterizzare le informazioni | Ombra su card non interattive che crea aspettativa |
+| Raggi concentrici | Raggio interno = raggio esterno - padding | Stesso raggio su card e pulsante interno |
+| Tab bar | 3-5 voci, icona riempita per selezionata | Più di 5 voci o icone senza etichetta |
+| Hamburger | Sta scomparendo, solo in alto a sinistra/destra | Usarlo come unica navigazione su desktop |
+| Form | Raggruppare oltre 6 input, validazione inline | Mostrare errori solo dopo il submit |
+| Modale | Sempre con via d'uscita. Per conferme importanti | Modale senza X e senza bottone Annulla |
+| Toast | Non bloccante, 3-5 secondi, per conferme leggere | Usare toast per errori critici |
+| Toggle vs checkbox | Toggle = on/off, checkbox = multiplo, radio = esclusivo | Mischiare i tre |

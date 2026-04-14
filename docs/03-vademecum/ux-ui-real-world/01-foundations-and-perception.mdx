@@ -1,0 +1,587 @@
+---
+sidebar_position: 1
+title: Foundations and Perception
+description: What is UX/UI, perception, affordance, feedback, Jakob's law, mapping, constraints, visual hierarchy, white space, UI typography, and color.
+---
+
+import Link from '@docusaurus/Link';
+
+# UX & UI Real World Vademecum
+
+# Part I: Foundations and Perception
+
+Before drawing a single component on screen, you must understand how the user's brain organizes, scans, and deciphers everything it sees.
+
+---
+
+## The Foundations
+
+UX/UI isn't "making things pretty." It's building products that people can use without frustration, without having to think, and without having to ask for help.
+
+---
+
+### 1. UX and UI (Two Disciplines, One Goal)
+
+The most common confusion in the industry is treating UX and UI as synonyms. They are not. They certainly work together, but they do different things.
+
+#### The Difference
+
+**UX** (User Experience) is the user's overall experience with the product. It includes research to understand what is needed, flows to organize the journey, information architecture to structure content, and testing to ensure everything works. UX deals with the *journey*, not the appearance.
+
+**UI** (User Interface) is the visual interface the user interacts with. Colors, typography, buttons, spacing, icons, animations. UI deals with the *appearance*, not the journey.
+
+Think of a restaurant. UX is the service: how they greet you, how long you wait to sit down, whether the menu is organized so you immediately find what you're looking for, whether the waiter brings the check without you having to ask three times. UI is the plating: how the dish looks when it arrives at the table. A restaurant with perfect service but poorly presented dishes loses customers. A restaurant with beautiful dishes but where you wait an hour to order also loses customers. You need both.
+
+-----
+
+#### The Aesthetic-Usability Effect
+
+There is a documented phenomenon in research: more aesthetically pleasing products are perceived as easier to use, even when they aren't. It's called the *Aesthetic-Usability Effect*. Users forgive minor usability issues if the interface is pleasing, and they give better reviews of the navigation if the design is polished.
+
+This doesn't mean aesthetics replace usability. It means they are accomplices: investing everything in UX (research, flows, testing) and neglecting UI is wasted work, because the user will perceive the product as less functional than it actually is. Investing everything in UI (colors, animations, graphics) and neglecting UX is equally wasted, because the product will be beautiful but frustrating.
+
+**Rule:** UX and UI are different disciplines that work together. UX designs the journey, UI designs the appearance. Neither works without the other.
+
+<br />
+<br />
+<br />
+<br />
+
+### 2. How the User Really Sees Your Page
+
+When we design an interface, we imagine an attentive user reading every word, evaluating every option, and choosing the best one. Reality is very different.
+
+#### The User Scans, They Don't Read
+
+One of the most well-documented facts about web usage is that people dedicate very little time to reading. They scan the page hunting for words or phrases that match what they are looking for, exactly how we scan newspaper headlines to find the article that interests us. If they don't find it in a few seconds, they leave.
+
+When we create a website, we think the user will read every word carefully, appreciate the paragraph structure, and evaluate every option before clicking. Reality is much closer to a billboard seen from a car going 100km/h. The user scans, finds (or doesn't find) what they are looking for, and moves on.
+
+There are three reasons. First: the user is on a mission. They are trying to do something, usually in a hurry. They don't have time to read more than necessary. Second: they know they don't have to read everything because they are only interested in the fraction of content that matches their goal. The rest is irrelevant. Third: scanning is a skill they have practiced all their life, with newspapers, magazines, and social media. They know it works.
+
+Practical implication: do not design for reading, design for scanning. Clear headlines, highlighted text on key points, visually distinct areas. If your design were a billboard seen from a car going 100km/h, would the user understand what to do?
+
+An important note: this principle, like all those you will find in this vademecum, is not a dogma. It depends on the context. This very site you are reading, for example, intentionally does not follow many of the rules we will see. It is a technical vademecum aimed at those studying, not a product that must capture the attention of a passing user. The target is different, therefore the design choices are different. The same reasoning applies to the mobile-first approach we saw in <Link to="/docs/vademecum/css-real-world/layout-responsive#19-responsive-design-one-site-for-all-screens">section 19 of the CSS Vademecum</Link>: it's the default advice, but if your product lives on desktop, starting from desktop is the right choice. Do not take for granted either what you find here or the concepts praised out there. Question them on a case-by-case basis, because design is made of nuances and "it depends," not of absolute rules.
+
+-----
+
+#### Satisficing (The First Reasonable Solution)
+
+People don't choose the best option. They choose the first one that seems reasonable. The technical term is *satisficing*, a blend of "satisfying" and "sufficing".
+
+Imagine landing on an e-commerce site looking for bluetooth headphones. The page shows a grid of products, a side menu with filters, a search bar, and a promotional banner. The user does not scan all 48 products, read all the filters, and evaluate all the options. They see the first product that looks right and click it. If it's not the one, they hit "back" and try the second. The "back" button is the most used button in browsers, and this says everything about real user behavior.
+
+Practical implication: put the most important action where the user will find it first during scanning. Not where it makes "more logical sense" in your information architecture, but where the eye naturally encounters it.
+
+-----
+
+#### "We'll Muddle Through" (Nobody Reads Instructions)
+
+One of the things that becomes obvious as soon as you do usability testing is the extent to which people use things without understanding how they work. Faced with any kind of technology, very few people take the time to read the instructions. They forge ahead on their own and muddle through, sometimes making up vaguely plausible stories about what they are doing and why it works.
+
+Once they find something that works, regardless of how weird or complex the process is, they tend not to look for a better way. They will use a better way if they stumble across it by chance, but they rarely actively seek one out.
+
+This has a huge implication: if the user "gets" your interface, they will be more likely to discover all the features, feel in control, and come back. You can get by with a site where people struggle to muddle through (especially if your product is rare), but it only works until someone builds a better one that makes them **feel smarter**.
+
+-----
+
+#### Self-evident vs Self-explanatory
+
+The highest level of clarity is **self-evidence**: you look at the interface and you understand what to do. Zero mental effort. Most daily interactions should be at this level.
+
+When you are doing something original, innovative, or inherently complex, you can accept **self-explanatory**: it takes a little effort to "get it," but you get there right away. The combination of sizes, colors, layout, and small amounts of well-structured text creates almost immediate comprehension.
+
+If your interface isn't even self-explanatory, you have a problem. The user won't stop to try and figure it out. They will leave and blame themselves ("I'm not good enough with technology"), even though the fault lies with the design (therefore, you).
+
+-----
+
+#### Gestalt Principles (How the Brain Organizes What It Sees)
+
+The human brain doesn't see pixels. It sees patterns. Gestalt principles describe how the brain groups and organizes visual elements.
+
+**Proximity** is the most powerful: elements close to each other are perceived as a group, even without borders or dividing lines. In practice, this means you can group information by bringing elements closer together and separate sections by increasing the space. You don't need boxes or divider lines. A product card with a title, price, and "Add to Cart" button close together is perceived as a single block, even without a visible container. If, however, the price is as far from the title as it is from the button underneath, the brain hesitates because it doesn't know which of the two it belongs to. The same goes for forms: a label must be closer to its field than to the previous field, otherwise the user has to stop and figure out which label goes with which input.
+
+**Similarity** makes elements that look alike visually in shape, color, or size perceived as related. In practice, this means visual consistency creates meaning. If all the primary actions on your site are blue buttons with rounded corners, the user quickly learns that "blue rounded = I can click". But the principle goes beyond buttons: if all prices are green and bold, the user spots them at a glance anywhere on the page without having to search for them. If all product cards have the same structure (image on top, title below, price in the bottom right), the eye already knows where to look from the second card onwards. Similarity is the reason a design system works: elements that do the same thing must look the same, elements that do different things must look different.
+
+**Closure** prompts the brain to complete incomplete shapes. We don't need to see every detail of an object to recognize it; the brain fills in the gaps on its own. In practice, interface icons work on this principle. A magnifying glass drawn with a few essential lines suggests "search" because the brain completes the shape. A circle with a triangle in the middle says "play" even if it doesn't resemble any real physical object. This explains why minimalist icons perform better than overly detailed ones: the fewer details you give, the faster the recognition, because the brain uses the patterns it already knows instead of having to process new information. The same principle applies to layouts. In a carousel, the last visible card is cut off by the screen's edge. The brain completes it and understands there is more content beyond the edge, which invites horizontal scrolling without the need for arrows or instructions. It's a pattern you see on Netflix, Airbnb, and in app stores, and it's pure closure applied to UI.
+
+**Figure-Ground** automatically separates the foreground from the background. The brain decides at every moment what is "the object" and what is "the space behind it," concentrating its attention on the object. In practice, this principle drives every contrast decision in your interface. A modal with a white background appearing over a dark, semi-transparent overlay emerges as "the thing to focus on," while the rest of the page becomes the background. A colored button on a neutral toolbar catches the eye precisely because the brain interprets it as the figure and everything else as the ground. When an interface looks "flat" and nothing stands out, the problem is often that figure and ground don't have enough contrast: everything seems to be on the same plane and the brain doesn't know what to look at first.
+
+**Continuity** compels the eye to follow natural lines and curves. When elements are arranged along a consistent direction, the eye traverses them effortlessly; it's like following a path. In practice, this explains why a form with fields aligned vertically on a single axis is filled out more fluidly than one with fields arranged in a zig-zag. It explains why a horizontal timeline (step 1 → step 2 → step 3) communicates progression better than three separate blocks. And it explains why breaking the reading direction carries a cognitive cost: if a page scrolls vertically but at a certain point a horizontally-scrolling gallery gets wedged in the middle, the user has to change direction, figure out that you scroll sideways there, then go back to scrolling down. The flow breaks and the user slows down. If the path is clear, the user follows it without thinking.
+
+**Rule:** the user scans, they don't read. They choose the first reasonable option, not the best one. Your design must be self-evident or, at minimum, self-explanatory. Use proximity to group, similarity to create consistency, and contrast to highlight what matters.
+
+<br />
+<br />
+<br />
+<br />
+
+### 3. Affordance (The Door Handle)
+
+The term *affordance* comes from Don Norman and describes an object's quality that suggests how it should be used, without the need for instructions.
+
+#### The Concept
+
+When you see a handle on a door, your brain says "pull". When you see a flat plate, it says "push". You don't have to read it or even think about it. The object's shape communicates the action. If someone puts a handle on a door that needs to be pushed, they have created a cognitive trap (*Norman Doors*). Once you learn to recognize them, you see them everywhere.
+
+Scissors are a perfect example of affordance. The holes say "put your fingers here". The size of the holes indicates how many fingers. The angle of the blades tells you which direction to cut. No instructions needed.
+
+-----
+
+#### Affordance in Digital Design
+
+In digital environments, affordance is built with visual cues. A button must *look* pressable: a slight shadow, contrasting color, defined borders. A text field must *look* ready to receive input: a thin border, a slightly different background, a blinking cursor. A link must *look* clickable: a different color from the text, underlining, or a change in appearance on mouse hover. A toggle switch *looks* like something that slides back and forth. A slider *looks* like something you drag.
+
+If the user has to read a label to figure out if an element is interactive, the affordance is missing.
+
+-----
+
+#### The Leitz Projector Disaster
+
+Norman uses an example that has become legendary. The Leitz slide projector had a single button that did three different things: move forward between slides, move backward, and eject slides from the tray. There was no indicator of which function was currently active. The result: slides dropped onto the floor right in the middle of the presentation.
+
+Translated for your interfaces: avoid a button that does different things based on the context without the user knowing which context they are in. Never make destructive actions look identical to normal actions. But above all, never sacrifice clarity for the sake of elegance.
+
+-----
+
+#### Concrete Scenarios
+
+❌ An e-commerce site where "Add to Cart" is gray text with no background, no border, and no shadow. It looks like a label, not a button. The user doesn't click it because they don't perceive it as a possible action.  
+↓  
+✅ The same "Add to Cart" with a colored background, rounded borders, and a slight shadow. The user instantly knows they can press it.
+
+❌ An app where the trash can icon and the share icon are gray, small, and close to each other in the toolbar. The user clicks "delete" thinking they are going to share. Two actions of a completely opposite nature (destructive and constructive) that look visually identical.  
+↓  
+✅ The delete icon is red and separated from the other actions. The share icon is blue and close to the other constructive actions. Color, position, and distance communicate the nature of each action.
+
+**Rule:** affordance makes it clear how to use an object without explanations. In digital, build it with shadow, color, shape, and contrast. If you have to explain that something is clickable, the design has failed. If two opposite actions look alike, you have created a trap.
+
+<br />
+<br />
+<br />
+<br />
+
+### 4. System Feedback (The Silent Conversation)
+
+Every time the user takes an action, they need to know it was received and what is happening. Silence is the greatest enemy of an interface.
+
+#### Why Feedback is Essential
+
+Think of a light switch. You press it, the light comes on. Immediate feedback. Now imagine pressing the switch and nothing happens for 3 seconds. You would think it's broken and press it another 5 times. That moment of uncertainty ("did it work or not?") is exactly what happens in the interface when feedback is missing.
+
+For a deep dive into how feedback integrates into Norman's complete action cycle, on the page dedicated to <Link to="/docs/bookshelf/the-design-of-everyday-things">The Design of Everyday Things</Link> you will find a Button component designed to cycle through five distinct stages: rest, intent, action, wait, and confirmation.
+
+-----
+
+#### The Critical Timings
+
+Software must respond within **100 milliseconds** to be perceived as instantaneous. Within **1 second** is acceptable, but it requires a visual indicator (a button color change, a spinner). Beyond **1 second**, a progress bar or a skeleton screen is needed. The user must never ask themselves "did I click it or not?".
+
+The *skeleton screen* (that gray structure you often see on social media, and elsewhere, while content loads) is often better than a spinner because it communicates "the content is arriving and will have this shape," whereas a spinner only communicates "I am working".
+
+An example of feedback that makes a difference: you click "Submit Order" on an e-commerce site. With poor feedback, the button's appearance doesn't change, the page seems frozen, you don't know if the click went through, and after 3 seconds you click it again (risking a duplicate order). With excellent feedback, the button immediately changes color, a spinner appears inside it, the text becomes "Sending...", and after 2 seconds the page shows "Order Confirmed!" with a confirmation animation. The user never doubted the system was working.
+
+-----
+
+#### Audio Feedback
+
+Bill Gaver, who studied the use of sound in design, highlights a point we often forget: sound informs us when our visual attention is elsewhere. You know the water is boiling by the sound, not because you're staring at it. You know the car has a problem from the engine noise.
+
+A success sound ("ding!") or an error sound ("buzz!") communicates the system's state without forcing the user to look at the screen. It's particularly useful in environments where attention is divided.
+
+Beware of *repetitive tolerance*: a sound that is satisfying the first time becomes unbearable the hundredth. The more frequently a sound repeats, the shorter, more discreet, and "warmer" it needs to be.
+
+**Rule:** every user action receives a response. Within 100ms for direct actions. Skeleton screen or spinner for waits. The user must never wonder if the system received their input.
+
+<br />
+<br />
+<br />
+<br />
+
+### 5. Jakob's Law (The Power of Habit)
+
+Users spend 99% of their time on websites and apps that are not yours. They have built precise expectations about how things work, and they expect your product to respect those expectations.
+
+#### The Untouchable Conventions
+
+The cart is in the top right. The logo takes you back to the home page. The magnifying glass means "search". The hamburger menu (if you use it) is in the top left or top right. The primary action is the most prominent button on the page. The back button is on the left. The forward button is on the right.
+
+These are not arbitrary rules. They are mental models that billions of people have internalized. Breaking them is like designing a car with the brake on the right and the gas on the left because "it's more innovative".
+
+-----
+
+#### The Z-Pattern
+
+In Western cultures, the eye scans the page following a Z-pattern: it starts from the top left (where the logo usually is), moves to the top right (where the profile or cart often is), drops down to the bottom left (where the main content is), and finishes in the bottom right (where the secondary action or navigation is).
+
+This pattern is the result of how we read. Positioning elements respecting this flow makes scanning natural. Positioning them against the flow creates friction.
+
+-----
+
+#### When to Innovate
+
+Innovation in UI should be dispensed with an eyedropper. Only innovate if the change *drastically* improves efficiency or experience. In all other cases, respect the conventions. Your user doesn't want to learn a new system for every website they visit.
+
+This doesn't mean every site has to look the same. It means interaction conventions (where to find things, how controls work) remain familiar, while visual design (colors, typography, personality) differentiates.
+
+**Rule:** familiarity beats creativity in almost all cases. Innovate in visual design, not in interaction conventions. If the user has to "learn" your interface, you have a problem.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. Natural Mapping (Stovetops and Switches)
+
+*Mapping* is the spatial relationship between a control and the object it operates. When this relationship is natural, the user doesn't have to think. When it's arbitrary, the user has to remember (or guess).
+
+#### The Stovetop Case
+
+Norman's classic example: a kitchen with 4 burners arranged two on top and two on the bottom, but the knobs are all in a horizontal row below the cooktop. Which knob turns on which burner? You have to read the labels, or worse, try at random. Now imagine the knobs arranged in pairs, each one directly below its burner. Zero doubts, zero labels.
+
+```
+❌ Burners in a square, knobs in a row:
+
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+      ○  ○  ○  ○       ← which controls which?
+
+✅ Burners and knobs in the same layout:
+
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+      ○       ○
+    ┌────┐  ┌────┐
+    │    │  │    │
+    └────┘  └────┘
+      ○       ○        ← no doubt
+```
+
+If labels are needed to understand which control operates which element, the design is flawed. Labels are a band-aid on a mapping problem, never a solution.
+
+-----
+
+#### Mapping in Software
+
+In software, mapping translates to proximity and layout. The "Delete" button must be next to the element to be deleted, not at the bottom of the page. The steps of a process must be arranged in the order they are executed (step 1 on top, step 2 below, never the reverse). A flow that goes from left to right respects the way we read.
+
+A practical example: in a text editor, formatting controls (bold, italic, alignment) are in the toolbar directly above the text. Not in a hidden menu, not in a right-hand sidebar. They are where the user looks while writing.
+
+Another example: house switches. The most intuitive way to arrange them is to mirror the position of the lights they control. If the lights are left, center, and right, the switches follow the same order.
+
+**Rule:** the position of the control must reflect the position of what it operates. If you need labels to understand what controls what, the mapping is wrong.
+
+<br />
+<br />
+<br />
+<br />
+
+### 7. Constraints (Preventing Errors Before They Happen)
+
+A constraint is a design limit that restricts available actions, leaving visible or actionable only the correct ones. The user doesn't have to choose the right one out of many options, because the wrong ones don't exist.
+
+#### The Four Types of Constraints
+
+**Physical constraints** make the wrong action impossible. The old USB-A only went in one way but the shape didn't communicate which way, forcing you to try over and over (USB-C solved the problem because it goes in both ways, making the error impossible). A disabled button cannot be clicked. A numeric field that doesn't accept letters. This way no instructions are needed; the error is structurally impossible.
+
+**Semantic constraints** use meaning to guide. Red means stop, danger, error. Green means success, confirmation. These meanings are so deeply rooted that violating them (a green button to delete, a red one to confirm) creates immediate confusion.
+
+**Cultural constraints** rely on shared conventions. We read from left to right. The gear icon means settings. The floppy disk means save (even if no one under 25 has ever seen a real one). Violating these constraints forces the user to learn a new system.
+
+**Logical constraints** use context consistency to eliminate options that make no sense. If you selected "Italy" as your country, the next field only shows Italian provinces. If the cart is empty, the "Proceed to Checkout" button does not appear. If a step in a process requires the completion of the previous one, the next step remains inaccessible until you finish. The user doesn't have to reason about what is valid and what isn't; the context does it for them.
+
+-----
+
+#### Error Prevention (Nielsen's Heuristic #5)
+
+Prevention is always better than recovery. Instead of showing "Invalid date format" after the user has typed, show a calendar where only valid dates can be selected. Instead of allowing a blank form to be submitted and then showing 5 errors, disable the "Submit" button until the required fields are filled out.
+
+The goal is that the user cannot do the wrong thing, not that they are punished for doing it.
+
+**Rule:** physical constraints make errors impossible. Semantic constraints use meaning to guide. Cultural constraints leverage conventions. Logical constraints use structure. The best design is one where the user *cannot* make a mistake.
+
+<br />
+
+### Recap (Foundations at a Glance)
+
+| Concept | Key Rule | Common Trap |
+|----------|--------------|-----------------|
+| UX vs UI | UX designs the journey, UI designs the appearance. You need both | Treating them as synonyms or investing in only one |
+| Scanning | The user scans, they don't read. Design for scanning | Writing dense text pages that no one will read |
+| Satisficing | The user picks the first reasonable option, not the best one | Putting the main action where it makes "logical sense" but where the eye doesn't easily spot it |
+| Self-evidence | The interface must communicate what to do on its own | Requiring instructions for basic interactions |
+| Gestalt | Proximity to group, similarity for consistency, contrast for emphasis | Failing to visually group related elements |
+| Affordance | The object must suggest how it's used without explanations | Interactive elements that don't look clickable |
+| Feedback | Every action receives a response within 100ms | Silence after a click; the user doesn't know if it worked |
+| Jakob's Law | Respect conventions; the user expects it to work like other sites | Reinventing navigation to be "creative" |
+| Mapping | The position of the control reflects what it operates | Labels as a substitute for natural mapping |
+| Constraints | Prevent the error before it happens, not after | Allowing the error and then showing a message |
+
+<br />
+<br />
+<br />
+<br />
+
+## Visual Hierarchy
+
+Visual hierarchy is the tool you use to guide the user's eye without forcing them to think.
+
+---
+
+### 8. Visual Hierarchy (Don't Shout Everything)
+
+Imagine a page where every title is huge, every text is bold, every button is colored, and every section has a border. Nothing stands out because everything is competing for attention. The example is extreme, but it helps you understand that visual hierarchy exists to prevent all this: it decides what the user should see first, second, and last.
+
+Visual hierarchy is not created solely by text size. It is created with a combination of four tools: **contrast** (light vs dark), **weight** (bold vs regular), **color** (saturated vs neutral), and **position** (top vs bottom, left vs right). Small but bold black text catches the eye more than large but thin light gray text.
+
+#### Two Font Sizes Are Enough
+
+One of the most common mistakes is using 8-10 different text sizes in the same interface. In reality, as Refactoring UI suggests, you can create all the necessary hierarchy with just two sizes: one for base text (400-500 weight) and one for larger text (600-700 weight). You do the differentiation with color and weight.
+
+- **Primary**: black, bold. It's the title, the info the eye must find first
+- **Secondary**: dark gray, regular. It's supporting content, the paragraph that provides detail
+- **Tertiary**: light gray, small. It's the footnote, the timestamp, the least important info
+
+You've just created hierarchy without changing the font size by a single pixel.
+
+To see these principles applied in practice, on the page dedicated to <Link to="/docs/bookshelf/refactoring-ui">Refactoring UI</Link> you will find the book's key concepts in action.
+
+-----
+
+#### Labels Are the Last Resort
+
+A widespread mistake is putting labels everywhere: "Name:", "Price:", "Email:", "Role:". In most cases, context makes it clear what it is. If you see "Mario Rossi" above a profile picture, you don't need the "Name:" label. If you see "€49.99" under a product, you don't need "Price:".
+
+If a piece of data is unclear without a label, you can often clarify it by rephrasing. Instead of "In stock: 12", write "12 left in stock". The information is the same, but the context is integrated into the value.
+
+The only case where a label should be emphasized is in technical specification sheets, where the user is specifically scanning for the label to find the data ("Processor: M5 Pro", "RAM: 64GB"). In that context, the label is what the user is looking for, so it gets the spotlight.
+
+-----
+
+#### Emphasize by De-emphasizing
+
+If you want to give more emphasis to an element and you are pushing harder and harder (bigger, bolder, more colorful), stop. Try the opposite: de-emphasize everything else. When you turn down the volume of secondary elements, the primary one stands out without having to shout.
+
+A concrete example: you have a dashboard featuring a data table and, right above it, a row of controls to narrow down results (by date, by category, by status). Those controls have heavy borders, a colored background, and bold text, and they end up grabbing more attention than the table itself, which is the actual content the user came to consult. Instead of making the table larger or adding thicker borders to the rows, take weight off the controls: thin borders, transparent background, regular gray text. The table will naturally stand out on its own.
+
+The same principle applies to buttons. If you have two actions and you can't make the primary one clear by emphasizing it, try de-emphasizing the other. Remove the border, remove the background, reduce it to just text. The primary one will emerge by itself.
+
+-----
+
+#### Balancing Weight and Contrast
+
+Large icons, thick borders, visually "heavy" elements capture attention. If an icon is naturally large and prominent (like a navigation icon) but shouldn't dominate the hierarchy, lower its contrast: gray instead of black, reduced opacity. The visual weight (size) is balanced by the reduced contrast (lighter color).
+
+The same goes for divider lines between sections. If you make them too dark, you get a "harsh" design, with borders that catch the eye more than the content. If you make them too light, you get a "mushy" design where sections blur together. The solution: keep a low contrast (light gray) but slightly increase the thickness. A 2px gray border at 15% opacity separates better than a 1px gray border at 40%.
+
+-----
+
+#### Button Hierarchy in Practice
+
+Hierarchy isn't just about text. Every interface has actions of varying importance, and buttons must reflect this importance. Focus on how frequently an action is performed to determine its place in the hierarchy.
+
+❌ A bank app page with 5 identical blue buttons in a row: "Transfer," "Pay," "Top Up," "Invest," "Settings." The user doesn't know which one to click first; their eyes bounce between them all. The company probably thought "blue is our color, let's make them all blue!". But the right question is: "Which action will the user perform most often?".
+
+✅ After a research phase, you discover that "Transfer" should be the primary (solid blue background), "Pay" and "Top Up" secondary (blue outline), and "Invest" and "Settings" tertiary (text only). The user immediately knows where to look.
+
+**Rule:** hierarchy is built by de-emphasizing the secondary, not by emphasizing the primary. Balance weight and contrast. Two font sizes + weight and color create enough hierarchy. Labels are the last resort.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. White Space (The Interface's Oxygen)
+
+Think of an art museum. Paintings aren't plastered next to each other like items on a supermarket flyer. They have meters of empty wall around them. That space isn't "wasted"; it's what gives value to the painting and allows you to focus on one at a time. It's the same principle that guides exhibition spaces in industrial design, where good design works by subtraction: the object breathes, and the empty space around it communicates importance. It works exactly the same in UI.
+
+#### Start with Too Much Space
+
+The instinctive approach is to throw every element on the canvas and then add spacing wherever it feels crowded. The proper approach is exactly the opposite: begin with exaggerated margins, then progressively scale them back until you reach equilibrium. Stripping away space is much easier than adding it, since removing it instantly reveals the exact moment it becomes too tight. If you only add space, you run the risk of stopping at the "bare minimum" rather than finding the "optimal" balance.
+
+-----
+
+#### You Don't Have to Fill the Whole Screen
+
+If your content needs 450px of width, use 450px even if the screen has 1400. The navbar can span screen-wide, but the content shouldn't. A paragraph stretching edge-to-edge on a 27-inch monitor is unreadable (like watching a tennis match from the bleachers): your eyes dart back and forth, and after 5 minutes you have a headache.
+
+If you struggle to design for large screens, reduce your canvas size. Or even better, design mobile-first, then adapt. You'll find out that you don't always need to change much.
+
+-----
+
+#### The Dashboard is the Exception
+
+There is one case where high density is correct: the dashboard. The dashboard user wants all information at their fingertips, on a single screen, without having to scroll. Here, white space should be reduced (not eliminated), and hierarchy is created with color, weight, and thin dividers.
+
+-----
+
+#### Ambiguous Spacing
+
+A subtle error: if a title is equidistant from the paragraph above and the one below, the brain doesn't know which of the two it belongs to. The space between a title and its content must be smaller than the space between that content and the next section. Proximity (Gestalt) must make the relationship obvious.
+
+❌ 24px above the title, 24px below the title. Which paragraph does it belong to?
+
+✅ 48px above the title, 16px below. The title is clearly linked to what follows.
+
+**Rule:** start with too much white space and reduce gradually. Don't fill the entire available width. Space is not empty; it is structure.
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Alignment and Grid
+
+The human eye loves drawing imaginary lines. If an element is shifted by 2 pixels compared to the one above it, the user won't say "it's unaligned," they will say "this site doesn't inspire trust." Alignment is a subconscious signal of quality and reliability.
+
+#### The Spacing Scale
+
+Instead of picking random values (13px here, 17px there, 22px over there), define a scale of preset values and strictly stick to them. The most common scale starts at 16px (the browser default font size) and scales up with increasingly larger jumps:
+
+```
+4px - 8px - 12px - 16px - 24px - 32px - 48px - 64px - 96px - 128px
+```
+
+The jumps aren't linear, and this is entirely by design. Between 4px and 8px, the difference is 100%, impossible to miss. Between 40px and 48px, the difference is only 20%, barely noticeable. That is why the scale leaps directly from 32 to 48 (bypassing 40): the gap must always be significant enough to easily recognize.
+
+-----
+
+#### Designing by Elimination
+
+When you enforce a preset scale, the decision-making process gets drastically simpler. Need to space out two elements? Try 16px. Feels too tight? Try 24px. Too loose? Go back to 16px. By following this method, you'll never waste time debating between 18px and 19px, simply because those values don't exist within your system.
+
+This approach offers a hidden advantage: even without realizing it, the user picks up on a subtle consistency throughout the design, much like when all the furniture in a home belongs to the same collection. They won't know exactly why, but "it just feels right."
+
+**Rule:** use a preset spacing scale (based on 16px) for all decisions. Design by elimination: choose from a few distinct values. Alignment is an unconscious signal of quality.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. UI Typography (Hierarchy Without Sizes)
+
+This section isn't about CSS text properties (you can find those in <Link to="/docs/vademecum/css-real-world/visual-styling">Part II of the CSS Real World Vademecum</Link>). Here we talk about typographic design choices that dictate how the user reads and scans your content.
+
+#### Fonts for Headings vs. Fonts for Body
+
+Fonts are not all created equal, even the ones that "look similar." A font specifically cut for headings (like Anton) features narrower, tighter letters: perfect for commanding attention in tight spaces. A font optimized for body copy (like Roboto) features wider letters and a taller x-height (the height of lowercase letters), which makes extended reading much more comfortable.
+
+If you try to ram a heading font into long paragraphs, the text turns into a chore to read. Conversely, if you blow up a body font for massive headings, it will completely lose its visual punch.
+
+-----
+
+#### Line Length
+
+The ideal limit falls between **50 and 80 characters** per line (the WCAG guidelines themselves recommend keeping lines under 80 characters). If a line drags on too long, the eye struggles to lock onto the start of the next line when sweeping back across the screen. This is exactly why newspapers and books rely on narrow columns. In your CSS, enforce `max-width` to keep paragraphs contained, even on ultra-wide monitors.
+
+-----
+
+#### Proportional Line-Height
+
+Line height and paragraph width must scale proportionally. A tightly contained text block can smoothly run a 1.5 line height. A wide text block (one that stretches heavily across the horizontal axis) demands a much taller line height, pushing closer to 2, because the eye is forced to "jump" a far greater distance just to find the start of the following line.
+
+Font size inherently shifts this balance as well: with a smaller font class, you absolutely need more breathing room (a taller line height) because the individual lines crowd together and blur. With massive headline fonts, you actually need to choke that air out (dropping the line height down to 1.1 or 1.2) because you're dealing with very few lines, and excessive vertical spacing will shatter the visual block.
+
+-----
+
+#### Never Center Long Text
+
+If a block of text pushes past 2 or 3 lines, kill the center alignment. Centering is built for short, punchy headings and subheadings, where the eye can snatch the entire line in a split second. For full paragraphs, left alignment is almost always the definitive play because it sets a hard, consistent left edge that the eye instantly uses as a guide rail to lock onto the next line down.
+
+For instance, if you're building out multiple feature sections and one of them runs a line long, aggressively rewrite the copy to perfectly match the line count across all of them. This single fix instantly hard-wires structural consistency into the design.
+
+**Rule:** 50-80 characters per line. Line-height proportional to width. Do not center long texts.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Functional Color (Don't Paint, Signal)
+
+Color in UI design must be fiercely functional first, not just aesthetic. The red of a traffic light isn't there because it compliments the surrounding landscape; it's there because the human brain is hardwired to process it instantly as "stop" or "danger."
+
+#### The 60-30-10 System
+
+A battle-tested formula for distributing color across an interface:
+
+- **60% Neutral**: white, grays, backgrounds. This is the canvas everything else sits on.
+- **30% Secondary**: the brand color. Sets visual identity, drives headers, structures elements.
+- **10% Accent**: calls to action, error states, success confirmations. This is the laser that snaps the user's eye directly to critical actions.
+
+If the accent color bleeds everywhere, its power evaporates. If the 60% neutral foundation is missing, the interface turns into a circus.
+
+-----
+
+#### The Brand Trap
+
+If your brand color is red, absolutely do not use red for confirmation buttons. Users will instantly process it as a destructive or dangerous action. In that ruthless split second, brand identity must yield to functional logic. The reverse is exactly the same: Spotify drenches everything in its brand green, but a violently destructive action like "Delete Playlist" has no business being green. Functional color (red = danger, green = success) always overrules brand color when a conflict arises.
+
+A real-world example: Feltrinelli runs red as their core brand color. Across their interface, red is heavily present, but on critical buttons like "Add to Cart," they specifically deployed green. If they had forced red there, that "Add to Cart" would have instantly projected the harsh vibe of a destructive action, plunging the user into deep confusion.
+
+-----
+
+#### You Need More Colors Than You Think
+
+A rookie mistake is assuming 3 to 5 colors will cut it. A heavy-duty interface actually demands:
+
+- **Grays**: 5-10 distinct variants, scaling from near-white down to near-black. The vast majority of any serious interface is built on gray.
+- **Primary color**: 5-10 variants, from ultra-light (for subtle alert backgrounds) to ultra-dark (for text sitting on a light surface).
+- **Accent colors**: red for critical errors, green for hard successes, yellow for warnings, blue for neutral system info. Every single one requires its own scale of variants.
+
+-----
+
+#### Never Use Pure Gray
+
+A dead, 0% saturation gray strips all life from an interface, leaving it looking flat and "out of the box." Injecting even the faintest chromatic undertone instantly builds personality. A cold undertone (blue) drives a sharp, highly technical, professional atmosphere. A warm undertone (yellow/orange) pushes a much more welcoming and approachable vibe. The absolute rule here is strict coherence: never, ever mix cold and warm grays in the same UI.
+
+-----
+
+#### Never Rely on Color Alone
+
+Color blindness affects roughly 8% of men and 0.5% of women. If the *only* difference between "success" and "error" is green versus red, a color-blind user literally will not see the distinction. You must always deploy a secondary channel of information: a hard icon (↑ for positive, ↓ for negative), explicit text ("Sent successfully"), or distinct textures/patterns inside graphs.
+
+Aggressively problematic combinations to watch for: green/red, green/brown, blue/purple, green/blue, green/black.
+
+A brutally effective test is crushing your interface down into grayscale. If you can still navigate and understand everything instantly, your design is structurally sound and doesn't lean on color.
+
+-----
+
+#### The Psychology of Color
+
+Color psychology is not a rigid spreadsheet of guaranteed emotional responses. Blue projects safety and deep familiarity, making it the dominant force in tech and finance, but not because a committee arbitrarily decided it. Blue thoroughly dominates the natural world (sky, water), so the brain permanently links it to stability; unlike red or yellow, it completely avoids biological arousal. It's the only color that bothers absolutely no one, making it the definitive "safe" play for anyone unsure of where to start.
+
+Red is its exact physiological opposite: it spikes the heart rate, aggressively hijacks attention before any other color, and carries a brutal sense of urgency that makes it flawless for digital errors and destructive actions, but highly volatile as a primary brand color (as proven by the Feltrinelli case). Green is deeply rooted in organic growth and nature, and digitally it has permanently solidified as the universal signal for success and absolute confirmation. Yellow snatches attention almost as violently as red but exhausts the eye much faster, which makes it highly effective for warnings and alerts but completely useless for massive surface areas.
+
+Nuances absolutely shatter the base color rules. A muted sage green projects calm, organic craftsmanship; a violent neon green screams high-energy tech. A deep navy blue commands heavy authority; a pastel sky blue floats on light, airy vibes. Which means two entirely different products can deploy "blue" and project violently opposing personalities. The strategic choice is never just the color, it is the highly specific tone.
+
+Cultural context forces another massive layer of complexity: white in the West screams absolute purity and cleanliness, while aggressively prominent Asian cultures lock it down as the color of mourning and death. Red in the West screams danger; in China, it's the ultimate symbol of fortune and massive prosperity. If your product is hitting an international audience, you must ruthlessly verify these regional hardwirings.
+
+**Rule:** 60% neutral, 30% brand, 10% accent. Functional color aggressively overrules brand color. Never rely on color alone to broadcast critical information. Grays injected with a chromatic undertone build personality.
+
+<br />
+
+### Recap (Visual Hierarchy at a Glance)
+
+| Concept | Key Rule | Common Trap |
+|----------|--------------|-----------------|
+| Hierarchy | De-emphasize the secondary, do not emphasize the primary | Everything huge, everything bold, everything bright |
+| Font sizes | 2 sizes + weight and color are enough | Using 8-10 different sizes in the exact same interface |
+| Labels | Absolute last resort: context almost always claryfies it | Slapping "Name:", "Price:", "Email:" on every single field |
+| White space | Start big and aggressively cut back. Never force-fill the screen | Adding space as an afterthought, sticking to the "bare minimum" |
+| Ambiguous spacing | The heading must live closer to its own content than to the section above it | Leaving titles dead-centered between top and bottom content |
+| Spacing scale | Lock it to a 16px baseline, use aggressive non-linear jumps, design by elimination | Throwing random pixel values around (13px, 17px, 22px) |
+| Line length | Cap it at 50-80 characters per line. Enforce `max-width` | Letting text bleed edge-to-edge on massive widescreens |
+| Line-height | Strictly bind it to width: 1.5 for tight blocks, pull it to 2 for wide ones | Using one blind value for everything |
+| Text alignment | Lock baselines across different text blocks, lock paragraphs to the left, only center punchy titles | Centering massive blocks of text |
+| 60-30-10 Color | 60% strictly neutral, 30% brand lockdown, 10% pure accent | Bleeding accent color everywhere until it loses all power |
+| Brand vs Function | Functional color brutally overrides brand color in a conflict | Forcing the red brand color onto critical confirmation buttons |
+| Accessibility | Never rely on color alone. Run brutal grayscale testing | Relying entirely on green/red to signal structural success/error |
+| Grays | Lock in a warm or cold undertone, never use dead gray | Running 0% saturation grays that flatten the interface into a lifeless board |
+
