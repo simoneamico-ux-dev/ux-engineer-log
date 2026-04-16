@@ -1,0 +1,568 @@
+---
+sidebar_position: 2
+title: Collaboration and GitHub
+description: Remote, branching, merge vs rebase, conflicts, Pull Requests, forks, .gitignore, and SSH.
+---
+
+import Link from '@docusaurus/Link';
+
+# Git & GitHub Real World Vademecum
+
+# Part II: Collaboration and GitHub
+
+Now that you know the terminal, the Staging Area, and atomic commits, it's time to extract the project from your computer's local environment and synchronize it with the rest of the world. This part covers everything that has to do with teamwork: remote platforms (GitHub), synchronization rules, code conflicts, and Pull Requests.
+
+---
+
+## Collaboration and GitHub
+
+### The Rules Change (Solo vs Team)
+Until now you've worked in your isolated ecosystem, where you're free to merge directly onto `main` and push whenever you want. In the world of professional work, reality is turned upside down: `main` is no longer your draft, but physically represents the exact copy of the code in production that customers are using in that very instant.
+
+For this reason, in a professional team the rules change: the `main` branch is almost always a protected branch at the server level and no developer has the permissions to perform a direct merge. Every single change goes through Pull Requests: it's mandatory to upload your work onto isolated branches where colleagues read the code, spot any issues, and formally approve the request before it gets merged into the main project.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. Remote Setup: SSH (The Physical Key)
+
+Now that the dynamics of teamwork are clear, we need to physically connect to the GitHub platform. Even before being able to download someone else's code or upload your own, GitHub needs to verify your identity.
+
+Since 2021, GitHub no longer accepts passwords for terminal authentication. You have to use an SSH key, which is more secure and, once configured, you'll never have to type anything again.
+
+An SSH key works like a physical key split into two pieces that match perfectly. You have the half that opens (the **private** key, kept on your computer and never shared). GitHub has the matching lock (the **public** key, which you can share freely).
+
+-----
+
+#### Procedure (Once Only)
+
+**Step 1: Generate the key pair**
+
+```bash
+ssh-keygen -t ed25519 -C "your@email.com"
+```
+
+When it asks where to save, press Enter (use the default location). When it asks for the passphrase, press Enter (leave it empty so you don't have to type it every time).
+
+You've created two files in the `~/.ssh/` folder:
+- `id_ed25519` → the PRIVATE key (never share it)
+- `id_ed25519.pub` → the PUBLIC key (this is the one you give to GitHub)
+
+-----
+
+**Step 2: Activate the SSH agent**
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+The agent is a digital keyring that keeps your private key in memory.
+
+-----
+
+**Step 3: Copy the public key**
+
+Mac:
+```bash
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+Windows (Git Bash):
+```bash
+cat ~/.ssh/id_ed25519.pub | clip
+```
+
+Linux:
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+Select all the output and copy it manually.
+
+-----
+
+**Step 4: Hand the key to GitHub**
+
+Go to GitHub → Settings → SSH and GPG keys → New SSH key. Paste the public key you copied. Give it a title that reminds you which computer it is ("Mac Home", "Work PC").
+
+-----
+
+**Step 5: Test**
+
+```bash
+ssh -T git@github.com
+```
+
+If you see `Hi YOURNAME! You've successfully authenticated...`, you're all set.
+
+-----
+
+#### Always SSH, Never HTTPS
+
+When you clone a repository, GitHub shows two links. **Always** use the SSH one:
+
+```bash
+# ✅ SSH (you recognize it by git@github.com)
+git clone git@github.com:username/repo.git
+
+# ❌ HTTPS (it will ask for username and password, which no longer work)
+git clone https://github.com/username/repo.git
+```
+
+If you've already cloned with HTTPS by mistake, you can change it:
+
+```bash
+git remote set-url origin git@github.com:username/repo.git
+```
+
+-----
+
+#### Common Problems
+
+**"Permission denied (publickey)"**: the key isn't configured. Verify you've completed all the steps and test with `ssh -T git@github.com`.
+
+**"Could not open a connection to your authentication agent"**: the SSH agent isn't active. Re-run `eval "$(ssh-agent -s)"` and `ssh-add ~/.ssh/id_ed25519`.
+
+-----
+
+#### Corporate Pro-Tip: The Double Account (Home vs Work)
+This base guide assumes you use a single GitHub account. In the real corporate world, it's very common to use the same computer for both your personal projects and your company GitHub profile (`yourname@company.com`). 
+If you find yourself in this situation, logging in via terminal isn't enough anymore: **don't try to overwrite your private SSH key with the new one**. There's a specific file (called `~/.ssh/config`) that was made precisely to handle multiple identities, so that you can tell Git: *"use key A if I'm pushing to my personal project, use corporate key B if I'm pushing to the office code"*. When the time comes, search Google for *"GitHub multiple SSH keys config"* and you'll save your own life.
+
+**Rule:** SSH is configured once only and works forever. Always the SSH link to clone, never HTTPS.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Branches (The Parallel Timelines)
+
+A branch is a separate development line where you can build a feature or fix a bug without touching the main code. If the experiment fails, you delete the branch and main hasn't suffered any damage.
+
+#### Creating and Navigating Branches
+
+#### Create a new branch and move to it immediately:
+```bash
+git switch -c name
+```
+Without the `-c` (just `git switch name`), you move onto a branch that already exists.
+
+#### Return to the main branch:
+```bash
+git switch main
+```
+
+#### Get the list of all branches (the one with * is where you are):
+```bash
+git branch
+```
+
+#### Delete a branch (after merging it):
+```bash
+git branch -d name
+```
+
+-----
+
+#### Naming Conventions
+
+Branch names follow the same conventions as Conventional Commits: the type indicates the nature of the work, the rest describes what you're doing. For example:
+
+```
+feat-login              → new login feature
+feat-dark-mode          → new dark mode feature
+fix-navbar-mobile       → fix for the navbar on mobile
+chore-update-deps       → dependency update
+refactor-api-calls      → refactoring of API calls
+```
+
+Lowercase words, separated by hyphens, and no spaces or special characters. The name must communicate what the branch contains to anyone who reads it.
+
+**Rule:** one branch for every feature or fix. A name that describes the content. Delete branches after merging.
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Merge vs Rebase (The Philosophical Choice)
+
+When you need to unite two branches, Git offers two paths. The choice changes how the project's history gets written.
+
+#### Merge (The Knot)
+
+Merge is the standard method. Git takes your parallel history (your branch with all its commits) and unites it with the main history creating a *merge commit*, a knot that says "here two paths joined".
+
+Think of two train tracks that split into parallel routes for a stretch, then reconnect. Even looking at the map 10 years later, you'll clearly see where the route split and where it rejoined.
+
+The advantage: the real history is faithfully preserved. You can see when you created the branch, when you worked, and when you merged. The disadvantage: if everyone on the team uses merge continuously, the project's timeline becomes a tangle of intertwined lines, almost illegible.
+
+#### Switch back to main:
+```bash
+git switch main
+```
+
+#### Merge the branch into main:
+```bash
+git merge name
+```
+
+-----
+
+#### Rebase (The Rewrite)
+
+Rebase doesn't unite two paths, but alters the timeline. It detaches your commits from the root where you created them and reattaches them on top of the most updated version of the main project. It's the mechanical equivalent of making work that was processed last week look like it was done today.
+
+Imagine you created a branch on Monday to develop the delicate **Checkout** operation. While you work for days on your isolated code, your colleagues complete the base flow and publish three structural updates on `main`: the **Login** page, the **Navbar**, and the **Cart**.
+
+When you perform a rebase, Git doesn't just "wedge" your old code in the middle of theirs. It physically detaches your Checkout commits and meticulously reproduces them on top of the very latest version of main. The final effect is chronological: reading the project's history, it will seem that you strategically waited for the team to finish and publish Login, Navbar, and Cart before starting to write the Checkout operation only this morning, starting from scaffolding that was already perfect and finished.
+
+**The Advantage**: the entire project history flattens visually into a single straight line, eliminating at the root the existence of timelines or parallel development tracks. Zero crossed branches and zero merge commits. Reading the log, it looks like the whole team worked in turns, closing single tasks in order (this happens because Git will textually keep your original author date, but will formally reset the system commit date to the exact instant of the operation).
+
+**The Danger**: you're literally **rewriting history**. To reposition your changes on top, Git deletes your old commits and replaces them with new copies that have a different hash ID. The operation is technically safe as long as you're operating only on your computer, but if you had already pushed those files, forcing a rebase will wipe out the remote references: anyone on the team trying to sync up will run into irreversible conflicts looking for old IDs that no longer exist.
+
+#### Move onto your isolated work-in-progress branch:
+```bash
+git switch feat-checkout
+```
+
+#### Run the rebase, repositioning your work on top of the main updates:
+
+```bash
+git rebase main
+```
+
+-----
+
+#### The Fundamental Rule
+
+Use **rebase** to clean up *your* work before delivering it. Use **merge** to unite the *team's* work.
+
+In practice: rebase only on private branches, those where only you work. If you rebase on a branch shared with colleagues, you destroy their sync. The result will be chaos.
+
+**Rule:** rebase on your private branches to keep the history clean. Merge to unite the team's work. Never rebase on a shared branch.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Conflicts (Merge Conflicts)
+
+In an ideal world, Git unites everything automatically. In reality, this happens: you modify line 10 of `style.css` (blue), your colleague modifies the same line 10 of `style.css` (red). When you try to merge, Git stops and asks: "there are two versions, which one do I keep?".
+
+#### It's Not an Error, It's a Question
+The conflict isn't a bug. It's Git saying "I can't decide for you". Like an editor who receives two different versions of the same sentence from two writers: they stop and ask which one to print.
+
+-----
+
+#### How It Appears (Under the Hood)
+
+When a conflict arises, Git inserts textual markers into your file:
+
+```css
+body {
+<<<<<<< HEAD
+  background-color: blue;   /* Your version (Current) */
+=======
+  background-color: red;    /* Your colleague's version (Incoming) */
+>>>>>>> feat-login
+}
+```
+
+`<<<<<<< HEAD` marks where the version you're currently positioned on begins.  
+`=======` is the divider between the two versions.  
+`>>>>>>> feat-login` marks where the conflicting modification incoming from the new branch ends.
+
+-----
+
+#### The Modern Resolution (VS Code)
+
+If you open this file in a modern visual editor like VS Code, you won't have to go crazy deleting the markers by hand with the keyboard (risking formatting errors). The editor natively scans those symbols and makes clickable commands appear right above the conflicting block:
+`Accept Current Change | Accept Incoming Change | Accept Both Changes | Compare Changes`
+
+Once you've clicked the desired button, VS Code automatically deletes all the annoying `<<<<<<<` markers and dividers, leaving the file perfectly clean.
+
+At that point all you need to do is tell Git the emergency is over. Save the file, run `git add .` to mark the conflict as resolved, and finally run `git commit` to definitively close the operation.
+
+**Rule:** conflicts aren't errors, they're questions from Git. Resolve them through the editor and always close the case with a resolution commit.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Syncing with the Remote (Push, Pull, Fetch)
+
+#### `git push` (Sending to the Server)
+
+It's used to send your local commits to GitHub, making them available to the team.
+
+#### The first time: set up the tracking between local branch and remote:
+
+```bash
+git push -u origin name
+```
+
+#### Subsequent times: just push:
+
+```bash
+git push
+```
+
+The `-u origin name` (for example: `-u origin feat-login`) is done only the first time you push a new branch. It tells Git "this local branch corresponds to that branch on GitHub". After that, just `git push`.
+
+#### Let's Bust a Myth: Pushing is NOT Publishing
+
+The classic terror is: *"If I push and I wrote a line wrong, I'll break the app for live users!"*. False. 
+
+When you push your isolated branch (e.g., `feat-login`), you're simply transferring a draft of the code into the GitHub depot so that your team can inspect it. The public worldwide will see your changes **only and only** when the whole team approves your future Pull Request, merging your work into the `main` branch. Until then you can relax: push your branch frequently and without any fear.
+
+-----
+
+#### `git pull` (Download and Merge)
+
+Downloads updates from the server and merges them with your local work. Imagine writing a novel with a colleague. You go to sleep, and while you rest the colleague on the other side of the world writes Chapter 3 and uploads it to the server. If in the morning you start writing Chapter 4 *without* having downloaded and read Chapter 3, the story won't make sense.
+
+```bash
+git pull
+```
+
+Do it **every morning**, as the first thing after opening the terminal. Before writing a single line of code. If a colleague messages you on Slack saying "I pushed an important fix", run `git pull` immediately.
+
+Behind the scenes, `git pull` runs two commands in sequence: first `git fetch` (downloads the data from the server into a hidden memory, without touching your files), then `git merge` (unites that data with your current work).
+
+If you try to `git push` and Git blocks you with a "rejected" error, it means someone pushed code while you were working. The solution: `git pull` first (to sync up), then `git push`.
+
+-----
+
+#### `git fetch` (Download Without Merging)
+
+`git fetch` downloads the data from the server but doesn't unite it with your work. It's the cautious version of `git pull`: you can take a look at what changed before deciding to merge.
+
+#### Download without merging:
+
+```bash
+git fetch
+```
+
+#### See what's new:
+
+```bash
+git log origin/main --oneline
+```
+
+#### If you're good with it, merge manually:
+
+```bash
+git merge origin/main
+```
+
+In daily practice, `git pull` is enough for the vast majority of cases. `git fetch` is useful when you want to be cautious, for example before a complex merge where you know there could be conflicts.
+
+**Rule:** `git pull` every morning before working. `git push` after every significant work session. `git fetch` when you want to check before uniting.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. Pull Requests (The Heart of Collaboration)
+
+The Pull Request (PR) is a formal request to unite your branch with the main branch, with the possibility for the team to read the code, comment, and approve before the merge.
+
+#### The Complete Flow
+
+The flow starts from your computer: you create the branch (`git switch -c feat-dark-mode`), make your commits, and then send the branch to GitHub with `git push -u origin feat-dark-mode`.
+
+At this point you go to GitHub. You'll see a yellow banner "Compare & Pull Request": it's GitHub noticing your newly pushed branch and proposing you open the PR. Click it, write the title and description (we'll talk about that shortly), and submit.
+
+Now the team comes into play. Colleagues read the code in the PR, comment ("here you could use a constant instead of a hardcoded value"), suggest changes. If there are comments to resolve, make the changes locally, commit, and push again to the same branch. The PR automatically updates with the new commits.
+
+When the colleagues are satisfied, they approve the PR. Only at that point do you click the green "Merge" button on GitHub and the branch gets united with main.
+
+-----
+
+#### How to Write a Good PR (On the Web Interface)
+
+Unlike commits in the terminal (where you were forced to use the -m flags), the Pull Request takes life comfortably on GitHub's web page. When you open the request, you'll find yourself in front of a visual form very similar to an email: a string for the Title and a large text editor for the Description (where you can comfortably paste images or format the text).
+
+The **title** must be clear and concise, inheriting the rigorous syntax of Conventional Commits: `feat(ui): add dark mode toggle`. The description in the box below must explain what you did and why. Not the how (your colleagues will see that by looking at the code line by line), but the logical why of your choices.
+
+A good description includes:
+- A summary of what changes and why it was necessary
+- Screenshots, GIFs, or short videos if you modified the UI (the reviewer may not want to start up the project just to see your button)
+- Notes on how to test the feature (if something specific needs to be done)
+- Any open points or decisions you want to discuss with the team
+
+❌ Title: "changes". Description: empty.
+
+✅ Title: "feat(ui): add dark mode toggle". Description: "Adds a toggle in the navbar that lets you switch between light and dark themes. Colors are saved in CSS variables and the preference is saved in localStorage. Screenshot attached."
+
+-----
+
+#### The Merge Options on GitHub
+
+When you click "Merge", GitHub offers three options:
+
+**Create a merge commit**: unites the branch with a merge commit, preserving all the history. The safest and most transparent choice.
+
+**Squash and merge**: compacts all the branch's commits into a single commit before merging. Useful when you've made 15 commits of "wip" and "fix typo" and want a single clean commit to appear in main's history.
+
+**Rebase and merge**: rebases the branch's commits onto main before merging. Creates a linear history without a merge commit. Unlike `squash and merge`, it preserves the individual history of every small change you saved along the way, but forcibly updates the system date (the Commit Date) to the exact instant when you run the operation. 
+
+For personal projects and small teams, "Create a merge commit" is the simplest choice. "Squash and merge" is the most used in teams that want a clean history on main.
+
+-----
+
+#### Linking Issues and PRs
+
+If your PR resolves an issue, you can link it by writing keywords in English like `Fixes #42` or `Closes #42` in the PR's description.
+
+When the PR is merged, GitHub will close the issue **automatically**, but only under two strict conditions:
+
+1. You used the exact magic words in English (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`) followed by the number.
+2. You're merging directly onto the project's **default** branch (e.g., `main`). If you're merging onto a secondary branch like `develop`, GitHub won't activate the automation and you'll have to close the issue manually at the end of the line.
+
+**Rule:** every significant code change goes through a PR. Clear title, description of the what and the why. Screenshot if it's UI.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Fork and Open Source (Contributing to Other People's Projects)
+
+You can't push directly to someone else's repository because you don't have the permissions. The fork solves this problem: it creates a complete copy of the repository in your GitHub account, where you have total control.
+
+#### The Flow
+
+1. **Fork**: on GitHub, go to the project's repository and click "Fork". A copy is created in your account
+2. **Clone**: clone *your* fork to your computer (`git clone git@github.com:yourname/repo.git`)
+3. **Branch**: create a branch for your change (`git switch -c fix-typo-readme`)
+4. **Work**: make the changes, commit, push to your fork
+5. **PR**: open a Pull Request from your fork to the original repository. The project's author reads it and decides whether to accept it
+
+The difference between fork and clone: the fork copies the repository on GitHub (from one account to another). The clone copies the repository from GitHub to your computer. To contribute to someone else's project, you need the fork first (on GitHub) and then the clone (on your computer).
+
+-----
+
+#### Keeping the Fork Updated
+
+Your fork is a snapshot of the original repository at the moment of the fork. If the original project moves forward, your fork stays behind. To sync it:
+
+#### Add the original repository as "upstream"
+
+```bash
+git remote add upstream git@github.com:original-author/repo.git
+```
+
+#### Download the updates from the original
+
+```bash
+git fetch upstream
+```
+
+#### Merge the updates into your main
+
+First, make sure you return mandatorily to your main branch:
+
+```bash
+git switch main
+```
+
+Once you're physically on main, integrate the updates you just downloaded:
+
+```bash
+git merge upstream/main
+```
+
+Tip: Once you've gained confidence, you can take care of the whole operation by running a single concatenation: `bash git switch main && git merge upstream/main`. The logical operator && tells the terminal to run the second command only and exclusively if the first one succeeds. If for any reason Git fails the move onto main, the terminal will stop everything and the merge will never start, preventing you from accidentally merging the updates into the wrong branch.
+On the contrary, if you copied and pasted the two lines simultaneously and the switch suddenly failed, the terminal would ignore it and blindly run the second command, merging all the updates into the wrong branch.
+
+
+#### Push to your fork to update it on GitHub too
+
+```bash
+git push
+```
+
+**Rule:** fork to contribute to other people's projects. Clone of your fork onto your computer. PR from the fork to the original. Keep the fork updated with upstream.
+
+<br />
+<br />
+<br />
+<br />
+
+### 15. .gitignore (The Repository's Bouncer)
+
+Since Git is like a photo album, you don't want blurry photos or photos that are too heavy to end up in it. There are files that must never enter the repository because they're too big, contain secrets, can be regenerated, or are specific to your computer.
+
+The `.gitignore` file tells Git: "ignore these files, never track them".
+
+```gitignore
+# NPM dependencies (hundreds of MB, regenerated with npm install)
+node_modules/
+
+# Mac junk
+.DS_Store
+
+# PASSWORDS AND SECRETS (if they end up on public GitHub, serious trouble)
+.env
+.env.local
+*.key
+*.pem
+
+# Production build (regenerated with npm run build)
+build/
+dist/
+out/
+.next/
+
+# Temporary files and cache
+*.log
+.cache/
+.vscode/
+.idea/
+```
+
+If you've already committed a file by mistake *before* adding it to the `.gitignore`, gitignore has no retroactive effect. You have to remove the file manually:
+
+#### Removes the file from Git's tracking but leaves it on your computer
+
+```bash
+git rm --cached filename.env
+```
+
+A particular case is **raw multimedia files**. Git remembers the complete history, even deleted files: a 100MB video added at commit 10 and removed at commit 20 still weighs 100MB for anyone who clones the project. Before committing any image or video, optimize it:
+
+- **Images** → convert to WebP with [Squoosh](https://squoosh.app) (free, no installation).
+- **Animated GIFs** → convert to WebM or MP4 with [CloudConvert](https://cloudconvert.com/gif-to-webm): you save 80-90% of the weight.
+
+**Rule:** create the `.gitignore` as the first thing in the project, before the first commit. Never commit `node_modules`, `.env`, build, or editor-specific files. Always optimize multimedia files before committing them.
+
+<br />
+<br />
+<br />
+<br />
+
+<br />
+
+### Summary (Collaboration in Brief)
+
+| Concept | Key rule | Common trap |
+|----------|--------------|-----------------|
+| Solo vs Team | In a team, everything goes through Pull Requests | Merging directly onto main in a team project |
+| SSH | Once only, then it works forever. Always SSH, never HTTPS | Cloning with HTTPS and having authentication problems |
+| Branch | One branch per feature/fix. Descriptive name | Branches with vague names like "test" or "new" |
+| Merge | Preserves the real history, creates a merge commit | Not understanding why the timeline looks like "Guitar Hero" |
+| Rebase | Only on private branches, never on shared branches | Rebase on a branch where others are also working |
+| Conflicts | They aren't errors, they're questions. Resolve and commit | Panicking and deleting the branch |
+| `git pull` | Every morning, before writing code | Working on an old version and discovering conflicts hours later |
+| `git push` | After every significant work session | Forgetting to push and losing the work if the computer breaks |
+| Pull Request | Clear title, description of the what and the why | PR with no description or with title "changes" |
+| Fork | To contribute to other people's projects. PR from fork to original | Pushing directly to someone else's repo (doesn't work) |
+| .gitignore | First thing to create in the project | Committing `node_modules` or `.env` |

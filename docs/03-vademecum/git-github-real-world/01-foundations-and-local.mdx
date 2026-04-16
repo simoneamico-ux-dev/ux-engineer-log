@@ -1,0 +1,379 @@
+---
+sidebar_position: 1
+title: Foundations and Local Git
+description: Essential terminal, the three rooms model, setup, commits, Conventional Commits, and git log.
+---
+
+import Link from '@docusaurus/Link';
+
+# Git & GitHub Real World Vademecum
+
+# Part I: Foundations and Local Git
+
+Git is not a "save". It's a collaborative time machine that lets you return to any point in your project's history and work on parallel versions without risk.
+
+---
+
+## Foundations and Local Git
+
+### 1. The Terminal (The Engine Room)
+
+The graphical interface (mouse, folders, clicks) is the tourist shop. The terminal is the ship's engine room. To use Git you need to know how to navigate the terminal. There are 6 recurring commands.
+
+| Action | Command | What it does |
+|--------|---------|-------------|
+| Where am I? | `pwd` | Shows the path of the current folder |
+| What's here? | `ls` | Lists files and folders |
+| Enter a folder | `cd folder-name` | Like double-clicking a folder |
+| Go back | `cd ..` | Goes up one level |
+| Create a folder | `mkdir name` | Creates a new empty folder |
+| Clear the screen | `clear` | Erases all text from the terminal |
+
+A trick that will save you time: instead of typing long paths by hand (with the risk of typos), you can write `cd ` (with a space after it) and then drag the folder from Finder (Mac), File Explorer (Windows), or your File Manager (Linux) directly into the terminal window. The system will write the path for you.
+
+When you're forced to type manually, autocomplete via the TAB key drastically reduces the cognitive load. You just need to enter the first letter or letters of the destination, for example `cd D`, and press TAB. If only one matching folder exists on the system, the terminal completes the word instantly. If conflicts exist (like between *Desktop*, *Documents*, and *Downloads*), the terminal stops and prints the list of options. At that point you have two paths: type an additional letter to break the ambiguity and press TAB again (e.g., combine an `o` and a `c` to jump straight to *Documents*), or take advantage of Zsh's visual autocomplete (the default Shell on Macs, the actual "engine" that processes commands under the hood of the terminal). Pressing TAB fluidly twice activates an interactive selector, letting you scroll through the options.
+
+There's also an additional shortcut dedicated to Unix systems like Mac and Linux: the Tilde symbol (`~`), which absolutely identifies the root of your user folder. If you're buried five levels deep in the subfolders of a project and need to return immediately to the desktop, you avoid writing the backward path in full. You type `cd ~/Desktop` and the terminal teleports you straight to the destination, completely ignoring how deep you currently are at that moment.
+
+**Rule:** before any Git operation, verify you're in the right folder with `pwd`. Running commands in the wrong folder is one of the most common causes of problems.
+
+<br />
+<br />
+<br />
+<br />
+
+### 2. The Three Rooms Model (Working Directory, Staging Area, Repository)
+
+Many people wonder why Git is "so complicated". Why doesn't it just save everything like Word? The answer is that the three-room system gives you a power that classic saving doesn't have: choosing *what* to save and *when*.
+
+#### Working Directory (The Photo Set)
+
+Imagine a professional photo studio. The **Working Directory** is the set where the action happens: you've changed a button's color and started rewriting text that's still half done. Everything is mixed up on the table, nothing is final. It's the folder of your project as it is right now.
+
+-----
+
+#### Staging Area (The Camera Viewfinder)
+
+The **Staging Area** is the camera viewfinder. Unlike a classic save that saves everything indiscriminately, Git lets you look through the viewfinder and decide what to frame. With the `git add` command, you're saying: "I want to frame only the blue button, leaving the incomplete text outside the frame". You're preparing the perfect composition, filtering out the noise.
+
+This is the power that classic saving lacks. You may have modified 10 files, but commit only the 3 that concern the blue button. The other 7 stay in the Working Directory, ready for a later commit when they're complete.
+
+-----
+
+#### Repository (The Photo Album)
+
+The **Repository** is the album. When you run `git commit`, it's like pressing the shutter button: *click*. You've frozen that precise moment into an indelible photograph. Now in the project's history there's a clean version called "Blue button" that you can return to at any future moment, while the incomplete text stayed on the set, ready to be finished and photographed in the next shot.
+
+```
+You modify files   →   git add (you frame)   →   git commit (you take the photo)
+Working Directory         Staging Area                  Repository
+   (the set)              (the viewfinder)               (the album)
+```
+
+**Rule:** the Working Directory is where you work. The Staging Area is where you choose what to commit. The Repository is the immutable history of the project. This three-room flow lets you create clean, focused commits.
+
+<br />
+<br />
+<br />
+<br />
+
+### 3. Initial Setup (The Signature)
+
+Before making any commit, Git needs to know who you are. If we consider every commit as a photograph taken of your project, the system never lets you insert it into the album anonymously: it demands that your signature is always stamped on it.
+
+#### To set the name anyone reading your commits will see:
+```bash
+git config --global user.name "Your Full Name"
+```
+
+#### To set the email GitHub uses to link commits to your profile:
+```bash
+git config --global user.email "your@email.com"
+```
+
+This step is done **once only** in the life of the computer. If you reformat the computer, you'll need to redo it.
+
+An important detail: if you use an email different from your GitHub account's, your contributions won't appear on your online profile. No green squares in the activity graph. It may seem like a cosmetic detail, but for a recruiter looking at your GitHub it's important to see your contributions.
+
+**Rule:** use the same email for `git config` and for your GitHub account. It's configured once only.
+
+<br />
+<br />
+<br />
+<br />
+
+### 4. Initialization (Point Zero)
+
+You've created a new folder for your project. At the moment it's a normal folder, with no memory. To install Git's "brain" in it, you need to initialize it.
+
+#### First, enter the project folder:
+```bash
+cd project-name
+```
+
+#### Then initialize Git:
+```bash
+git init
+```
+
+The output will be something like:
+
+```
+Initialized empty Git repository in /Users/yourname/Desktop/project-name/.git/
+```
+
+Git has created a hidden folder called `.git` inside your project. That folder is the brain: it contains all the project's history and its configurations. If you accidentally delete it, the project loses its memory and returns to being a simple folder of files.
+
+❌ Never run `git init` on the Desktop, in the User folder, or in system folders. Git would monitor thousands of files that have nothing to do with your project.
+
+✅ Always `cd` into the project folder before `git init`. Verify with `pwd` that you're in the right place.
+
+**Rule:** `git init` runs once per project, inside the project folder. Never on the Desktop or in the User folder.
+
+<br />
+<br />
+<br />
+<br />
+
+### 5. Inspection (The Project's GPS)
+
+Before doing any operation, you need to know what state you're in. These three commands are your GPS.
+
+#### `git status` (The Dashboard)
+
+Tells you what's happening in the project right now: which files have been modified, which are in staging, which branch you're on.
+
+```bash
+git status
+```
+
+```
+On branch main
+Changes not staged for commit:
+  modified:   style.css      ← RED: modified but not in staging
+  modified:   index.html     ← RED: modified but not in staging
+
+Untracked files:
+  script.js                  ← RED: new file, Git doesn't know it
+```
+
+After a `git add .`:
+
+```
+Changes to be committed:
+  modified:   style.css      ← GREEN: in staging, ready for commit
+  modified:   index.html     ← GREEN: in staging, ready for commit
+  new file:   script.js      ← GREEN: in staging, ready for commit
+```
+
+Red = in the Working Directory, not yet selected. Green = in the Staging Area, ready for the photo.
+
+-----
+
+#### `git diff` (The Microscope)
+
+Tells you *what* changed inside the files, line by line.
+
+```bash
+git diff
+```
+
+```diff
+- color: black;    ← This line was REMOVED (in red)
++ color: blue;     ← This line was ADDED (in green)
+```
+
+`git diff` without arguments shows the differences between the Working Directory and the Staging Area (what you've modified but not yet added). `git diff --staged` shows the differences between the Staging Area and the last commit (what you're about to commit).
+
+-----
+
+#### `git log` (The Photo Album)
+
+Shows you the history of commits, from the most recent to the oldest.
+
+```bash
+git log
+```
+
+```
+commit a3f2b1c4d5e6f7890123456789abcdef01234567
+Author: Jane Smith <jane@email.com>
+Date:   Mon Apr 14 10:30:00 2026 +0200
+
+    feat(ui): add dark mode toggle
+
+commit b2c3d4e5f6a7b8901234567890abcdef12345678
+Author: Jane Smith <jane@email.com>
+Date:   Sun Apr 13 18:15:00 2026 +0200
+
+    fix(navbar): correct mobile menu alignment
+```
+
+Every commit has a **hash** (that long string of letters and numbers), an **author**, a **date**, and a **message**. The hash is the unique identifier of the commit, like a fingerprint.
+
+For a more compact view, one line per commit:
+
+```bash
+git log --oneline
+```
+
+```
+a3f2b1c feat(ui): add dark mode toggle
+b2c3d4e fix(navbar): correct mobile menu alignment
+c4d5e6f feat(auth): add login page
+```
+
+To visualize branches as a tree:
+
+```bash
+git log --graph --oneline
+```
+
+**Rule:** `git status` before every operation. `git diff` to see what changed. `git log --oneline` to navigate the history.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. Capturing the Moment (Add and Commit)
+
+#### `git add` (Bringing into Focus)
+
+Moves changes from the Working Directory to the Staging Area. You're choosing what to include in the next commit.
+
+#### Adds ALL modified and new files
+```bash
+git add .
+```
+
+#### Adds only a specific file
+```bash
+git add style.css
+```
+
+#### Adds all files in a folder
+```bash
+git add src/
+```
+
+`git add .` is the most used in daily practice. `git add filename` is useful when you want to create separate commits for different things: first we commit the CSS changes, then the JavaScript ones, into two distinct clean commits.
+
+-----
+
+#### `git commit` (The Shot)
+
+Takes everything in the Staging Area and freezes it forever into history.
+
+The `-m` flag lets you write the message inline. Without `-m`, Git opens a text editor for a longer message (useful for complex commits that need a detailed description).
+
+```bash
+git commit -m "feat(ui): add dark mode toggle"
+```
+
+To write a long message directly from the terminal (avoiding the editor entirely), just chain two `-m` flags. The first creates the title, the second creates the description (press Enter before closing the quotes to go to a new line):
+
+```bash
+git commit -m "feat(ui): add dark mode toggle" -m "- Added the switch button in the navbar.
+- Set up preference saving in localStorage.
+- Handled fallback colors for older browsers."
+```
+
+A commit without a clear message is a black hole in the project's history. In six months, "fix stuff" won't tell you anything. "fix(cart): prevent negative quantity in checkout" will tell you exactly what was fixed and where.
+
+-----
+
+#### The Atomic Commit
+
+Every commit should do **one single thing**. Not "fix bug and add feature and change color" in one commit. If you have to use the word "and" in the commit message, you probably need two separate commits.
+
+❌ `git commit -m "fix cart bug and add dark mode and update footer styles"`
+
+✅ Three separate commits:
+- `git commit -m "fix(cart): prevent negative quantity in checkout"`
+- `git commit -m "feat(ui): add dark mode toggle"`
+- `git commit -m "style(footer): update spacing and colors"`
+
+This is because if tomorrow you discover that dark mode causes a bug and you need to revert, you can cancel only that commit without losing the cart fix and the footer update.
+
+To make it concrete, all you need to do is take the ID (the first 7 characters are enough) of that single commit and run:
+
+```bash 
+git revert abc1234 
+```
+
+This command instantly creates a new commit that applies the exact inverse of your changes, removing dark mode but perfectly saving the cart fix and the footer styling.
+
+If you add the `--no-edit` flag (`git revert abc1234 --no-edit`), the system text editor is completely bypassed: Git does everything on its own, silently generating a commit automatically titled `Revert "feat(ui): add dark mode toggle"`. This is the true essence of `revert`: it repairs damage by moving forward into the present, without ever deleting past history. That's the difference that sets it apart from the `reset` command.
+If you run `git reset` instead, Git moves the entire project back to that moment and **cancels everything that happened after**. It's the equivalent of ripping the last pages out of the photo album, pretending they never existed. (The modified files still remain on your computer as "uncommitted", unless you add `--hard`: we'll come back to this in <Link to="/docs/vademecum/git-github-real-world/advanced-and-workflow#git-reset-after-the-commit">section 17</Link>.)
+
+**Rule:** one commit, one thing. If the message contains "and", you probably need two commits. The atomic commit lets you make surgical reverts.
+
+<br />
+<br />
+<br />
+<br />
+
+### 7. Conventional Commits (The Professional Language)
+
+Never write `fix stuff`, `update`, `changes`: reopening the project in six months, you won't remember what was touched or why. Conventional Commits eliminate the ambiguity by providing a universal grammar for messages.
+
+#### The Syntax
+
+```
+type(scope): imperative description
+```
+
+The **type** says *what* you did. The **scope** says *where* you did it. The **description** says *how*.
+
+-----
+
+#### The Types
+
+- **`feat`**: new user-facing functionality. You added the login button, a new page, a new feature
+- **`fix`**: bug correction. The button didn't respond to clicks, the form didn't validate, the page crashed
+- **`docs`**: documentation changes. Correcting a typo in the README, updating a guide
+- **`style`**: code formatting, not visual style. Spacing and indentation, without changing behavior
+- **`refactor`**: code restructuring without changing external behavior. You split a 100-line function into two 50-line ones
+- **`perf`**: performance improvement. Loading optimization, bundle size reduction
+- **`chore`**: maintenance. Dependency updates, config changes, cleanup of useless files
+- **`test`**: adding or fixing automated tests. You don't touch production code, only the verification files.
+- **`revert`**: mirror cancellation of a previous commit. It's the type automatically generated when you use the git revert command.
+- **`build`**: changes to the build system tools or main dependencies (e.g., changes to Vite, Webpack, or critical NPM packages).
+- **`ci`**: changes to continuous integration and automation files (e.g., GitHub Actions workflows).
+
+-----
+
+#### The Scope
+
+The scope is the area of the project you touched. There's no universal list, it depends on your project. The most common:
+
+`ui`, `components`, `layout`, `navbar`, `footer`, `sidebar`, `forms`, `modal`, `buttons`, `theme`, `animations`, `auth`, `profile`, `settings`, `dashboard`, `cart`, `checkout`, `search`, `filters`, `api`, `db`, `models`, `middleware`, `store`, `router`, `types`, `utils`, `core`, `tests`, `e2e`, `deps`, `config`, `lint`, `docker`, `seo`, `a11y`, `i18n`, `performance`
+
+The rule for choosing it: specific enough to immediately decode the affected area, but broad enough not to fall into exaggerated and useless micro-detail.
+
+❌ Too vague: `feat(code): ...` (everything is code)
+
+❌ Too specific: `feat(red-button-bottom-right): ...`
+
+✅ Just right: `feat(navbar): ...` or `feat(auth): ...`
+
+If you changed the color of the "Logout" button in the navbar, it's `style(navbar): update logout button color`. If you changed the color of all buttons on the site, it's `style(ui): update primary button color`.
+
+**Rule:** `type(scope): imperative description`. The type says what, the scope says where. If the message tells you nothing in 6 months, rewrite it.
+
+<br />
+
+### Summary (Foundations in Brief)
+
+| Concept | Key rule | Common trap |
+|----------|--------------|-----------------|
+| Terminal | `pwd` first of all. 6 commands are enough | Running commands in the wrong folder |
+| Three rooms | Working Directory → Staging Area → Repository | Thinking `git add` is the commit |
+| Setup | Same email as GitHub for `git config` | Different email and no green squares |
+| `git init` | Once per project, inside the project folder | `git init` on the Desktop |
+| `git status` | Before every operation | Not checking the state and committing wrong files |
+| `git diff` | See what changed before committing | Committing without knowing what you're committing |
+| `git log` | `--oneline` for the compact view | Never consulting the history |
+| Atomic commit | One commit, one thing. No "and" in the message | A giant commit with 15 different changes |
+| Conventional Commits | `type(scope): imperative description` | `git commit -m "fix"` or `git commit -m "update"` |

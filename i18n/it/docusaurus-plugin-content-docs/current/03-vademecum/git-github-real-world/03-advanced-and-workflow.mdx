@@ -1,0 +1,407 @@
+---
+sidebar_position: 3
+title: Tecniche Avanzate e Workflow
+description: Stash, restore, reset, cherry-pick e tag.
+---
+
+import Link from '@docusaurus/Link';
+
+# Git & GitHub Real World Vademecum
+
+# Parte III: Tecniche Avanzate e Workflow
+
+Ora che conosci Git e GitHub, impariamo le tecniche che ti salvano la vita nelle emergenze e gli strumenti per gestire release e collaborazione a livello professionale.
+
+---
+
+## Tecniche Avanzate e Workflow
+
+### 16. Stash (La Scatola)
+
+Sei al lavoro. Hai completamente smontato il "motore" della feature carrello: 5 file aperti, modifiche a metà.
+
+Il telefono squilla. Il capo: "FERMA TUTTO! Il sito è down, gli utenti non riescono a completare il checkout! C'è un bug critico in produzione, devi correggerlo IMMEDIATAMENTE sul branch `main`!"
+
+Devi passare a `main` subito per fixare il disastro ma allo stesso tempo non vuoi perdere le modifiche che stavi facendo in quel momento. Se provi a cambiare branch, Git ti blocca: "error: Your local changes would be overwritten by checkout". Non puoi nemmeno committare perché non eri a metà dell'opera. Sei bloccato.
+
+#### La Soluzione
+
+`git stash` è una scatola dove puoi infilare tutto il disordine dalla scrivania in un secondo, lavorare su altro con la scrivania pulita, e poi tirare fuori tutto esattamente come lo avevi lasciato.
+
+Infila tutto nella scatola (il `-u` conviene sempre aggiungerlo perché include anche i file nuovi che non hai mai ancora committato):
+
+```bash
+git stash -u
+```
+
+Le tue modifiche spariscono. I file tornano puliti, come nell'ultimo commit, ma senza aver perso nulla: Git ha messo tutto nella scatola.
+
+#### Ora sei libero, quindi:
+
+Corri su main:
+
+```bash
+git switch main
+```
+
+Fixi il bug, testi, committi, fai push. Crisi risolta, capo contento.
+
+Torni al tuo branch
+
+```bash
+git switch feature-cart
+```
+
+Tiri fuori la scatola
+
+```bash
+git stash pop
+```
+
+Le tue modifiche riappaiono esattamente come le avevi lasciate. Puoi continuare da dove avevi interrotto.
+
+-----
+
+#### Comandi Utili per lo Stash
+
+Vedi cosa c'è nella scatola (puoi averne più di una, impilate):
+
+```bash
+git stash list
+```
+
+Output:
+```
+stash@{0}: WIP on feature-cart: a3f2b1c Added form validation
+stash@{1}: WIP on fix-navbar: b2c3d4e Mobile menu correction
+```
+
+La differenza tra `pop` e `apply`: `pop` tira fuori e cancella la scatola dalla lista. `apply` tira fuori ma lascia la scatola nella lista, come una copia. Nella maggior parte dei casi, `pop` è quello che vuoi.
+
+-----
+
+#### Interruzioni Multiple (La Pila di Scatole)
+
+Lo scenario del capo che chiama si risolve con una singola scatola e un `pop` finale. Ma può accadere che le interruzioni si accumulino: stai fixando il bug su `main`, quando arriva un collega e ti chiede di mettere in pausa anche quello per guardare un problema urgente sul login. Fai un secondo `git stash -u`. Ora hai due scatole impilate.
+
+Il giorno dopo non ricordi quale contiene cosa. `git stash list` ti mostra la pila:
+
+```
+stash@{0}: WIP on feat-login: ...
+stash@{1}: WIP on feat-cart: ...
+```
+
+Le etichette automatiche sono criptiche. Quando sai già che stai per creare una scatola che dovrai ritrovare in mezzo ad altre, usa `git stash push -m` per darle un nome leggibile. Il `push` è la forma estesa di `git stash`: ti permette di aggiungere opzioni, in questo caso `-u` per i file nuovi e `-m` per il messaggio descrittivo:
+
+```bash
+git stash push -u -m "Logica sconti carrello prima di fixare bug pagamento"
+```
+
+Ora vuoi tornare al lavoro sul carrello. Sai che è la `stash@{1}` (la seconda in lista, dove `{0}` è sempre la più recente). Usi `apply` invece di `pop` quando non sei ancora sicuro di aver finito: la scatola rimane nella lista come riserva finché non verifichi che tutto funzioni:
+
+```bash
+git stash apply stash@{1}
+```
+
+Hai verificato, tutto funziona. A questo punto quella scatola è inutile e ingombra la lista. La elimini a mano:
+
+```bash
+git stash drop stash@{0}
+```
+
+Lo stesso vale se nel frattempo hai deciso di abbandonare del tutto quel pezzo di lavoro: non vuoi applicarlo, vuoi solo che sparisca dalla pila.
+
+**Regola:** `git stash -u` per mettere da parte il lavoro in corso. `git stash pop` per recuperarlo. Usa `push -u -m` e `apply`/`drop` solo quando gestisci più scatole contemporaneamente.
+
+<br />
+<br />
+<br />
+<br />
+
+### 17. Restore e Reset (Il Ctrl+Z di Git)
+
+Stai modificando `cart.js`. Selezioni quello che pensi sia codice vecchio, premi Canc. Troppo tardi ti rendi conto di aver appena eliminato 200 righe di logica critica scritta settimane fa. Ctrl+Z non torna abbastanza indietro. Panico.
+
+Oppure: hai pasticciato con il CSS del checkout, provato 47 modifiche diverse, e ora il layout è un disastro completo. Non ricordi nemmeno com'era prima. Vuoi solo tornare indietro a come era all'ultimo commit.
+
+#### `git restore` (Prima del Commit)
+
+Riporta un file al suo stato nell'ultimo commit, cancellando tutte le modifiche che hai fatto da quel punto in poi.
+
+Ripristina un singolo file:
+
+```bash
+git restore cart.js
+```
+
+Ripristina tutti i file modificati:
+
+```bash
+git restore .
+```
+
+Il file torna come era. Tutte le modifiche recenti spariscono.
+
+Se il file è già in staging (hai fatto `git add`), devi prima toglierlo dallo staging:
+
+Togli dallo staging:
+
+```bash
+git restore --staged cart.js
+```
+
+Poi ripristina il file:
+
+```bash
+git restore cart.js
+```
+
+Oppure fai tutto in un colpo solo:
+
+```bash
+git restore --staged --worktree cart.js
+```
+
+-----
+
+#### `git reset` (Dopo il Commit)
+
+Se hai già committato e vuoi annullare uno o più commit, `git restore` non basta. Serve `git reset`, che sposta il branch indietro nel tempo.
+
+Annulla l'ultimo commit, le modifiche restano nei file:
+
+```bash
+git reset HEAD~1
+```
+
+Annulla l'ultimo commit E cancella le modifiche (irreversibile):
+
+```bash
+git reset --hard HEAD~1
+```
+
+Annulla gli ultimi 3 commit:
+
+```bash
+git reset HEAD~3
+```
+
+Senza `--hard`, le modifiche dei commit annullati restano nei tuoi file come "non committate". Puoi rivederle, correggerle e committare di nuovo. Con `--hard`, tutto viene cancellato, commit e modifiche. È irreversibile.
+
+-----
+
+#### La Differenza Chiave
+
+`git restore` lavora sui **file non ancora committati**. È il Ctrl+Z per le modifiche in corso. Non tocca la storia dei commit.
+
+`git reset` lavora sui **commit già fatti**. È la macchina del tempo che torna indietro nella storia.
+
+Quindi: non hai ancora committato? → `git restore`. Hai già committato? → `git reset`.
+
+-----
+
+#### Il Trick: Guarda Prima di Cancellare
+
+Prima di fare `git restore` e rimpiangere un secondo dopo, controlla cosa stai per perdere:
+
+```bash
+git diff cart.js
+```
+
+In **rosso** (con `-`): le righe che spariranno per sempre. In **verde** (con `+`): le righe che torneranno dall'ultimo commit. Se vedi qualcosa di importante che avevi dimenticato, copialo da qualche parte prima di fare restore.
+
+⚠️ Le modifiche cancellate con `git restore` sono **perse per sempre**. Non c'è cestino, non c'è undo. L'unica protezione è la cronologia locale del tuo editor (VS Code ha una funzione "Local History" che può salvarti).
+
+**Regola:** `restore` per le modifiche non committate, `reset` per i commit fatti. Sempre `git diff` prima di cancellare. Le modifiche cancellate non si recuperano.
+
+<br />
+<br />
+<br />
+<br />
+
+### 18. Cherry-Pick (Prendere un Singolo Commit)
+
+Stai lavorando su un branch di feature che non è ancora pronto per il merge. Ma in quel branch hai fatto un fix che serve urgentemente anche su `main`. Non puoi fare merge dell'intero branch (la feature è incompleta), ma ti serve quel singolo commit.
+
+`git cherry-pick` copia un commit specifico da un branch a un altro, senza portare tutto il resto.
+
+Trova l'hash del commit che ti serve:
+
+```bash
+git log --oneline feat-login
+```
+
+Output:
+```
+a3f2b1c fix(auth): prevent empty password submission  ← questo mi serve
+b2c3d4e feat(auth): add login form
+c4d5e6f feat(auth): create auth page
+```
+
+Spostati sul branch dove vuoi il commit:
+
+```bash
+git switch main
+```
+
+Copia quel singolo commit:
+
+```bash
+git cherry-pick a3f2b1c
+```
+
+Il commit viene copiato su `main` con un nuovo hash (è una copia, non uno spostamento). Il branch originale non viene toccato.
+
+Usalo con parsimonia: se ti ritrovi a fare cherry-pick spesso, probabilmente i tuoi branch sono troppo grandi o potresti star mischiando fix e feature nello stesso branch. In tal caso dovresti fare commit più atomici e branch più piccoli.  
+Fa eccezione il backporting: se il tuo progetto ha più versioni attive contemporaneamente (es. la `v2.0` in sviluppo e la `v1.5` ancora in uso dai clienti), scoprire un bug critico significa doverlo fixare su entrambe. Non puoi fare merge dell'intera `main` sulla vecchia versione perché porteresti dentro tutte le funzionalità nuove non testate. Il cherry-pick del singolo commit del fix è l'unica soluzione chirurgica corretta.
+
+**Regola:** cherry-pick per copiare un singolo commit da un branch a un altro. Utile per fix urgenti. Se lo usi spesso, i tuoi branch sono troppo grandi.
+
+<br />
+<br />
+<br />
+<br />
+
+### 19. Tag e Release (Versioni del Progetto)
+
+I tag segnano punti specifici nella storia del progetto: "questa è la versione 1.0", "questa è la versione 2.0". Sono come dei segnalibri permanenti nella timeline dei commit.
+
+Crea un tag leggero:
+
+```bash
+git tag v1.0
+```
+
+Crea un tag annotato (con messaggio, preferito per le release):
+
+```bash
+git tag -a v1.0 -m "Prima release stabile"
+```
+
+Lista tutti i tag:
+
+```bash
+git tag
+```
+
+Push dei tag su GitHub (non vengono pushati automaticamente con `git push`). Devi aggiungere `--tags` esplicitamente, altrimenti i tag restano solo sul tuo computer:
+
+```bash
+git push --tags
+```
+
+Attenzione: `git push --tags` fa **solo** il push dei tag, non dei commit. Se vuoi pushare entrambi in un colpo solo, usa `--follow-tags`: pusha i commit del branch e automaticamente i tag annotati che li referenziano:
+
+```bash
+git push --follow-tags
+```
+
+Il momento giusto per creare un tag è immediatamente prima o dopo un deploy in produzione, non durante lo sviluppo. Puoi anche taggare retroattivamente un commit vecchio con `git tag v1.0 <hash>`, ma più aspetti più perdi il riferimento preciso a quale commit era effettivamente in produzione in quell'istante.
+
+I tag hanno senso quando chi usa il tuo prodotto sceglie attivamente quale versione installare o scaricare: pacchetti pubblicati su npm o PyPI, API versionate, app desktop (come VSCode, Obsidian, Figma Desktop), strumenti CLI, progetti open source con release scaricabili. In una web app SaaS con deploy automatico su Vercel o Netlify, invece, la piattaforma traccia già ogni deploy automaticamente e aggiungere tag manualmente è spesso superfluo.
+
+-----
+
+#### Semantic Versioning
+
+Lo standard per numerare le versioni è il **Semantic Versioning**: `MAJOR.MINOR.PATCH`. La riga guida per decidere quale numero incrementare quando rilasci una nuova versione è una domanda sola:
+
+- **PATCH** (1.0.0 → 1.0.1): hai solo corretto bug senza aggiungere niente di nuovo e senza rompere nulla. Chi usa il tuo prodotto può aggiornare senza cambiare nulla dal suo lato.
+- **MINOR** (1.0.0 → 1.1.0): hai aggiunto nuove funzionalità mantenendo tutto retrocompatibile. Tutto ciò che funzionava con la v1.0 funziona ancora senza modifiche.
+- **MAJOR** (1.0.0 → 2.0.0): hai rotto qualcosa che funzionava prima. Ad esempio un'API cambiata, un parametro rimosso o un comportamento modificato. Chi aggiorna potrebbe dover rivedere come interagisce con la tua versione.
+
+Quando vedi `react@19.0.0`, sai che è una major release con potenziali breaking change. Quando vedi `react@18.2.1`, sai che è un fix sicuro da aggiornare.
+
+-----
+
+#### GitHub Releases
+
+Su GitHub puoi creare una Release dalla pagina del repository (sezione "Releases"). Una release combina un tag con un changelog (descrizione delle modifiche) e opzionalmente file allegati. È il modo professionale di pubblicare una nuova versione del progetto.
+
+**Regola:** un tag per ogni versione rilasciata. Semantic versioning per la numerazione. `git push --tags` per inviare i tag a GitHub.
+
+<br />
+<br />
+<br />
+<br />
+
+### 20. GitHub Issues e Actions
+
+#### GitHub Issues (Tracciare il Lavoro)
+
+Le Issues sono il sistema di ticketing integrato in GitHub. Ogni issue rappresenta un pezzo di lavoro: un bug da correggere, una feature da costruire, un miglioramento da implementare.
+
+-----
+
+#### Segnalare un'Issue (La Prospettiva del Reporter)
+
+Una buona issue ha un titolo chiaro e una descrizione che spiega il problema con abbastanza dettaglio perché qualcun altro possa riprodurlo. Se è un bug, includi i passaggi per riprodurlo, il comportamento atteso e quello effettivo. Se è una feature, descrivi cosa dovrebbe fare e perché serve.
+
+Questo è un esempio reale, ricevuto su [veil](https://github.com/simoneamico-ux-dev/veil) (un progetto open source). Nota come il reporter abbia seguito esattamente la struttura corretta:
+
+> **When uploading an Arabic PDF, downloading corrupts the font encoding**
+>
+> When uploading an Arabic PDF with a selectable text layer, the text is rendered correctly and remains selectable within the web-app reader. However, upon clicking the Download button, the resulting PDF either flattens the text into an image or corrupts the font encoding, resulting in "Replacement Characters" (empty boxes/mojibake) when attempting to copy-paste from the downloaded file.
+>
+> **Steps to reproduce:**
+> 1. Upload an Arabic PDF that has a selectable text layer.
+> 2. Observe that in the "Reader" view, the text is visible and selectable.
+> 3. Click the Download icon.
+> 4. Open the downloaded PDF in a local viewer (Chrome, Acrobat, etc.).
+> 5. Attempt to select or copy the text.
+>
+> **Expected behavior:** The downloaded PDF should maintain the original text layer with inverted colors, rather than being flattened into a raster image or losing its character encoding map.
+>
+> **Actual behavior:** In some cases, the PDF behaves like an image (text cannot be highlighted). In other cases, the text can be highlighted, but when pasted, it appears as replacement characters.
+
+Titolo specifico, passaggi numerati, expected vs actual separati. Chiunque nel team può riprodurre il bug senza fare ulteriori domande.
+
+Le **label** sono etichette colorate che applichi a un'issue dal pannello laterale su GitHub (sezione "Labels"). Servono a filtrare e classificare la board quando le issue si accumulano: senza label, su una board con 50 issue aperte non riesci a distinguere a colpo d'occhio cosa è un bug critico e cosa è una miglioria.  
+GitHub crea automaticamente un set di label base: `bug`, `enhancement`, `documentation`, `duplicate`, `wontfix`, `invalid`. Puoi creare le tue nella sezione Settings → Labels del repository. Nei team è comune aggiungere label di priorità come `priority: high` o `priority: low`.  
+Nei progetti open source, `good first issue` segnala i task adatti a chi vuole contribuire per la prima volta: è spesso il punto di ingresso per i nuovi contributor e il modo per far crescere la community.
+
+-----
+
+#### Lavorarci Sopra (La Prospettiva dello Sviluppatore)
+
+Quando prendi in carico un'issue, assegnala a te stesso tramite il pannello laterale su GitHub. Questo segnala al team che qualcuno ci sta lavorando e previene il lavoro doppio.
+
+Crea un branch dedicato il cui nome richiama il numero dell'issue, lavora, apri una PR con `Closes #42` nella descrizione. Quando la PR viene mergiata, l'issue si chiude automaticamente. Questo crea una traccia completa: dall'identificazione del problema alla sua risoluzione nel codice.
+
+-----
+
+#### Tenere la Board in Ordine (La Gestione Attiva)
+
+Le issue aperte si accumulano rapidamente e senza gestione diventano un cimitero di segnalazioni irrisolte. Tieni la board leggibile: assegna una label a ogni issue appena viene aperta, chiudi quelle duplicate o già risolte, usa le **milestone** per raggruppare le issue che devono essere completate per una certa release.
+
+-----
+
+#### GitHub Actions (Automazione)
+
+GitHub Actions permette di automatizzare operazioni che si attivano quando succede qualcosa nella repository. L'evento scatenante può essere un push, una PR aperta, un tag creato, o un orario programmato.
+
+L'uso più comune nei progetti reali è un workflow che **fa girare i test automaticamente** quando apri una PR. Prima ancora che un collega legga il tuo codice, il sistema ha già verificato che non rompe nulla. Se i test passano, la PR mostra un segno verde "All checks passed". Se falliscono, mostra un segno rosso, e il collega sa che c'è un problema senza nemmeno guardare il codice.
+
+Questo concetto si chiama **CI/CD**: la *Continuous Integration* fa girare i test automaticamente ad ogni push, assicurandosi che il codice nuovo non rompa quello esistente. Il *Continuous Deployment* porta il codice testato in produzione automaticamente, senza intervento manuale. Insieme eliminano il processo manuale "correggo, testo a mano, carico sul server a mano" che è lento e soggetto a errori umani.
+
+Non entriamo nei dettagli della sintassi YAML dei workflow perché è un argomento che merita un approfondimento dedicato. Ma sapere che esiste è fondamentale: quando vedrai un file [.github/workflows/](https://github.com/simoneamico-ux-dev/veil/tree/main/.github/workflows) in un repository, saprai che contiene le istruzioni per queste automazioni.
+
+**Regola:** le Issues per tracciare il lavoro, `Closes #N` nella PR per collegare codice e issue. GitHub Actions per automatizzare test e deploy.
+
+<br />
+<br />
+<br />
+<br />
+
+### Riepilogo (Tecniche Avanzate in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Stash | `git stash` per mettere da parte, `git stash pop` per recuperare | Dimenticare `-u` e perdere i file nuovi |
+| Restore | Per file non ancora committati. Irreversibile | Non fare `git diff` prima e perdere lavoro importante |
+| Reset | Per annullare commit. `--hard` è pericoloso | Usare `--hard` senza sapere che cancella tutto |
+| Restore vs Reset | Restore = file, Reset = commit | Confondere i due e usare quello sbagliato |
+| Cherry-pick | Copiare un singolo commit tra branch | Usarlo troppo spesso (segno che i branch sono troppo grandi) |
+| Tag | Un tag per versione. Semantic versioning (MAJOR.MINOR.PATCH) | Dimenticare `git push --tags` |
+| Issues | Tracciare bug e feature. `Closes #N` nella PR | Non usare le issue e perdere traccia del lavoro |
+| Actions | Automatizzare test e deploy. CI/CD | Non avere test automatici e scoprire i bug in produzione |

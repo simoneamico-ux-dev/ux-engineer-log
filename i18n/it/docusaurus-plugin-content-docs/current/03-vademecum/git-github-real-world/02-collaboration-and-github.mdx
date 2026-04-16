@@ -1,0 +1,568 @@
+---
+sidebar_position: 2
+title: Collaborazione e GitHub
+description: Remote, branching, merge vs rebase, conflitti, Pull Request, fork, .gitignore e SSH.
+---
+
+import Link from '@docusaurus/Link';
+
+# Git & GitHub Real World Vademecum
+
+# Parte II: Collaborazione e GitHub
+
+Ora che conosci il terminale, la Staging Area e i commit atomici, è il momento di estrarre il progetto dall'ambiente locale del tuo computer e sincronizzarlo con il resto del mondo. Questa parte copre tutto ciò che riguarda il lavoro in team: piattaforme remote (GitHub), regole di sincronizzazione, conflitti di codice e Pull Request.
+
+---
+
+## Collaborazione e GitHub
+
+### Le Regole Cambiano (Solo vs Team)
+Finora hai lavorato nel tuo ecosistema isolato, dove sei libero di fare merge direttamente su `main` e pushare quando vuoi. Nel mondo del lavoro la realtà viene stravolta: `main` non è più la tua bozza, ma rappresenta fisicamente la copia esatta del codice in produzione che i clienti stanno usando in quello stesso istante.
+
+Per questo motivo, in un team professionale le regole cambiano: il ramo `main` è quasi sempre un branch protetto a livello di server e nessuno sviluppatore ha i permessi per eseguire un merge diretto. Ogni singola modifica passa per le Pull Request: è obbligatorio caricare il proprio lavoro su branch isolati in cui i colleghi leggono il codice, scovano eventuali problemi e approvano formalmente la richiesta prima che venga unita al progetto principale.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. Setup Remoto: SSH (La Chiave Fisica)
+
+Ora che le dinamiche del lavoro in team sono chiare, dobbiamo connetterci fisicamente alla piattaforma GitHub. Prima ancora di poter scaricare il codice degli altri o caricare il tuo, GitHub deve accertarsi della tua identità.
+
+Dal 2021, GitHub non accetta più le password per l'autenticazione da terminale. Devi usare una chiave SSH, che è più sicura e, una volta configurata, non dovrai mai più digitare nulla.
+
+Una chiave SSH funziona come una chiave fisica divisa in due pezzi che combaciano perfettamente. Tu hai la metà che apre (la chiave **privata**, conservata sul tuo computer e mai condivisa). GitHub ha la serratura corrispondente (la chiave **pubblica**, che puoi condividere liberamente).
+
+-----
+
+#### Procedura (Una Volta Sola)
+
+**Passo 1: Genera la coppia di chiavi**
+
+```bash
+ssh-keygen -t ed25519 -C "tua@email.com"
+```
+
+Quando chiede dove salvare, premi Invio (usa la posizione default). Quando chiede la passphrase, premi Invio (lasciala vuota per non doverla digitare ogni volta).
+
+Hai creato due file nella cartella `~/.ssh/`:
+- `id_ed25519` → la chiave PRIVATA (non condividerla mai)
+- `id_ed25519.pub` → la chiave PUBBLICA (questa la dai a GitHub)
+
+-----
+
+**Passo 2: Attiva l'agent SSH**
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+L'agent è un portachiavi digitale che tiene la tua chiave privata in memoria.
+
+-----
+
+**Passo 3: Copia la chiave pubblica**
+
+Mac:
+```bash
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+Windows (Git Bash):
+```bash
+cat ~/.ssh/id_ed25519.pub | clip
+```
+
+Linux:
+```bash
+cat ~/.ssh/id_ed25519.pub
+```
+Seleziona tutto l'output e copialo manualmente.
+
+-----
+
+**Passo 4: Consegna la chiave a GitHub**
+
+Vai su GitHub → Settings → SSH and GPG keys → New SSH key. Incolla la chiave pubblica copiata. Dai un titolo che ti ricordi quale computer è ("Mac Casa", "PC Lavoro").
+
+-----
+
+**Passo 5: Testa**
+
+```bash
+ssh -T git@github.com
+```
+
+Se vedi `Hi TUONOME! You've successfully authenticated...`, sei a posto.
+
+-----
+
+#### Sempre SSH, Mai HTTPS
+
+Quando cloni un repository, GitHub mostra due link. Usa **sempre** quello SSH:
+
+```bash
+# ✅ SSH (lo riconosci da git@github.com)
+git clone git@github.com:utente/repo.git
+
+# ❌ HTTPS (chiederà username e password che non funzionano più)
+git clone https://github.com/utente/repo.git
+```
+
+Se hai già clonato con HTTPS per errore, puoi cambiare:
+
+```bash
+git remote set-url origin git@github.com:utente/repo.git
+```
+
+-----
+
+#### Problemi Comuni
+
+**"Permission denied (publickey)"**: la chiave non è configurata. Verifica di aver completato tutti i passi e testa con `ssh -T git@github.com`.
+
+**"Could not open a connection to your authentication agent"**: l'agent SSH non è attivo. Riesegui `eval "$(ssh-agent -s)"` e `ssh-add ~/.ssh/id_ed25519`.
+
+-----
+
+#### Pro-Tip Aziendale: Il Doppio Account (Casa vs Lavoro)
+Questa guida base assume l'utilizzo di un singolo account GitHub. Nel mondo reale aziendale, è comunissimo usare lo stesso computer sia per i propri progetti personali sia per il profilo GitHub aziendale (`nome@azienda.com`). 
+Se ti trovi in questa situazione, fare il login col terminale non basta più: **non tentare di sovrascrivere la tua chiave SSH privata con quella nuova**. Esiste un file specifico (chiamato `~/.ssh/config`) nato appositamente per gestire identità multiple, in modo da dire a Git: *"usa la chiave A se sto pushando sul mio progetto personale, usa la chiave aziendale B se sto pushando sul codice dell'ufficio"*. Quando arriverà il momento, cerca su Google *"GitHub multiple SSH keys config"* e ti salverai la vita.
+
+**Regola:** SSH si configura una volta sola e funziona per sempre. Sempre il link SSH per clonare, mai HTTPS.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Branch (Le Timeline Parallele)
+
+Un branch è una linea di sviluppo separata dove puoi costruire una feature o correggere un bug senza toccare il codice principale. Se l'esperimento fallisce, cancelli il branch e main non ha subito nessun danno.
+
+#### Creare e Navigare tra Branch
+
+#### Creare un nuovo branch e spostarti lì immediatamente:
+```bash
+git switch -c nome
+```
+Senza il `-c` (solo `git switch nome`), ti sposti su un branch che esiste già.
+
+#### Tornare al branch principale:
+```bash
+git switch main
+```
+
+#### Ottenere la lista di tutti i branch (quello con * è dove ti trovi):
+```bash
+git branch
+```
+
+#### Eliminare un branch (dopo averlo mergiato):
+```bash
+git branch -d nome
+```
+
+-----
+
+#### Convenzioni di Naming
+
+I nomi dei branch seguono le stesse convenzioni dei Conventional Commits: il tipo indica la natura del lavoro, il resto descrive cosa stai facendo. Ad esempio:
+
+```
+feat-login              → nuova funzionalità di login
+feat-dark-mode          → nuova funzionalità dark mode
+fix-navbar-mobile       → correzione della navbar su mobile
+chore-update-deps       → aggiornamento delle dipendenze
+refactor-api-calls      → refactor delle chiamate API
+```
+
+Parole minuscole, separate da trattini e senza spazi né caratteri speciali. Il nome deve comunicare cosa contiene il branch a chiunque lo legga.
+
+**Regola:** un branch per ogni feature o fix. Nome che descrive il contenuto. Cancella i branch dopo il merge.
+
+<br />
+<br />
+<br />
+<br />
+
+### 10. Merge vs Rebase (La Scelta Filosofica)
+
+Quando devi unire due branch, Git offre due strade. La scelta cambia come viene scritta la storia del progetto.
+
+#### Merge (Il Nodo)
+
+Il merge è il metodo standard. Git prende la tua storia parallela (il tuo branch con tutti i commit) e la unisce alla storia principale creando un *merge commit*, un nodo che dice "qui due strade si sono unite".
+
+Pensa a due binari del treno che si separano in percorsi paralleli per un tratto, poi si ricongiungono. Anche guardando la mappa tra 10 anni vedrai chiaramente dove il percorso si è diviso e dove si è riunito.
+
+Il vantaggio: la storia reale è preservata fedelmente. Puoi vedere quando hai creato il branch, quando hai lavorato e quando hai mergiato. Lo svantaggio: se tutti nel team usano merge continuamente, la timeline del progetto diventa un groviglio di linee intrecciate quasi illeggibile.
+
+#### Tornare su main:
+```bash
+git switch main
+```
+
+#### Mergiare il branch nel main:
+```bash
+git merge nome
+```
+
+-----
+
+#### Rebase (La Riscrittura)
+
+Il rebase non unisce due percorsi, ma altera la linea temporale. Scollega i tuoi commit dalla radice in cui li avevi creati e li ricollega in cima alla versione più aggiornata del progetto principale. È l'equivalente meccanico di far risultare oggi un lavoro processato la settimana scorsa.
+
+Immagina di aver creato un branch lunedì per sviluppare la delicata operazione di **Checkout**. Mentre lavori per giorni sul tuo codice isolato, i tuoi colleghi completano il flusso base e pubblicano su `main` tre aggiornamenti strutturali: la pagina di **Login**, la **Navbar** e il **Carrello**.
+
+Quando esegui un rebase, Git non si limita a "incastrare" il tuo vecchio codice in mezzo al loro. Scollega fisicamente i tuoi commit del Checkout e li riproduce meticolosamente in cima all'ultimissima versione di main. L'effetto finale è cronologico: leggendo la storia del progetto, sembrerà che tu abbia strategicamente atteso che il team finisse e pubblicasse Login, Navbar e Carrello per poi iniziare a scrivere l'operazione di Checkout solo questa mattina, partendo da un'impalcatura già perfetta e finita.
+
+**Il Vantaggio**: l'intera storia del progetto si appiattisce visivamente in una singola linea retta, eliminando alla radice l'esistenza di timeline o binari di sviluppo paralleli. Zero rami incrociati e zero commit di merge. Leggendo il log, sembra che l'intero team abbia lavorato a turno chiudendo in ordine le singole attività (questo avviene perché Git conserverà testualmente la tua data d'autore originale, ma re-imposterà formalmente la data di commit di sistema all'istante esatto dell'operazione).
+
+**Il Pericolo**: stai letteralmente **riscrivendo la storia**. Per riposizionare le tue modifiche in cima, Git elimina i tuoi vecchi commit sostituendoli con nuove copie dotate di un ID hash differente. L'operazione è tecnicamente sicura finché operi solo sul tuo computer, ma se avevi già eseguito un push di quei file, forzare un rebase spazzerà via i riferimenti remoti: chiunque nel team cerchi di sincronizzarsi andrà incontro a conflitti irreversibili cercando vecchi ID ora inesistenti.
+
+#### Spostati sul tuo branch isolato in lavorazione:
+```bash
+git switch feat-checkout
+```
+
+#### Esegui il rebase riposizionando il tuo lavoro in cima agli aggiornamenti di main:
+
+```bash
+git rebase main
+```
+
+-----
+
+#### La Regola Fondamentale
+
+Usa il **rebase** per pulire il *tuo* lavoro prima di consegnarlo. Usa il **merge** per unire il lavoro del *team*.
+
+In pratica: rebase solo sui branch privati, quelli dove lavori solo tu. Se fai rebase su un branch condiviso con i colleghi, distruggi la loro sincronizzazione. Il risultato sarà il caos.
+
+**Regola:** rebase sui tuoi branch privati per tenere la storia pulita. Merge per unire il lavoro del team. Mai rebase su un branch condiviso.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Conflitti (Merge Conflicts)
+
+In un mondo ideale, Git unisce tutto automaticamente. Nella realtà, succede questo: tu modifichi la riga 10 di `style.css` (blu), il tuo collega modifica la stessa riga 10 di `style.css` (rosso). Quando provi a fare merge, Git si ferma e chiede: "ci sono due versioni, quale tengo?".
+
+#### Non è un Errore, è una Domanda
+Il conflitto non è un bug. È Git che dice "non posso decidere al posto tuo". Come un editore che riceve due versioni diverse della stessa frase da due scrittori: si ferma e chiede quale stampare.
+
+-----
+
+#### Come si Presenta (Sotto il Cofano)
+
+Quando sorge un conflitto, Git inserisce nel tuo file dei marcatori testuali:
+
+```css
+body {
+<<<<<<< HEAD
+  background-color: blue;   /* La tua versione (Corrente) */
+=======
+  background-color: red;    /* La versione del collega (In arrivo) */
+>>>>>>> feat-login
+}
+```
+
+`<<<<<<< HEAD` segna dove inizia la versione su cui sei attualmente posizionato.  
+`=======` è il divisore tra le due versioni.  
+`>>>>>>> feat-login` segna dove finisce la modifica contrastante in arrivo dal nuovo branch.
+
+-----
+
+#### La Risoluzione Moderna (VS Code)
+
+Se apri questo file in un editor visivo moderno come VS Code, non dovrai impazzire a cancellare i marcatori a mano con la tastiera (rischiando formattazioni errate). L'editor scansiona nativamente quei simboli e fa apparire dei comandi cliccabili proprio sopra il blocco in conflitto:
+`Accept Current Change | Accept Incoming Change | Accept Both Changes | Compare Changes`
+
+Una volta cliccato il bottone desiderato, VS Code elimina automaticamente tutti i fastidiosi marcatori `<<<<<<<` e i divisori, lasciando il file perfettamente pulito.
+
+A questo punto ti basta dire a Git che l'emergenza è rientrata. Salva quindi il file, fai `git add .` per marcare il conflitto come risolto ed infine fai `git commit` per chiudere l'operazione in via definitiva
+
+**Regola:** i conflitti non sono errori, sono domande di Git. Risolvili tramite editor e chiudi sempre la pratica con un commit risolutivo.
+
+<br />
+<br />
+<br />
+<br />
+
+### 12. Sync con il Remoto (Push, Pull, Fetch)
+
+#### `git push` (Inviare al Server)
+
+Serve a mandare i tuoi commit locali su GitHub, rendendoli disponibili al team.
+
+#### La prima volta: imposta il tracking tra branch locale e remoto:
+
+```bash
+git push -u origin nome
+```
+
+#### Le volte successive: basta push:
+
+```bash
+git push
+```
+
+Il `-u origin nome` (ad esempio: `-u origin feat-login`) si fa solo la prima volta che pushiamo un nuovo branch. Dice a Git "questo branch locale corrisponde a quel branch su GitHub". Dopo, basta `git push`.
+
+#### Sfatiamo un Mito: Pushare NON significa Pubblicare
+
+Il terrore classico è: *"Se faccio push e ho scritto male una riga, rompo l'app agli utenti live!"*. Falso. 
+
+Quando esegui il push del tuo branch isolato (es. `feat-login`), stai semplicemente trasferendo una bozza del codice nel deposito di GitHub affinché il tuo team possa ispezionarla. Il pubblico mondiale vedrà le tue modifiche **solo e soltanto** quando tutto il team approverà la tua futura Pull Request, fondendo il tuo lavoro nel branch `main`. Fino ad allora puoi stare tranquillo: pusha il tuo branch frequentemente e senza alcun timore.
+
+-----
+
+#### `git pull` (Scaricare e Unire)
+
+Scarica gli aggiornamenti dal server e li unisce con il tuo lavoro locale. Immagina di scrivere un romanzo con un collega. Vai a dormire, e mentre riposi il collega dall'altra parte del mondo scrive il Capitolo 3 e lo carica sul server. Se al mattino inizi a scrivere il Capitolo 4 *senza* aver scaricato e letto il Capitolo 3, la storia non avrà senso.
+
+```bash
+git pull
+```
+
+Da fare **ogni mattina**, come prima cosa dopo aver aperto il terminale. Prima di scrivere una riga di codice. Se un collega ti scrive su Slack "ho pushato un fix importante", fai `git pull` immediatamente.
+
+Dietro le quinte, `git pull` esegue due comandi in sequenza: prima `git fetch` (scarica i dati dal server in una memoria nascosta, senza toccare i tuoi file), poi `git merge` (unisce quei dati con il tuo lavoro corrente).
+
+Se provi a fare `git push` e Git ti blocca con un errore "rejected", significa che qualcuno ha pushato codice mentre tu lavoravi. La soluzione: `git pull` prima (per sincronizzarti), poi `git push`.
+
+-----
+
+#### `git fetch` (Scaricare Senza Unire)
+
+`git fetch` scarica i dati dal server ma non li unisce con il tuo lavoro. È la versione prudente di `git pull`: puoi dare un'occhiata a cosa è cambiato prima di decidere di fare il merge.
+
+#### Scarichi senza unire:
+
+```bash
+git fetch
+```
+
+#### Guardi cosa c'è di nuovo:
+
+```bash
+git log origin/main --oneline
+```
+
+#### Se ti va bene, mergi manualmente:
+
+```bash
+git merge origin/main
+```
+
+Nella pratica quotidiana, `git pull` è sufficiente per la stragrande maggioranza dei casi. `git fetch` serve quando vuoi essere cauto, per esempio prima di un merge complesso dove sai che potrebbero esserci conflitti.
+
+**Regola:** `git pull` ogni mattina prima di lavorare. `git push` dopo ogni sessione di lavoro significativa. `git fetch` quando vuoi controllare prima di unire.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. Pull Request (Il Cuore della Collaborazione)
+
+La Pull Request (PR) è una richiesta formale di unire il tuo branch al branch principale, con la possibilità per il team di leggere il codice, commentare e approvare prima del merge.
+
+#### Il Flusso Completo
+
+Il flusso parte dal tuo computer: crei il branch (`git switch -c feat-dark-mode`), fai i tuoi commit e poi invii il branch su GitHub con `git push -u origin feat-dark-mode`.
+
+A questo punto vai su GitHub. Vedrai un banner giallo "Compare & Pull Request": è GitHub che ha notato il tuo branch appena pushato e ti propone di aprire la PR. Cliccalo, scrivi titolo e descrizione (ne parliamo tra poco), e invia.
+
+Ora il team entra in gioco. I colleghi leggono il codice nella PR, commentano ("qui potresti usare una costante invece di un valore hardcoded"), suggeriscono modifiche. Se ci sono commenti da risolvere, fai le modifiche in locale, committa e pusha di nuovo sullo stesso branch. La PR si aggiorna automaticamente con i nuovi commit.
+
+Quando i colleghi sono soddisfatti, approvano la PR. Solo a quel punto clicchi il bottone verde "Merge" su GitHub e il branch viene unito a main.
+
+-----
+
+#### Come Scrivere una Buona PR (Sull'interfaccia Web)
+
+A differenza dei commit nel terminale (dove eri costretto a usare i flag -m), la Pull Request prende vita comodamente sulla pagina web di GitHub. Quando apri la richiesta, ti troverai davanti a un modulo visivo molto simile a quello di una email: una stringa per il Titolo e un grande editor di testo per la Descrizione (dove potrai comodamente incollare immagini o formattare il testo).
+
+Il **titolo** deve essere chiaro e conciso, ereditando la sintassi rigorosa dei Conventional Commits: `feat(ui): add dark mode toggle`. La descrizione nel riquadro sottostante deve spiegare cosa hai fatto e perché. Non il come (quello i tuoi colleghi lo vedranno guardando il codice riga per riga), ma il perché logico delle tue scelte.
+
+Una buona descrizione include:
+- Un riassunto di cosa cambia e perché era necessario
+- Screenshot, GIF o brevi video se hai modificato la UI (il revisore potrebbe non voler avviare il progetto solo per vedere il tuo bottone)
+- Note su come testare la feature (se serve fare qualcosa di specifico)
+- Eventuali punti aperti o decisioni che vuoi discutere con il team
+
+❌ Titolo: "changes". Descrizione: vuota.
+
+✅ Titolo: "feat(ui): add dark mode toggle". Descrizione: "Aggiunge un toggle nella navbar che permette di passare tra tema chiaro e scuro. I colori sono salvati in CSS variables e il preference viene salvato in localStorage. Screenshot allegato."
+
+-----
+
+#### Le Opzioni di Merge su GitHub
+
+Quando clicchi "Merge", GitHub offre tre opzioni:
+
+**Create a merge commit**: unisce il branch con un merge commit, preservando tutta la storia. La scelta più sicura e trasparente.
+
+**Squash and merge**: compatta tutti i commit del branch in un singolo commit prima di mergiare. Utile quando hai fatto 15 commit di "wip" e "fix typo" e vuoi che nella storia di main appaia un unico commit pulito.
+
+**Rebase and merge**: fa il rebase dei commit del branch su main prima di mergiare. Crea una storia lineare senza merge commit. A differenza di `squash and merge` conserva la cronologia individuale di ogni singola piccola modifica che avevi salvato nel percorso ma ne aggiorna forzatamente la data di sistema (la Commit Date) all'istante esatto in cui esegui l'operazione. 
+
+Per i progetti personali e i team piccoli, "Create a merge commit" è la scelta più semplice. "Squash and merge" è la più usata nei team che vogliono una storia pulita su main.
+
+-----
+
+#### Collegare Issue e PR
+
+Se la tua PR risolve un'issue, puoi collegarla scrivendo parole chiave in inglese come `Fixes #42` o `Closes #42` nella descrizione della PR.
+
+Quando la PR viene mergiata, GitHub chiuderà l'issue **automaticamente**, ma solo a due rigide condizioni:
+
+1. Hai usato le parole magiche esatte in inglese (`close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`) seguite dal numero.
+2. Stai facendo merge direttamente sul branch **default** del progetto (es. `main`). Se stai mergiando su un branch secondario come `develop`, GitHub non attiverà l'automazione e dovrai chiudere l'issue manualmente a fine riga.
+
+**Regola:** ogni modifica significativa al codice passa per una PR. Titolo chiaro, descrizione del cosa e del perché. Screenshot se è UI.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Fork e Open Source (Contribuire ai Progetti Altrui)
+
+Non puoi pushare direttamente sul repository di qualcun altro perché non hai i permessi. Il fork risolve questo problema: crea una copia completa del repository nel tuo account GitHub, dove hai il controllo totale.
+
+#### Il Flusso
+
+1. **Fork**: su GitHub, vai al repository del progetto e clicca "Fork". Si crea una copia nel tuo account
+2. **Clone**: clona il *tuo* fork sul computer (`git clone git@github.com:tuonome/repo.git`)
+3. **Branch**: crea un branch per la tua modifica (`git switch -c fix-typo-readme`)
+4. **Lavora**: fai le modifiche, committa, pusha sul tuo fork
+5. **PR**: apri una Pull Request dal tuo fork verso il repository originale. L'autore del progetto la legge e decide se accettarla
+
+La differenza tra fork e clone: il fork copia il repository su GitHub (da un account a un altro). Il clone copia il repository da GitHub al tuo computer. Per contribuire a un progetto altrui, serve prima il fork (su GitHub) e poi il clone (sul tuo computer).
+
+-----
+
+#### Mantenere il Fork Aggiornato
+
+Il tuo fork è una fotografia del repository originale al momento del fork. Se il progetto originale va avanti, il tuo fork resta indietro. Per sincronizzarlo:
+
+#### Aggiungi il repository originale come "upstream"
+
+```bash
+git remote add upstream git@github.com:autore-originale/repo.git
+```
+
+#### Scarica gli aggiornamenti dall'originale
+
+```bash
+git fetch upstream
+```
+
+#### Mergia gli aggiornamenti nel tuo main
+
+Prima, assicurati di tornare obbligatoriamente sul tuo branch principale:
+
+```bash
+git switch main
+```
+
+Una volta che sei fisicamente su main, integra gli aggiornamenti appena scaricati:
+
+```bash
+git merge upstream/main
+```
+
+Consiglio: Quando avrai preso confidenza, potrai sbrigare l'intera operazione lanciando una singola concatenazione: `bash git switch main && git merge upstream/main`. L'operatore logico && dice al terminale di eseguire il secondo comando solo ed esclusivamente se il primo va a buon fine. Se per qualsiasi errore Git fallisce lo spostamento su main, il terminale interromperà tutto e il merge non partirà mai, impedendoti di unire accidentalmente gli aggiornamenti nel branch sbagliato.
+Al contrario, se copiassi e incollassi le due righe contemporaneamente e lo switch dovesse improvvisamente fallire, il terminale te lo ignorerebbe andando a eseguire ciecamente il secondo comando, fondendo tutti gli aggiornamenti nel branch sbagliato.
+
+
+#### Pusha sul tuo fork per aggiornarlo anche su GitHub
+
+```bash
+git push
+```
+
+**Regola:** fork per contribuire a progetti altrui. Clone del tuo fork sul computer. PR dal fork verso l'originale. Tieni il fork aggiornato con upstream.
+
+<br />
+<br />
+<br />
+<br />
+
+### 15. .gitignore (Il Buttafuori del Repository)
+
+Dato che Git è come un album fotografico, non vuoi che finiscano dentro le foto sfocate e le foto troppo pesanti. Ci sono file che non devono mai entrare nella repository perché sono troppo grandi, contengono segreti, possono essere rigenerati o sono specifici del tuo computer.
+
+Il file `.gitignore` dice a Git: "ignora questi file, non tracciarli mai".
+
+```gitignore
+# Dipendenze NPM (centinaia di MB, si rigenerano con npm install)
+node_modules/
+
+# Spazzatura Mac
+.DS_Store
+
+# PASSWORD E SEGRETI (se finiscono su GitHub pubblico, guai seri)
+.env
+.env.local
+*.key
+*.pem
+
+# Build di produzione (si rigenerano con npm run build)
+build/
+dist/
+out/
+.next/
+
+# File temporanei e cache
+*.log
+.cache/
+.vscode/
+.idea/
+```
+
+Se hai già committato un file per errore *prima* di aggiungerlo al `.gitignore`, il gitignore non ha effetto retroattivo. Devi rimuovere il file manualmente:
+
+#### Rimuove il file dal tracking di Git ma lo lascia sul tuo computer
+
+```bash
+git rm --cached nome-file.env
+```
+
+Un caso particolare sono i **file multimediali grezzi**. Git ricorda la storia completa, anche i file cancellati: un video da 100MB aggiunto al commit 10 e rimosso al commit 20 pesa ancora 100MB per chiunque cloni il progetto. Prima di committare qualsiasi immagine o video, ottimizzalo:
+
+- **Immagini** → converti in WebP con [Squoosh](https://squoosh.app) (gratuito, nessuna installazione).
+- **GIF animate** → converti in WebM o MP4 con [CloudConvert](https://cloudconvert.com/gif-to-webm): risparmi l'80-90% del peso.
+
+**Regola:** crea il `.gitignore` come prima cosa nel progetto, prima del primo commit. Mai committare `node_modules`, `.env`, build o file specifici dell'editor. Ottimizza sempre i file multimediali prima di committarli.
+
+<br />
+<br />
+<br />
+<br />
+
+<br />
+
+### Riepilogo (Collaborazione in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|--------------|-----------------|
+| Solo vs Team | In team tutto passa per le Pull Request | Fare merge diretto su main in un progetto di team |
+| SSH | Una volta sola, poi funziona per sempre. Sempre SSH, mai HTTPS | Clonare con HTTPS e avere problemi di autenticazione |
+| Branch | Un branch per feature/fix. Nome descrittivo | Branch con nomi vaghi come "test" o "new" |
+| Merge | Preserva la storia reale, crea un merge commit | Non capire perché la timeline sembra "Guitar Hero" |
+| Rebase | Solo su branch privati, mai su branch condivisi | Rebase su un branch dove lavorano anche altri |
+| Conflitti | Non sono errori, sono domande. Risolvi e committa | Andare nel panico e cancellare il branch |
+| `git pull` | Ogni mattina, prima di scrivere codice | Lavorare su una versione vecchia e scoprire conflitti dopo ore |
+| `git push` | Dopo ogni sessione di lavoro significativa | Dimenticare di pushare e perdere il lavoro se il computer si rompe |
+| Pull Request | Titolo chiaro, descrizione del cosa e del perché | PR senza descrizione o con titolo "changes" |
+| Fork | Per contribuire a progetti altrui. PR dal fork all'originale | Pushare direttamente sul repo di qualcun altro (non funziona) |
+| .gitignore | Prima cosa da creare nel progetto | Committare `node_modules` o `.env` |
