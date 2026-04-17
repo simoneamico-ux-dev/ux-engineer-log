@@ -17,8 +17,11 @@
   "link.item.label.Bookshelf": {
     "message": "Libreria"
   },
+  "link.item.label.Source Code": {
+    "message": "Codice sorgente"
+  },
   "link.item.label.Origin Story": {
-    "message": "Le Origini"
+    "message": "Origini"
   },
   "copyright": {
     "message": "Copyright © 2026 Simone Amico.<br />Costruito con Docusaurus."

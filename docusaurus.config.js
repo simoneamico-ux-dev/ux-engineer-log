@@ -100,11 +100,6 @@ const config = {
         title: 'UX Engineer Log',
         items: [
           {
-            href: 'https://github.com/simoneamico-ux-dev/ux-engineer-log',
-            label: 'GitHub',
-            position: 'right',
-          },
-          {
             type: 'localeDropdown',
             position: 'right',
           },
@@ -137,6 +132,10 @@ const config = {
           {
             title: 'Connect',
             items: [
+              {
+                label: 'Source Code',
+                href: 'https://github.com/simoneamico-ux-dev/ux-engineer-log',
+              },
               {
                 label: 'Origin Story',
                 href: 'https://github.com/simoneamico-ux-dev/from-factory-to-ux-engineer',
