@@ -1,5 +1,5 @@
 /* DESIGN
-   ------------------------------------------
+   ------
    * This configuration overrides the default Infima/Docusaurus theme
    * to achieve a "UX Engineer Log" aesthetic
 
@@ -428,6 +428,7 @@ html[data-theme='dark'] code span.token.variable {
   opacity: 0.6;
 }
 
+
 /* MOBILE UX: Dynamic title fade & collapse */
 
 /*
@@ -496,6 +497,7 @@ I fixed it by applying a very high z-index (99999)
 
 
 /* FOOTER CONTRAST FIX (Goal: 100/100 A11y) */
+
 /* The default grey links on dark background fail WCAG contrast ratio. */
 .footer__link-item {
     color: #e0e0e0; /* Almost white (High Contrast) */
@@ -530,6 +532,7 @@ I fixed it by applying a very high z-index (99999)
 
 
 /* SIDEBAR LEVEL 2 COLOR FIX */
+
 /*
 I noticed that after disabling the "generated-index" link, these sub-categories
 defaulted to a stark white color (active state)
@@ -544,9 +547,47 @@ across the entire navigation tree.
 }
 
 
+/* FOCUS MODE (Auto-dim + Proximity Reveal)
+ *
+ * Companion to src/clientModules/focus-mode.js.
+ * The JS toggles two body classes that hide the sidebar and the TOC after
+ * 5 seconds of mouse inactivity. They come back only when the cursor enters
+ * their proximity zones on the viewport edges. The navbar is deliberately
+ * left out because it acts as the site-level anchor: dissolving it together
+ * with the page-level chrome broke the sense of continuity during page
+ * navigation and left the top area feeling orphaned after fade-out.
+
+ * Asymmetric timing decision:
+ * Reveal: 550ms with ease-out-quart. It must feel responsive even to the
+ * smallest movement into a proximity zone, but with a soft landing instead
+ * of a hard snap.
+ * Fade-out: 750ms with ease-in-out. Slower than the reveal to avoid
+ * flicker on slow reading pauses, but brisk enough to respond promptly
+ * when the user deliberately leaves a zone.
+
+ * pointer-events: none on hidden chrome prevents accidental clicks on
+ * invisible links. It is safe because the wake-up listener lives on the
+ * document root, so any mousemove triggers the reveal regardless of the
+ * hidden element's pointer-events state.
+*/
+.theme-doc-sidebar-container,
+.theme-doc-toc-desktop {
+    transition: opacity 550ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 1;
+}
+
+body.zen-sidebar-hidden .theme-doc-sidebar-container,
+body.zen-toc-hidden .theme-doc-toc-desktop {
+    transition: opacity 750ms ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+}
+
+
 /* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Enhanced TOC) */
+
 /*
-   * Strategy: "Card deconstruction" & "Native app feel"
+   * Strategy: "Card deconstruction" and "Native app feel"
    * I opted for the same solution adopted in the "Telephone Number Validator" project.
    * Recent user testing revealed that the "card" container felt awkward and
    * anti-aesthetic on mobile, even if it didn't consume much width
@@ -621,6 +662,7 @@ across the entire navigation tree.
 
 
 /* LANDSCAPE OPTIMIZATION */
+
 /*
    * Observation: While testing on iPhone in landscape mode, I noticed unsightly
    * colored bars on the sides (default browser behavior to avoid the notch)

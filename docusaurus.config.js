@@ -60,6 +60,8 @@ const config = {
     ],
   ],
 
+  clientModules: [require.resolve('./src/clientModules/focus-mode.js')],
+
   headTags: [
     {
       tagName: 'link',
