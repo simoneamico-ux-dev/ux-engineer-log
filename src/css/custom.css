@@ -102,6 +102,17 @@ pre,
     /* Syntax Highlighting (Light Mode specific tokens) */
     --code-token-cyan-fix: #005a75; /* Dark Petrol (replaces unreadable Cyan) */
     --code-token-doctype: #393a34;  /* Dark Grey (fixes Italic Doctype) */
+
+    /*
+     * WCAG contrast accents (light mode tuned against Coffee & Sand background).
+     * Infima default emphasis-600 and blockquote-border measured against
+     * #E4D6C9 fell to ~1.08:1 and ~1.04:1 respectively, essentially
+     * invisible. These values raise every affected element above the WCAG
+     * AA threshold (4.5:1 for text, 3:1 for decorative borders).
+    */
+    --caption-text-color: #574c45;                              /* italic figcaption, 5.84:1 */
+    --callout-accent: #8d0a0a;                                  /* warning red for h4 + border, 5.94:1 on callout bg */
+    --ifm-blockquote-border-color: var(--card-border-color);    /* 4.26:1, reuses card border hue */
 }
 
 
@@ -149,6 +160,27 @@ pre,
     
     /* Syntax Highlighting (Dark Mode specific tokens) */
     --code-token-keyword-fix: #d4aaff; /* Light Lavender (for contrast) */
+
+    /*
+     * WCAG contrast accents (dark mode).
+     * Infima's emphasis-600 is bright enough for caption text against
+     * the Warm Night background, so I keep the default there. The
+     * callout red #ff4b4b measured 4.30:1 on the red-tinted callout
+     * background, below the AA threshold of 4.5:1 for normal text, so
+     * I lifted it to #ff7474 (5.48:1) to clear the threshold comfortably.
+     * The visual difference is almost imperceptible, the accessibility
+     * gain is clear.
+     *
+     * Blockquote border: Infima's default (emphasis-300) measured only
+     * 2.56:1 against the Warm Night background, well below WCAG 1.4.11's
+     * 3:1 requirement for non-text UI. Moving to emphasis-400 lifts the
+     * contrast to 4.78:1 while keeping the neutral grey tone, which sits
+     * on the dark palette better than the warm --card-border-color used
+     * in light mode.
+    */
+    --caption-text-color: var(--ifm-color-emphasis-600);             /* caption text, Infima default passes well on dark bg */
+    --callout-accent: #ff7474;                                       /* warning red for h4 + border, 5.48:1 on callout bg */
+    --ifm-blockquote-border-color: var(--ifm-color-emphasis-400);    /* 4.78:1, neutral grey over the warmer light-mode override */
 }
 
 
@@ -397,7 +429,7 @@ figcaption.image-caption {
 */
 figcaption.image-caption--version {
     font-size: 0.9rem;
-    color: var(--ifm-color-emphasis-600);
+    color: var(--caption-text-color);
     margin-top: 12px;
     font-style: italic;
 }
@@ -440,18 +472,28 @@ figcaption.image-caption--media {
 /* CALLOUT (Warning, enumerated insights) */
 /*
  * Highlighted block that interrupts the reading flow to draw attention
- * to a short numbered list of related points. Used in the Center case
- * study to enumerate the "3 wastes" of the dosing procedure. The
- * underlying structure is <aside><ol><li>..., which screen readers
- * announce as "aside, list with N items". Richer than three consecutive
- * <p> tags with manually numbered "1.", "2.", "3." prefixes.
+ * to a short numbered list of related points. Used e.g. in the Center case
+ * study to enumerate the "3 wastes" of the dosing procedure. Built on
+ * <aside><ol><li>, which is more meaningful to screen readers than
+ * manually numbered <p> tags, and avoids the double bottom spacing
+ * the red-box variant was producing.
 */
 .callout-warning {
-    border-left: 4px solid #ff4b4bff;
+    border-left: 4px solid var(--callout-accent);
     background-color: rgba(140, 28, 28, 0.08);
     padding: 1.2rem;
     margin-bottom: 2rem;
     border-radius: 4px;
+}
+
+/*
+ * Consolidated h4 title styling (moved from inline style on the MDX
+ * tag). The color reuses --callout-accent so the heading and the
+ * border share the same warning hue in both themes.
+*/
+.callout-warning h4 {
+    color: var(--callout-accent);
+    margin: 0 0 10px 0;
 }
 
 /*
@@ -691,6 +733,22 @@ html[data-theme='dark'] code span.token.variable {
     color: var(--ifm-menu-color) !important;
     background-color: transparent !important;
     font-weight: 600;
+}
+
+
+/* BLOCKQUOTE (Dark mode text softening) */
+/*
+ * In dark mode the default body color is pure white (#FFFFFF) which on
+ * the blockquote background gives a 12.48:1 contrast, well above AAA
+ * but visually a bit shouty against the rest of the Warm Night palette.
+ * I dim the text slightly via rgba alpha (0.9), which lands at 12.12:1
+ * in DevTools. A small reduction on paper but it takes the visual edge
+ * off the pure-white glare, while keeping the contrast far above AAA
+ * (7:1). Light mode is left untouched: the black-on-sand contrast
+ * there reads balanced already.
+*/
+[data-theme='dark'] blockquote {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 
