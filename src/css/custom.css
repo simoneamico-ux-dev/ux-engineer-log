@@ -182,11 +182,12 @@ body {
     width: auto;
 
     /* NAVBAR 3D ELEVATION FIX */
-    /* I added a very soft and diffused shadow to give a subtle sense of floating.
-    I focused on lightness, as in the rest of the CSS, in order to avoid putting
-    unnecessary load on the GPU.
-    The effect is intentionally almost imperceptible on the main screen, but becomes
-    more noticeable as you scroll down.
+    /*
+     * I added a very soft and diffused shadow to give a subtle sense of floating.
+     * I focused on lightness, as in the rest of the CSS, in order to avoid putting
+     * unnecessary load on the GPU.
+     * The effect is intentionally almost imperceptible on the main screen, but becomes
+     * more noticeable as you scroll down.
     */
     box-shadow: var(--ifm-navbar-shadow);
 }
@@ -352,10 +353,11 @@ aside[class^='theme-doc-sidebar-container'] {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* ACCESSIBILITY & SEO FIX (Heading Hierarchy)
-   * Semantic HTML requires sequential headings (H1 -> H2 -> H3)
-   * To preserve the intended UI rhythm without breaking accessibility,
-   * I visually downgrade H2 tags to look exactly like H3 tags
+/* 
+ * ACCESSIBILITY & SEO FIX (Heading Hierarchy)
+ * Semantic HTML requires sequential headings (H1 -> H2 -> H3)
+ * To preserve the intended UI rhythm without breaking accessibility,
+ * I visually downgrade H2 tags to look exactly like H3 tags
 */
 .markdown h2 {
     font-size: 1.45rem !important;
@@ -373,8 +375,10 @@ aside[class^='theme-doc-sidebar-container'] {
 }
 
 
-/* ACCESSIBILITY & SYNTAX (Token Overrides) */
-/* Forces readable colors for specific code tokens based on theme */
+/* 
+ * ACCESSIBILITY & SYNTAX (Token Overrides)
+ * Forces readable colors for specific code tokens based on theme 
+*/
 
 /* LIGHT MODE: Fixes low contrast Cyan and Italic Doctype */
 html[data-theme='light'] code span.token.attr-name,
@@ -432,11 +436,11 @@ html[data-theme='dark'] code span.token.variable {
 /* MOBILE UX: Dynamic title fade & collapse */
 
 /*
- I tried to fix the issue where the search bar was collapsing
- into the site title on very narrow devices by introducing an
- animation. This way, the experience no longer feels like “something
- is being taken away because there’s a problem,” but rather like “something
- is being added through an animation.”
+ * I tried to fix the issue where the search bar was collapsing
+ * into the site title on very narrow devices by introducing an
+ * animation. This way, the experience no longer feels like “something
+ * is being taken away because there’s a problem,” but rather like “something
+ * is being added through an animation.”
 */
 @media screen and (max-width: 411px) {
 
@@ -463,9 +467,9 @@ html[data-theme='dark'] code span.token.variable {
 /* SAFARI & MOBILE SEARCH FIX */
 
 /*
-I noticed a very annoying bug on iOS: after tapping on the search bar,
-the screen dims and the search results become unclickable.
-I fixed it by applying a very high z-index (99999)
+ * I noticed a very annoying bug on iOS: after tapping on the search bar,
+ * the screen dims and the search results become unclickable.
+ * I fixed it by applying a very high z-index (99999)
 */
 @media (max-width: 996px) { /* Here we force the search container above EVERYTHING (including the fixed navbar) */
   .DocSearch-Container {
@@ -534,10 +538,10 @@ I fixed it by applying a very high z-index (99999)
 /* SIDEBAR LEVEL 2 COLOR FIX */
 
 /*
-I noticed that after disabling the "generated-index" link, these sub-categories
-defaulted to a stark white color (active state)
-I forced the standard neutral menu color here to ensure visual consistency
-across the entire navigation tree.
+ * I noticed that after disabling the "generated-index" link, these sub-categories
+ * defaulted to a stark white color (active state)
+ * I forced the standard neutral menu color here to ensure visual consistency
+ * across the entire navigation tree.
 */
 .theme-doc-sidebar-item-category-level-2 > div > .menu__link,
 .theme-doc-sidebar-item-category-level-2 > div > .menu__link--active {
@@ -629,8 +633,10 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
         border-bottom: 1.7px solid var(--card-border-color) !important; /* I increased the border to make the separation clearer since I removed the shadow in this mobile version */
     }
     
-    /* Safety: Restoring internal padding so the text doesn't hit the bezel */
-    /* Chosen 6px here to maximize the reading width */
+    /*
+     * Safety: Restoring internal padding so the text doesn't hit the bezel
+     * Chosen 6px here to maximize the reading width
+    */
     .container {
         padding-left: 6px !important;
         padding-right: 6px !important;
@@ -650,8 +656,10 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
     
     /* TOC ENHANCEMENTS (Accordion) */
     .theme-doc-toc-mobile {
-        /* Width trick: Using negative margins to pull the element to the screen edges
-           With -12px creating a visual breakout relative to the container padding */
+        /*
+         * Width trick: Using negative margins to pull the element to the screen edges
+         * With -12px creating a visual breakout relative to the container padding
+        */
         margin-left: -12px !important;
         margin-right: -12px !important;
         width: calc(100% + 24px) !important; 
@@ -702,33 +710,41 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
         border-bottom: 1.7px solid var(--card-border-color) !important;
         z-index: 100; /* Layer priority over content */
 
-        /* Notch Safety + Base Padding
-           I use calc() to ensure there is ALWAYS at least 12px of padding.
-           - On iPhone: Adds 12px to the notch area (safe & breathable)
-           - On Foldables (0 notch): Adds 0px + 12px (fixes the "stuck to edge" issue) */
+        /*
+         * Notch Safety + Base Padding
+         * I use calc() to ensure there is ALWAYS at least 12px of padding.
+         * - On iPhone: Adds 12px to the notch area (safe & breathable)
+         * - On Foldables (0 notch): Adds 0px + 12px (fixes the "stuck to edge" issue)
+        */
         padding-left: calc(env(safe-area-inset-left) + 12px) !important;
         padding-right: calc(env(safe-area-inset-right) + 12px) !important;
     }
     
-    /* Compensation Logic
-       Since navbar is now 'fixed', the content flows underneath it
-       We must push the content down by the exact height of the navbar (50px) */
+    /*
+     * Compensation Logic
+     * Since navbar is now 'fixed', the content flows underneath it
+     * We must push the content down by the exact height of the navbar (50px)
+    */
     .main-wrapper {
         margin-top: 50px !important;
 
-        /* Optical Alignment Fix:
-           Unlike the navbar, I DO NOT add the extra +12px here
-           Reason: The internal text container already possesses intrinsic padding
-           Adding extra padding here would push the text too far right on Foldables (double padding),
-           breaking the visual alignment with the navbar logo */
+        /*
+         * Optical Alignment Fix:
+         * Unlike the navbar, I DO NOT add the extra +12px here
+         * Reason: The internal text container already possesses intrinsic padding
+         * Adding extra padding here would push the text too far right on Foldables (double padding),
+         * breaking the visual alignment with the navbar logo
+        */
         padding-left: env(safe-area-inset-left) !important;
         padding-right: env(safe-area-inset-right) !important;
         width: 100% !important;
 
-        /* Layout Stability Fix
-           When content is minimal, the wrapper would naturally collapse to a small height.
-           By setting min-height to full viewport minus navbar (100vh - 50px), we ensure 
-           the layout always fills the screen, preventing awkward white space at the bottom */ 
+        /*
+         * Layout Stability Fix
+         * When content is minimal, the wrapper would naturally collapse to a small height.
+         * By setting min-height to full viewport minus navbar (100vh - 50px), we ensure
+         * the layout always fills the screen, preventing awkward white space at the bottom
+        */
         min-height: calc(100dvh - 50px) !important;
     }
 
