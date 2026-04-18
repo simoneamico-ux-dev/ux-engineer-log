@@ -752,6 +752,32 @@ html[data-theme='dark'] code span.token.variable {
 }
 
 
+/* SEARCH HIGHLIGHT (Ephemeral guide) */
+/*
+ * When the user lands on a page through a search result, the search
+ * plugin wraps every matched term in <mark>. A permanent yellow
+ * highlight turned long pages into visual noise on short queries
+ * (three-character searches like "rem" or "var" lit up the whole doc).
+ * I keep the highlights visible long enough to guide the eye toward
+ * the matched terms, then fade them out so the reading surface stays
+ * clean. Timing values match the focus mode exactly: 3 seconds of
+ * hold and 750ms of ease-in-out fade, the same pair the sidebar and
+ * TOC use when they retreat from the viewport. The motion language
+ * stays coherent across the site, and the attention-aware principle
+ * is applied in both cases: show enough to orient, retreat cleanly.
+*/
+mark {
+    animation: search-highlight-fade 0.75s ease-in-out 3s forwards;
+}
+
+@keyframes search-highlight-fade {
+    to {
+        background-color: transparent;
+        color: inherit;
+    }
+}
+
+
 /* FOCUS MODE (Auto-dim + Proximity Reveal)
  *
  * Companion to src/clientModules/focus-mode.js.
