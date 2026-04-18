@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Spreadsheet
 
-<div style={{ textAlign: 'center', marginBottom: '20px' }}>
+<figure className="image-caption-figure" style={{ textAlign: 'center', marginBottom: '20px' }}>
   <img
     src={require('./assets/spreadsheet-1-it.webp').default}
     alt="Time Analysis Simulation Italian Version"
@@ -25,10 +25,8 @@ import TabItem from '@theme/TabItem';
       aspectRatio: '1350 / 612'
     }}
   />
-  <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
-    <em>Esempio pratico dello Spreadsheet mentre analizza i dati di un test di usabilità.</em>
-  </p>
-</div>
+  <figcaption className="image-caption image-caption--source"><em>Esempio pratico dello Spreadsheet mentre analizza i dati di un test di usabilità.</em></figcaption>
+</figure>
 
 I dati inseriti simulano i tempi di completamento (in secondi) e gli errori commessi da 5 utenti che testano una nuova funzionalità (ad esempio, un processo di checkout).
 La Media (93s) e la Mediana (90s) dei tempi di completamento sono molto vicine. Questo è un segnale eccellente, perché indica un'esperienza utente consistente e prevedibile, senza valori anomali estremi che distorcerebbero la media. <br />
@@ -37,7 +35,7 @@ In un contesto reale, questo risultato fornisce un chiaro passo successivo: il t
 
 <br />
 
-<div style={{ textAlign: 'center', marginBottom: '20px' }}>
+<figure className="image-caption-figure" style={{ textAlign: 'center', marginBottom: '20px' }}>
   <img
     src={require('./assets/spreadsheet-2-it.webp').default}
     alt="Test A:B Simulazione Italian version"
@@ -53,10 +51,8 @@ In un contesto reale, questo risultato fornisce un chiaro passo successivo: il t
       aspectRatio: '1350 / 722'
     }}
   />
-  <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
-    <em>Esempio pratico dello Spreadsheet utilizzato per analizzare rapidamente i risultati di un A/B Test.</em>
-  </p>
-</div>
+  <figcaption className="image-caption image-caption--source"><em>Esempio pratico dello Spreadsheet utilizzato per analizzare rapidamente i risultati di un A/B Test.</em></figcaption>
+</figure>
 
 Questa simulazione confronta due design: "Design A" (il Controllo originale) e "Design B" (la Nuova versione), per vedere quale dei due ha un Tasso di Conversione migliore per il pulsante "Richiedi Demo".
 Il foglio di calcolo calcola il Tasso di Conversione per entrambi, mostrando il Design A al 12.4% e il Design B al 15.4%. Questa metrica è cruciale perché misura la forza persuasiva di ciascun design.<br />

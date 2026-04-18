@@ -98,9 +98,7 @@ import ThemedImage from '@theme/ThemedImage';
   <a href="https://calcolaturno.simoneamico.com/" target="_blank" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
     Open Web App ↗
   </a>
-  <p style={{ margin: '8px 0 0 0', opacity: 0.6, fontSize: '0.9rem' }}>
-    Works offline on all devices
-  </p>
+  <p className="hero-subtitle">Works offline on all devices</p>
 </div>
 
 ### The Project
@@ -2053,7 +2051,7 @@ It worked: the app spread around the factory and solved a real problem for peopl
 This time it’s different. I rebuilt the app from scratch in a total of 5 hours (2 hours for the working core + 3 hours for polish and responsiveness), applying everything I’ve learned in the last few months.
 
 <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-  <div style={{ maxWidth: '320px' }}>
+  <figure className="image-caption-figure" style={{ maxWidth: '320px' }}>
     <img 
       src={require('./assets/calcola-turno-old-version.webp').default} 
       alt="Calcola Turno Version 1.0" 
@@ -2068,16 +2066,8 @@ This time it’s different. I rebuilt the app from scratch in a total of 5 hours
         height: 'auto'
       }}
     />
-    <p style={{ 
-      textAlign: 'center', 
-      fontSize: '0.9rem', 
-      color: 'var(--ifm-color-emphasis-600)', 
-      marginTop: '12px', 
-      fontStyle: 'italic' 
-    }}>
-      Version 1.0 (2024)
-    </p>
-  </div>
+    <figcaption className="image-caption image-caption--version">Version 1.0 (2024)</figcaption>
+  </figure>
 </div>
 
 ### Why Rebuild It?

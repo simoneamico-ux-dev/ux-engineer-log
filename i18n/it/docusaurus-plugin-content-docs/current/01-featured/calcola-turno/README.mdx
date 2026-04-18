@@ -98,9 +98,7 @@ import ThemedImage from '@theme/ThemedImage';
   <a href="https://calcolaturno.simoneamico.com/" target="_blank" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
     Apri Web App ↗
   </a>
-  <p style={{ margin: '8px 0 0 0', opacity: 0.6, fontSize: '0.9rem' }}>
-    Funziona offline su tutti i dispositivi
-  </p>
+  <p className="hero-subtitle">Funziona offline su tutti i dispositivi</p>
 </div>
 
 ## Il Progetto
@@ -2053,7 +2051,7 @@ Aveva funzionato: l'app si è diffusa in fabbrica e ha risolto un problema concr
 Questa volta è diverso. Ho ricostruito l'app da zero in 5 ore totali (2 ore per il core funzionante + 3 ore per rifinitura e responsive), applicando tutto ciò che ho imparato in questi mesi.
 
 <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-  <div style={{ maxWidth: '320px' }}>
+  <figure className="image-caption-figure" style={{ maxWidth: '320px' }}>
     <img 
       src={require('./assets/calcola-turno-old-version.webp').default} 
       alt="Calcola Turno Versione 1.0" 
@@ -2068,16 +2066,8 @@ Questa volta è diverso. Ho ricostruito l'app da zero in 5 ore totali (2 ore per
         height: 'auto'
       }}
     />
-    <p style={{ 
-      textAlign: 'center', 
-      fontSize: '0.9rem', 
-      color: 'var(--ifm-color-emphasis-600)', 
-      marginTop: '12px', 
-      fontStyle: 'italic' 
-    }}>
-      La versione 1.0 (2024)
-    </p>
-  </div>
+    <figcaption className="image-caption image-caption--version">La versione 1.0 (2024)</figcaption>
+  </figure>
 </div>
 
 ## Perché Rifarla?

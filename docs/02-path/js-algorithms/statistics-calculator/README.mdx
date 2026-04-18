@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Statistics Calculator
 
-<div style={{ textAlign: 'center', marginBottom: '20px' }}>
+<figure className="image-caption-figure" style={{ textAlign: 'center', marginBottom: '20px' }}>
   <img
     src={require('./assets/statistics-calculator.webp').default}
     alt="Screenshot of the Statistics Calculator app, simulating the analysis of user satisfaction ratings"
@@ -19,10 +19,8 @@ import TabItem from '@theme/TabItem';
     height="1182"
     style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
   />
-  <p style={{ marginTop: '8px', fontSize: '0.9em', opacity: 0.8 }}>
-    <em>Practical example of the Statistics Calculator analyzing user satisfaction survey (UX) data.</em>
-  </p>
-</div>
+  <figcaption className="image-caption image-caption--source"><em>Practical example of the Statistics Calculator analyzing user satisfaction survey (UX) data.</em></figcaption>
+</figure>
 The entered numbers (4, 5, 3,...) simulate ratings given by a group of users for a new feature, on a scale from 1 to 5 stars.<br />
 The Mode and Median of 4 reveal that the most common reaction and the "typical" user's experience were very positive.<br />
 The Mean (3.89), while slightly lower due to a single negative rating, confirms an overall more than favorable reception.<br />

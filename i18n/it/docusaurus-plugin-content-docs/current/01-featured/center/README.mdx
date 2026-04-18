@@ -95,7 +95,7 @@ Alcune di queste procedure sono state poi ufficializzate dall'ufficio senza che 
 Ecco la primissima versione:
 
 <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
-  <div style={{ maxWidth: '240px' }}>
+  <figure className="image-caption-figure" style={{ maxWidth: '240px' }}>
     <img 
       src={require('./assets/center-01-v1-html-raw.webp').default} 
       alt="L'interfaccia primitiva della versione 0.0.1 costruita con solo HTML grezzo dove si vedono i due pulsanti standard per aggiungere 1000 kg" 
@@ -109,16 +109,8 @@ Ecco la primissima versione:
         height: 'auto'
       }}
     />
-    <p style={{ 
-      textAlign: 'center', 
-      fontSize: '0.9rem', 
-      color: 'var(--ifm-color-emphasis-600)', 
-      marginTop: '12px', 
-      fontStyle: 'italic' 
-    }}>
-      Versione 0.0.1
-    </p>
-  </div>
+    <figcaption className="image-caption image-caption--version">Versione 0.0.1</figcaption>
+  </figure>
 </div>
 
 Un'interfaccia terribile. Eppure, che senso avevano quei due bottoni "Aggiungi 1000 kg"? Replicavano l'esatta procedura che facevamo a mano con la calcolatrice: aggiungevamo 1000 per vedere fino a che ora si arrivava cucinando quella quantità.
@@ -218,7 +210,7 @@ Da qui applicherò un filtro monocromatico, perché anche senza i codici esadeci
 Ogni modifica la facevo su un IDE chiamato "Koder" su un iPhone 12 mini:
 
 <div style={{ display: 'flex', justifyContent: 'center', margin: '8px 0' }}>
-  <div style={{ maxWidth: '240px' }}>
+  <figure className="image-caption-figure" style={{ maxWidth: '240px' }}>
     <img 
       src={require('./assets/center-dev-koder-ide.webp').default} 
       alt="Uno screenshot dell'editor di codice Koder su iPhone 12 mini mentre modificavo live la classe CSS box" 
@@ -232,16 +224,8 @@ Ogni modifica la facevo su un IDE chiamato "Koder" su un iPhone 12 mini:
         height: 'auto'
       }}
     />
-    <p style={{ 
-      textAlign: 'center', 
-      fontSize: '0.9rem', 
-      color: 'var(--ifm-color-emphasis-600)', 
-      marginTop: '12px', 
-      fontStyle: 'italic' 
-    }}>
-      Koder Code Editor
-    </p>
-  </div>
+    <figcaption className="image-caption image-caption--version">Koder Code Editor</figcaption>
+  </figure>
 </div>
 
 Dove ho finalmente centrato quei box input all’interno del container:
@@ -348,23 +332,13 @@ La procedura era paradossale: si interrompeva il flusso della linea, si faceva c
 
 Che senso aveva? Analizzando il processo, si generavano **3 sprechi** in un colpo solo:
 
-<div style={{
-  borderLeft: '4px solid #ff4b4bff',
-  backgroundColor: 'rgba(140, 28, 28, 0.08)',
-  padding: '1.2rem',
-  marginBottom: '2rem',
-  borderRadius: '4px'
-}}>
-  <p style={{ marginTop: '16px' }}>
-    <strong>1. Tempo:</strong> La produzione non andava a regime.
-  </p>
-  <p>
-    <strong>2. Materia Prima:</strong> Il prodotto usato per il test finiva nel bidone (non recuperabile).
-  </p>
-  <p style={{ margin: 0 }}>
-    <strong>3. Processo:</strong> Richiedeva l'intervento manuale di un operatore esterno.
-  </p>
-</div>
+<aside className="callout-warning">
+  <ol>
+    <li><strong>Tempo:</strong> La produzione non andava a regime.</li>
+    <li><strong>Materia Prima:</strong> Il prodotto usato per il test finiva nel bidone (non recuperabile).</li>
+    <li><strong>Processo:</strong> Richiedeva l'intervento manuale di un operatore esterno.</li>
+  </ol>
+</aside>
 
 <div style={{ display: 'flex', justifyContent: 'center', margin: '12px 0 32px 0' }}>
 <div style={{ maxWidth: '240px' }}>

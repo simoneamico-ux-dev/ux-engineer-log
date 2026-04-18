@@ -480,6 +480,17 @@ figcaption.image-caption--media {
     font-weight: bold;
 }
 
+/*
+ * Opt-out modifier: suppresses the counter prefix on callouts whose
+ * list items already include their own text-level numbering (e.g.
+ * "Error 1 - ..."). Without this override the counter would render
+ * a redundant "1. Error 1 - ...". The <ol> semantics stay intact so
+ * screen readers still announce the group as an ordered list.
+*/
+.callout-warning ol.callout-list-plain > li::before {
+    content: none;
+}
+
 .callout-warning li + li {
     margin-top: 16px;
 }

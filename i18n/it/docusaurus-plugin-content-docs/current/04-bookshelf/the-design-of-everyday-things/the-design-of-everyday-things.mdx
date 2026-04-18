@@ -26,7 +26,7 @@ Per dimostrare i principi di Norman in un contesto puramente software, ho proget
   margin: '2rem 0'
 }}>
 
-  <div style={{ flex: '0.647 1 0px', minWidth: '200px' }}>
+  <figure className="image-caption-figure" style={{ flex: '0.647 1 0px', minWidth: '200px' }}>
     <img 
       src={require('./assets/the-design-of-everyday-things-it.webp').default} 
       alt="Artefatto Visivo Norman Button"
@@ -40,12 +40,10 @@ Per dimostrare i principi di Norman in un contesto puramente software, ho proget
         display: 'block'
       }}
     />
-    <p style={{textAlign: 'center', opacity: 0.7, fontSize: '0.9rem', marginTop: '10px'}}>
-      Prototipo Figma
-    </p>
-  </div>
+    <figcaption className="image-caption image-caption--media">Prototipo Figma</figcaption>
+  </figure>
 
-  <div style={{ flex: '1.593 1 0px', minWidth: '280px' }}>
+  <figure className="image-caption-figure" style={{ flex: '1.593 1 0px', minWidth: '280px' }}>
     <video 
       src={require('./assets/the-design-of-everyday-things.webm').default} 
       autoPlay 
@@ -59,10 +57,8 @@ Per dimostrare i principi di Norman in un contesto puramente software, ho proget
         display: 'block'
       }}
     />
-    <p style={{textAlign: 'center', opacity: 0.7, fontSize: '0.9rem', marginTop: '10px'}}>
-      Implementazione Reale (Codice) • Velocità 0.5x
-    </p>
-  </div>
+    <figcaption className="image-caption image-caption--media">Implementazione Reale (Codice) • Velocità 0.5x</figcaption>
+  </figure>
 
 </div>
 
