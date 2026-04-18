@@ -353,7 +353,139 @@ aside[class^='theme-doc-sidebar-container'] {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* 
+
+/* SEMANTIC BLOCKS (Image captions, hero subtitles, callouts) */
+/*
+ * Classes used by MDX files to render captions and enumerated callouts
+ * through semantic HTML5 structures (<figure>, <figcaption>, <ol>,
+ * <aside>) instead of repeated inline styles on <p> tags.
+ *
+ * The move to proper semantic wrappers eliminates the "<p> inside <p>"
+ * React hydration error that MDX was producing whenever text content
+ * lived on its own line inside a JSX <p>, and improves screen reader
+ * behavior at the same time (automatic image-caption association,
+ * structured list enumeration).
+*/
+
+/* IMAGE CAPTIONS */
+/*
+ * Captions attached to images and videos through <figure>/<figcaption>.
+ * The <figure> wrapper is the HTML5 canonical structure that lets screen
+ * readers associate the caption to the media automatically, which was
+ * impossible with the previous "<p> sibling of <img>" pattern.
+ * Three variants cover the different caption registers used across the site.
+*/
+figure.image-caption-figure {
+    /*
+     * The browser default for <figure> is margin: 1em 40px, which would
+     * indent the whole block. I zero the horizontal margins and keep a
+     * 1em bottom margin to replicate the breathing room that the old
+     * <p> caption had by default, otherwise the next content would sit
+     * too close to the caption text.
+    */
+    margin: 0 0 1em 0;
+}
+
+figcaption.image-caption {
+    text-align: center;
+}
+
+/*
+ * Variant "version": italic project-version or tool labels
+ * (e.g. "Version 0.0.1", "Koder Code Editor") placed below
+ * thumbnails in case studies.
+*/
+figcaption.image-caption--version {
+    font-size: 0.9rem;
+    color: var(--ifm-color-emphasis-600);
+    margin-top: 12px;
+    font-style: italic;
+}
+
+/*
+ * Variant "source": technical attribution line below performance
+ * screenshots or data visualizations.
+*/
+figcaption.image-caption--source {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/*
+ * Variant "media": labels for video or prototype captures.
+ * Slightly higher opacity than the other variants.
+*/
+figcaption.image-caption--media {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-top: 10px;
+}
+
+
+/* HERO SUBTITLE */
+/*
+ * Small dimmed label right below the primary action link in a project
+ * hero card (e.g. "Works offline on all devices"). Not attached to an
+ * image, so it stays a legitimate <p> element. Only the repeated inline
+ * style has been replaced by this class for DRY consistency.
+*/
+.hero-subtitle {
+    margin: 8px 0 0 0;
+    opacity: 0.6;
+    font-size: 0.9rem;
+}
+
+
+/* CALLOUT (Warning, enumerated insights) */
+/*
+ * Highlighted block that interrupts the reading flow to draw attention
+ * to a short numbered list of related points. Used in the Center case
+ * study to enumerate the "3 wastes" of the dosing procedure. The
+ * underlying structure is <aside><ol><li>..., which screen readers
+ * announce as "aside, list with N items". Richer than three consecutive
+ * <p> tags with manually numbered "1.", "2.", "3." prefixes.
+*/
+.callout-warning {
+    border-left: 4px solid #ff4b4bff;
+    background-color: rgba(140, 28, 28, 0.08);
+    padding: 1.2rem;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+}
+
+/*
+ * I render the "1.", "2.", "3." markers via a CSS counter so I can keep
+ * them bold and flowing inline with the text, matching the original look
+ * where the number was hard-coded inside a <strong> tag. Dropping the
+ * default <ol> numbering lets the li content align to the left edge of
+ * the callout padding without the forced indent that would otherwise
+ * push the text to the right and break visual parity with the previous
+ * <p>-based markup.
+*/
+.callout-warning ol {
+    counter-reset: callout-item;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.callout-warning li {
+    counter-increment: callout-item;
+    margin: 0;
+}
+
+.callout-warning li::before {
+    content: counter(callout-item) ". ";
+    font-weight: bold;
+}
+
+.callout-warning li + li {
+    margin-top: 16px;
+}
+
+
+/*
  * ACCESSIBILITY & SEO FIX (Heading Hierarchy)
  * Semantic HTML requires sequential headings (H1 -> H2 -> H3)
  * To preserve the intended UI rhythm without breaking accessibility,
