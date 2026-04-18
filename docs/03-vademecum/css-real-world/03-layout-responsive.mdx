@@ -803,14 +803,14 @@ Having already learned Flexbox, `justify-content` and `align-items` will be fami
 }
 /* On screens below 900px the columns overflow. */
 
-/* ��� Use fr or auto-fit + minmax for flexibility */
+/* ✅ Use fr or auto-fit + minmax for flexibility */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 
-/* ��� "I have empty space on the right of my grid" */
+/* ❌ "I have empty space on the right of my grid" */
 .grid {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
