@@ -844,45 +844,59 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
 }
 
 
-/* READING COMFORT (Content width + leading) */
+/* READING COMFORT (Content width, font size, leading, code breakout) */
 
 /*
- * The article content is capped at 724px, roughly 100 characters per
- * line, with line-height raised from the Infima default 1.65 to 1.75
- * for comfortable reading at that width. The trade-off follows the
- * React docs model: wider than the classic 65-75ch typographic ideal,
- * but compensated with extra leading so the saccadic return from the
- * end of a line to the start of the next stays easy.
+ * Content is capped at 820px. Prose, headings, images, callouts,
+ * and standalone code blocks stay there at every viewport. Tabs
+ * are the exception: at ≥1540px they extend 32px each side via
+ * negative margin, giving their multi-language code panels more
+ * horizontal room before triggering scroll. Standalone fenced
+ * snippets stay at 820 because they are usually short.
  *
- * 724px was chosen over a narrower 65ch because the content is
- * image-heavy (screenshots, diagrams, UI mockups), and a narrower
- * column would shrink every figure and waste visual impact. 724px
- * also renders source images captured at 1440px retina resolution at
- * a clean 2x scale. It sits above the WCAG 1.4.8 AAA recommendation
- * of 80 characters per line, but AA (the compliance-level standard)
- * has no line-length requirement, and the added leading preserves
- * reading comfort in practice.
+ * On pointing-device setups (fine pointer + hover: desktop
+ * mouse/trackpad, iPad with keyboard) the body font goes from
+ * Infima's 16px to 18px: 820px at 18px keeps around 90 characters
+ * per line. This is above WCAG 1.4.8 AAA (80 chars) but AA has no
+ * line-length requirement, and 1.75 line-height compensates the
+ * wider column (React docs model). On touch devices (coarse
+ * pointer) the font stays at 16px because 18px feels oversized at
+ * phone viewing distance. The pointer query is intentional instead
+ * of a viewport breakpoint: a desktop window shrunk below 997px
+ * still reads at desktop distance, so its font should stay at 18px.
  *
- * Line-height is scoped to .theme-doc-markdown rather than set
- * globally via --ifm-line-height-base, because sidebar, footer, and
- * navbar have different widths and do not benefit from the same
- * leading. Heading (1.25) and code (1.45) line-heights stay untouched
- * because their own Infima rules win by specificity, preserving the
- * tight heading rhythm and the monospace code-block cadence.
+ * The --ifm-code-font-size override to 80% holds code at the same
+ * absolute size as before (80% of 18 ≈ 14.4px, matching Infima's
+ * default 90% of 16). On touch devices the override is inactive.
  *
- * The content is centered in its column with margin auto. Without
- * it, the max-width would anchor the text to the left of the main
- * column and pile all the leftover whitespace on the right, producing
- * a visibly asymmetric frame on wide viewports (a 264px imbalance at
- * 1920px). Centering balances the whitespace on both sides and is a
- * no-op on narrower viewports where the column is already tighter
- * than 724px.
+ * Negative margins rather than :not() or CSS grid: :not() proved
+ * fragile against the MDX render chain, and grid would change
+ * layout semantics. max-width: none !important is needed because
+ * .theme-doc-markdown caps children at 820 through its own
+ * max-width; the tabs container must explicitly override that
+ * cap to break out.
 */
 .theme-doc-markdown {
-    max-width: 724px;
+    max-width: 820px;
     line-height: 1.75;
     margin-left: auto;
     margin-right: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .theme-doc-markdown {
+        font-size: 1.125rem;
+        --ifm-code-font-size: 80%;
+    }
+}
+
+@media (min-width: 1540px) {
+    .theme-doc-markdown > .tabs-container {
+        width: calc(100% + 64px);
+        margin-left: -32px;
+        margin-right: -32px;
+        max-width: none !important;
+    }
 }
 
 
