@@ -899,13 +899,16 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
  * upper hierarchy makes h3 read too close to h2 on subsection-
  * heavy pages like the vademecum. At body 18px: h1=38.25, h2=27,
  * h3=22.5, h4=19.8. At body 16px: h1=34, h2=24, h3=20, h4=17.6.
- * h5 and h6 keep Infima defaults because they are rarely used
- * and the scale compresses naturally from h4 down.
+ * h5 and h6 sit just above body size (1.05em and 1em) so even
+ * the deepest subsections stay visually above the body text they
+ * introduce, distinguished by their bold heading weight.
 */
 .theme-doc-markdown h1 { font-size: 2.125em; }
 .theme-doc-markdown h2 { font-size: 1.5em; }
 .theme-doc-markdown h3 { font-size: 1.25em; }
 .theme-doc-markdown h4 { font-size: 1.1em; }
+.theme-doc-markdown h5 { font-size: 1.05em; }
+.theme-doc-markdown h6 { font-size: 1em; }
 
 
 /* CONTENT-ALIGNED PERIPHERALS (Breadcrumbs and paginator) */
