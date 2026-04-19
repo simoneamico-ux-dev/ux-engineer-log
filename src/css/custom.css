@@ -815,6 +815,43 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
 }
 
 
+/* INTERMEDIATE DESKTOP LAYOUT */
+
+/*
+ * The default Docusaurus layout (300px sidebar + 25% TOC) looks
+ * asymmetric in this range because the sidebar is fixed in px while
+ * the TOC is a proportional 25% of the row, so the two rails drift
+ * apart as the viewport shifts. The MacBook Air 13" at 1280px native
+ * width lands right in here.
+ *
+ * First attempt: shrink both rails to 210px via :has() on the TOC
+ * column. It failed because the TOC sits inside a private Docusaurus
+ * CSS module that also caps the main column at 75% !important, so the
+ * fix needed a fragile :has() + !important stack that proved
+ * unreliable in testing.
+ *
+ * Second attempt: widen the sidebar to a constant that matches the
+ * TOC (260px). Clean override via the official --doc-sidebar-width
+ * variable, but any fixed value is symmetric at one viewport only and
+ * drifts everywhere else: at 1031px it produced a 71px imbalance.
+ *
+ * What works: a linear calc derived from two measured data points.
+ * Setting left gap equal to right gap gives S = (V - 28) / 5, where
+ * 28px absorbs the row padding Docusaurus applies inside the
+ * container. Symmetric at every viewport in the range, no private
+ * styles touched. Up to 3px of drift is possible in browsers where 
+ * 100vw includes the scrollbar width (Firefox): the excess pixels 
+ * enter the formula but are divided by 5 along with everything else, 
+ * keeping the error negligible.
+
+*/
+@media (min-width: 997px) and (max-width: 1300px) {
+    :root {
+        --doc-sidebar-width: calc((100vw - 28px) / 5);
+    }
+}
+
+
 /* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Enhanced TOC) */
 
 /*
