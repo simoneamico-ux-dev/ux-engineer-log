@@ -540,7 +540,7 @@ Per mitigare il rischio allucinazione, da quasi 2 mesi ho sostituito Claude con 
 
 Mi sono appuntato alcuni concetti basati su confronti tra l'approccio di freeCodeCamp e alternative migliori. Niente era sbagliato, d'altronde chi sono io per dirlo? Ma approfondire le alternative mi ha portato a ragionare con pensiero critico.
 
-**1. style.display vs classList.toggle() - Il SRP**
+### 1. style.display vs classList.toggle() - Il SRP
 
 FreeCodeCamp ha proposto:
 
@@ -575,7 +575,7 @@ rulesBtn.textContent = isModalShowing ? "Hide rules" : "Show rules";
 
 Così facendo non abbiamo pezzi di CSS nel JavaScript, bensì due documenti ben distinti: il JavaScript si occupa solo di richiamare lo stile nel CSS, non di crearlo.
 
-**2. parseInt() vs Number() - Rigore Semantico**
+### 2. parseInt() vs Number() - Rigore Semantico
 
 L'approccio di freeCodeCamp è stato `score += parseInt(selectedValue);`
 
@@ -592,7 +592,7 @@ Sono corrette entrambe, ma **Number() sembra essere più rigoroso**. Ecco perch�
 
 Number() è più rigoroso perché fallisce quando incontra input invalidi, mentre parseInt() fa conversioni "ottimiste". A seconda del contesto, la rigorosità di Number() può essere preferibile per catturare errori di input.
 
-**3. innerHTML += vs createElement() - Performance e DOM Integrity**
+### 3. innerHTML += vs createElement() - Performance e DOM Integrity
 
 Questo punto è emerso dal code tutor che ha giustamente fatto notare che:
 

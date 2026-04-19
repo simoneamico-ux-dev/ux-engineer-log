@@ -162,7 +162,7 @@ body {
 
 Prima di arrivare a questo progetto c'è stata la teoria sui Dati, estremamente interessante. Ecco i concetti che voglio tenermi stretti.
 
-**La Maschera del JSX**
+### La Maschera del JSX
 
 Nei progetti precedenti avevo capito che React fosse zucchero sintattico, ma non avevo compreso quanto.
 In sostanza, sotto il cofano è tutto `React.createElement`, quindi oggetti JavaScript puri. Le **parentesi graffe `{ }`** non sono "sintassi React speciale", sono una sorta di “portale” che ti riporta nel mondo JavaScript. Fuori dalle graffe sei in modalità "testo statico", dentro le graffe sei in modalità "logica eseguibile". 
@@ -173,19 +173,19 @@ Sono estremamente contento che il **template literal con ternario** sia una best
 
 Ero abituato a vedere `&&` come una condizione per logica booleana (vero o falso), in realtà funziona anche come operatore che restituisce valori. Quando scrivo `const risultato = true && "Ciao"`, l'operatore vede `true`, va avanti e restituisce `"Ciao"`. Se scrivo `const risultato = false && "Ciao"`, l'operatore vede `false`, si ferma e restituisce `false`. In React questo diventa `{message && <p>{message}</p>}`: se `message` è una stringa (truthy), React passa al secondo pezzo e renderizza il paragrafo. Se `message` è stringa vuota (falsy), React si ferma e restituisce `""`, che React ignora completamente (non disegna nulla). React è programmato per ignorare `false`, `null`, `undefined` e `true`, quindi il rendering condizionale con `&&` funziona perfettamente. Ironicamente, ho capito questo meccanismo di JavaScript non studiando JavaScript stesso, ma React.
 
-**I Componenti come Funzioni Pure**
+### I Componenti come Funzioni Pure
 
 Ho capito che un componente è letteralmente una funzione che produce unicamente UI: Props in ingresso → UI in uscita. Le Props sono immutabili per contratto, il figlio non può modificarle. I dati scorrono solo verso il basso (One-Way Data Flow), quindi se voglio cambiare qualcosa devo cambiare l'input alla fonte nel componente genitore, e React rieseguirà la funzione del figlio con i nuovi dati.
 
 Nel mio caso pratico: `<Card name="Mark" />` passa la stringa "Mark" come input alla funzione `Card`. Dentro `Card`, se provo a fare `name = "Doug"`, sto solo riassegnando una variabile locale che viene buttata via al prossimo render. Per cambiare davvero cosa vede l'utente, devo modificare l'array `profiles` dentro `App` (che è il genitore), e React rieseguirà automaticamente `Card` con il nuovo valore. È come nelle catene di montaggio che ci sono nella fabbrica in cui lavoro: il nastro trasportatore (Props) porta i pezzi con l'etichetta già scritta. Io operaio (componente figlio) posso leggere l'etichetta e montare il pezzo di conseguenza, ma non posso cambiare cosa c'è scritto. Se l'etichetta è sbagliata, devo fermare la linea e far correggere a monte (nel componente genitore).
 
-**La Teoria dell'Identità (Keys)**
+### La Teoria dell'Identità (Keys)
 
 Quando una lista cambia, React deve decidere se distruggere tutto e rifare o spostare solo certi elementi. Arriva in nostro soccorso la `key`, che non serve a ordinare, bensì ad identificare.
 
 Ad esempio, se ho una lista di tre utenti e uso `key={index}`, le key saranno `0, 1, 2`. Se rimuovo il primo utente, React vede ancora key `0, 1` e pensa "perfetto, gli utenti 0 e 1 sono ancora qui, devo solo rimuovere il numero 2". Ma in realtà l'utente 0 è stato eliminato, e quelli che vedo ora erano l'1 e il 2. React riutilizzerebbe quindi il nodo DOM sbagliato. Se invece uso `key={profile.id}` con ID univoci tipo `101, 202, 303`, quando rimuovo l'utente 101, React sa esattamente "l'utente con ID 101 non c'è più, ma 202 e 303 sono ancora qui". Quindi riutilizzerebbe correttamente i loro nodi DOM. Ho scoperto che questo diventerà importantissimo quando avrò box di input o animazioni, perché, senza key stabili, il testo che scrive l’utente può "saltare" in un'altra casella o sparire completamente perché React ha riutilizzato il nodo DOM sbagliato. 
 
-**crypto.randomUUID() - L’arma ideale per gli ID**
+### crypto.randomUUID() - L’arma ideale per gli ID
 
 Un punto su cui mi sono soffermato con molto piacere è `crypto.randomUUID()` perché lo trovo estremamente affascinante nel funzionamento.
 

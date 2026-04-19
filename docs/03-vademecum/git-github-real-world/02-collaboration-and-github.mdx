@@ -38,7 +38,7 @@ An SSH key works like a physical key split into two pieces that match perfectly.
 
 #### Procedure (Once Only)
 
-**Step 1: Generate the key pair**
+##### Step 1: Generate the key pair
 
 ```bash
 ssh-keygen -t ed25519 -C "your@email.com"
@@ -52,7 +52,7 @@ You've created two files in the `~/.ssh/` folder:
 
 -----
 
-**Step 2: Activate the SSH agent**
+##### Step 2: Activate the SSH agent
 
 ```bash
 eval "$(ssh-agent -s)"
@@ -63,7 +63,7 @@ The agent is a digital keyring that keeps your private key in memory.
 
 -----
 
-**Step 3: Copy the public key**
+##### Step 3: Copy the public key
 
 Mac:
 ```bash
@@ -83,13 +83,13 @@ Select all the output and copy it manually.
 
 -----
 
-**Step 4: Hand the key to GitHub**
+##### Step 4: Hand the key to GitHub
 
 Go to GitHub → Settings → SSH and GPG keys → New SSH key. Paste the public key you copied. Give it a title that reminds you which computer it is ("Mac Home", "Work PC").
 
 -----
 
-**Step 5: Test**
+##### Step 5: Test
 
 ```bash
 ssh -T git@github.com

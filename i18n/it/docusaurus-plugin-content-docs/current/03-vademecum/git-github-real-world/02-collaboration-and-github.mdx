@@ -38,7 +38,7 @@ Una chiave SSH funziona come una chiave fisica divisa in due pezzi che combacian
 
 #### Procedura (Una Volta Sola)
 
-**Passo 1: Genera la coppia di chiavi**
+##### Passo 1: Genera la coppia di chiavi
 
 ```bash
 ssh-keygen -t ed25519 -C "tua@email.com"
@@ -52,7 +52,7 @@ Hai creato due file nella cartella `~/.ssh/`:
 
 -----
 
-**Passo 2: Attiva l'agent SSH**
+##### Passo 2: Attiva l'agent SSH
 
 ```bash
 eval "$(ssh-agent -s)"
@@ -63,7 +63,7 @@ L'agent è un portachiavi digitale che tiene la tua chiave privata in memoria.
 
 -----
 
-**Passo 3: Copia la chiave pubblica**
+##### Passo 3: Copia la chiave pubblica
 
 Mac:
 ```bash
@@ -83,13 +83,13 @@ Seleziona tutto l'output e copialo manualmente.
 
 -----
 
-**Passo 4: Consegna la chiave a GitHub**
+##### Passo 4: Consegna la chiave a GitHub
 
 Vai su GitHub → Settings → SSH and GPG keys → New SSH key. Incolla la chiave pubblica copiata. Dai un titolo che ti ricordi quale computer è ("Mac Casa", "PC Lavoro").
 
 -----
 
-**Passo 5: Testa**
+##### Passo 5: Testa
 
 ```bash
 ssh -T git@github.com

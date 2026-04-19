@@ -43,7 +43,7 @@ function updateUI(newData) {
 
 With React, you write **once** how the UI should look for every possible state of the data. Then you update the data, and React handles the rest.
 
-**The Facebook Problem in 2013**
+##### The Facebook Problem in 2013
 
 The story of React was born from a concrete problem that Facebook had with its interface. Imagine the notification bar at the top: it showed a number. Then the chat on the left: it showed unread messages. Then the comments on posts: they showed new replies. All these elements had to stay *synchronized* with the same data.
 
@@ -51,7 +51,7 @@ With Vanilla JavaScript, every small change required manually updating dozens of
 
 Jordan Walke, a Facebook engineer, created React in 2011 (publicly released in 2013) to solve exactly this: making the UI automatically synchronized with the data, without manual intervention.
 
-**The "Reactive" in the Name**
+##### The "Reactive" in the Name
 
 React draws inspiration from the concept of *reactive programming*, but it is not a pure implementation of it in the academic sense. It is a practical simplification of the idea: instead of writing "when X changes, update Y and Z", you write "the UI is *this* when X has *this* value". React takes care of figuring out what needs to change and when.
 
@@ -72,7 +72,7 @@ Think of IKEA. You walk in, pick the furniture you need, pay, and leave. Then yo
 
 React is IKEA: it gives you the tools to build your interface, but **it does not tell you how to structure routing, how to manage global state, how to communicate with the server**. Those are your decisions.
 
-**Key Characteristic: You Call the Library**
+##### Key Characteristic: You Call the Library
 
 When you use React, it is *your* code that imports and calls React's components. The library knows nothing about the rest of your application until you invoke it.
 
@@ -164,7 +164,7 @@ No white page. Instant transitions. UX as fluid as a native app.
 </Routes>
 ```
 
-**The Problems of a Pure SPA**
+##### The Problems of a Pure SPA
 
 Developing a Single Page Application involves two main trade-offs:
 
@@ -183,7 +183,7 @@ With **Server-Side Rendering (SSR)**, the work shifts to the server. When a user
 
 The advantage is twofold: the user sees the page instantly (no waiting for JavaScript) and search engines find an HTML full of content to index.
 
-**Hydration, React's Awakening**
+##### Hydration, React's Awakening
 
 The HTML that arrives from the server is static, like a photograph: you can see everything but you cannot click anything. At that point React loads in the browser and "attaches" itself to the already present HTML, connecting events and hooks to make the page interactive without having to redraw it from scratch. This process is called **Hydration**.
 

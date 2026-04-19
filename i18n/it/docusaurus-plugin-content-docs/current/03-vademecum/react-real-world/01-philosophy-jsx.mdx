@@ -43,7 +43,7 @@ function aggiornaUI(nuoviDati) {
 
 Con React, scrivi **una sola volta** come la UI deve apparire per ogni possibile stato dei dati. Poi aggiorni i dati, e React pensa al resto.
 
-**Il Problema di Facebook nel 2013**
+##### Il Problema di Facebook nel 2013
 
 La storia di React nasce da un problema concreto che Facebook aveva con la sua interfaccia. Immagina la barra delle notifiche in alto: mostrava un numero. Poi la chat a sinistra: mostrava messaggi non letti. Poi i commenti nei post: mostravano nuove risposte. Tutti questi elementi dovevano rimanere *sincronizzati* con gli stessi dati.
 
@@ -51,7 +51,7 @@ Con JavaScript Vanilla, ogni piccola modifica richiedeva di aggiornare manualmen
 
 Jordan Walke, un ingegnere di Facebook, creò React nel 2011 (rilasciato pubblicamente nel 2013) per risolvere esattamente questo: rendere la UI automaticamente sincronizzata con i dati, senza intervento manuale.
 
-**Il "Reactive" nel nome**
+##### Il "Reactive" nel nome
 
 React prende ispirazione dal concetto di *programmazione reattiva*, ma non ne è un'implementazione pura in senso accademico. È una semplificazione pratica dell'idea: invece di scrivere "quando cambia X, aggiorna Y e Z", scrivi "la UI è *questa* quando X ha *questo* valore". React si occupa di capire cosa deve cambiare e quando.
 
@@ -72,7 +72,7 @@ Pensa a IKEA. Entri, scegli i mobili che ti servono, paghi, esci. Poi assembli t
 
 React è IKEA: ti dà gli strumenti per costruire la tua interfaccia, ma **non ti dice come strutturare il routing, come gestire lo stato globale, come comunicare con il server**. Quelle sono tue decisioni.
 
-**Caratteristica Chiave: Sei Tu a Chiamare la Libreria**
+##### Caratteristica Chiave: Sei Tu a Chiamare la Libreria
 
 Quando usi React, è il *tuo* codice che importa e chiama i componenti di React. La libreria non sa niente del resto della tua applicazione finché non la invochi tu.
 
@@ -164,7 +164,7 @@ Nessuna pagina bianca. Transizioni istantanee. UX fluida come un'app nativa.
 </Routes>
 ```
 
-**I Problemi della SPA Pura**
+##### I Problemi della SPA Pura
 
 Sviluppare una Single Page Application comporta due compromessi principali:
 
@@ -183,7 +183,7 @@ Con il **Server-Side Rendering (SSR)** il lavoro si sposta sul server. Quando un
 
 Il vantaggio è doppio: l'utente vede la pagina istantaneamente (nessuna attesa del JavaScript) e i motori di ricerca trovano un HTML pieno di contenuti da indicizzare.
 
-**Hydration, il Risveglio di React**
+##### Hydration, il Risveglio di React
 
 L'HTML che arriva dal server è statico, come una fotografia: si vede tutto ma non si può cliccare nulla. A quel punto React si carica nel browser e "si aggancia" a quell'HTML già presente, collegando gli eventi e gli hook per rendere la pagina interattiva senza doverla ridisegnare da zero. Questo processo si chiama **Hydration**.
 

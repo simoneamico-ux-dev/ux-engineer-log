@@ -218,7 +218,7 @@ Ho tratto moltissimo aiuto dall’analizzare "dal vivo" file e concetti come `pa
 
 Mi sono fermato in tre macro-tempi, analizzando ciò che avevo appreso fino a quel punto. Ecco cosa ho appreso in ogni fase.
 
-**Primo Tempo: Componenti e Naming Convention**
+### Primo Tempo: Componenti e Naming Convention
 
 Ho capito perché React obbliga la **maiuscola** nei nomi dei componenti (`<Navbar />` e non `<navbar />`).  
 Si tratta di sintassi obbligatoria, non di uno stile particolare. Quando il transpiler (Babel/Vite), ovvero il traduttore che converte JSX in JavaScript vanilla, legge il JSX, deve decidere cosa farne:
@@ -234,7 +234,7 @@ Ho anche capito la differenza tra **Named Export** (`export function Navbar`) e 
 Ho scoperto che i Named Export sono preferiti nel mondo professionale per componenti riutilizzabili perché l'IDE (come VS Code) suggerisce il nome esatto (autocomplete), se sbagli a scrivere, magari scrivendo `{ Navbr }` l'app smetterà di funzionare fin da subito con un errore chiaro, invece di importare undefined e farti scoprire il bug solo quando provi a usare effettivamente il componente. Inoltre i Named Export aiutano il tree shaking, ovvero i tool di build eliminano il codice non usato, proprio perché questi export espliciti permettono ai bundler di vedere esattamente cosa viene importato e cosa no. Se esporto 10 componenti ma ne importo solo 2, il bundler elimina gli altri 8 dal bundle finale. Se invece li raggruppo in un oggetto (`export default { Navbar, Footer, Card }`), il bundler li include tutti, perché vede un unico blocco inscatolato e non riesce a capire quali pezzi uso davvero.
 
 
-**Secondo Tempo: JSX e le Sue Stranezze**
+### Secondo Tempo: JSX e le Sue Stranezze
 
 Ho capito perché si usa `className` invece di `class`.
 Il motivo ufficiale è "perché `class` è una parola riservata a JavaScript” (serve per definire Classi in programmazione a oggetti). Ma c'è un motivo più profondo e interessante.
@@ -260,7 +260,7 @@ return;
 Le parentesi tonde è come se dicessero a JavaScript: "Fermo! Non ho finito. Il valore di ritorno inizia qui `(` e finisce laggiù `)`. Tratta tutto come un unico pacchetto".  
 Un’analogia che inserirò nel Real World Vademecum React per far capire al volo il concetto è che è come tenere insieme una pila di fogli con una graffetta: senza graffetta, i fogli si disperdono. Le parentesi sono la graffetta che tiene il blocco JSX unito.
 
-**Terzo Tempo: WET Code e Promesse di Dinamicità**
+### Terzo Tempo: WET Code e Promesse di Dinamicità
 
 Guardando il codice finale, ho sentito la "puzza" di ripetizione (WET vs DRY):
 

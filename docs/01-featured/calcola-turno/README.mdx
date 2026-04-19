@@ -2168,7 +2168,7 @@ After all, the app promises to do just one thing: tell you which of the 3 shifts
 From the beginning I thought about the architecture and what I would need for the backend, in particular **localStorage** and **cache management**. I wanted it to work offline and remember the shift chosen by the user during onboarding.
 I wanted it working that same evening, so I orchestrated the AI by sharing my ideas and asking it to confirm whether I was missing something or if there were better ways to reach the solution.
 
-**The midnight problem**  
+#### The midnight problem
 An interesting point was the algorithm to automatically switch the calendar day at exactly midnight.  
 At first I had an approach I thought was elegant: a **Timer** that calculated exactly how much time was left until midnight. When opening the app, JavaScript would check how long remained before midnight and set itself up accordingly for the day change.
 

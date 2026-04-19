@@ -2168,7 +2168,7 @@ D'altronde l'app promette di fare una cosa sola: dirti quale dei 3 turni farai.
 Fin dall'inizio ho ragionato sull'architettura e su cosa avrei avuto bisogno per il backend, in particolare mi riferisco al **localStorage** e alla **gestione della cache**. Volevo che funzionasse offline e ricordasse il turno scelto dall'utente nell'onboarding.
 Volevo che fosse funzionante la sera stessa, quindi ho orchestrato l'AI dicendole le mie idee e chiedendo conferma se mi stessi perdendo qualcosa o se ci fossero modi migliori per giungere alla soluzione.
 
-**Il problema della mezzanotte**  
+#### Il problema della mezzanotte
 Un punto interessante è stato l'algoritmo per cambiare automaticamente il giorno del calendario a mezzanotte esatta.  
 Inizialmente pensavo a una soluzione che credevo elegante: un **Timer** che calcolasse esattamente quanto tempo mancava alla mezzanotte. All'apertura dell'app, JavaScript avrebbe controllato quanto tempo sarebbe mancato prima della mezzanotte, regolandosi di conseguenza per il cambio del giorno.
 

@@ -162,7 +162,7 @@ body {
 
 Before getting to this project there was theory on Data, extremely interesting. Here are the concepts I want to hold onto.
 
-**The Mask of JSX**
+### The Mask of JSX
 
 In previous projects I had understood that React was syntactic sugar, but I hadn't understood how much.
 Essentially, under the hood it's all `React.createElement`, therefore pure JavaScript objects. The **curly braces `{ }`** aren't "special React syntax", they're a sort of "portal" that brings you back into the JavaScript world. Outside the braces you're in "static text" mode, inside the braces you're in "executable logic" mode.
@@ -173,19 +173,19 @@ I'm extremely happy that the **template literal with ternary** is a best practic
 
 I was used to seeing `&&` as a condition for boolean logic (true or false), it actually also works as an operator that returns values. When I write `const result = true && "Hello"`, the operator sees `true`, continues and returns `"Hello"`. If I write `const result = false && "Hello"`, the operator sees `false`, stops and returns `false`. In React this becomes `{message && <p>{message}</p>}`: if `message` is a string (truthy), React proceeds to the second piece and renders the paragraph. If `message` is an empty string (falsy), React stops and returns `""`, which React completely ignores (doesn't draw anything). React is programmed to ignore `false`, `null`, `undefined` and `true`, so conditional rendering with `&&` works perfectly. Ironically, I understood this JavaScript mechanism not by studying JavaScript itself, but React.
 
-**Components as Pure Functions**
+### Components as Pure Functions
 
 I understood that a component is literally a function that produces only UI: Props input → UI output. Props are immutable by contract, the child can't modify them. Data flows only downward (One-Way Data Flow), so if I want to change something I need to change the input at the source in the parent component, and React will re-execute the child's function with the new data.
 
 In my practical case: `<Card name="Mark" />` passes the string "Mark" as input to the `Card` function. Inside `Card`, if I try to do `name = "Doug"`, I'm only reassigning a local variable that gets thrown away at the next render. To really change what the user sees, I need to modify the `profiles` array inside `App` (which is the parent), and React will automatically re-execute `Card` with the new value. It's like the assembly lines in the factory where I work: the conveyor belt (Props) brings the pieces with the label already written. I, the worker (child component), can read the label and assemble the piece accordingly, but I can't change what's written. If the label is wrong, I need to stop the line and have it corrected upstream (in the parent component).
 
-**The Theory of Identity (Keys)**
+### The Theory of Identity (Keys)
 
 When a list changes, React must decide whether to destroy everything and redo it or move only certain elements. The `key` comes to our rescue, which doesn't serve to order, but to identify.
 
 For example, if I have a list of three users and use `key={index}`, the keys will be `0, 1, 2`. If I remove the first user, React still sees key `0, 1` and thinks "perfect, users 0 and 1 are still here, I only need to remove number 2". But actually user 0 was deleted, and those I see now were 1 and 2. React would therefore reuse the wrong DOM node. If instead I use `key={profile.id}` with unique IDs like `101, 202, 303`, when I remove user 101, React knows exactly "the user with ID 101 is gone, but 202 and 303 are still here". So it would correctly reuse their DOM nodes. I discovered that this will become extremely important when I have input boxes or animations, because, without stable keys, the text the user writes can "jump" into another box or disappear completely because React reused the wrong DOM node.
 
-**crypto.randomUUID() - The Ideal Weapon for IDs**
+### crypto.randomUUID() - The Ideal Weapon for IDs
 
 A point I dwelled on with great pleasure is `crypto.randomUUID()` because I find it extremely fascinating in its operation.
 

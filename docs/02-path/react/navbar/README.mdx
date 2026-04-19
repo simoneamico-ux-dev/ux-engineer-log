@@ -218,7 +218,7 @@ I got a lot of help from analyzing "live" files and concepts like `package.json`
 
 I stopped at three macro-times, analyzing what I had learned up to that point. Here's what I learned in each phase.
 
-**First Time: Components and Naming Convention**
+### First Time: Components and Naming Convention
 
 I understood why React requires **capitalization** in component names (`<Navbar />` and not `<navbar />`).  
 It's mandatory syntax, not a particular style. When the transpiler (Babel/Vite), that is the translator that converts JSX into vanilla JavaScript, reads JSX, it must decide what to do with it:
@@ -234,7 +234,7 @@ I also understood the difference between **Named Export** (`export function Navb
 I discovered that Named Exports are preferred in the professional world for reusable components because the IDE (like VS Code) suggests the exact name (autocomplete), if you make a mistake writing, maybe writing `{ Navbr }` the app will stop working immediately with a clear error, instead of importing undefined and making you discover the bug only when you actually try to use the component. Additionally, Named Exports help tree shaking, that is, build tools eliminate unused code, precisely because these explicit exports allow bundlers to see exactly what is imported and what isn't. If I export 10 components but import only 2, the bundler eliminates the other 8 from the final bundle. If instead I group them in an object (`export default { Navbar, Footer, Card }`), the bundler includes them all, because it sees a single boxed block and can't figure out which pieces I actually use.
 
 
-**Second Time: JSX and Its Quirks**
+### Second Time: JSX and Its Quirks
 
 I understood why we use `className` instead of `class`.
 The official reason is "because `class` is a reserved word in JavaScript" (it's used to define Classes in object-oriented programming). But there's a deeper and more interesting reason.
@@ -260,7 +260,7 @@ return;
 Round parentheses are as if they tell JavaScript: "Stop! I'm not done. The return value starts here `(` and ends there `)`. Treat everything as a single package".  
 An analogy I'll insert in the Real World Vademecum React to make the concept immediately clear is that it's like holding together a stack of papers with a staple: without the staple, the papers scatter. Parentheses are the staple that holds the JSX block together.
 
-**Third Time: WET Code and Promises of Dynamism**
+### Third Time: WET Code and Promises of Dynamism
 
 Looking at the final code, I smelled the "stench" of repetition (WET vs DRY):
 
