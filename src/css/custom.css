@@ -852,6 +852,48 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
 }
 
 
+/* READING COMFORT (Content width + leading) */
+
+/*
+ * The article content is capped at 724px, roughly 100 characters per
+ * line, with line-height raised from the Infima default 1.65 to 1.75
+ * for comfortable reading at that width. The trade-off follows the
+ * React docs model: wider than the classic 65-75ch typographic ideal,
+ * but compensated with extra leading so the saccadic return from the
+ * end of a line to the start of the next stays easy.
+ *
+ * 724px was chosen over a narrower 65ch because the content is
+ * image-heavy (screenshots, diagrams, UI mockups), and a narrower
+ * column would shrink every figure and waste visual impact. 724px
+ * also renders source images captured at 1440px retina resolution at
+ * a clean 2x scale. It sits above the WCAG 1.4.8 AAA recommendation
+ * of 80 characters per line, but AA (the compliance-level standard)
+ * has no line-length requirement, and the added leading preserves
+ * reading comfort in practice.
+ *
+ * Line-height is scoped to .theme-doc-markdown rather than set
+ * globally via --ifm-line-height-base, because sidebar, footer, and
+ * navbar have different widths and do not benefit from the same
+ * leading. Heading (1.25) and code (1.45) line-heights stay untouched
+ * because their own Infima rules win by specificity, preserving the
+ * tight heading rhythm and the monospace code-block cadence.
+ *
+ * The content is centered in its column with margin auto. Without
+ * it, the max-width would anchor the text to the left of the main
+ * column and pile all the leftover whitespace on the right, producing
+ * a visibly asymmetric frame on wide viewports (a 264px imbalance at
+ * 1920px). Centering balances the whitespace on both sides and is a
+ * no-op on narrower viewports where the column is already tighter
+ * than 724px.
+*/
+.theme-doc-markdown {
+    max-width: 724px;
+    line-height: 1.75;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 /* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Enhanced TOC) */
 
 /*
