@@ -539,28 +539,6 @@ figcaption.image-caption--media {
 
 
 /*
- * ACCESSIBILITY & SEO FIX (Heading Hierarchy)
- * Semantic HTML requires sequential headings (H1 -> H2 -> H3)
- * To preserve the intended UI rhythm without breaking accessibility,
- * I visually downgrade H2 tags to look exactly like H3 tags
-*/
-.markdown h2 {
-    font-size: 1.45rem !important;
-    border-bottom: none !important;
-    margin-top: var(--ifm-heading-margin-top) !important;
-    margin-bottom: var(--ifm-heading-margin-bottom) !important;
-    margin-top: 2rem !important;
-    font-weight: 700 !important;
-}
-
-.markdown h3 {
-    font-size: 1.25rem !important;
-    margin-top: 1.5rem !important;
-    margin-bottom: var(--ifm-heading-margin-bottom) !important;
-}
-
-
-/* 
  * ACCESSIBILITY & SYNTAX (Token Overrides)
  * Forces readable colors for specific code tokens based on theme 
 */
@@ -898,6 +876,36 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
         max-width: none !important;
     }
 }
+
+
+/* HEADING HIERARCHY (em-based scale) */
+
+/*
+ * Infima sets --ifm-hX-font-size in rem at :root and then overrides
+ * the values for .markdown > h2, .markdown > h3, and
+ * .markdown h1:first-child directly on the heading elements. A
+ * locally-declared custom property beats one inherited from an
+ * ancestor, so overriding the variables on .theme-doc-markdown has
+ * no effect on h1, h2, h3. Setting font-size directly on the
+ * heading elements with higher specificity is the way to override
+ * both layers reliably.
+ *
+ * em units keep the scale proportional to the body font, so the
+ * hierarchy holds at 16px (touch) and at 18px (pointer + hover)
+ * alike. The scale gives h1 a visible gap below as the standalone
+ * page title, then h2 to h4 step down with a ~1.2-1.25 ratio,
+ * a common reading-docs modular scale. h2 sits at 1.5em rather
+ * than something smaller (like 1.375em) because a compressed
+ * upper hierarchy makes h3 read too close to h2 on subsection-
+ * heavy pages like the vademecum. At body 18px: h1=38.25, h2=27,
+ * h3=22.5, h4=19.8. At body 16px: h1=34, h2=24, h3=20, h4=17.6.
+ * h5 and h6 keep Infima defaults because they are rarely used
+ * and the scale compresses naturally from h4 down.
+*/
+.theme-doc-markdown h1 { font-size: 2.125em; }
+.theme-doc-markdown h2 { font-size: 1.5em; }
+.theme-doc-markdown h3 { font-size: 1.25em; }
+.theme-doc-markdown h4 { font-size: 1.1em; }
 
 
 /* MOBILE LAYOUT ADAPTATION (Immersive layout + Reader mode + Enhanced TOC) */
