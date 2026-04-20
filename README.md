@@ -1,9 +1,5 @@
 <h1 align="center">UX Engineer Log</h1>
 
-<p align="center">
-  <a href="https://simoneamico.com"><strong>Visit the site</strong></a>
-</p>
-
 <br />
 
 This site is the evolution of <a href="https://github.com/simoneamico-ux-dev/from-factory-to-ux-engineer">from-factory-to-ux-engineer</a>, the original static logbook where the journey began. UX Engineer Log is the moment the log came to life: migrated into a Docusaurus architecture, fully bilingual, with its own design system and reading-first typography.
@@ -33,5 +29,5 @@ yarn write-translations --locale it         # sync Italian translations
 ---
 
 <p align="center">
-  <a href="https://simoneamico.com">simoneamico.com</a>
+  <a href="https://simoneamico.com"><strong>Visit the site</strong></a>
 </p>
