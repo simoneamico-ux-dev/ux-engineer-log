@@ -15,7 +15,7 @@ You can find the Figma prototype below, so you can explore the entire experience
 
 <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '30px', alignItems: 'center', marginBottom: '30px' }}>
   
-  <div style={{ flex: '1 1 300px' }}> 
+  <div style={{ flex: '1 1 300px', maxWidth: '320px' }}> 
     <img 
       src={require('./assets/mosaic-1.webp').default} 
       alt="Mosaic Project Preview (Home Screen)" 
@@ -64,7 +64,7 @@ Here's how Apple used the tab bar in the Music app. I want to clarify that in mo
   loading="lazy"
   decoding="async"
   style={{
-    width: '40%',
+    width: 'min(100%, 330px)',
     height: 'auto',
     borderRadius: '6px'
   }}
@@ -79,7 +79,7 @@ Here's how Apple used the tab bar in the Music app. I want to clarify that in mo
   loading="lazy"
   decoding="async"
   style={{
-    width: '40%',
+    width: 'min(100%, 330px)',
     height: 'auto',
     borderRadius: '6px'
   }}
@@ -94,7 +94,7 @@ Here's how Apple used the tab bar in the Music app. I want to clarify that in mo
   loading="lazy"
   decoding="async"
   style={{
-    width: '40%',
+    width: 'min(100%, 330px)',
     height: 'auto',
     borderRadius: '6px'
   }}
@@ -110,7 +110,7 @@ And how I decided to use it very lightly in Mosaic:
   loading="lazy"
   decoding="async"
   style={{
-    width: '40%',
+    width: 'min(100%, 330px)',
     height: 'auto',
     borderRadius: '6px'
   }}
