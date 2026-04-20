@@ -571,28 +571,93 @@ html[data-theme='dark'] code span.token.variable {
     font-style: normal !important;
 }
 
-/* Footer */
-.footer__links {
-  display: flex;
-  justify-content: flex-start; /* Anchors the navigation map to the left edge */
-  padding-left: 2rem; 
-  width: 100%;
+
+/* FOOTER (Desktop alignment with body + typography) */
+
+/*
+ * The footer lives outside .main-wrapper, so it does not share the
+ * 16px card margin and the sidebar offset that shape every page
+ * above. Without intervention "Navigation" starts near the viewport
+ * left while the body content up in the article sits past the
+ * sidebar AND centered inside the 820px reading cap, and the two
+ * columns never line up.
+ *
+ * Alignment is done in two layers:
+ *
+ * 1. Footer padding: 16px (card margin) + --doc-sidebar-width on
+ *    the left, 16px on the right. This puts the footer's container
+ *    over main's container at the viewport level.
+ *
+ * 2. Row and copyright padding: a dynamic offset that matches the
+ *    horizontal centering applied inside the article col by the
+ *    .theme-doc-markdown, .pagination-nav and .theme-doc-breadcrumbs
+ *    rules above, which cap content at 820px and auto-center it
+ *    inside a col whose content is 75% of the row. When col content
+ *    is wider than 820, the body shifts right by (col - 820) / 2;
+ *    the footer applies the same shift so "Navigation" lands on
+ *    "Previous" exactly, not just on the col content left edge.
+ *
+ * The second layer reads the live row width from the same variables
+ * Infima and the rest of this file already use:
+ * min(100vw - 32px - sidebar, container-xl) * 0.75 - 32px
+ * is the article col content width; the offset is (that - 820) / 2
+ * clamped to zero when the col is narrower than the cap.
+ *
+ * The footer container inside also gets the same max-width and
+ * margin-auto as main's container, explicit in case something in
+ * the cascade ever tried to let it go fluid. Docusaurus sets
+ * "container-fluid" with a single dash on the element, which does
+ * not match Infima's "container--fluid" with the double dash, so
+ * the fluid override never fires; the rule below locks the intent
+ * regardless.
+ *
+ * Mobile (< 997px) is untouched: the sidebar is gone there and
+ * there is no body offset to chase.
+*/
+@media (min-width: 997px) {
+    .footer {
+        padding-left: calc(16px + var(--doc-sidebar-width));
+        padding-right: 16px;
+    }
+
+    .footer > .container {
+        max-width: var(--ifm-container-width);
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .footer__links,
+    .footer__bottom {
+        padding-left: max(
+            0px,
+            calc(
+                (min(
+                    calc(100vw - 32px - var(--doc-sidebar-width)),
+                    var(--ifm-container-width-xl)
+                ) * 0.75 - 852px) / 2
+            )
+        );
+    }
+}
+
+@media (min-width: 1440px) {
+    .footer > .container {
+        max-width: var(--ifm-container-width-xl);
+    }
 }
 
 .footer__title {
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.6;
-  margin-bottom: 1rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+    margin-bottom: 1rem;
 }
 
-/* Copyright */
 .footer__bottom {
-  text-align: left;   
-  padding-left: 2rem;
-  margin-top: 2rem;
-  opacity: 0.6;
+    text-align: left;
+    margin-top: 2rem;
+    opacity: 0.6;
 }
 
 
