@@ -63,6 +63,7 @@ const config = {
   clientModules: [
     require.resolve('./src/clientModules/focus-mode.js'),
     require.resolve('./src/clientModules/search-input-attrs.js'),
+    require.resolve('./src/clientModules/mobile-locale-toggle.js'),
   ],
 
   headTags: [
@@ -107,6 +108,7 @@ const config = {
           {
             type: 'localeDropdown',
             position: 'right',
+            className: 'native-locale-dropdown',
           },
         ],
       },

@@ -612,9 +612,12 @@ html[data-theme='dark'] code span.token.variable {
         line-height: 2; /* I set line-height to 2 because visual testing showed this matches the hamburger menu height perfectly, ensuring vertical centering */
         transition: opacity 0.3s ease, max-width 0.3s ease, margin 0.3s ease;
         opacity: 1;
-        max-width: 200px;
         white-space: nowrap;
         overflow: hidden;
+    }
+
+    .navbar__brand {
+        margin-right: 0.25rem;
     }
 
     .navbar:has(.navbar__search-input:focus) .navbar__title {
@@ -932,6 +935,112 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
 
 .theme-doc-breadcrumbs .breadcrumbs {
     margin-left: -0.64rem;
+}
+
+
+/* MOBILE LOCALE TOGGLE (Direct IT/EN switch, no hamburger submenu) */
+
+/*
+ * Companion to src/clientModules/mobile-locale-toggle.js which
+ * injects a direct IT/EN link inside the drawer header next to
+ * the dark-mode toggle. This section styles the injected element
+ * and removes the native localeDropdown from the mobile drawer so
+ * the two paths never coexist. Infima already hides .navbar__item
+ * at max-width 996px, so the desktop dropdown disappears from the
+ * mobile top bar without extra rules; the :has() selector below
+ * handles the drawer rendering.
+ *
+ * The back-to-main-menu button is also hidden here: it only
+ * renders when navbar.items is non-empty (see theme-classic
+ * SecondaryMenu source), so keeping the localeDropdown in config
+ * for the desktop globe would leave the button visible in the
+ * drawer secondary view and land users on an empty primary.
+*/
+
+.mobile-locale-toggle {
+    display: none;
+}
+
+@media (max-width: 996px) {
+    .navbar-sidebar__brand .mobile-locale-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 2rem;
+        min-width: 2rem;
+        margin-left: auto;
+        margin-right: 0.25rem;
+        padding: 0 0.5rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.05em;
+        border-radius: 6px;
+        color: var(--ifm-navbar-link-color);
+        text-decoration: none;
+        transform: translateY(1px);
+        transition: background var(--ifm-transition-fast);
+    }
+
+    .navbar-sidebar__brand .mobile-locale-toggle:hover,
+    .navbar-sidebar__brand .mobile-locale-toggle:focus {
+        background-color: var(--ifm-color-emphasis-200);
+        text-decoration: none;
+        outline: none;
+    }
+
+    /*
+     * Infima's margin-left:auto on the close button absorbs the
+     * drawer slack and pins the close to the right edge. With the
+     * injected toggle in the row that slack ends up after the moon
+     * and the whole cluster drifts toward the logo on wider drawers
+     * (iPhone 15 Pro, foldable opened), which feels off-balance. I
+     * moved the auto margin onto the toggle so the cluster hugs the
+     * right edge instead, with the logo anchored on the left. The
+     * 0.5rem here adds a small breathing gap between moon and close.
+    */
+    .navbar-sidebar__brand .navbar-sidebar__close {
+        margin-left: 0.5rem;
+    }
+
+    /*
+     * Between 411 and 996px (compressed desktop, foldable opened)
+     * the title would otherwise fall back to its inherited ~1rem
+     * while the toggle and moon sit at 1.3rem / 2rem, reading
+     * smaller than the controls on the same row. I bump it to
+     * 1.2rem unscoped so both the navbar top bar and the drawer
+     * brand pick it up, keeping the site identity consistent across
+     * every place the title shows up at mobile widths.
+    */
+    .navbar__title {
+        font-size: 1.2rem;
+        line-height: 2;
+    }
+
+    .navbar-sidebar .menu__list-item:has(.native-locale-dropdown) {
+        display: none;
+    }
+
+    .navbar-sidebar__back {
+        display: none;
+    }
+}
+
+
+/*
+ * Browser-specific baseline fix. WebKit (iPhone 12 mini at 375pt,
+ * iPhone 15 Pro at 393pt, both under 411px) already aligns the
+ * title with the hamburger at font-size 1.2rem + line-height 2,
+ * nothing more needed. Blink (Android foldable opened, 600+pt)
+ * renders the same text about 2px higher inside the flex row,
+ * leaving a visible gap with the hamburger icon. I scope the
+ * nudge to min-width 412px so Safari stays untouched and only
+ * Chromium gets corrected where it misaligns.
+*/
+@media screen and (min-width: 412px) and (max-width: 996px) {
+    .navbar__title {
+        transform: translateY(2px);
+    }
 }
 
 
