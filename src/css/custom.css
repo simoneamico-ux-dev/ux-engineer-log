@@ -661,6 +661,112 @@ html[data-theme='dark'] code span.token.variable {
 }
 
 
+/* FOOTER (Mobile layout: breathing room + two columns on wider mobile) */
+
+/*
+ * Under 996px Infima stacks .col to a single column (flex-basis:
+ * 100%) and zeros the footer padding variable, so by default the
+ * mobile footer reads as one tight list hugging the viewport edge.
+ * Two fixes on top of that default:
+ *
+ * 1. Breathing room and copyright alignment. I zero the col padding
+ *    and move the horizontal insets onto .footer__links and
+ *    .footer__bottom. This lines up the "Navigation" title (inside
+ *    the col) with the copyright line (outside any col) on the same
+ *    left edge, which they did not do before because col padding
+ *    was only adding 16px to the title's position. The 1.5rem
+ *    padding itself lifts the whole footer block off the 6px
+ *    container edge the body text uses above, making the footer
+ *    read as a distinct chrome region rather than a flush-left
+ *    continuation of the article.
+ *
+ * 2. Two-column side-by-side on every mobile width. I override
+ *    Infima's flex-basis: 100% back to 0 so the cols share the row
+ *    evenly via the inherited flex-grow: 1. There is no lower
+ *    breakpoint because even at 344pt (foldable closed) the cols
+ *    land at ~125px of content width, still enough for the longest
+ *    items like "Origin Story" and "Source Code". Below ~300pt the
+ *    cols would cramp, but modern phones stay above that and flex-
+ *    wrap would handle the degenerate case gracefully if it ever
+ *    happens. Row gaps are split so column-gap (2rem) spaces the
+ *    cols when they are side-by-side while row-gap (1rem) stays
+ *    modest for the rare wrap case, avoiding oversized vertical
+ *    breaks between sections.
+*/
+@media (max-width: 996px) {
+    .footer {
+        padding-top: 3rem; /* 1rem more than Infima default so the block breathes clear of the main content above on mobile */
+    }
+
+    .footer__col {
+        padding: 0;
+    }
+
+    .footer__links,
+    .footer__bottom {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .footer__links {
+        row-gap: 1rem;
+        column-gap: 2rem;
+    }
+
+    .footer__bottom {
+        margin-top: 0.5rem; /* copyright reads as a marginal note next to the cols, not a separate section block */
+    }
+}
+
+@media (max-width: 996px) {
+    .footer__col {
+        flex-basis: 0;
+    }
+}
+
+/*
+ * Landscape-only override. The mobile landscape rule further down
+ * in this file (around line 1262) pushes .main-wrapper right by
+ * env(safe-area-inset-left) so the body text clears the iPhone
+ * notch, which lifts the body content left edge from the viewport
+ * 0 to around safe-area + 22 on devices with a left notch. The
+ * footer lives outside .main-wrapper and does not inherit that
+ * push, so without this rule "Navigation" in landscape sits well
+ * to the left of Previous (by the full safe-area amount).
+ *
+ * Here the footer mirrors the main-wrapper safe-area padding and
+ * reverts the portrait breathing-room rules (zero col padding,
+ * 1.5rem row padding, 2rem column gap) back to Infima's 1rem col
+ * padding with zero row padding. After the safe-area push, the
+ * col's 1rem padding lands Navigation exactly on the body text
+ * left edge (= safe-area + 22). Copyright gets the same 1rem
+ * horizontal padding manually since it sits outside the col.
+ * Portrait still keeps the 8px extra breathing room above the body
+ * because portrait has no safe-area to provide it naturally.
+*/
+@media (max-width: 996px) and (orientation: landscape) {
+    .footer {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    .footer__col {
+        padding: 0 1rem;
+    }
+
+    .footer__links {
+        padding-left: 0;
+        padding-right: 0;
+        column-gap: 0;
+    }
+
+    .footer__bottom {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+
 /* MOBILE UX: Dynamic title fade & collapse */
 
 /*
