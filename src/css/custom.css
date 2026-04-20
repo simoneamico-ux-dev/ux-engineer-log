@@ -1199,18 +1199,55 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
 
 
 /*
- * Browser-specific baseline fix. WebKit (iPhone 12 mini at 375pt,
- * iPhone 15 Pro at 393pt, both under 411px) already aligns the
- * title with the hamburger at font-size 1.2rem + line-height 2,
- * nothing more needed. Blink (Android foldable opened, 600+pt)
- * renders the same text about 2px higher inside the flex row,
- * leaving a visible gap with the hamburger icon. I scope the
- * nudge to min-width 412px so Safari stays untouched and only
- * Chromium gets corrected where it misaligns.
+ * Browser-specific baseline fix. The title's default baseline sits
+ * at slightly different vertical positions across rendering engines
+ * and pointer types, so the correction is gated on three signals:
+ * engine (WebKit vs Blink), viewport (above or below 411px), and
+ * pointer (coarse touch vs fine mouse).
+ *
+ * 1. WebKit on iOS at any viewport already aligns perfectly with
+ *    the hamburger at font-size 1.2rem + line-height 2. No shift.
+ *
+ * 2. Blink on real mobile touch devices (Chromium on Android, both
+ *    foldable closed and open) renders the caps a couple of pixels
+ *    higher than the hamburger icon. I push them down by 1.5px
+ *    under 411px (foldable closed) and by 2px between 412 and 996px
+ *    (foldable opened, Android phones) so the shift grows with the
+ *    visible gap. Sub-pixel values on transform are fully supported
+ *    by the compositor across every modern engine, no rendering
+ *    caveats here.
+ *
+ * 3. Blink on a desktop window shrunk into the mobile breakpoint
+ *    (a Chrome / Edge / Brave window resized below 996px on a
+ *    laptop) reports pointer: fine, and the Chromium-mobile shift
+ *    would push the title below the hamburger baseline there. The
+ *    pointer: coarse filter keeps the shift out of desktop windows
+ *    while still applying it on genuine touch devices.
+ *
+ * iOS uses Blink-like rendering for layout but lands the baseline
+ * correctly without any shift, so pointer: coarse alone would
+ * over-correct on iPhones. @supports (-webkit-touch-callout: none)
+ * is a Safari/WebKit-only property (ignored by Android Chromium)
+ * and zeroes the transform back to identity on iOS after the
+ * Chromium branches have fired.
 */
-@media screen and (min-width: 412px) and (max-width: 996px) {
+@media screen and (max-width: 411px) and (pointer: coarse) {
+    .navbar__title {
+        transform: translateY(1.5px);
+    }
+}
+
+@media screen and (min-width: 412px) and (max-width: 996px) and (pointer: coarse) {
     .navbar__title {
         transform: translateY(2px);
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    @media (max-width: 996px) {
+        .navbar__title {
+            transform: translateY(0);
+        }
     }
 }
 
