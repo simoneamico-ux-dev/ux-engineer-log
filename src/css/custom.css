@@ -630,12 +630,10 @@ html[data-theme='dark'] code span.token.variable {
     .footer__bottom {
         padding-left: max(
             0px,
-            calc(
-                (min(
-                    calc(100vw - 32px - var(--doc-sidebar-width)),
-                    var(--ifm-container-width-xl)
-                ) * 0.75 - 852px) / 2
-            )
+            (min(
+                100vw - 32px - var(--doc-sidebar-width),
+                var(--ifm-container-width-xl)
+            ) * 0.75 - 852px) / 2
         );
     }
 }
