@@ -1199,6 +1199,23 @@ body.zen-toc-hidden .theme-doc-toc-desktop {
 
 
 /*
+ * iOS Safari visibly triggers :hover on tap, flashing the drawer
+ * brand to Infima's hover color (the primary, amber on dark mode).
+ * Android Chromium does the same simulation but imperceptibly fast,
+ * so the bug surfaced only on iOS. Under (hover: none) the hover/
+ * focus/active states stay at the rest color on every touch device,
+ * while desktop keeps its intended hover behavior.
+*/
+@media (hover: none) {
+    .navbar-sidebar__brand .navbar__brand:hover,
+    .navbar-sidebar__brand .navbar__brand:focus,
+    .navbar-sidebar__brand .navbar__brand:active {
+        color: var(--ifm-navbar-link-color);
+    }
+}
+
+
+/*
  * Browser-specific baseline fix. The title's default baseline sits
  * at slightly different vertical positions across rendering engines
  * and pointer types, so the correction is gated on three signals:
