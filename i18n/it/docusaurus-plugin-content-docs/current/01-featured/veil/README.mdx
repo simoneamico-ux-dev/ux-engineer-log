@@ -1,0 +1,310 @@
+---
+sidebar_position: 1
+sidebar_label: 'Veil'
+title: 'Veil'
+---
+
+# Veil
+
+<video 
+  autoPlay 
+  loop 
+  muted 
+  playsInline 
+  width="1456"
+  height="1080"
+  style={{
+    width: '100%',
+    height: 'auto',
+    borderRadius: '10px',
+    marginBottom: '50px',
+  }}
+  src={require('./assets/veil.webm').default} 
+/>
+
+<div style={{ 
+  display: 'flex', 
+  flexDirection: 'column', 
+  alignItems: 'center', 
+  justifyContent: 'center',
+  textAlign: 'center',
+  marginBottom: '50px'
+}}>
+  <a 
+    href="https://veil.simoneamico.com/" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    style={{ 
+      border: 'none', 
+      display: 'block',
+      transition: 'transform 0.2s ease'
+    }}
+  >
+    <img 
+      src={require('./assets/icon.webp').default} 
+      alt="Apri veil" 
+      width="180"
+      height="180"
+      loading="lazy" 
+      decoding="async"
+      style={{
+        borderRadius: '22px',
+        display: 'block',
+        width: '100px',
+        height: 'auto',
+        marginBottom: '15px',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.46)'
+      }}
+    />
+  </a>
+  <h2 style={{ margin: '0 0 8px 0', fontSize: '1.5rem' }}>veil</h2>
+  <a href="https://veil.simoneamico.com/" target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>
+    Apri Web App ↗
+  </a>
+  <p className="hero-subtitle">Funziona offline su tutti i dispositivi</p>
+</div>
+
+## Il Progetto
+
+**Veil** è un PDF reader open source che applica il dark mode preservando immagini, link, testo selezionabile e struttura del documento. Funziona interamente nel browser, può essere installato come PWA e processa i PDF sul dispositivo dell'utente, senza inviarli a server esterni.
+
+## Codice Sorgente
+
+Il codice sorgente è interamente disponibile su [GitHub](https://github.com/simoneamico-ux-dev/veil).
+
+## Genesi: Fuori dalla Fabbrica
+
+La fabbrica è riuscita a influenzare anche veil, il mio primo progetto nato fuori da quel contesto.
+
+In reparto le luci erano sempre molto forti e non variavano in base al giorno o alla notte. Senza l'orologio era infatti impossibile capire che ore fossero.
+Accadeva spesso che andassi a leggere in mensa o in spogliatoio, quindi in luoghi meno illuminati, ma se era lo stesso telefono a essere accecante ero punto e a capo. 
+Acquistai un foldable (un Honor Magic v2) per leggere al lavoro e ottimizzare le pause. 
+Fin da subito sperimentai diversi reader in dark mode e trovavo sempre gli stessi problemi, quelli che mi ero promesso di risolvere quando ne sarei stato in grado.
+Oggi quel problema mi pesa meno rispetto ad allora, ma ho deciso di mantenere quella promessa.
+
+## Quattro Problemi
+
+Ecco i quattro problemi che mi ero prefissato di risolvere:
+
+1. **Non distruggere le immagini.**
+
+2. **Riportare alla pagina dove ero rimasto.** <br />
+Si trattava di una mancanza che avevo percepito e che sentivo indispensabile implementare. Per arginare il problema, alla fine di ogni sessione di lettura mi annotavo l'ultima pagina nelle note del telefono.
+
+3. **Evitare il nero assoluto come sfondo e il bianco assoluto come testo.** <br />
+Era un qualcosa che mi infastidiva senza che riuscissi a spiegarmi il perché. 
+
+4. **Mantenere i colori degli elementi il più simili possibile al documento originale** (link, elementi grafici, ecc.).
+
+I libri che leggevo lì erano infatti in gran parte libri di design ricchi di UI, casi studio, figure, screenshot a colori. La cosa più fastidiosa era tenere il PDF originale aperto in multitasking accanto al lettore dark e passare continuamente da uno all'altro per vedere le immagini come erano davvero, non invertite e non in scala di grigi.
+
+## L'Analisi Spietata
+
+A un mese da quando avevo lasciato la fabbrica, ho messo per iscritto le idee e ho passato qualche giorno a smontarle.
+Ho creato un file chiamato `technical-feasibility-analysis.md` e ho fatto contestare ogni scelta da Claude Code. 
+Il file è diventato una stratificazione di obiezioni e controproposte.
+
+Due decisioni sono state bocciate prima ancora di arrivare al codice.
+
+La prima riguardava il problema centrale, ed era legata a YOLO nano. Un modello AI leggerissimo, addestrato a riconoscere immagini dentro le pagine renderizzate, capace di decidere cosa invertire e cosa no. 
+Mi piaceva l'idea e la trovavo elegante. Claude me l'ha smontata fin da subito.
+
+Il motivo era che non dovevo guardare la pagina finita come se fosse una fotografia e lasciare a un modello di visione leggero il compito di indovinare dove fossero le immagini. 
+Un PDF nativo non è una singola immagine piatta, ma una sorta di ricetta che contiene istruzioni che dicono al reader cosa disegnare, in che ordine e in quale punto della pagina. 
+Il formato, quindi, sapeva già dove si trovavano le immagini e perciò non serviva un classificatore, serviva leggere quelle istruzioni.
+
+La seconda era più ambiziosa. La bozza iniziale si chiamava "My Theme Reader": avevo aggiunto feature oltre ai tre problemi che stavo risolvendo e immaginato un lettore in cui l'utente partecipava alla costruzione del tema, scegliendo regolazioni cromatiche su misura per il singolo PDF. 
+Mi affascinava quel tipo di personalizzazione e l'idea di offrire anche template predefiniti. 
+L'analisi ha smontato anche quella, ma per un motivo diverso, ovvero che stavo entrando in una nicchia dentro una nicchia. 
+Il prodotto utile era un altro: un default ben fatto. Credo che il default sia il caso che la stragrande maggioranza degli utenti avrebbe usato, anche se non avendo condotto ricerca su utenti reali resta soltanto una supposizione. 
+Ho messo il concept del My Theme Reader nel cassetto e mi sono concentrato sul fare bene una cosa sola.
+
+## Il Trucco delle Due Tele
+
+Il funzionamento di veil è più semplice da capire se lo immaginiamo come due fogli trasparenti sovrapposti.  
+Sul foglio sottostante viene disegnata la pagina intera in dark mode. 
+Sul foglio sopra vengono ridipinte solo le immagini nei loro colori originali. 
+Il lettore vede un'unica pagina, ma in realtà sta guardando due livelli perfettamente allineati.
+
+Il **primo layer** riceve il render di PDF.js, dove viene applicato il filtro CSS:
+
+```css
+filter: invert(0.86) hue-rotate(180deg);
+```
+
+Ho scelto `0.86` invece di `1.0` per risolvere il problema numero 3 e quindi ottenere un grigio scuro morbido, attorno a `#242424`, e un bianco leggermente smorzato, attorno a `#DBDBDB`. 
+Dopo alcuni test sono i due valori che ho trovato più riposanti.  
+L'`hue-rotate(180deg)` accoppiato all'inversione fa un'altra cosa che mi premeva: preservare i colori degli altri elementi del documento. 
+In questo modo i link blu e tutti gli altri elementi sarebbero rimasti il più possibile come nella versione originale del PDF.
+La stessa linea di CSS copriva quindi anche il quarto problema. 
+
+Il **secondo layer** è posizionato sopra il primo in `absolute` e ridipinge i pixel originali delle immagini esattamente sopra le regioni in cui si trovano.  
+Il problema interessante qui è stato capire come dire al secondo canvas dove si trovano le immagini. 
+
+<img
+    src={require('./assets/veil-2.webp').default}
+    alt="Schema concettuale di veil: il PDF originale resta la sorgente, la pagina viene mostrata in dark mode e un livello trasparente superiore riposiziona immagini originali ed elementi cliccabili come link sopra il rendering invertito."
+    loading="lazy"
+    decoding="async"
+    width="1458"
+    height="1496"
+    style={{ width: '100%', height: 'auto', maxWidth: '400px', borderRadius: '12px' }}
+/>
+
+Come abbiamo visto prima, un PDF nativo non salva soltanto il risultato finale della pagina ma salva anche le istruzioni per ricostruirla: disegna questo testo, sposta l'origine, scala questo elemento, inserisci questa immagine, continua da qui. 
+PDF.js (una libreria open source sviluppata da Mozilla Foundation) espone questa lista tramite l'API pubblica `page.getOperatorList()`. 
+
+Senza fare fork della libreria, mi sono agganciato a quell'API e ho implementato il modo di percorrere la lista, come farebbe il reader ufficiale di Mozilla. La differenza è che non l'ho usata per disegnare tutto a schermo, ma solo per capire dove vengono disegnate le immagini.
+Il punto delicato è che veil doveva capire dove sarebbe finita un'immagine sulla pagina, ma il PDF non sempre lo dice con un rettangolo già pronto, tipo: "immagine da `x=100`, `y=200`, `width=300` e `height=180`".
+
+Il PDF ragiona in modo diverso. È come se appoggiasse un foglio trasparente sopra la pagina: prima lo sposta nel punto giusto, lo ingrandisce o lo rimpicciolisce, a volte lo ruota; solo dopo dice: "disegna qui questa immagine".  
+In pratica, invece di salvare direttamente la posizione finale dell'immagine, il PDF salva le istruzioni per posizionare quel foglio trasparente nel modo corretto.
+
+Per evitare che lo spostamento o la rotazione usati per un'immagine influenzino anche il resto della pagina, il PDF usa `save` e `restore`.  
+`save` significa: "ricorda com'è posizionato il foglio trasparente adesso".  
+Poi il PDF può spostarlo, ridimensionarlo o ruotarlo per disegnare un elemento specifico, ad esempio una figura più piccola, un logo dentro un riquadro o una pagina scansionata ruotata.  
+Quando arriva `restore`, torna alla posizione salvata prima.  
+In questo modo la trasformazione usata per quell'elemento non altera ciò che viene disegnato dopo. È come se il PDF preparasse temporaneamente un'area di disegno per quell'immagine, la usasse, e poi tornasse al modo normale di disegnare la pagina.
+
+Tecnicamente questo stato si chiama `CTM` (`Current Transformation Matrix`). Veil la tratta come una mappa temporanea che descrive come quel foglio trasparente è stato posizionato: dove si trova, quanto è grande e se è ruotato. 
+A ogni `save` ne salva una copia, a ogni `transform` la aggiorna e a ogni `restore` torna alla copia precedente.
+
+Quando nella sequenza compare `paintImageXObject`, veil sa che il PDF sta per disegnare un'immagine. 
+A quel punto guarda la CTM corrente: è quella a dire dove l'immagine verrà posizionata, quanto sarà grande e se sarà ruotata. 
+Da lì veil ricava il rettangolo reale occupato dall'immagine sul canvas.
+
+Infine, sul secondo canvas, quello senza filtri sopra al primo, veil copia i pixel di quella regione da un render pulito della pagina. 
+Il primo canvas resta invertito, le immagini tornano ai loro colori originali, il testo intorno continua a essere chiaro su scuro e il lettore vede ciò che voleva vedere senza accorgersi del "trucco".
+
+In sostanza c'è solo il PDF che dichiara dove disegnerà le immagini, e veil che usa quell'informazione per rimettere i pixel originali nel punto giusto. 
+Essendo mera matematica gira interamente sulla CPU e costa pochi millisecondi per pagina.
+
+## BT.601
+
+C'è un caso in cui il filtro va spento del tutto, ovvero le pagine già scure. 
+Non volevo che venisse applicata l'inversione su una pagina già scura trasformandola in una pagina chiara, perché l'utente si sarebbe ritrovato un flash negli occhi. 
+Inoltre sentivo che avrebbe fatto percepire il software come "stupido", come se invertisse alla cieca tutto ciò che gli venisse chiesto di processare.
+
+Dopo il render viene fatta un'operazione estremamente economica: viene misurata la luminanza di sfondo campionando i bordi e gli angoli della pagina, perché è lì che è più probabile trovare sfondo puro senza testo o immagini di mezzo. 
+In altre parole veil prende alcuni punti ai margini della pagina, ne legge il colore e prova a capire se lo sfondo è già abbastanza scuro. 
+A quel punto, la pagina è un canvas, quindi una griglia di pixel. Il browser permette di leggere quei pixel con `getImageData()`. Per ogni punto della pagina veil ottiene quattro valori, rosso, verde, blu e alpha. L'alpha indica la trasparenza e qui non serve, mentre i primi tre canali vengono usati per calcolare la luminanza.
+Non guarda il colore in modo ingenuo, facendo una media identica di rosso, verde e blu. Usa invece la formula BT.601:
+
+```txt
+luminanza = 0.299 * rosso + 0.587 * verde + 0.114 * blu
+```
+
+- verde 58.7%
+- rosso 29.9%
+- blu 11.4%
+
+Come visto nella [Color Picker App](/it/docs/path/react/color-picker-app#la-formula-yiq-perché-i-nostri-occhi-preferiscono-il-verde), il peso del verde è alto perché l'occhio umano è biologicamente più sensibile a quel colore. L'evoluzione in ambienti naturali, dove distinguere sfumature di verde poteva fare la differenza, spiega in parte questa sensibilità. Il blu e il rosso incidono meno.
+
+Se la luminanza media scende sotto il 40% la pagina viene marcata come già scura e l'inversione viene saltata mostrando la pagina originale.
+
+## La Guerra della Memoria
+
+Questo è stato il problema più lungo e faticoso dello sviluppo, quello su cui ho passato oltre metà del tempo dedicato a veil. 
+
+Il primo problema è arrivato quando ho testato su un tablet di fascia bassa, un Samsung Tab S6 Lite. 
+A differenza del desktop, con documenti che superavano le 200 pagine il browser crashava. 
+Il motivo era che ogni pagina generava un container nel DOM, e ogni container conteneva due canvas, un text layer e un link layer. 
+Su un PDF da 500 pagine questo significava avere oltre 2000 elementi (pesanti) contemporaneamente, la stragrande maggioranza dei quali invisibili per l'utente, perché lontani dallo schermo. 
+Il browser finiva quindi la memoria GPU disponibile.  
+Avevo sottovalutato il costo computazionale e, contemporaneamente, sopravvalutato i device di fascia bassa.
+
+La soluzione è stata il **virtual scrolling**.
+Invece di creare una struttura HTML completa per ogni pagina del PDF, veil mantiene un numero massimo di strutture riutilizzabili: 5 sui dispositivi memory-constrained, cioè Android con poca RAM e iOS, 7 sui mobile con più margine e 15 su desktop.  
+
+Ognuna di queste strutture contiene tutto ciò che serve per mostrare una pagina processata da veil: il canvas principale con il dark mode, il canvas overlay con le immagini originali, il text layer selezionabile e gli elementi link cliccabili.  
+Il pool viene usato per coprire la zona che l'utente sta leggendo più un margine di sicurezza: una pagina prima e una dopo sui dispositivi più limitati, 2 prima e 2 dopo sui mobile normali, 5 prima e 5 dopo su desktop. 
+Il numero esatto di strutture usate varia in base a quante pagine sono visibili nello schermo in quel momento. Quindi 5, 7 e 15 sono il massimo di strutture riutilizzabili presenti nel DOM, non un numero sempre usato per intero.
+
+Quando una pagina esce abbastanza lontano da questa zona, la sua struttura viene svuotata, riassegnata a un'altra pagina più vicina alla lettura corrente e riempita con il nuovo rendering. 
+Vengono cambiati contenuti, posizioni e dimensioni, ma la struttura HTML viene sempre riutilizzata.
+
+Una volta risolto, arrivò un problema ancor peggiore: **iOS**. 
+
+Dato che PDF.js gira in un worker thread, cioè una parte separata del browser che lavora in background mentre la pagina resta utilizzabile, quel worker accumula memoria durante il render delle pagine: font già letti, indici del documento, cache delle immagini e risorse riutilizzate più volte.  
+Anche chiamando le funzioni di cleanup che mette a disposizione PDF.js, una parte di quello stato non veniva mai rilasciata del tutto.  
+Dopo qualche centinaio di pagine la memoria toccava i 200-300 MB e Jetsam, il memory manager di iOS, chiudeva la tab del browser senza preavviso.
+
+La soluzione fu brutale. 
+Ogni 15 render veil distrugge l'intera istanza di PDF.js e la ricrea da zero a partire dal buffer originale, vale a dire che il vecchio worker viene terminato e ne parte uno nuovo pulito. 
+L'utente non se ne accorge perché i canvas già dipinti restano nel DOM: una volta che i pixel sono a schermo, non dipendono più da PDF.js.  
+Ho scoperto che il costo di questa soluzione era di circa 200-400 ms di reinizializzazione, schedulata inoltre nei momenti in cui il browser non ha altre attività da compiere. 
+
+Un `generation counter` monotonicamente crescente protegge dalle race condition (situazioni in cui un'operazione vecchia finisce dopo una più recente e rischia di sovrascrivere il risultato corretto): ogni operazione asincrona controlla se appartiene ancora alla generazione corrente prima di toccare il DOM. 
+Senza questo controllo, un render partito prima della ricreazione di PDF.js potrebbe finire in ritardo e disegnare una pagina vecchia dentro una struttura già assegnata a un'altra pagina. 
+Se invece il numero non coincide più, veil capisce che quell'operazione apparteneva alla vecchia istanza di PDF.js e scarta il risultato prima che possa modificare la pagina.
+
+Su desktop, invece, il reset non viene schedulato. Nel codice avevo ragionato anche su una soglia più alta, 40 render, ma per ora ho preferito non attivarla perché non avevo osservato lo stesso accumulo critico, nemmeno su documenti pesanti. 
+Resto ancora combattuto su questa scelta. Fare prevenzione anche lì sarebbe più rassicurante, ma una ricreazione periodica di PDF.js resta comunque un meccanismo invasivo, con costo e complessità propri. 
+
+Probabilmente saranno i prossimi progetti, i libri e il percorso che sto facendo a farmi capire meglio dove finisce la prevenzione e dove inizia l'overengineering.  
+Detto ciò, credo che l'ottimizzazione per iOS abbia rappresentato appieno il **curb cut effect** in questo progetto, ovvero le rampe dei marciapiedi per persone in sedia a rotelle, che pur essendo nate per chi aveva quella condizione specifica, hanno finito per agevolare molte altre categorie, ad esempio chi ha un passeggino e chi è in bici.
+
+## Il Lock-In
+
+Un altro punto che consideravo essenziale era la possibilità di esportare il PDF convertito.
+
+La cosa che sopporto sempre meno nel software moderno, sebbene ne capisca i motivi per i quali venga adottato, è il lock-in. 
+Avrei potuto chiudere l'esperienza dentro veil e comunicare implicitamente all'utente che questa tipologia di dark mode esiste solo se apri il documento qui. 
+Anche se il salvataggio della sessione e il resume sulla pagina dove eri rimasto avrebbero già garantito un livello di comfort sufficiente affinché l'utente restasse, sentivo che non era abbastanza.  
+Ho deciso che sarebbe stato l'utente a scegliere su quale reader leggere il PDF convertito.
+
+Con il pulsante di export viene generato un nuovo PDF con il dark mode applicato, testo selezionabile, link interni ed esterni funzionanti e testo OCR nei PDF scansionati incluso nel file esportato.
+
+Per ulteriori curiosità sull'architettura ti lascio il link al file [ARCHITECTURE.md](https://github.com/simoneamico-ux-dev/veil/blob/main/ARCHITECTURE.md) presente nel repository.
+
+## Cosa Ho Imparato
+
+**Conoscere il dominio prima di inventare una soluzione:**  
+All'inizio stavo ragionando come se il PDF fosse una pagina finita da analizzare visivamente, e per questo l'idea di usare YOLO nano mi sembrava sensata. 
+La svolta è stata capire che un PDF nativo non va indovinato dall'esterno, perché contiene già le istruzioni che spiegano cosa viene disegnato e dove. 
+Prima di aggiungere intelligenza, dovevo capire meglio ciò che avevo davanti.
+
+**Un default ben fatto vale più di molte preferenze:**  
+Il concept iniziale di *My Theme Reader* andava verso temi, preset e regolazioni, mentre veil mi ha costretto a fare il contrario, cioè togliere possibilità e assumermi la responsabilità di un comportamento di default. 
+Non perché la personalizzazione sia inutile, ma perché in questo caso il problema reale era aprire un PDF in dark mode senza distruggerne immagini, colori e leggibilità.
+
+**La memoria è UX:**  
+Prima di questo progetto avrei trattato memoria, canvas e worker come temi di performance, ma qui ho capito che su iOS e su dispositivi limitati diventano esperienza utente.  
+
+**Nel PDF l'invisibile è parte del documento:**  
+La lezione non è stata aggiungere text layer, link, OCR ed export come feature separate, bensì capire che un PDF può restare corretto visivamente ma perdere ciò che lo rende utile. 
+Se per esempio il testo si copia portandosi dietro lo sfondo scuro del reader, se i link non funzionano, se le parole dentro un grafico o una scansione restano bloccate nell'immagine e se il risultato resta intrappolato nell'applicazione, il dark mode ha solo prodotto una pagina più comoda da guardare senza davvero preservare il documento.
+
+**Rinunciare alla gratificazione immediata del fork:**  
+Modificare direttamente PDF.js mi avrebbe dato più controllo nell'immediato, ma avrebbe creato un debito difficile da sostenere. 
+Restare sulle API pubbliche ha imposto più lavoro attorno al problema, però ha mantenuto veil più facilmente mantenibile. 
+
+**I test servono a vedere rotture silenziose e ad andare più veloce:**  
+In un reader PDF molte regressioni non si manifestano con un errore evidente. 
+Un link può smettere di funzionare, il testo può restare visibile ma non più selezionabile, una pagina può sembrare corretta ma avere le immagini riallineate male, e l'export può perdere informazioni. 
+Unit test, E2E e visual regression non sono stati solo una rete di sicurezza, ma un modo per procedere più velocemente, perché mi permettevano di cambiare codice recuperando subito il tempo perso quando qualcosa si rompeva. 
+Questo è diventato ancora più importante lavorando con gli agenti, che potevano proporre una soluzione, sbagliare e ricevere un riscontro concreto, invece di affidarsi soltanto a una valutazione stocastica e generale del codice.
+
+**Gli agenti sono strumenti, non abitudini:**  
+Dopo il case study su Refactoring UI, veil è stato il secondo progetto in cui ho usato Claude Code in modo davvero massiccio, mentre gli altri agenti sono stati utili soprattutto per review, diagnosi e controproposte. 
+La parte importante non è stata affidarmi a uno strumento specifico, ma imparare a usare gli agenti come attrito tecnico: far contestare ipotesi, ricevere alternative e poi verificare tutto nel codice, nei test e sui dispositivi reali. 
+Nei prossimi progetti voglio provare anche altri agenti come primari, per evitare ancora di più che il mio metodo si chiuda attorno a un solo strumento.
+
+**Overengineering intenzionale:**  
+DOI, `CITATION.cff` e Software Heritage non erano necessari per l'uso reale di veil. 
+So che è improbabile che qualcuno citerà mai il tool in un paper, ma il punto non era quello. 
+Volevo imparare il flusso completo adesso, su un progetto mio e ancora controllabile, invece di scoprirlo per la prima volta quando mi servirà davvero.
+
+## La Vita Dopo il Deploy
+
+Ho lanciato veil su Hacker News. 
+Ho scritto ciò che sentivo di voler dire, dalla fabbrica al modo in cui funziona, fino alla formula BT.601. 
+
+Ti lascio il link al post su [Hacker News](https://news.ycombinator.com/item?id=47529306) e quello dell'articolo pubblicato da [Gigazine](https://gigazine.net/gsc_news/en/20260401-veil-pdf/), una rivista tech giapponese. 
+Apprezzo davvero molto che nella conclusione abbiano riportato alcuni passaggi della discussione di HN, in particolare quello in cui spiego il motivo per cui ho reso veil offline first.
+
+## Riflessione
+
+In fabbrica costruivo per persone che conoscevo benissimo, dal loro dominio al dispositivo che avrebbero usato. 
+Veil è stata la prima volta senza quella garanzia.  
+Eppure la fabbrica mi aveva preparato anche a questo.

@@ -120,7 +120,7 @@ const config = {
             items: [
               {
                 label: 'Featured',
-                to: '/docs/featured/center',
+                to: '/docs/featured/veil',
               },
               {
                 label: 'Path',

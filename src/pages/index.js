@@ -8,7 +8,7 @@ export default function Home() {
   
   const isItalian = i18n.currentLocale === 'it';
   
-  const redirectTarget = isItalian ? '/it/docs/featured/center' : '/docs/featured/center';
+  const redirectTarget = isItalian ? '/it/docs/featured/veil' : '/docs/featured/veil';
 
   const seoTitle = 'UX Engineer Log | Simone Amico';
   const seoDescription = isItalian 
