@@ -14,34 +14,34 @@ Sai già conservare un numero. Ora imparerai a conservare e aggiornare le cose r
 
 ## State Avanzato e Hooks
 
-### 16. Aggiornare lo State, Oggetti (Il Custode Pigro)
+### 16. Aggiornare lo State, Oggetti
 
 Quando lo state non è un numero primitivo ma un oggetto, le regole cambiano. Il modo "ovvio" di aggiornarlo, modificarlo direttamente, non funziona. Per capire perché, devi capire come React controlla se qualcosa è cambiato.
 
 #### Perché `utente.eta = 31` Non Funziona (Reference Equality)
 
-React è un custode pigro. Per decidere se un componente deve ridisegnarsi, non apre il pacco e controlla ogni singola proprietà dell'oggetto. Guarda solo l'**indirizzo di memoria**, il "codice a barre" sulla scatola.
+React non confronta ogni proprietà interna di un oggetto. Per capire se lo state è cambiato, guarda prima il riferimento, cioè se stai passando lo stesso oggetto di prima o un oggetto nuovo. Se modifichi l'oggetto esistente, il riferimento resta uguale e React può non vedere il cambiamento.
 
 ```javascript
 // Due situazioni diverse per React:
 
-// SITUAZIONE 1: Mutazione diretta (React non vede niente)
+// SITUAZIONE 1: Mutazione diretta (il riferimento resta uguale)
 const utente = { nome: "Mario", eta: 30 };
-utente.eta = 31; // Cambi il contenuto MA la scatola è la stessa
-// React controlla: "Stesso indirizzo? Sì → nessun re-render"
+utente.eta = 31; // Cambi il contenuto, ma l'oggetto è lo stesso
+// React controlla: "Stesso riferimento? Sì → nessun re-render"
 
-// SITUAZIONE 2: Sostituzione (React vede il cambiamento)
-const nuovoUtente = { ...utente, eta: 31 }; // Nuova scatola, nuovo indirizzo
-setUtente(nuovoUtente); // React controlla: "Indirizzo diverso → RE-RENDER!"
+// SITUAZIONE 2: Sostituzione (il riferimento cambia)
+const nuovoUtente = { ...utente, eta: 31 }; // Nuovo oggetto, nuovo riferimento
+setUtente(nuovoUtente); // React controlla: "Riferimento diverso → RE-RENDER!"
 ```
 
-Cambi il dipinto dentro la cornice? Il custode pigro non se ne accorge, guarda solo il codice a barre sulla cornice. Appendi una cornice nuova? Allora sì che si sveglia.
+La differenza non è il valore `31`, ma il fatto che nel secondo caso hai creato un oggetto nuovo. È questo cambio di riferimento che rende l'aggiornamento visibile a React.
 
 **Regola:** non modificare mai un oggetto di stato direttamente. Crea sempre un nuovo oggetto.
 
 -----
 
-#### Lo Spread Operator (La Fotocopiatrice)
+#### Lo Spread Operator
 
 Serve per creare un nuovo oggetto copiando il vecchio e modificando solo ciò che serve. È come una fotocopiatrice che copia tutto e ti lascia correggere solo i dettagli.
 
@@ -85,7 +85,7 @@ L'ordine è obbligatorio: spread prima, sovrascrittura dopo.
 
 -----
 
-#### La Funzione Updater `prev => ...` (Lo State Più Fresco)
+#### La Funzione Updater `prev => ...` (Lo State Aggiornato)
 
 Quando il nuovo valore dipende dal vecchio, c'è un rischio sottile: lo state che leggi dentro il componente potrebbe non essere ancora aggiornato (stale) se React ha ancora aggiornamenti in coda da processare.
 
@@ -103,9 +103,9 @@ setUtente(prev => ({ ...prev, eta: prev.eta + 1 }));
 
 -----
 
-#### Computed Property Names `[name]: value` (Il Form Magico)
+#### Computed Property Names `[name]: value`
 
-Quando hai un form con dieci campi, scrivere dieci funzioni `handleCambioNome`, `handleCambioEmail`, `handleCambioCitta`... è un casino. Esiste un modo per gestirli tutti con una sola funzione.
+Quando hai un form con dieci campi, scrivere dieci funzioni separate diventa ripetitivo e difficile da mantenere. Esiste un modo per gestirli tutti con una sola funzione.
 
 I **Computed Property Names** di JavaScript permettono di usare il valore di una variabile come nome di una proprietà in un oggetto letterale:
 
@@ -154,13 +154,13 @@ Il trucco funziona perché `e.target.name` legge l'attributo `name` del tag HTML
 
 ---
 
-### 17. Aggiornare lo State, Array (La Fabbrica di Scatole Sigillate)
+### 17. Aggiornare lo State, Array
 
 Gli array nello state seguono le stesse regole degli oggetti: mai modificarli direttamente. Ma ci sono metodi JavaScript specifici che "tradiscono" questa regola in modo silenzioso.
 
-#### I Metodi Traditori (La Lista Nera)
+#### I Metodi Mutanti
 
-Questi metodi modificano l'array "in place", cambiano il contenuto senza creare un nuovo array e senza cambiare l'indirizzo di memoria. Il Custode Pigro non vede niente.
+Questi metodi modificano l'array "in place", cambiano il contenuto senza creare un nuovo array e senza cambiare il riferimento. Se aggiorni lo state con lo stesso array, React può non vedere il cambiamento.
 
 ```javascript
 // ❌ LISTA NERA: modificano l'array originale
@@ -177,7 +177,7 @@ Tutti questi cambiano il contenuto ma lasciano invariato l'indirizzo. React non 
 
 -----
 
-#### Aggiungere Elementi (La Tecnica "Apri e Riconfeziona")
+#### Aggiungere Elementi
 
 Non puoi aggiungere un pezzo a una scatola sigillata. Devi aprire una nuova scatola, metterci dentro tutto il vecchio contenuto più il pezzo nuovo, e sigillare la nuova scatola.
 
@@ -208,7 +208,7 @@ function ListaSpesa() {
 
 -----
 
-#### Rimuovere Elementi (Il Buttafuori `.filter()`)
+#### Rimuovere Elementi con `.filter()`
 
 `.filter()` è un metodo "buono" (immutabile) che scorre l'array e **restituisce sempre un nuovo array** contenente solo gli elementi che superano il test. L'array originale rimane intatto.
 
@@ -223,7 +223,7 @@ Se la lista aveva 5 elementi e quello con id `"a3"` viene rimosso, `filter` rest
 
 -----
 
-#### Modificare Elementi (Il Coltellino Svizzero `.map()` + Spread)
+#### Modificare Elementi con `.map()` e Spread
 
 Come si aggiorna **un solo elemento** dentro una lista senza toccare gli altri?
 
@@ -264,11 +264,11 @@ Il risultato è un nuovo array dove solo quell'elemento è diverso. Tutti gli al
 
 ---
 
-### 18. Componenti Controllati e Form (La Dittatura di React)
+### 18. Componenti Controllati e Form
 
 Un form con React può funzionare in due modi filosoficamente opposti. Scegliere quello giusto per il contesto sbagliato è la fonte di molta frustrazione.
 
-#### Controllato vs Non Controllato (La Dittatura vs La Democrazia)
+#### Controllato vs Non Controllato
 
 Nel componente controllato React è la Single Source of Truth. L'input HTML non ricorda nulla da solo, è uno schermo che mostra solo ciò che React gli dice di mostrare. Ogni modifica dell'utente deve passare per React.
 
@@ -308,9 +308,9 @@ function FormSemplice() {
 }
 ```
 
-Il pro è pochissimo codice e nessun re-render mentre l'utente scrive. Il contro è che perdi i superpoteri di React (validazione in tempo reale, sincronizzazione con altri campi).
+Il pro è pochissimo codice e nessun re-render mentre l'utente scrive. Il contro è che perdi alcuni vantaggi pratici dello state controllato, come validazione in tempo reale e sincronizzazione con altri campi.
 
-React 19 ha introdotto una terza via con `useActionState`. L'idea è smettere di combattere contro il browser e tornare a usare l'attributo nativo `action` dei form HTML, lo stesso che il web usava nel 1999 con PHP. Ma stavolta React ci aggiunge sopra il suo superpotere.
+React 19 ha introdotto una terza via con `useActionState`. L'idea è smettere di combattere contro il browser e tornare a usare l'attributo nativo `action` dei form HTML, lo stesso che il web usava nel 1999 con PHP. React aggiunge gestione dello state, pending state e aggiornamento della UI.
 
 ```jsx
 // 1. La funzione vive sul server, il browser non la vede mai
@@ -339,7 +339,7 @@ const [stato, submit, isPending] = useActionState(inviaForm, { messaggio: "" });
 
 -----
 
-#### Text Input (La TV e il Telecomando)
+#### Text Input
 
 Il pattern controllato per un input di testo è il più comune in React. Vale la pena visualizzarlo chiaramente:
 
@@ -356,7 +356,7 @@ Se rimuovessi `onChange` mantenendo `value`, l'input diventerebbe di sola lettur
 
 #### Select (`value` sul Tag Padre)
 
-In HTML standard, selezioni un'opzione mettendo `selected` sul singolo `<option>`. Con 50 opzioni è un casino. React cambia approccio:
+In HTML standard, selezioni un'opzione mettendo `selected` sul singolo `<option>`. Con molte opzioni diventa scomodo. React cambia approccio:
 
 ```jsx
 function SelezioneCategoria() {
@@ -376,7 +376,7 @@ function SelezioneCategoria() {
 }
 ```
 
-Il superpotere nascosto è che avendo `categoria` nello state puoi fare conditional rendering istantaneo basato sulla selezione.
+Il vantaggio pratico è che avendo `categoria` nello state puoi fare conditional rendering istantaneo basato sulla selezione.
 
 ```jsx
 {categoria === "cucina" && <RicetteSuggerite />}
@@ -384,7 +384,7 @@ Il superpotere nascosto è che avendo `categoria` nello state puoi fare conditio
 
 -----
 
-#### Checkbox (La Doppia Personalità)
+#### Checkbox
 
 I checkbox hanno una natura diversa dagli input di testo. Non hanno un valore da mostrare, hanno uno **stato booleano** (spuntato/non spuntato) e si usano `checked` invece di `value`.
 
@@ -443,7 +443,7 @@ function SelezioneInteressi() {
 }
 ```
 
-`interessi.includes(interesse)` è il filo invisibile. Se il valore è nell'array la spunta appare, se non c'è la spunta scompare. UI e dati restano sempre sincronizzati.
+`interessi.includes(interesse)` è il collegamento tra dato e UI. Se il valore è nell'array, la spunta appare; se non c'è, la spunta scompare. UI e dati restano sempre sincronizzati.
 
 -----
 
@@ -502,12 +502,11 @@ Per i **checkbox personalizzati** (quelli visivamente customizzati, non lo stile
 
 ---
 
-### 19. useRef (Il Cassetto Segreto)
+### 19. useRef
 
-`useState` è la vetrina del negozio, ogni cambiamento riapre il negozio (re-render) e tutti lo vedono.  
-`useRef` è il cassetto segreto del cassiere. Puoi metterci qualcosa, recuperarlo quando serve, cambiarlo quanto vuoi. Nessuno lo sa, ciò significa: nessun re-render.
+`useRef` conserva un valore tra un render e l'altro senza causare un nuovo render quando cambia. È utile per riferimenti al DOM, timer, valori precedenti o dati tecnici che il componente deve ricordare ma che non devono aggiornare la UI.
 
-#### useState (Vetrina) vs useRef (Cassetto)
+#### useState vs useRef
 
 ```jsx
 // useState: ogni cambiamento triggera un re-render
@@ -518,11 +517,11 @@ const conteggioRef = useRef(0);
 conteggioRef.current = conteggioRef.current + 1; // Silenzioso, no re-render
 ```
 
-Usa `useRef` quando vuoi accedere direttamente a un elemento del DOM (focus, misurazioni) oppure quando vuoi tenere in memoria un valore tra i render senza triggerare aggiornamenti (timer ID, valori precedenti).
+La differenza pratica è questa: `useState` rappresenta dati che devono aggiornare l'interfaccia, mentre `useRef` conserva dati che devono restare disponibili ma non devono ridisegnare il componente.
 
 -----
 
-#### Sotto il Cofano (La Scatola Immortale `{ current: ... }`)
+#### Sotto il Cofano (`{ current: ... }`)
 
 Le variabili normali dentro una funzione nascono e muoiono ad ogni render. `useRef` è diverso, crea un piccolo oggetto `{ current: valoreIniziale }` che **vive fuori dalla funzione componente**. React ti ridà sempre lo stesso oggetto (stesso indirizzo di memoria) ad ogni render.
 
@@ -539,7 +538,7 @@ Puoi cambiare `ref.current` quanto vuoi, la scatola rimane la stessa e React non
 
 -----
 
-#### Agganciare il DOM (I Tre Passi)
+#### Agganciare il DOM
 
 Il caso d'uso più comune di `useRef` è ottenere un riferimento diretto a un elemento HTML per chiamarne i metodi nativi (`.focus()`, `.scrollIntoView()`, `.play()`).
 
@@ -572,7 +571,7 @@ L'`if (inputRef.current)` protegge da errori se l'elemento non è ancora montato
 
 -----
 
-#### Accessibilità e Gestione del Focus (La Telepatia dell'Attenzione)
+#### Accessibilità e Gestione del Focus
 
 `useRef` con il DOM non è solo una comodità, in certi contesti è una necessità per l'accessibilità. Le SPA React "rompono" il comportamento naturale del browser riguardo al focus.
 
@@ -710,11 +709,11 @@ function TitoloTab({ titolo }) {
 
 -----
 
-#### L'Array delle Dipendenze (Il Buttafuori dell'Effect)
+#### L'Array delle Dipendenze
 
-`useEffect` accetta due argomenti: la funzione da eseguire e un array di dipendenze. L'array è il buttafuori che decide quando la funzione deve girare.
+`useEffect` accetta due argomenti: la funzione da eseguire e un array di dipendenze. L'array dice a React da quali valori dipende l'effect. Quando uno di quei valori cambia tra un render e il successivo, React esegue di nuovo la funzione.
 
-Senza array l'effetto è un parassita.
+Senza array l'effetto viene eseguito dopo ogni render.
 
 ```jsx
 useEffect(() => {
@@ -725,7 +724,7 @@ useEffect(() => {
 // Loop infinito e crash del browser
 ```
 
-Con array vuoto `[]` l'effetto gira una sola volta.
+Con array vuoto `[]`, React esegue l'effect dopo il primo render e poi non lo riesegue più, a meno che il componente venga smontato e montato di nuovo.
 
 ```jsx
 useEffect(() => {
@@ -735,9 +734,7 @@ useEffect(() => {
 }, []);
 ```
 
-Il buttafuori dice: "L'effect è entrato all'inaugurazione. Non rientra mai più."
-
-Con array contenente variabili l'effetto diventa un guardiano.
+Con array contenente variabili, l'effect viene rieseguito solo quando una di quelle variabili cambia.
 
 ```jsx
 useEffect(() => {
@@ -750,7 +747,7 @@ useEffect(() => {
 
 -----
 
-#### La Funzione di Cleanup (La Squadra delle Pulizie)
+#### La Funzione di Cleanup
 
 Quando un effect attiva qualcosa che vive nel tempo, come un timer, un event listener globale o una connessione WebSocket, quel qualcosa non smette di funzionare da solo quando il componente viene rimosso dallo schermo.
 Se non lo fermi esplicitamente, continua a girare in background consumando memoria e potenzialmente provocando errori su componenti che non esistono più.
@@ -783,7 +780,7 @@ Senza cleanup: se l'utente smonta il componente, `setInterval` continua a girare
 
 -----
 
-#### Il Vero Modello Mentale (Sincronizzazione, Non "Fai Quando")
+#### Il Vero Modello Mentale (Sincronizzazione)
 
 Il modo sbagliato di pensare a `useEffect` è "Quando clicco questo bottone, voglio che succeda X."  
 Il modo giusto è invece "Voglio che il mio componente sia sempre **sincronizzato** con questo sistema esterno."
@@ -813,7 +810,7 @@ Sono Side Effect tutte le operazioni che toccano il mondo fuori da React: `fetch
 
 ---
 
-### 21. Custom Hooks (Gli Specialisti Riutilizzabili)
+### 21. Custom Hooks
 
 Un componente diventa complicato quando fa troppe cose: gestisce l'UI, fa fetch di dati, gestisce errori, gestisce il loading, gestisce timer. È come uno chef che cucina, serve ai tavoli, lava i piatti e fa la cassa.
 
@@ -861,7 +858,7 @@ A parte questa convenzione sul nome, i Custom Hook sono normali funzioni JavaScr
 
 -----
 
-#### Caso Studio `useDebounce` (Il Cameriere Paziente)
+#### Caso Studio `useDebounce`
 
 Hai una barra di ricerca che vuole mostrare risultati in tempo reale. Ogni tasto triggera una chiamata API? Con un utente che scrive "MESSI" velocemente, mandare 5 chiamate API in 200ms è inutile e costoso. La soluzione è il debounce: aspetta che l'utente smetta di scrivere per X millisecondi, poi agisci. Funziona come un cameriere che aspetta che tu finisca di parlare prima di andare in cucina.
 
@@ -945,7 +942,7 @@ Il Custom Hook `useDebounce` scritto oggi per la ricerca calciatori è identico 
 
 -----
 
-#### Batching vs Debouncing (Due Cugini, Non la Stessa Cosa)
+#### Batching vs Debouncing
 
 Questi due termini vengono spesso confusi perché entrambi "raggruppano" aggiornamenti. Sono meccanismi molto diversi.
 
@@ -958,7 +955,7 @@ Questi due termini vengono spesso confusi perché entrambi "raggruppano" aggiorn
 
 -----
 
-#### Pattern `useFocusOnMount` (L'Hook di Accessibilità Pulito)
+#### Pattern `useFocusOnMount`
 
 Abbiamo visto il pattern di focus in `useRef`. Estrarlo in un Custom Hook trasforma codice ripetitivo e verboso in una singola riga leggibile.
 

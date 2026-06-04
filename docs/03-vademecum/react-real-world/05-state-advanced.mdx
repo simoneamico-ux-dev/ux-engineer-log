@@ -14,34 +14,34 @@ You already know how to store a number. Now you will learn to store and update r
 
 ## Advanced State and Hooks
 
-### 16. Updating State, Objects (The Lazy Guardian)
+### 16. Updating State, Objects
 
 When state is not a primitive number but an object, the rules change. The "obvious" way to update it, modifying it directly, does not work. To understand why, you need to understand how React checks if something has changed.
 
 #### Why `user.age = 31` Does Not Work (Reference Equality)
 
-React is a lazy guardian. To decide if a component needs to re-render, it does not open the box and check every single property of the object. It only looks at the **memory address**, the "barcode" on the box.
+React does not compare every internal property of an object. To understand whether state has changed, it first looks at the reference, meaning whether you are passing the same object as before or a new object. If you modify the existing object, the reference stays the same and React may not see the change.
 
 ```javascript
 // Two different situations for React:
 
-// SITUATION 1: Direct mutation (React sees nothing)
+// SITUATION 1: Direct mutation (the reference stays the same)
 const user = { name: "Mario", age: 30 };
-user.age = 31; // You change the content BUT the box is the same
-// React checks: "Same address? Yes → no re-render"
+user.age = 31; // You change the content, but the object is the same
+// React checks: "Same reference? Yes → no re-render"
 
-// SITUATION 2: Replacement (React sees the change)
-const newUser = { ...user, age: 31 }; // New box, new address
-setUser(newUser); // React checks: "Different address → RE-RENDER!"
+// SITUATION 2: Replacement (the reference changes)
+const newUser = { ...user, age: 31 }; // New object, new reference
+setUser(newUser); // React checks: "Different reference → RE-RENDER!"
 ```
 
-You change the painting inside the frame? The lazy guardian does not notice, it only looks at the barcode on the frame. You hang a new frame? Then it wakes up.
+The difference is not the value `31`, but the fact that in the second case you created a new object. This reference change is what makes the update visible to React.
 
 **Rule:** never modify a state object directly. Always create a new object.
 
 -----
 
-#### The Spread Operator (The Photocopier)
+#### The Spread Operator
 
 It is used to create a new object by copying the old one and modifying only what is needed. It is like a photocopier that copies everything and lets you correct only the details.
 
@@ -85,7 +85,7 @@ The order is mandatory: spread first, override after.
 
 -----
 
-#### The Updater Function `prev => ...` (The Freshest State)
+#### The Updater Function `prev => ...` (Updated State)
 
 When the new value depends on the old one, there is a subtle risk: the state you read inside the component might not be updated yet (stale) if React still has queued updates to process.
 
@@ -103,9 +103,9 @@ setUser(prev => ({ ...prev, age: prev.age + 1 }));
 
 -----
 
-#### Computed Property Names `[name]: value` (The Magic Form)
+#### Computed Property Names `[name]: value`
 
-When you have a form with ten fields, writing ten functions `handleNameChange`, `handleEmailChange`, `handleCityChange`... is a mess. There is a way to handle them all with a single function.
+When you have a form with ten fields, writing ten separate functions becomes repetitive and hard to maintain. There is a way to handle them all with a single function.
 
 JavaScript **Computed Property Names** allow you to use the value of a variable as a property name in an object literal:
 
@@ -154,13 +154,13 @@ The trick works because `e.target.name` reads the `name` attribute of the HTML t
 
 ---
 
-### 17. Updating State, Arrays (The Sealed Box Factory)
+### 17. Updating State, Arrays
 
 Arrays in state follow the same rules as objects: never modify them directly. But there are specific JavaScript methods that "betray" this rule silently.
 
-#### The Treacherous Methods (The Blacklist)
+#### Mutating Methods
 
-These methods modify the array "in place", they change the content without creating a new array and without changing the memory address. The Lazy Guardian sees nothing.
+These methods modify the array "in place", they change the content without creating a new array and without changing the reference. If you update state with the same array, React may not see the change.
 
 ```javascript
 // ❌ BLACKLIST: they modify the original array
@@ -177,7 +177,7 @@ All of these change the content but leave the address unchanged. React does not 
 
 -----
 
-#### Adding Elements (The "Open and Repackage" Technique)
+#### Adding Elements
 
 You cannot add a piece to a sealed box. You must open a new box, put all the old content plus the new piece inside, and seal the new box.
 
@@ -208,7 +208,7 @@ function ShoppingList() {
 
 -----
 
-#### Removing Elements (The `.filter()` Bouncer)
+#### Removing Elements with `.filter()`
 
 `.filter()` is a "good" (immutable) method that iterates over the array and **always returns a new array** containing only the elements that pass the test. The original array remains untouched.
 
@@ -223,7 +223,7 @@ If the list had 5 elements and the one with id `"a3"` is removed, `filter` retur
 
 -----
 
-#### Modifying Elements (The `.map()` + Spread Swiss Army Knife)
+#### Modifying Elements with `.map()` and Spread
 
 How do you update **a single element** inside a list without touching the others?
 
@@ -264,11 +264,11 @@ The result is a new array where only that element is different. All others are t
 
 ---
 
-### 18. Controlled Components and Forms (The React Dictatorship)
+### 18. Controlled Components and Forms
 
 A form with React can work in two philosophically opposite ways. Choosing the right one for the wrong context is the source of much frustration.
 
-#### Controlled vs Uncontrolled (The Dictatorship vs The Democracy)
+#### Controlled vs Uncontrolled
 
 In the controlled component React is the Single Source of Truth. The HTML input does not remember anything on its own, it is a screen that only shows what React tells it to show. Every user modification must go through React.
 
@@ -308,9 +308,9 @@ function SimpleForm() {
 }
 ```
 
-The pro is very little code and no re-render while the user types. The con is that you lose React's superpowers (real-time validation, synchronization with other fields).
+The pro is very little code and no re-render while the user types. The con is that you lose some practical advantages of controlled state, such as real-time validation and synchronization with other fields.
 
-React 19 introduced a third way with `useActionState`. The idea is to stop fighting the browser and go back to using the native `action` attribute of HTML forms, the same one the web used in 1999 with PHP. But this time React adds its superpower on top.
+React 19 introduced a third way with `useActionState`. The idea is to stop fighting the browser and go back to using the native `action` attribute of HTML forms, the same one the web used in 1999 with PHP. React adds state management, pending state, and UI updates.
 
 ```jsx
 // 1. The function lives on the server, the browser never sees it
@@ -339,7 +339,7 @@ It is the perfect compromise: no re-render while the user types (like an uncontr
 
 -----
 
-#### Text Input (The TV and the Remote Control)
+#### Text Input
 
 The controlled pattern for a text input is the most common in React. It is worth visualizing it clearly:
 
@@ -356,7 +356,7 @@ If you removed `onChange` while keeping `value`, the input would become read-onl
 
 #### Select (`value` on the Parent Tag)
 
-In standard HTML, you select an option by putting `selected` on the individual `<option>`. With 50 options it is a mess. React changes the approach:
+In standard HTML, you select an option by putting `selected` on the individual `<option>`. With many options, this becomes inconvenient. React changes the approach:
 
 ```jsx
 function CategorySelect() {
@@ -376,7 +376,7 @@ function CategorySelect() {
 }
 ```
 
-The hidden superpower is that having `category` in state lets you do instant conditional rendering based on the selection.
+The practical advantage is that having `category` in state lets you do instant conditional rendering based on the selection.
 
 ```jsx
 {category === "cooking" && <SuggestedRecipes />}
@@ -384,7 +384,7 @@ The hidden superpower is that having `category` in state lets you do instant con
 
 -----
 
-#### Checkbox (The Dual Personality)
+#### Checkbox
 
 Checkboxes have a different nature from text inputs. They do not have a value to display, they have a **boolean state** (checked/unchecked) and you use `checked` instead of `value`.
 
@@ -443,7 +443,7 @@ function InterestSelector() {
 }
 ```
 
-`interests.includes(interest)` is the invisible thread. If the value is in the array the checkmark appears, if it is not the checkmark disappears. UI and data always stay in sync.
+`interests.includes(interest)` is the connection between data and UI. If the value is in the array, the checkmark appears; if it is not, the checkmark disappears. UI and data always stay in sync.
 
 -----
 
@@ -502,12 +502,11 @@ For **custom checkboxes** (visually customized ones, not the native browser styl
 
 ---
 
-### 19. useRef (The Secret Drawer)
+### 19. useRef
 
-`useState` is the shop window, every change reopens the shop (re-render) and everyone sees it.  
-`useRef` is the cashier's secret drawer. You can put something in it, retrieve it when needed, change it as much as you want. Nobody knows, which means: no re-render.
+`useRef` preserves a value between renders without causing a new render when it changes. It is useful for DOM references, timers, previous values, or technical data the component needs to remember but that should not update the UI.
 
-#### useState (Window) vs useRef (Drawer)
+#### useState vs useRef
 
 ```jsx
 // useState: every change triggers a re-render
@@ -518,11 +517,11 @@ const countRef = useRef(0);
 countRef.current = countRef.current + 1; // Silent, no re-render
 ```
 
-Use `useRef` when you want to access a DOM element directly (focus, measurements) or when you want to keep a value in memory across renders without triggering updates (timer ID, previous values).
+The practical difference is this: `useState` represents data that should update the interface, while `useRef` preserves data that must remain available but should not redraw the component.
 
 -----
 
-#### Under the Hood (The Immortal Box `{ current: ... }`)
+#### Under the Hood (`{ current: ... }`)
 
 Normal variables inside a function are born and die on every render. `useRef` is different, it creates a small object `{ current: initialValue }` that **lives outside the component function**. React gives you back the same object (same memory address) on every render.
 
@@ -539,7 +538,7 @@ You can change `ref.current` as much as you want, the box stays the same and Rea
 
 -----
 
-#### Hooking into the DOM (The Three Steps)
+#### Hooking into the DOM
 
 The most common use case for `useRef` is getting a direct reference to an HTML element to call its native methods (`.focus()`, `.scrollIntoView()`, `.play()`).
 
@@ -572,7 +571,7 @@ The `if (inputRef.current)` protects from errors if the element is not yet mount
 
 -----
 
-#### Accessibility and Focus Management (The Attention Telepathy)
+#### Accessibility and Focus Management
 
 `useRef` with the DOM is not just a convenience, in certain contexts it is a necessity for accessibility. React SPAs "break" the browser's natural behavior regarding focus.
 
@@ -710,11 +709,11 @@ function TabTitle({ title }) {
 
 -----
 
-#### The Dependency Array (The Effect's Bouncer)
+#### The Dependency Array
 
-`useEffect` accepts two arguments: the function to execute and a dependency array. The array is the bouncer that decides when the function should run.
+`useEffect` accepts two arguments: the function to execute and a dependency array. The array tells React which values the effect depends on. When one of those values changes between one render and the next, React runs the function again.
 
-Without array the effect is a parasite.
+Without an array, the effect runs after every render.
 
 ```jsx
 useEffect(() => {
@@ -725,7 +724,7 @@ useEffect(() => {
 // Infinite loop and browser crash
 ```
 
-With empty array `[]` the effect runs only once.
+With an empty array `[]`, React runs the effect after the first render and then does not run it again, unless the component is unmounted and mounted again.
 
 ```jsx
 useEffect(() => {
@@ -735,9 +734,7 @@ useEffect(() => {
 }, []);
 ```
 
-The bouncer says: "The effect entered at the grand opening. It never comes in again."
-
-With array containing variables the effect becomes a guardian.
+With an array containing variables, the effect runs again only when one of those variables changes.
 
 ```jsx
 useEffect(() => {
@@ -750,7 +747,7 @@ useEffect(() => {
 
 -----
 
-#### The Cleanup Function (The Cleaning Crew)
+#### The Cleanup Function
 
 When an effect activates something that lives over time, like a timer, a global event listener, or a WebSocket connection, that something does not stop working on its own when the component is removed from the screen.
 If you do not stop it explicitly, it continues running in the background consuming memory and potentially causing errors on components that no longer exist.
@@ -783,7 +780,7 @@ Without cleanup: if the user unmounts the component, `setInterval` continues run
 
 -----
 
-#### The True Mental Model (Synchronization, Not "Do When")
+#### The True Mental Model (Synchronization)
 
 The wrong way to think about `useEffect` is "When I click this button, I want X to happen."  
 The right way is instead "I want my component to always be **synchronized** with this external system."
@@ -813,7 +810,7 @@ Side Effects are all operations that touch the world outside React: `fetch()` fo
 
 ---
 
-### 21. Custom Hooks (The Reusable Specialists)
+### 21. Custom Hooks
 
 A component becomes complicated when it does too many things: it manages the UI, fetches data, handles errors, handles loading, handles timers. It is like a chef who cooks, serves tables, washes dishes, and runs the register.
 
@@ -861,7 +858,7 @@ Apart from this naming convention, Custom Hooks are regular JavaScript functions
 
 -----
 
-#### Case Study `useDebounce` (The Patient Waiter)
+#### Case Study `useDebounce`
 
 You have a search bar that wants to show results in real time. Every keystroke triggers an API call? With a user typing "MESSI" quickly, sending 5 API calls in 200ms is pointless and expensive. The solution is debounce: wait until the user stops typing for X milliseconds, then act. It works like a waiter who waits for you to finish speaking before going to the kitchen.
 
@@ -945,7 +942,7 @@ It is also **testable in isolation**, you can verify the timer works correctly w
 
 -----
 
-#### Batching vs Debouncing (Two Cousins, Not the Same Thing)
+#### Batching vs Debouncing
 
 These two terms are often confused because both "group" updates. They are very different mechanisms.
 
@@ -958,7 +955,7 @@ These two terms are often confused because both "group" updates. They are very d
 
 -----
 
-#### Pattern `useFocusOnMount` (The Clean Accessibility Hook)
+#### Pattern `useFocusOnMount`
 
 We saw the focus pattern in `useRef`. Extracting it into a Custom Hook transforms repetitive and verbose code into a single readable line.
 

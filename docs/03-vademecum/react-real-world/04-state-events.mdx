@@ -14,11 +14,11 @@ State is React's memory. Events are its nervous system. Together they transform 
 
 ## State and Events
 
-### 13. Events (The Diplomatic Nervous System)
+### 13. Events
 
 An application without events is a poster: you look at it but you don't touch it. Events are the channels through which the user communicates with your app. React has built an elegant system to handle them uniformly across every browser, and understanding the mechanics saves you from subtle bugs and unexpected behavior.
 
-#### The Synthetic Event System (The Universal Adapter)
+#### The Synthetic Event System
 
 Browsers are anarchic. Chrome, Firefox, Safari: every engine has written its own event implementation. A click event on Chrome can have different properties from one on Firefox. A `event.which` field exists in some browsers and not in others.
 
@@ -74,7 +74,7 @@ Result: better performance, zero orphan listeners in memory.
 
 -----
 
-#### `onClick={fn}` vs `onClick={fn()}` (The Recipe vs The Cake)
+#### `onClick={fn}` vs `onClick={fn()}`
 
 There is a huge difference between passing a function and calling it.
 
@@ -146,11 +146,11 @@ On native HTML tags (`<button>`, `<input>`, `<form>`) the names are fixed and im
 
 -----
 
-#### `e.preventDefault()` (Stop the Browser's Instinct)
+#### `e.preventDefault()` (Blocking the Default Behavior)
 
 Every HTML tag has a default behavior. The browser performs that action automatically, without asking permission. A `<form>` with submit reloads the entire page, a clicked `<a href="...">` changes the URL and navigates away, an `<input type="checkbox">` checks or unchecks the box, and a drag on an image starts the native drag.
 
-`e.preventDefault()` tells the browser: "Stop your instinct. I'll take care of what to do."
+`e.preventDefault()` tells the browser not to run the default behavior, because your code will handle the action.
 
 ```jsx
 function ContactForm({ onSubmission }) {
@@ -174,7 +174,7 @@ function ContactForm({ onSubmission }) {
 
 -----
 
-#### `e.stopPropagation()` (Stop the Bubble)
+#### `e.stopPropagation()` (Stopping Propagation)
 
 When an event fires on a child element, it automatically rises toward the parents (Bubbling). Sometimes this is undesirable.
 
@@ -200,7 +200,7 @@ So, `preventDefault` is a problem of **Nature** (what the browser or the HTML ta
 
 -----
 
-#### `e.target` (The Smoking Gun)
+#### `e.target` (Element That Generated the Event)
 
 `e.target` physically points to the HTML element that triggered the event. From `e.target` you can extract information about the user's input.
 
@@ -263,11 +263,11 @@ function ColorPicker() {
 
 ---
 
-### 14. useState (The External Memory)
+### 14. useState
 
 You can click, hover, focus with events. But if you want something to *change* visually in response to that interaction, you need state. State is the mechanism that tells React: "Something has changed, redraw."
 
-#### The Problem (Functions Have Alzheimer's)
+#### Why Local Variables Are Not Enough
 
 React builds your UI by calling component functions. It calls them again every time something changes. Every time a function is called, local variables are created from scratch and then forgotten.
 
@@ -294,7 +294,7 @@ The variable `count` gets incremented in memory, but React doesn't know about it
 
 -----
 
-#### useState (The Sticky Note on the Fridge)
+#### useState (Component Memory)
 
 `useState` is a special React function (a **Hook**) that solves both problems: it preserves the value between one render and the next, and when the value changes it tells React to redraw. It is as if React Core had a fridge with sticky notes. Each `useState` corresponds to a sticky note. Between one render and the next, the note stays stuck to the fridge. On the next render, React reads it again and uses it.
 
@@ -351,7 +351,7 @@ On Re-render React calls `Counter()` again, encounters `useState(0)` but IGNORES
 
 -----
 
-#### The Shelf Order Rule (Hooks at the Top)
+#### The Rule of Hooks at the Top
 
 React doesn't save state by name. It saves it by **position**, in the order the Hooks are called inside the component.
 
@@ -368,7 +368,7 @@ function ProfessionalProfile() {
 }
 ```
 
-If on the next render React calls only 2 Hooks instead of 3 (because you put one inside an `if`), the shelves swap. `age` reads from the drawer of `name`. Silent disaster.
+If on the next render React calls only 2 Hooks instead of 3 (because you put one inside an `if`), the shelves swap. `age` ends up reading the value in the wrong position, and the component uses state that no longer matches the variable name.
 
 ```jsx
 // ❌ NEVER do this. Hook inside an if
@@ -390,7 +390,7 @@ function Component({ loading }) {
 
 -----
 
-#### Isolation (The Cookie Cutter Principle)
+#### State Isolation
 
 Every instance of a component has its own private state space. Two `<Counter />` on the same page are born from the same function but live independent lives: if you bring the count of the first to 5, the second stays at 0.
 
@@ -411,7 +411,7 @@ Clicking +1 on the first `<Counter />` doesn't affect the second one at all.
 
 -----
 
-#### Immutability in Time (The Animated Flipbook)
+#### Immutability Over Time
 
 `const count = false` is immutable for **that specific render**. Being a constant, it cannot change while the component is drawing.
 
@@ -423,7 +423,7 @@ React works exactly like this. When you call `setIsVisible(true)` you don't modi
 
 -----
 
-#### The `console.log` Lie (Stale Closure)
+#### Why `console.log` Can Show the Previous Value (Stale Closure)
 
 After calling `setIsVisible(true)`, you might be tempted to do `console.log(isVisible)` to see if it changed. You will still get `false`. This is not a bug, it is the consequence of how closures work in JavaScript.
 
@@ -466,7 +466,7 @@ function Toggle() {
 
 -----
 
-#### Batching (The Efficiency Engine)
+#### Batching (Grouped Updates)
 
 React doesn't execute every `setState` immediately, one by one. It waits a moment to collect all state changes and then performs **a single re-render** for all of them.
 
@@ -562,7 +562,7 @@ After the Commit, the browser receives the DOM changes and updates the pixels on
 
 -----
 
-#### Why This Architecture Is Brilliant
+#### Why This Architecture Works
 
 The browser DOM is heavy. Every node carries hundreds of properties. Every change to the real DOM can trigger Reflow (layout recalculation) and Repaint (pixel redrawing), costly operations.
 

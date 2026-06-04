@@ -14,18 +14,16 @@ React non ha un linguaggio template speciale. Non troverai `v-if`, `*ngIf` o `{%
 
 ## La Logica di Rendering
 
-### 11. Rendering Condizionale (Tre Strade, Una Destinazione)
+### 11. Rendering Condizionale
 
-React non ha un attributo speciale per il rendering condizionale. Ha qualcosa di meglio: l'intero linguaggio JavaScript. Ci sono tre tecniche principali, ognuna con il suo caso d'uso. Imparare a scegliere quella giusta è la differenza tra codice leggibile e codice da incubo.
+React non ha un attributo speciale per il rendering condizionale. Ha qualcosa di meglio: l'intero linguaggio JavaScript. Ci sono tre tecniche principali, ognuna con il suo caso d'uso. Imparare a scegliere quella giusta è la differenza tra codice leggibile e codice difficile da seguire.
 
-#### L'`if` Statement (Il Buttafuori, Early Return)
+#### L'`if` Statement (Early Return)
 
-È come un buttafuori all'ingresso di un locale. Prima di lasciarti entrare, controlla la tua età. Se sei minorenne, ti rimbalza alla porta e non entri nemmeno. Se sei maggiorenne, entri e la festa comincia.
-
-In React, questo si chiama **Early Return**: il componente fa un controllo in cima, e se la condizione non è soddisfatta, restituisce subito qualcos'altro (o `null` per non disegnare niente). Il codice sotto il primo `return` non viene mai eseguito.
+L'early return serve quando una condizione decide l'intero risultato del componente. Il componente fa un controllo in cima e, se la condizione non è soddisfatta, restituisce subito qualcos'altro, oppure `null` per non disegnare niente. Il codice sotto il primo `return` non viene mai eseguito.
 
 ```jsx
-// Il buttafuori controlla i documenti prima di farti entrare
+// Se l'utente non è loggato, il componente esce subito
 function ProfiloUtente({ utenteLoggato }) {
   if (!utenteLoggato) {
     return <p>Devi accedere per vedere il profilo.</p>;
@@ -41,11 +39,11 @@ function ProfiloUtente({ utenteLoggato }) {
 }
 ```
 
-Usalo per i casi "tutto o niente" a livello di componente intero. Se la condizione è falsa, non ha senso disegnare niente, il buttafuori ti manda a casa.
+Usalo per i casi "tutto o niente" a livello di componente intero. Se la condizione è falsa, restituisci subito la UI alternativa e tieni il caso principale più leggibile.
 
 -----
 
-#### L'Operatore Ternario (Il Bivio in Autostrada)
+#### L'Operatore Ternario
 
 L'`if` ha un grande problema: è **ingombrante** e, soprattutto, **non può stare dentro le graffe `{ }` del JSX**. React non permette di scrivere `{if (condizione) { ... }}`.
 
@@ -80,7 +78,7 @@ Usalo quando vuoi mostrare **questo O quell'altro**, sempre due opzioni, mai di 
 
 -----
 
-#### L'Operatore `&&` (L'Interruttore Cortocircuito)
+#### L'Operatore `&&` (Short-Circuit)
 
 Scenario: vuoi mostrare un messaggio **solo se** una condizione è vera. Se è falsa, non vuoi mostrare niente, non un'alternativa, proprio niente. Il ternario ti obbligherebbe a scrivere `condizione ? <elemento> : null`. C'è di meglio.
 
@@ -136,7 +134,7 @@ Il ternario e `&&` producono valori, ecco perché sono i benvenuti tra le graffe
 
 -----
 
-#### Il Cestino Invisibile di React (Cosa Viene Ignorato)
+#### I Valori che React Ignora
 
 React è programmato per **ignorare silenziosamente** certi valori. Né li disegna e né li trasforma in testo, li butta nel cestino:
 
@@ -160,7 +158,7 @@ In JavaScript Vanilla, scrivere `elemento.innerHTML = false` stamperebbe lettera
 
 -----
 
-#### La Trappola dello Zero (Il Bug Più Comune con `&&`)
+#### Il Problema dello Zero con `&&`
 
 C'è un'eccezione che brucia tutti almeno una volta. **React non ignora il numero `0`.**
 
@@ -199,7 +197,7 @@ function Carrello({ quantita }) {
 
 ---
 
-### 12. Rendering di Liste (La Catena di Montaggio)
+### 12. Rendering di Liste
 
 Le liste sono ovunque nelle UI: prodotti, messaggi, notifiche, utenti. Saper renderizzare liste in modo corretto e performante è una delle competenze più usate in React. E tutto ruota attorno a due concetti: `.map()` e la prop `key`.
 
@@ -236,7 +234,7 @@ function ListaFrutta({ frutta }) {
 
 -----
 
-#### Come Funziona `.map()` (Il Nastro Trasportatore)
+#### Come Funziona `.map()`
 
 Pensa a una catena di montaggio in fabbrica. Il nastro trasportatore porta i pezzi grezzi (gli elementi dell'array) davanti all'operaio (la tua funzione dentro `.map()`). L'operaio prende ogni pezzo, lo trasforma in un prodotto finito (un elemento JSX), e lo mette sulla catena di ritorno. Alla fine, hai un nuovo nastro pieno di prodotti finiti.
 
@@ -272,7 +270,7 @@ function CatalogoProdotti() {
 
 -----
 
-#### La Prop `key` (Il Cartellino Identificativo)
+#### La Prop `key` (Identificatore Stabile)
 
 Immagina un ufficio postale con una fila di dieci persone. Ogni giorno l'impiegato (React) deve aggiornare la situazione di tutti. Un giorno arriva una persona nuova e si infila in cima alla fila.
 
@@ -309,7 +307,7 @@ L'indice va bene solo per liste puramente decorative che non cambieranno mai, co
 
 -----
 
-#### Dove Mettere la `key` (Il Manico della Valigia)
+#### Dove Mettere la `key`
 
 La `key` va sull'elemento **più esterno** restituito da ogni iterazione del `.map()`. React guarda solo il "manico", il primo elemento, e non apre la valigia per cercare dentro.
 
@@ -324,7 +322,7 @@ Con un componente custom, la `key` va sul componente, non dentro:
 ```jsx
 {utenti.map((utente) => (
   // key SUL COMPONENTE, non dentro
-  <CartaUtente key={utente.id} nome={utente.nome} />
+  <CardUtente key={utente.id} nome={utente.nome} />
 ))}
 ```
 
@@ -374,7 +372,7 @@ Con dati dal server (il caso reale), quando fai una chiamata API, il server ti m
 // Il JSON dal server ha già gli ID
 // { id: "usr_482", nome: "Giulia", ... }
 {utenti.map((utente) => (
-  <CartaUtente key={utente.id} {...utente} />
+  <CardUtente key={utente.id} {...utente} />
 ))}
 ```
 
@@ -396,7 +394,7 @@ function AggiungeTodo({ setTodos }) {
 
 -----
 
-#### `crypto.randomUUID()` (Il Generatore di ID Industriale)
+#### `crypto.randomUUID()`
 
 Quando hai bisogno di creare ID unici senza un server, `crypto.randomUUID()` è la scelta moderna e corretta.
 

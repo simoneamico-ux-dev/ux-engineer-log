@@ -14,18 +14,16 @@ React does not have a special template language. You will not find `v-if`, `*ngI
 
 ## Rendering Logic
 
-### 11. Conditional Rendering (Three Roads, One Destination)
+### 11. Conditional Rendering
 
-React does not have a special attribute for conditional rendering. It has something better: the entire JavaScript language. There are three main techniques, each with its own use case. Learning to pick the right one is the difference between readable code and nightmare code.
+React does not have a special attribute for conditional rendering. It has something better: the entire JavaScript language. There are three main techniques, each with its own use case. Learning to pick the right one is the difference between readable code and code that is hard to follow.
 
-#### The `if` Statement (The Bouncer, Early Return)
+#### The `if` Statement (Early Return)
 
-Think of a bouncer at the entrance of a club. Before letting you in, he checks your ID. If you are underage, he turns you away at the door and you never get in. If you are of age, you enter and the party begins.
-
-In React, this is called **Early Return**: the component runs a check at the top, and if the condition is not met, it immediately returns something else (or `null` to render nothing). The code below the first `return` never executes.
+Early return is useful when one condition decides the entire result of the component. The component runs a check at the top and, if the condition is not met, immediately returns something else, or `null` to render nothing. The code below the first `return` never executes.
 
 ```jsx
-// The bouncer checks your documents before letting you in
+// If the user is not logged in, the component exits immediately
 function UserProfile({ loggedInUser }) {
   if (!loggedInUser) {
     return <p>You must log in to view your profile.</p>;
@@ -41,11 +39,11 @@ function UserProfile({ loggedInUser }) {
 }
 ```
 
-Use it for "all or nothing" cases at the whole component level. If the condition is false, there is no point in rendering anything, the bouncer sends you home.
+Use it for "all or nothing" cases at the whole component level. If the condition is false, return the alternative UI immediately and keep the main case more readable.
 
 -----
 
-#### The Ternary Operator (The Highway Fork)
+#### The Ternary Operator
 
 The `if` has a big problem: it is **bulky** and, above all, **cannot go inside the curly braces `{ }` of JSX**. React does not allow you to write `{if (condition) { ... }}`.
 
@@ -80,7 +78,7 @@ Use it when you want to show **this OR that**, always two options, never more. I
 
 -----
 
-#### The `&&` Operator (The Short-Circuit Switch)
+#### The `&&` Operator (Short-Circuit)
 
 Scenario: you want to show a message **only if** a condition is true. If it is false, you do not want to show anything, not an alternative, nothing at all. The ternary would force you to write `condition ? <element> : null`. There is a better way.
 
@@ -136,7 +134,7 @@ The ternary and `&&` produce values, that is why they are welcome inside curly b
 
 -----
 
-#### React's Invisible Trash Can (What Gets Ignored)
+#### Values React Ignores
 
 React is programmed to **silently ignore** certain values. It neither renders them nor turns them into text, it throws them in the trash:
 
@@ -160,7 +158,7 @@ In Vanilla JavaScript, writing `element.innerHTML = false` would literally print
 
 -----
 
-#### The Zero Trap (The Most Common Bug with `&&`)
+#### The Zero Problem with `&&`
 
 There is one exception that burns everyone at least once. **React does not ignore the number `0`.**
 
@@ -199,7 +197,7 @@ function Cart({ quantity }) {
 
 ---
 
-### 12. Rendering Lists (The Assembly Line)
+### 12. Rendering Lists
 
 Lists are everywhere in UIs: products, messages, notifications, users. Knowing how to render lists correctly and performantly is one of the most used skills in React. And it all revolves around two concepts: `.map()` and the `key` prop.
 
@@ -236,7 +234,7 @@ function FruitList({ fruits }) {
 
 -----
 
-#### How `.map()` Works (The Conveyor Belt)
+#### How `.map()` Works
 
 Think of an assembly line in a factory. The conveyor belt carries the raw parts (the array elements) in front of the worker (your function inside `.map()`). The worker takes each part, transforms it into a finished product (a JSX element), and places it on the return belt. At the end, you have a new belt full of finished products.
 
@@ -272,7 +270,7 @@ function ProductCatalog() {
 
 -----
 
-#### The `key` Prop (The ID Badge)
+#### The `key` Prop (Stable Identifier)
 
 Imagine a post office with a line of ten people. Every day the clerk (React) has to update everyone's situation. One day a new person shows up and cuts to the front of the line.
 
@@ -309,7 +307,7 @@ The index is fine only for purely decorative lists that will never change, like 
 
 -----
 
-#### Where to Put the `key` (The Suitcase Handle)
+#### Where to Put the `key`
 
 The `key` goes on the **outermost** element returned by each iteration of `.map()`. React only looks at the "handle", the first element, and does not open the suitcase to search inside.
 
@@ -396,7 +394,7 @@ function AddTodo({ setTodos }) {
 
 -----
 
-#### `crypto.randomUUID()` (The Industrial ID Generator)
+#### `crypto.randomUUID()`
 
 When you need to create unique IDs without a server, `crypto.randomUUID()` is the modern and correct choice.
 

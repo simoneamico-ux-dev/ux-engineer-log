@@ -1,0 +1,2422 @@
+---
+sidebar_position: 4
+title: Browser, Asincronia e Pattern
+description: DOM, eventi, dialog, fetch, promise, async/await, storage, service worker, schemi avanzati e testing.
+---
+
+import Link from '@docusaurus/Link';
+
+# Parte IV: Browser, Asincronia e Pattern
+
+Finora abbiamo lavorato sul linguaggio: tipi, strutture, classi, moduli.
+Da qui in poi JavaScript entra nel browser, dove legge e modifica l'HTML, reagisce a click e input, comunica con server remoti e salva dati quando devono restare disponibili dopo un refresh.
+Questa parte ti mostrerà come collegare il codice alla pagina, alla rete e allo stato del browser.
+
+---
+
+## DOM e Interattività
+
+### 19. Caricamento Script (Quando Viene Eseguito il Tuo JS)
+
+Prima ancora di scrivere una riga di codice che tocca il DOM, devi capire **quando** il browser esegue il tuo JavaScript.
+Il momento in cui il tag `<script>` viene eseguito cambia drasticamente cosa puoi e cosa non puoi fare.
+
+#### Il Problema: `<script>` Blocca il Parser
+
+Quando il browser legge l'HTML dall'alto al basso e incontra un `<script>`, normalmente si ferma: scarica il file, lo esegue, e solo dopo riprende a interpretare il resto dell'HTML.
+Questo comportamento si chiama **parser blocking** (blocco del parser).
+Il parser è la parte del browser che legge l'HTML e costruisce il DOM, cioè l'albero di elementi della pagina; se viene bloccato, la pagina non può continuare a essere costruita (e quindi visualizzata).
+
+Il motivo ha radici storiche, ma vale ancora per gli script classici senza `defer`, `async` o `type="module"`: JavaScript può modificare l'HTML mentre il browser lo sta ancora leggendo e, con `document.write()` (un vecchio metodo che scrive nuovo HTML direttamente nel documento), uno script può inserire nuovi tag nella pagina, quindi il browser deve fermare il parser, eseguire lo script e solo dopo continuare, perché il contenuto della pagina potrebbe essere cambiato.
+
+```html
+<head>
+  <script src="app.js"></script>
+  <!-- Qui il parser si ferma finché app.js non è scaricato ed eseguito -->
+</head>
+<body>
+  <h1>Il mio sito</h1>
+</body>
+```
+
+Questo crea due problemi.
+Il primo è la **performance**, cioè la velocità percepita: l'utente vede la pagina più tardi perché il browser aspetta il JavaScript.
+Il secondo è che se il tuo script prova ad accedere al DOM della pagina, **gli elementi non esistono ancora**: il parser non è arrivato al `<body>`.
+
+```javascript
+// app.js, caricato nell'head
+const h1 = document.querySelector("h1");
+console.log(h1); // null! L'h1 non è ancora stato letto dal parser
+```
+
+-----
+
+#### La Soluzione Classica: `<script>` alla Fine del `<body>`
+
+Per anni la pratica standard è stata mettere i tag `<script>` **alla fine del `<body>`**, subito prima del tag di chiusura.
+In questo modo il parser ha già costruito tutto il DOM prima di incontrarli.
+
+```html
+<body>
+  <h1>Il mio sito</h1>
+  <!-- Tutto il contenuto -->
+  <script src="app.js"></script>
+</body>
+```
+
+Funziona bene, ma non è ottimale proprio perché il download del file JavaScript inizia molto tardi, alla fine della pagina.
+
+-----
+
+#### La Soluzione Moderna: `defer`
+
+L'attributo `defer` risolve entrambi i problemi in una riga.
+Lo metti nell'head, e il browser:
+
+1. Inizia a scaricare il file in background, cioè dietro le quinte, mentre continua a leggere l'HTML
+2. Esegue lo script **solo dopo** aver finito di costruire tutto il DOM
+
+```html
+<head>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <h1>Il mio sito</h1>
+</body>
+```
+
+Dipende dal tuo contesto, ma nella maggior parte dei casi userai `defer`, perché il JavaScript della tua app ha bisogno che il DOM sia già stato costruito.
+
+-----
+
+#### `async` (Per Script Indipendenti)
+
+L'attributo `async` è simile a `defer` ma più aggressivo: scarica in background ed **esegue appena il file è pronto**, senza aspettare il DOM completo, vale a dire che il parser si ferma durante l'esecuzione, ma non per il download.
+
+```html
+<script src="analytics.js" async></script>
+```
+
+L'uso tipico è per script indipendenti dal DOM, come analytics, tracking e pubblicità.
+Dipende quindi dal tuo contesto ma è probabile che tenderai ad usare `defer`.
+
+La differenza chiave: con `defer` l'ordine degli script è rispettato e tutti girano quando il DOM è pronto.
+Con `async` l'ordine non è garantito e possono partire prima.
+
+-----
+
+#### `type="module"` è `defer` per Default
+
+Come abbiamo visto nella <Link to="/it/docs/vademecum/javascript-real-world/oop-and-modules#script-typemodule-usare-i-moduli-nel-browser">sezione 17</Link>, `<script type="module">` ha automaticamente il comportamento di `defer`.
+Non devi aggiungere nulla.
+
+```html
+<script type="module" src="app.js"></script>
+<!-- Già si comporta come defer -->
+```
+
+-----
+
+#### `DOMContentLoaded` (Quando il DOM è Pronto)
+
+Se per qualche ragione non puoi usare `defer` (per esempio stai lavorando su codice legacy, cioè codice vecchio già esistente, con script inline), c'è un altro modo per sapere quando il DOM è pronto: l'evento `DOMContentLoaded`.
+
+```javascript
+document.addEventListener("DOMContentLoaded", () => {
+  const h1 = document.querySelector("h1");
+  console.log(h1); // Ora esiste
+});
+```
+
+`DOMContentLoaded` si verifica quando il browser ha finito di leggere l'HTML e ha costruito il DOM, cioè l'albero degli elementi della pagina.
+Da quel momento gli elementi esistono: puoi selezionarli con `querySelector`, leggere valori dagli input e modificare testo, classi o attributi.
+
+C'è un dettaglio importante: se nella pagina ci sono script `defer` o `type="module"`, `DOMContentLoaded` aspetta anche la loro esecuzione.
+Il browser considera il DOM pronto solo dopo aver letto l'HTML e dopo aver eseguito quegli script.
+
+Esiste anche un altro evento, `window.onload`, spesso citato nei vecchi esempi JavaScript.
+`window` è l'oggetto globale del browser; `.onload` è un gestore evento collegato al caricamento completo della pagina.
+A differenza di `DOMContentLoaded`, l'evento `load` arriva più tardi perché aspetta anche le risorse esterne della pagina, per esempio immagini, file CSS, font e file JavaScript.
+
+Per manipolare il DOM quasi sempre non ti serve aspettare tutto questo, ti basta `DOMContentLoaded`, oppure ancora meglio `defer`.
+
+**Regola:** `<script defer>` nell'head come scelta predefinita.
+`<script type="module">` ha defer automatico.
+`async` solo per script indipendenti dal DOM.
+`DOMContentLoaded` come soluzione storica se non puoi usare defer.
+
+<br />
+<br />
+<br />
+<br />
+
+### 20. DOM Manipulation (Leggere e Modificare la Pagina)
+
+Come abbiamo visto, il **DOM** (Document Object Model) è l'albero di oggetti che il browser costruisce a partire dal tuo HTML.
+È ciò che avevamo introdotto nella <Link to="/it/docs/vademecum/html-real-world-vademecum#cosa-succede-quando-apri-una-pagina">sezione 1 dell'HTML Vademecum</Link>, ma qui lo vedremo dal punto di vista di JavaScript.
+Manipolare il DOM significa accedere a quell'albero per leggere elementi, cambiarne il testo, modificare classi, aggiornare attributi o inserire nuovi nodi.
+
+#### Selezionare Elementi
+
+`document.getElementById()` cerca per `id` e restituisce l'elemento (o `null`).
+È la scelta più diretta quando conosci già l'id dell'elemento: non deve interpretare un selettore CSS ed è più veloce di `querySelector("#id")`, anche se nella pratica parliamo di differenze prestazionali minime, con impatto quasi sempre nullo.
+Conviene usarlo soprattutto perché comunica meglio l'intenzione: se stai cercando un elemento tramite `id`, `getElementById` dice esattamente quello.
+
+```javascript
+const header = document.getElementById("header");
+// Cerca l'elemento con id="header"
+```
+
+`document.querySelector()` accetta un **selettore CSS** e restituisce il **primo** elemento che corrisponde.
+È più flessibile: puoi cercare per id, classe, tag, attributo o combinazioni più complesse.
+Usalo quando ti serve la flessibilità dei selettori CSS.
+
+```javascript
+document.querySelector("#header");             // Per id
+document.querySelector(".card");               // Per classe (primo match)
+document.querySelector("button");              // Per tag (primo match)
+document.querySelector("nav > a");             // Selettori complessi
+document.querySelector('[data-role="admin"]'); // Per attributo
+```
+
+`document.querySelectorAll()` restituisce **tutti** gli elementi che corrispondono, in una `NodeList`, cioè una lista di nodi del DOM.
+
+```javascript
+const bottoni = document.querySelectorAll("button");
+// NodeList di tutti i bottoni della pagina
+```
+
+-----
+
+#### `HTMLCollection` vs `NodeList` (Live vs Statica)
+
+Metodi come `getElementsByClassName` restituiscono una `HTMLCollection`, cioè una lista di elementi del DOM.
+Questa lista è **live**: resta collegata al DOM e si aggiorna automaticamente quando il DOM cambia.
+Metodi come `querySelectorAll` restituiscono invece una `NodeList` **statica**, cioè una fotografia della situazione nel momento in cui l'hai creata.
+
+```javascript
+// Supponiamo che all'inizio ci siano 3 elementi con class="card"
+const listaLive = document.getElementsByClassName("card");
+const listaStatica = document.querySelectorAll(".card");
+
+// Aggiungi una nuova card al DOM
+const nuovaCard = document.createElement("div");
+nuovaCard.className = "card";
+document.body.appendChild(nuovaCard);
+
+console.log(listaLive.length);    // 4: include la nuova card
+console.log(listaStatica.length); // 3: fotografia iniziale
+```
+
+Una lista live può sembrare comoda, ma crea bug sottili: se aggiungi o rimuovi elementi mentre la stai usando, anche la lista cambia in quel momento.
+Persino il valore di `.length` può cambiare durante un ciclo.
+Una lista statica è più prevedibile.
+Nella pratica moderna, **si usa quasi sempre `querySelectorAll`**.
+
+Per iterarle con metodi d'array come `.map`, convertile con lo spread.
+I tre puntini `...` prendono gli elementi della `NodeList` e li inseriscono in un nuovo array:
+
+```javascript
+const cards = [...document.querySelectorAll(".card")];
+const titoli = cards.map(c => c.querySelector("h2").textContent);
+```
+
+-----
+
+#### Proprietà vs Metodi
+
+Sugli elementi del DOM hai due tipi di membri: **proprietà** (sostantivi, senza parentesi) e **metodi** (verbi, con parentesi).
+
+```javascript
+const el = document.querySelector("#titolo");
+
+// Proprietà: leggi o assegni
+el.textContent;           // Legge
+el.textContent = "Nuovo"; // Scrive
+el.className = "attivo";
+el.id;
+
+// Metodi: chiami con ()
+el.remove();
+el.addEventListener("click", gestore);
+el.appendChild(altro);
+```
+
+Un errore classico è trattare una proprietà come metodo o viceversa:
+
+```javascript
+// ❌ SBAGLIATO
+el.textContent("Nuovo titolo"); // TypeError: textContent is not a function
+
+// ✅ CORRETTO
+el.textContent = "Nuovo titolo";
+```
+
+-----
+
+#### Creare e Modificare Elementi
+
+`document.createElement()` crea un nuovo elemento, `element.appendChild()` o `element.append()` lo inserisce nell'albero.
+
+```javascript
+const nuovo = document.createElement("div");
+nuovo.textContent = "Ciao mondo";
+nuovo.className = "messaggio";
+
+document.body.appendChild(nuovo);
+// Nel DOM viene aggiunto: <div class="messaggio">Ciao mondo</div>
+```
+
+`.append()` è più moderno: accetta più elementi o stringhe di testo contemporaneamente.
+
+```javascript
+const lista = document.querySelector("ul");
+
+const primo = document.createElement("li");
+primo.textContent = "Primo";
+
+const secondo = document.createElement("li");
+secondo.textContent = "Secondo";
+
+lista.append(primo, secondo);
+// Nel DOM vengono aggiunti due <li> alla fine della lista
+```
+
+-----
+
+#### `textContent` vs `innerHTML` (Sicuro vs Pericoloso)
+
+Per cambiare il contenuto di un elemento hai due proprietà principali, con una differenza critica di sicurezza.
+
+```javascript
+const messaggio = document.querySelector("#messaggio");
+
+messaggio.textContent = "Ciao Mario";
+// Mostra testo puro
+
+messaggio.innerHTML = "<strong>Ciao</strong> Mario";
+// Inserisce markup HTML reale
+```
+
+`textContent` tratta il valore come **testo puro**.
+Qualsiasi carattere HTML viene mostrato letteralmente, non interpretato.
+
+```javascript
+el.textContent = "<b>ciao</b>";
+// Sullo schermo vedi: <b>ciao</b> (letteralmente)
+```
+
+`innerHTML` tratta il valore come **HTML**.
+Tag e attributi vengono interpretati e inseriti come markup reale, cioè come struttura HTML effettiva della pagina.
+
+```javascript
+el.innerHTML = "<b>ciao</b>";
+// Sullo schermo vedi: ciao (in grassetto)
+```
+
+Il problema di `innerHTML` è che se metti dentro **input utente** senza sanitizzarlo, qualcuno può iniettare codice malevolo.
+Sanitizzare significa pulire o trasformare un valore prima di inserirlo nella pagina, così il browser non lo interpreta come codice.
+Questo tipo di attacco si chiama **XSS** (Cross-Site Scripting), cioè inserimento di script malevoli dentro una pagina vista da altri utenti.
+
+```javascript
+// ❌ PERICOLOSO: se commentoUtente viene dall'utente
+const commentoUtente = '<img src=x onerror="rubaCookie()">';
+el.innerHTML = `Ha scritto: ${commentoUtente}`;
+// Il browser può eseguire codice inserito tramite attributi come onerror
+```
+
+La regola è: **usa `textContent` come scelta predefinita**, passa a `innerHTML` solo quando stai effettivamente costruendo markup e **solo con contenuto controllato da te** (mai input utente non sanitizzato).
+Per gestire input utente con `innerHTML`, vedremo `escapeHtml` e la differenza tra escape e sanitizzazione nella <a href="#escape-html-e-sanitizzazione-escapehtml">sezione 29</a>.
+
+`insertAdjacentHTML` ti permette di inserire HTML in posizioni precise relative a un elemento (prima, dentro all'inizio, dentro alla fine, dopo), senza toccare il resto.
+È utile per aggiungere markup senza ricostruire tutto, ma resta HTML interpretato dal browser, perciò valgono le stesse cautele di `innerHTML` se il contenuto arriva dall'utente.
+
+```javascript
+el.insertAdjacentHTML("beforeend", "<li>Nuovo</li>");
+```
+
+-----
+
+#### Stili: `style` vs `classList`
+
+Modificare lo stile direttamente con `.style.property` funziona, ma mescola logica e presentazione nel JavaScript, per questo motivo è una pratica da evitare quando possibile.
+
+```javascript
+// ❌ Stile inline, meno mantenibile
+el.style.backgroundColor = "red";
+el.style.padding = "10px";
+```
+
+La pratica preferibile è definire le classi CSS e **alternare le classi** da JavaScript.
+Tutto lo stile resta nel CSS, il JavaScript decide solo quando applicarlo.
+Questo principio si chiama **separation of concerns**, cioè separazione delle responsabilità: il CSS gestisce l'aspetto, JavaScript decide quando applicare o rimuovere una classe.
+
+```javascript
+// ✅ Aggiunge, rimuove, alterna, controlla
+el.classList.add("attivo");
+el.classList.remove("nascosto");
+el.classList.toggle("selezionato");
+el.classList.contains("admin"); // true o false
+```
+
+`classList.toggle` è particolarmente elegante: aggiunge la classe se manca, la rimuove se c'è.
+
+```javascript
+bottone.addEventListener("click", () => {
+  menu.classList.toggle("aperto");
+});
+```
+
+-----
+
+#### `data-*` come Ponte tra HTML e JS
+
+Gli attributi `data-*` (visti nella <Link to="/it/docs/vademecum/html-real-world-vademecum#12-attributi-globali-strumenti-universali">sezione sugli attributi globali dell'HTML Vademecum</Link>) sono il modo standard per allegare dati personalizzati a elementi HTML. Da JavaScript li leggi tramite `dataset`.
+
+```html
+<button data-azione="elimina" data-id="42">Elimina</button>
+```
+
+```javascript
+const bottone = document.querySelector("button");
+bottone.dataset.azione; // "elimina"
+bottone.dataset.id;     // "42" (sempre stringa, converti se serve numero)
+```
+
+Nomi con trattini diventano camelCase in `dataset`: `data-user-role` diventa `dataset.userRole`.
+
+Questo schema è usato per collegare elementi HTML a comportamenti JavaScript senza codificare ogni variante a mano.
+Immagina una pagina con molti bottoni che fanno cose diverse: invece di riconoscerli uno per uno nel codice, inserisci nell'HTML i dati minimi che servono al JavaScript per decidere cosa fare.
+
+```html
+<button data-action="copy" data-target="snippet-1">Copia</button>
+<button data-action="share" data-url="https://...">Condividi</button>
+<button data-action="delete" data-id="42">Elimina</button>
+```
+
+```javascript
+document.addEventListener("click", (e) => {
+  const bottone = e.target.closest("button[data-action]");
+  if (!bottone) return;
+
+  const azione = bottone.dataset.action;
+  if (azione === "copy") copia(bottone.dataset.target);
+  else if (azione === "share") condividi(bottone.dataset.url);
+  else if (azione === "delete") elimina(bottone.dataset.id);
+});
+```
+
+-----
+
+#### `navigator.clipboard` (Copiare negli Appunti)
+
+Per copiare del testo negli appunti da codice (il classico bottone "Copia" accanto a uno snippet di codice), il metodo moderno è `navigator.clipboard.writeText()`, asincrono e basato su Promise.
+Una Promise rappresenta un risultato futuro: la copia può riuscire o fallire dopo che hai chiamato il metodo.
+
+```javascript
+async function copiaTesto(testo) {
+  try {
+    await navigator.clipboard.writeText(testo);
+    mostraToast("Copiato negli appunti");
+  } catch (err) {
+    console.error("Copia fallita:", err);
+  }
+}
+
+const bottone = document.querySelector("#copia");
+bottone.addEventListener("click", () => {
+  const snippet = document.querySelector("#snippet").textContent;
+  copiaTesto(snippet);
+});
+```
+
+Il browser richiede che la chiamata avvenga in risposta a un'azione utente (un click) e in un contesto sicuro, di solito HTTPS.
+Serve a evitare che siti malevoli leggano o modifichino gli appunti senza consenso. Chiamarla fuori da un gestore evento di solito fallisce.
+
+C'è anche `navigator.clipboard.readText()` per leggere dagli appunti, ma richiede permesso esplicito dell'utente e non funziona in contesti non sicuri (http o file).
+
+Su browser più vecchi o contesti senza HTTPS, la soluzione storica è `document.execCommand("copy")` con un campo di testo temporaneo.
+Nella pratica oggi i browser moderni supportano `navigator.clipboard` e questa soluzione serve raramente.
+
+**Regola:** `getElementById` per id precisi, `querySelector` e `querySelectorAll` per selettori CSS.
+Proprietà senza `()`, metodi con `()`.
+`textContent` per testo puro, `innerHTML` solo con contenuto controllato.
+`classList` invece di `style` diretto.
+`data-*` + `dataset` per collegare HTML e JavaScript.
+`navigator.clipboard.writeText` per copiare testo da codice.
+
+<br />
+<br />
+<br />
+<br />
+
+### 21. Eventi (Reagire alle Interazioni)
+
+Gli eventi sono il modo in cui il DOM comunica che è successo qualcosa: un click, un tasto premuto, un form inviato, un input cambiato.
+Il tuo codice "ascolta" questi eventi e reagisce.
+
+#### `addEventListener` (Sempre, Mai `onclick`)
+
+Il metodo moderno per registrare un listener è `addEventListener`.
+Un listener è una funzione che resta in ascolto di un evento.
+`addEventListener` accetta il nome dell'evento e una funzione callback, cioè la funzione da chiamare quando l'evento accade.
+
+```javascript
+const bottone = document.querySelector("button");
+
+bottone.addEventListener("click", () => {
+  console.log("Cliccato!");
+});
+```
+
+Il vecchio modo era assegnare direttamente `element.onclick = funzione`, ma ha un grande difetto, ovvero che puoi avere solo un gestore alla volta.
+Assegnare un nuovo `onclick` sovrascrive il precedente.
+`addEventListener` invece può registrare quanti listener vuoi, tutti vengono chiamati.
+
+Inoltre, `addEventListener` ti dà `removeEventListener` per rimuovere un listener specifico, ma devi passare **lo stesso riferimento di funzione** che hai usato per aggiungerlo.
+Questo è un posto dove capita il classico errore:
+
+```javascript
+// Riferimento vs esecuzione
+bottone.addEventListener("click", gestoreClick()); // ❌ ERRORE: stai chiamando la funzione e passando il risultato
+bottone.addEventListener("click", gestoreClick);   // ✅ Passi il riferimento
+```
+
+Le parentesi `()` eseguono la funzione.
+Quando registri un listener, vuoi **passare il riferimento**, non eseguirla subito.
+
+Lo stesso principio vale quando vuoi rimuovere un listener: una funzione anonima scritta due volte non è la stessa funzione, anche se il codice dentro è identico.
+Anonima significa senza nome e senza una variabile che la conserva.
+Ogni volta che scrivi `() => { ... }`, stai creando una nuova funzione.
+
+```javascript
+// ❌ Non funziona: sono due funzioni diverse
+bottone.addEventListener("click", () => console.log("Cliccato"));
+bottone.removeEventListener("click", () => console.log("Cliccato"));
+```
+
+```javascript
+function gestoreClick() {
+  console.log("Cliccato");
+}
+
+bottone.addEventListener("click", gestoreClick);
+bottone.removeEventListener("click", gestoreClick); // Funziona: stesso riferimento
+```
+
+-----
+
+#### L'Oggetto `event`
+
+La callback riceve un oggetto `event` (convenzionalmente chiamato `e`) con informazioni sull'evento appena accaduto.
+Dentro quell'oggetto trovi, per esempio, quale elemento ha generato l'evento, che tipo di evento è stato e se l'utente teneva premuti tasti speciali.
+
+```javascript
+bottone.addEventListener("click", (e) => {
+  console.log(e.target);    // Per esempio <button>Salva</button>, l'elemento che ha generato l'evento
+  console.log(e.type);      // "click"
+  console.log(e.timeStamp); // 1243.52 circa, millisecondi dall'inizio della pagina
+});
+```
+
+**`e.target`** è l'elemento concreto da cui è partito l'evento.
+Utile per la delega degli eventi, che vedremo tra poco.
+Non confondelo con **`e.currentTarget`**, che è l'elemento su cui hai registrato il listener.
+Possono essere diversi se clicchi un elemento figlio e l'evento risale fino al genitore.
+
+```html
+<button id="salva">
+  <span>Salva</span>
+</button>
+```
+
+```javascript
+const bottone = document.getElementById("salva");
+
+bottone.addEventListener("click", (e) => {
+  console.log(e.target);        // Per esempio <span>Salva</span>, se hai cliccato sul testo
+  console.log(e.currentTarget); // <button id="salva">...</button>, dove hai registrato il listener
+});
+```
+
+**`e.preventDefault()`** blocca il comportamento predefinito del browser.
+Il caso più comune è il submit di un form: normalmente il browser ricarica la pagina, `preventDefault` lo impedisce così puoi gestire il submit con JavaScript.
+
+```javascript
+form.addEventListener("submit", (e) => {
+  e.preventDefault(); // Blocca il refresh della pagina
+  // Qui puoi leggere i dati del form e gestire l'invio con JavaScript
+});
+```
+
+**`e.stopPropagation()`** blocca la propagazione dell'evento ai genitori.
+Serve quando un click su un elemento interno non deve attivare anche il listener del contenitore.
+
+```javascript
+const card = document.querySelector(".card");
+const bottoneElimina = document.querySelector(".elimina");
+
+card.addEventListener("click", () => {
+  apriDettaglioCard();
+});
+
+bottoneElimina.addEventListener("click", (e) => {
+  e.stopPropagation(); // Il click non arriva alla card
+  eliminaElemento();
+});
+```
+
+-----
+
+#### Event Delegation (Un Listener per Tanti Elementi)
+
+Il DOM supporta la **propagazione degli eventi**: quando clicchi su un elemento, l'evento "risale" dai figli ai genitori.
+Se clicchi un'icona dentro un bottone, l'evento parte dall'icona, passa al bottone, poi ai contenitori superiori.
+Questo comportamento permette la **delegation** (delega degli eventi): un solo listener su un genitore gestisce gli eventi di tutti i figli.
+
+```html
+<ul id="lista">
+  <li><button data-id="1">Elimina 1</button></li>
+  <li><button data-id="2">Elimina 2</button></li>
+  <li><button data-id="3">Elimina 3</button></li>
+  <!-- Potenzialmente centinaia di bottoni -->
+</ul>
+```
+
+```javascript
+// ❌ Un listener per ogni bottone (poco efficiente se ce ne sono molti)
+document.querySelectorAll("button").forEach(b => {
+  b.addEventListener("click", () => elimina(b.dataset.id));
+});
+
+// ✅ Un solo listener sul genitore
+document.querySelector("#lista").addEventListener("click", (e) => {
+  const bottone = e.target.closest("button");
+  if (!bottone) return; // Il click non era su un bottone
+  elimina(bottone.dataset.id);
+});
+```
+
+Ci sono due vantaggi concreti.
+Il primo è la **performance**: un listener invece di uno per ogni bottone.
+Il secondo è la **dinamicità**: se aggiungi bottoni nuovi dopo il caricamento, funzionano automaticamente senza registrare nuovi listener.
+
+`.closest()` è fondamentale in questo schema: partendo da `e.target`, risale l'albero del DOM cercando il primo elemento che corrisponde al selettore.
+Se il click è avvenuto su un'icona dentro il bottone, `e.target` è l'icona; `closest("button")` risale al bottone padre.
+
+-----
+
+#### Eventi Comuni
+
+**Eventi di tastiera**: `keydown` parte quando il tasto viene premuto, ed è quello più usato per scorciatoie e azioni come Escape o Enter.
+`keyup` parte quando il tasto viene rilasciato.
+`keypress` era usato per i caratteri digitati, ma è deprecato perché non gestisce bene tasti non testuali come Escape, Delete o le frecce, e aveva comportamenti poco coerenti tra browser.
+
+```javascript
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") chiudiMenu();
+  if (e.key === "Enter" && e.ctrlKey) invia();
+});
+```
+
+`e.key` contiene il nome del tasto premuto, per esempio `"Escape"`, `"Enter"` o `"a"`.
+`e.ctrlKey`, `e.shiftKey`, `e.altKey` e `e.metaKey` sono booleani che ti dicono se quei tasti modificatori erano premuti nello stesso momento.
+`metaKey` di solito è Cmd su Mac e il tasto Windows su Windows.
+
+**Eventi di input**: `change` viene generato quando l'input perde il focus dopo una modifica (o alla selezione per i menu a tendina).
+`input` viene generato **a ogni carattere digitato** in tempo reale.
+
+```javascript
+// change: solo quando l'utente "conferma"
+campo.addEventListener("change", (e) => {
+  salva(e.target.value);
+});
+
+// input: a ogni carattere digitato, per ricerca live
+campo.addEventListener("input", (e) => {
+  filtra(e.target.value);
+});
+```
+
+**Submit**: viene generato quando un form viene inviato.
+Accoppialo con `e.preventDefault()` per gestire l'invio da JavaScript.
+
+```javascript
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const dati = new FormData(form);
+  inviaDati(dati);
+});
+```
+
+`FormData` è l'API standard per raccogliere tutti i campi di un form.
+Prende l'elemento `<form>` e produce un oggetto iterabile con coppie `nome -> valore`, dove `nome` è l'attributo `name` di ogni input.
+
+```javascript
+const form = document.querySelector("form");
+const dati = new FormData(form);
+
+dati.get("email");      // "mario@example.com"
+dati.get("password");   // "..."
+dati.has("newsletter"); // true/false
+
+for (const [chiave, valore] of dati) {
+  console.log(chiave, valore);
+}
+```
+
+Per inviarlo con `fetch`, passi l'istanza direttamente come `body`.
+Il browser imposta automaticamente il `Content-Type` corretto (incluso `multipart/form-data` per i file).
+
+```javascript
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const res = await fetch("/api/invia", {
+    method: "POST",
+    body: new FormData(form),
+  });
+  if (res.ok) mostraSuccesso();
+});
+```
+
+Se vuoi convertire i dati in un oggetto JavaScript classico, usi `Object.fromEntries`:
+
+```javascript
+const oggetto = Object.fromEntries(new FormData(form));
+// { email: "...", password: "...", newsletter: "on" }
+```
+
+Nota che gli input senza `name` non vengono inclusi in `FormData`.
+Se un campo non compare, controlla che abbia l'attributo `name` nel tag HTML.
+
+**Pointer events**: `pointerdown` e `pointerup` servono per gestire interazioni con mouse, touch e penna usando gli stessi eventi.
+Sono utili per un feedback visivo immediato, come la pressione del bottone, che `click` non può dare perché parte solo al rilascio.
+
+```javascript
+bottone.addEventListener("pointerdown", () => {
+  bottone.classList.add("premuto");
+});
+
+bottone.addEventListener("pointerup", () => {
+  bottone.classList.remove("premuto");
+});
+
+bottone.addEventListener("pointerleave", () => {
+  bottone.classList.remove("premuto");
+});
+
+bottone.addEventListener("pointercancel", () => {
+  bottone.classList.remove("premuto");
+});
+```
+
+`pointerleave` e `pointercancel` evitano che il bottone resti visivamente premuto se il puntatore esce dall'elemento o se il browser interrompe l'interazione.
+
+-----
+
+#### Il Problema di `this` con `addEventListener` nelle Classi
+
+Come abbiamo visto nella <Link to="/it/docs/vademecum/javascript-real-world/oop-and-modules#this-il-riferimento-allistanza">sezione 13</Link>, dentro le classi il `this` si perde quando passi un metodo come callback.
+La soluzione più semplice è registrare un wrapper con arrow function, così il metodo viene chiamato attraverso l'istanza corretta.
+
+```javascript
+class Contatore {
+  constructor(bottone) {
+    this.conteggio = 0;
+    // ✅ Il wrapper arrow preserva this
+    bottone.addEventListener("click", () => this.incrementa());
+  }
+
+  incrementa() {
+    this.conteggio++;
+  }
+}
+```
+
+**Regola:** sempre `addEventListener`, mai `onclick`.
+Passa il riferimento della funzione, non la chiamata.
+Usa event delegation per liste di elementi.
+`closest()` è il tuo alleato nella delegation.
+
+<br />
+<br />
+<br />
+<br />
+
+### 22. Dialog e Modali (Il Tag `<dialog>`)
+
+Prima del 2022, creare una modale significava codice CSS e JavaScript artigianali: overlay scuri, trappole di focus, gestione dell'Escape, overflow del body.
+Una trappola di focus è il comportamento per cui il tasto Tab resta dentro la modale, invece di spostarsi sugli elementi dietro.
+HTML ha ora `<dialog>`, un elemento nativo che gestisce molti di questi comportamenti.
+
+#### Struttura di Base
+
+Il tag `<dialog>` è un contenitore nascosto per impostazione predefinita.
+Lo mostri con i metodi `.show()` (non modale) o `.showModal()` (modale, blocca il resto della pagina), lo chiudi con `.close()`.
+
+```html
+<dialog id="confermaDialog">
+  <h2>Sei sicuro?</h2>
+  <p>Questa azione è irreversibile.</p>
+  <form method="dialog">
+    <button value="annulla">Annulla</button>
+    <button value="conferma">Conferma</button>
+  </form>
+</dialog>
+
+<button id="apri">Elimina</button>
+```
+
+```javascript
+const dialog = document.getElementById("confermaDialog");
+const apri = document.getElementById("apri");
+
+apri.addEventListener("click", () => dialog.showModal());
+```
+
+-----
+
+#### `showModal()` vs `show()`
+
+La differenza è sostanziale.
+
+`.show()` mostra il dialog come un normale elemento della pagina.
+Il resto del contenuto resta interattivo, puoi cliccare fuori, niente overlay.
+
+`.showModal()` mostra il dialog come **modale**: viene posizionato sopra tutto tramite il **top layer** del browser, cioè uno strato speciale sopra la pagina normale.
+Il resto della pagina è inattivo e offuscato da un `::backdrop`, uno pseudo-elemento stilizzabile via CSS, e il focus è intrappolato nel dialog.
+Premere `Escape` lo chiude automaticamente.
+
+Per una vera modale, userai quasi sempre `showModal()`.
+`show()` serve in casi specifici in cui vuoi mostrare un pannello senza bloccare il resto della pagina.
+
+-----
+
+#### Chiudere il Dialog e `returnValue`
+
+Hai tre modi possibili per chiudere il dialog:
+
+1. **`dialog.close(valore)`** in JavaScript, con un valore opzionale che finisce in `dialog.returnValue`
+2. **Bottone con `form method="dialog"`** dentro il dialog: cliccarlo chiude il dialog e usa `value` del bottone come returnValue
+3. **Tasto `Escape`** (funziona solo con `showModal`)
+
+Lo schema del form con `method="dialog"` è elegante perché evita di registrare un gestore su ogni bottone.
+
+```html
+<dialog id="chiediNome">
+  <form method="dialog">
+    <input name="nome" type="text" autofocus />
+    <button value="annulla">Annulla</button>
+    <button value="ok">OK</button>
+  </form>
+</dialog>
+```
+
+```javascript
+const dialog = document.getElementById("chiediNome");
+dialog.showModal();
+
+dialog.addEventListener("close", () => {
+  console.log("ReturnValue:", dialog.returnValue); // "annulla" o "ok"
+  if (dialog.returnValue === "ok") {
+    const nome = dialog.querySelector("input[name='nome']").value;
+    console.log("Nome inserito:", nome);
+  }
+});
+```
+
+L'evento `close` viene generato quando il dialog viene chiuso.
+`returnValue` è una stringa salvata sul dialog al momento della chiusura: contiene il `value` del bottone cliccato o il valore che hai passato a `dialog.close(valore)`.
+È utile quando vuoi sapere perché il dialog è stato chiuso, per esempio "annulla" oppure "ok".
+
+-----
+
+#### Accessibilità Incorporata
+
+`<dialog>` con `showModal()` include comportamenti che altrimenti dovresti implementare a mano:
+
+- Focus trap: Tab e Shift+Tab restano dentro il dialog
+- Focus iniziale sul primo elemento focusabile (o su uno con `autofocus`)
+- Escape per chiudere
+- Ruolo ARIA `dialog` implicito per gli screen reader
+- Il resto della pagina viene reso inattivo mentre la modale è aperta
+
+Per questo `<dialog>` è preferibile alle modali costruite solo con `div`, CSS e listener manuali, quando il caso d'uso è una modale vera.
+
+**Regola:** usa `<dialog>` per modali di conferma, dettaglio e form in overlay.
+`showModal()` per quasi tutti i casi.
+`form method="dialog"` per chiudere con `returnValue` senza gestori espliciti.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Asincronia
+
+### 23. Sincrono vs Asincrono
+
+JavaScript è **single-threaded**, ovvero esegue una sola operazione alla volta, in sequenza.
+Un thread è un flusso di esecuzione; dire "single-threaded" significa perciò che il codice JavaScript principale non fa due cose nello stesso identico momento.
+Questo potrebbe sembrare limitante (un'operazione lenta blocca tutto?), ma JavaScript risolve il problema con il modello **asincrono**: operazioni potenzialmente lente (chiamate di rete, timer, lettura/scrittura su storage o database, accessi a file) vengono delegate al sistema, e il codice continua a girare.
+Quando l'operazione finisce, JavaScript torna a occuparsene.
+
+#### Esempio Sincrono
+
+Il codice sincrono esegue una riga alla volta, in ordine, bloccando tutto finché ogni operazione non finisce.
+
+```javascript
+console.log("inizio");
+const risultato = calcolaQualcosa(); // Blocca fino al risultato
+console.log("fine");
+```
+
+Questo va bene per operazioni rapide (calcoli, manipolazione di stringhe) ma è disastroso per operazioni lente.
+
+-----
+
+#### Il Problema: Operazioni Lente
+
+Immagina di dover scaricare dati da un server.
+Se fosse sincrono, il codice resterebbe fermo per secondi aspettando la risposta.
+Durante quei secondi il browser sarebbe congelato: scroll, click, input da tastiera, animazioni e aggiornamenti visivi resterebbero fermi finché l'operazione non finisce.
+
+```javascript
+// Pseudo-codice sincrono (fortunatamente non funziona così in JS)
+const dati = scaricaDaServer(); // Blocca 2 secondi
+aggiornaUI(dati);
+// Per 2 secondi l'utente vede una pagina congelata
+```
+
+La soluzione è **asincrona**: lanciamo l'operazione, ma non restiamo fermi lì ad aspettare.
+È come se le dicessimo "quando hai finito, chiamami" e continuiamo a fare altro.
+
+-----
+
+#### Le Tre Forme dell'Asincrono
+
+JavaScript ha evoluto il modo di gestire l'asincrono nel tempo.
+Oggi convivono tre forme, in ordine storico:
+
+1. **Callback** (storico, ancora usato)
+2. **Promises** (ES6, 2015)
+3. **`async`/`await`** (ES2017, lo standard moderno)
+
+Sono strati sopra lo stesso meccanismo di base: il codice dice "quando finisce, fai questo", e intanto continua con altro.
+
+**Callback**: passi una funzione che verrà chiamata al completamento.
+
+```javascript
+setTimeout(() => {
+  console.log("Sono passati 2 secondi");
+}, 2000);
+console.log("Questo appare prima");
+```
+
+**Promise**: l'operazione restituisce un oggetto che rappresenta un risultato futuro, e con `.then()` dici cosa fare quando quel risultato arriva.
+
+```javascript
+scaricaDaServer().then(dati => {
+  aggiornaUI(dati);
+});
+console.log("Questo appare prima");
+```
+
+**async/await**: scrivi codice che **sembra** sincrono, ma non blocca davvero.
+È la sintassi moderna e pulita.
+
+```javascript
+async function caricaDati() {
+  const dati = await scaricaDaServer();
+  aggiornaUI(dati);
+}
+```
+
+Tutti e tre i modi portano allo stesso risultato.
+Nelle prossime sezioni vedremo nel dettaglio Promises e fetch, poi async/await.
+
+-----
+
+#### L'Event Loop (Come Funziona Davvero)
+
+Il motivo per cui JavaScript può essere single-threaded ma comunque gestire operazioni lente senza bloccarsi si chiama **Event Loop**.
+Conoscerlo concettualmente ti farà capire perché certi comportamenti sono quelli che sono.
+
+Per capire il modello, parti da due strutture principali.
+
+La **Call Stack** è la pila delle funzioni in esecuzione.
+"Stack" significa pila: l'ultima funzione entrata è la prima a uscire.
+Quando chiami una funzione, viene messa in cima.
+Quando finisce, viene tolta.
+Il codice sincrono gira tutto qui, e finché la stack non è vuota, niente altro può girare.
+
+La **Task Queue** (o Callback Queue) è una coda di callback che aspettano di essere eseguite.
+"Queue" significa proprio coda: la prima callback pronta è la prima a essere presa.
+Quando chiami `setTimeout` o registri un event listener, la callback non va subito nello stack: aspetta in una coda gestita dal browser (o da Node.js).
+Il browser si occupa del timer o dell'evento in background, e quando è il momento, mette la callback nella Task Queue.
+Le callback delle Promise, comprese quelle che arrivano da `fetch().then(...)`, finiscono invece nella Microtask Queue, che vediamo tra poco.
+
+L'**Event Loop** è il meccanismo che collega la Call Stack alle code di lavoro.
+Controlla costantemente la situazione: se la Call Stack è vuota, prende il prossimo lavoro in coda e lo mette nella stack per eseguirlo.
+
+```javascript
+console.log("A");
+
+setTimeout(() => {
+  console.log("B");
+}, 0);
+
+console.log("C");
+
+// Output: A, C, B
+```
+
+Anche con timer a `0` millisecondi, `B` esce per ultimo, perché `console.log("A")` e `console.log("C")` girano sulla Call Stack in modo sincrono.
+`setTimeout` mette la sua callback in coda; l'Event Loop la eseguirà **solo quando la Call Stack sarà vuota**, cioè dopo che il codice sincrono è finito.
+
+Esiste anche una **Microtask Queue** a priorità più alta, dove finiscono le callback delle Promise (`.then`, `.catch`, `await`).
+Le microtask sono piccoli lavori che JavaScript deve completare appena possibile dopo il codice sincrono corrente.
+Le microtask vengono sempre eseguite prima delle task ordinarie.
+Questo spiega perché una `Promise.resolve().then(fn)` viene eseguita prima di un `setTimeout(fn, 0)`, anche se entrambe sembrano "immediate".
+
+```javascript
+console.log("A");
+
+setTimeout(() => console.log("B"), 0);
+Promise.resolve().then(() => console.log("C"));
+
+console.log("D");
+
+// Output: A, D, C, B
+// D prima di C e B perché è sincrono.
+// C prima di B perché le Promise vanno in Microtask Queue (priorità alta).
+```
+
+L'implicazione pratica: **non fare mai operazioni pesanti in modo sincrono**.
+Un calcolo che impiega un secondo blocca la Call Stack, e per quel secondo restano ferme animazioni, click e callback in coda.
+L'utente vedrebbe quindi una pagina congelata.
+Le operazioni pesanti vanno spezzate in parti più piccole con `setTimeout`, o spostate su un <a href="#web-workers-cenni">Web Worker</a>.
+
+**Regola:** JavaScript è single-threaded ma asincrono.
+L'Event Loop esegue le callback dalla Task Queue quando la Call Stack è vuota.
+Le microtask (Promise) vengono prima delle task (setTimeout).
+Non bloccare mai la Call Stack con operazioni pesanti sincrone.
+Usa `async`/`await` come sintassi predefinita nel codice moderno.
+Le callback restano per eventi e timer.
+
+<br />
+<br />
+<br />
+<br />
+
+### 24. Promises e `fetch`
+
+Una **Promise** è un oggetto che rappresenta un valore futuro.
+Non è il valore stesso: rappresenta un valore che arriverà più avanti, oppure un errore se l'operazione fallisce.
+
+#### I Tre Stati
+
+Una Promise può essere in uno dei seguenti tre stati:
+
+- **pending**: l'operazione è in corso
+- **fulfilled**: l'operazione è riuscita, c'è un valore
+- **rejected**: l'operazione è fallita, c'è un errore
+
+Una Promise inizia come pending e finisce come fulfilled o rejected.
+Una volta risolta, non torna indietro.
+Quando diciamo che una Promise "si risolve", intendiamo che smette di essere in attesa e arriva a uno stato finale: successo (`fulfilled`) oppure errore (`rejected`).
+
+-----
+
+#### `.then()`, `.catch()`, `.finally()`
+
+Puoi attaccare i gestori ai tre stati con questi tre metodi.
+
+```javascript
+scaricaDati()
+  .then(dati => {
+    console.log("Riuscito:", dati);
+  })
+  .catch(errore => {
+    console.error("Fallito:", errore);
+  })
+  .finally(() => {
+    console.log("Finito (sia in caso di successo che di errore)");
+  });
+```
+
+`.then()` riceve il valore in caso di successo.
+`.catch()` riceve l'errore in caso di fallimento.
+`.finally()` gira sempre, tipicamente per operazioni di chiusura come nascondere uno spinner o riabilitare un bottone.
+
+-----
+
+#### Catena di Promise
+
+Ogni `.then()` restituisce una nuova Promise, quindi puoi incatenarli.
+Il valore restituito da un `.then()` diventa l'input del successivo.
+
+```javascript
+scaricaUtente(id)
+  .then(utente => scaricaOrdini(utente.id))
+  .then(ordini => scaricaDettagli(ordini[0].id))
+  .then(dettagli => mostraDettagli(dettagli))
+  .catch(errore => mostraErrore(errore));
+```
+
+Un solo `.catch()` alla fine gestisce qualunque errore nella catena.
+Se il primo `scaricaUtente` fallisce, il flusso salta direttamente al `.catch()`.
+
+La leggibilità della catena è buona finché il flusso resta semplice, ma peggiora drasticamente quando la logica si complica con condizioni, cicli o più operazioni asincrone.
+In quei casi `async`/`await` rende il flusso più lineare.
+
+-----
+
+#### `fetch()` (Le Chiamate HTTP)
+
+`fetch()` è l'API moderna per fare richieste HTTP.
+Una richiesta HTTP è una comunicazione con un server, per chiedere o inviare dati.
+`fetch` restituisce una Promise che si risolve con un oggetto `Response`, cioè la risposta ricevuta dal server.
+
+```javascript
+fetch("https://api.example.com/utenti")
+  .then(res => res.json())
+  .then(dati => console.log(dati))
+  .catch(err => console.error(err));
+```
+
+Il processo è **a due fasi**:
+
+1. Prima ricevi la **risposta HTTP** (l'oggetto `Response`): contiene status code, header e un body non ancora letto
+2. Poi chiami `.json()` (o `.text()`) sulla risposta per leggere e interpretare il body, cioè il contenuto vero della risposta, e anche questa operazione restituisce un'**altra Promise**
+
+Lo status code è il numero che descrive l'esito della risposta (`200`, `404`, `500`).
+Gli header sono metadati della risposta, per esempio formato, cache o autenticazione.
+
+Questa separazione può sembrare macchinosa all'inizio, ma ha un motivo: per risposte grandi, puoi decidere di non leggere il body (risparmi memoria) o leggerlo in streaming, cioè a pezzi invece che tutto insieme.
+
+-----
+
+#### Il Trabocchetto: `fetch` Non Va in Errore sugli Errori HTTP
+
+Questo è il trabocchetto più famoso di `fetch`.
+Un `.catch()` cattura solo errori di rete, come DNS fallito, connessione persa o CORS bloccato.
+Il DNS è il sistema che traduce un dominio come `example.com` nell'indirizzo del server.
+CORS è il meccanismo di sicurezza con cui il browser decide se una pagina può leggere risposte provenienti da un'origine diversa.
+**Non cattura errori HTTP come 404 o 500**: per `fetch` la risposta è arrivata, solo con status code diverso da 200.
+
+```javascript
+// ❌ PENSI di gestire gli errori, ma non cattura 404 o 500
+fetch("/api/non-esiste")
+  .then(res => res.json())
+  .then(dati => console.log(dati))
+  .catch(err => console.error("Errore:", err));
+// Se il server risponde 404, il .then() parte comunque
+```
+
+La soluzione è controllare manualmente `res.ok`, che è `true` solo se lo status è tra 200 e 299.
+
+```javascript
+// ✅ CORRETTO
+fetch("/api/utenti")
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    }
+    return res.json();
+  })
+  .then(dati => console.log(dati))
+  .catch(err => console.error("Errore:", err));
+```
+
+Se `res.ok` è `false`, lanciamo un errore esplicito che farà saltare il flusso al `.catch()`.
+
+-----
+
+#### Metodi Diversi dal GET
+
+Per impostazione predefinita, `fetch` fa un GET.
+Per POST, PUT, DELETE, passa un oggetto di configurazione come secondo argomento.
+
+```javascript
+fetch("/api/utenti", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ nome: "Mario", eta: 27 }),
+});
+```
+
+Con JSON, il body deve essere una stringa e la ottieni con `JSON.stringify`.
+In altri casi `fetch` accetta anche altri tipi di body, per esempio `FormData`, `Blob` o `URLSearchParams`.
+Gli header dipendono dal formato e dall'autenticazione che usi: con JSON imposti spesso `"Content-Type": "application/json"`, mentre con `FormData` di solito lasci che sia il browser a gestirlo.
+
+-----
+
+#### Costruire URL con `URL` e `URLSearchParams`
+
+Concatenare stringhe per costruire URL è fragile: puoi dimenticare di codificare i caratteri speciali, e un parametro con uno spazio o una `&` può rompere tutto.
+JavaScript ha due API native per farlo in modo sicuro.
+
+`URL` rappresenta un URL completo e ti dà proprietà per leggere e modificare le sue parti.
+
+```javascript
+const url = new URL("https://api.example.com/cerca");
+url.searchParams.set("q", "javascript moderno");
+url.searchParams.set("limit", 10);
+
+console.log(url.toString());
+// "https://api.example.com/cerca?q=javascript+moderno&limit=10"
+```
+
+`URLSearchParams` gestisce specificamente la query string.
+Puoi usarla da sola se stai interpretando una query già esistente.
+
+```javascript
+const params = new URLSearchParams("q=javascript&limit=10");
+params.get("q");         // "javascript"
+params.has("limit");     // true
+params.set("limit", 20);
+params.toString();       // "q=javascript&limit=20"
+```
+
+Nella pratica le accoppi a `fetch` per costruire richieste con parametri dinamici.
+
+```javascript
+function cerca(query, pagina = 1) {
+  const url = new URL("/api/cerca", window.location.origin);
+  url.searchParams.set("q", query);
+  url.searchParams.set("p", pagina);
+  return fetch(url);
+}
+```
+
+`window.location.origin` è l'origine del sito corrente, per esempio `https://example.com`.
+In questo modo puoi costruire un URL assoluto partendo da un percorso relativo come `/api/cerca`.
+
+Gli spazi, gli accenti e le `&` dentro i valori vengono codificati automaticamente.
+Non devi più gestire questa codifica a mano.
+
+-----
+
+#### `AbortController` (Cancellare un `fetch`)
+
+Quando l'utente inizia una ricerca e poi cambia idea prima che la risposta arrivi, la richiesta resta ancora in corso.
+Nei casi critici, per esempio una ricerca live con molte chiamate o una pagina che viene chiusa/cambiata, vuoi poter annullare la richiesta dal lato browser.
+`AbortController` è il meccanismo standard.
+
+```javascript
+const controller = new AbortController();
+
+fetch("/api/dati", { signal: controller.signal })
+  .then(res => res.json())
+  .then(dati => console.log(dati))
+  .catch(err => {
+    if (err.name === "AbortError") {
+      console.log("Richiesta cancellata");
+    } else {
+      console.error(err);
+    }
+  });
+
+// Più tardi, cancella la richiesta
+controller.abort();
+```
+
+`abort()` annulla la richiesta dal punto di vista del browser e fa fallire il `fetch` con un errore `AbortError`.
+Non significa necessariamente che il server smetta subito di lavorare: se la richiesta è già arrivata, il server potrebbe comunque elaborarla, scrivere dati o completare la risposta.
+
+Lo schema classico è combinare `AbortController` con il debounce per la ricerca live: quando arriva una nuova query, cancelli la precedente se non è ancora risolta.
+
+```javascript
+let currentController = null;
+
+async function cerca(query) {
+  if (currentController) currentController.abort();
+  currentController = new AbortController();
+
+  try {
+    const url = new URL("/api/cerca", window.location.origin);
+    url.searchParams.set("q", query);
+
+    const res = await fetch(url, {
+      signal: currentController.signal,
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    mostraRisultati(await res.json());
+  } catch (err) {
+    if (err.name !== "AbortError") console.error(err);
+  }
+}
+```
+
+Senza `AbortController`, in uno scenario di ricerca live rapido rischi che le risposte arrivino fuori ordine e il risultato visualizzato sia quello della query vecchia invece che di quella corrente.
+
+**Regola:** `fetch` restituisce una Promise con due fasi (Response -> body interpretato).
+Controlla sempre `res.ok` perché `fetch` non va in rejected su 4xx/5xx.
+Usa `.catch()` alla fine della catena per gestire gli errori.
+`URL` e `URLSearchParams` per costruire richieste senza concatenare stringhe a mano.
+`AbortController` per cancellare richieste che non servono più.
+
+<br />
+<br />
+<br />
+<br />
+
+### 25. `async`/`await` (L'Asincrono che Sembra Sincrono)
+
+`async`/`await` è zucchero sintattico sopra le Promise, cioè una sintassi più leggibile che però usa lo stesso meccanismo, non cambia perciò il comportamento, bensì **come lo scrivi**.
+Il risultato è codice asincrono che sembra sincrono: leggibile dall'alto al basso, con `await` che "aspetta" la risoluzione di una Promise e restituisce il valore.
+
+#### Sintassi di Base
+
+```javascript
+async function caricaUtente(id) {
+  const res = await fetch(`/api/utenti/${id}`);
+  const utente = await res.json();
+  return utente;
+}
+```
+
+La funzione è dichiarata `async`, il che significa che restituisce sempre una Promise, anche quando nel codice sembra restituire direttamente un valore.
+`await` può essere usato solo dentro una funzione `async`.
+
+Confrontalo con la versione con catena di Promise:
+
+```javascript
+function caricaUtente(id) {
+  return fetch(`/api/utenti/${id}`)
+    .then(res => res.json())
+    .then(utente => utente);
+}
+```
+
+Entrambi funzionano, entrambi restituiscono una Promise.
+`async`/`await` è più facile da leggere, specialmente quando la logica diventa complessa.
+
+-----
+
+#### Gestire gli Errori con `try`/`catch`
+
+Con `async`/`await`, la gestione errori usa il classico `try`/`catch`.
+
+```javascript
+async function caricaUtente(id) {
+  try {
+    const res = await fetch(`/api/utenti/${id}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const utente = await res.json();
+    return utente;
+  } catch (errore) {
+    console.error("Errore nel caricamento:", errore);
+    return null;
+  }
+}
+```
+
+Questo è il vantaggio più grande di `async`/`await`: gestione errori allo stesso modo sia in codice sincrono che asincrono.
+Prima con Promise dovevi ricordare `.catch()` alla fine, con `async`/`await` usi lo stesso `try`/`catch` del resto del linguaggio.
+
+-----
+
+#### Due Livelli di Errore
+
+Nella pratica, vuoi gestire errori in due modi diversi a seconda di chi li legge.
+
+**Per te sviluppatore**: registra l'errore nella console con tutto il dettaglio possibile.
+Lo vedrai durante il debug.
+
+**Per l'utente**: mostra un messaggio comprensibile nella UI.
+Non gli interessa lo stack trace, cioè la lista tecnica delle chiamate che hanno portato all'errore, gli interessa cosa fare.
+
+```javascript
+async function inviaForm(dati) {
+  try {
+    const res = await fetch("/api/invia", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dati),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (errore) {
+    // Per lo sviluppatore
+    console.error("Errore invio form:", errore);
+    // Per l'utente
+    mostraToast("Qualcosa è andato storto. Riprova tra poco.");
+    throw errore; // Rilancia se serve al chiamante
+  }
+}
+```
+
+-----
+
+#### `await` Senza `async` è Errore
+
+Ricorda: `await` è ammesso **solo dentro funzioni `async`**.
+Nei moduli moderni può essere usato anche nel corpo principale del modulo, comportamento chiamato **top-level await**.
+Fuori da questi casi, è un errore di sintassi.
+
+```javascript
+// ❌ SBAGLIATO
+function caricaUtente() {
+  const res = await fetch("/api/utenti"); // SyntaxError
+}
+
+// ✅ CORRETTO
+async function caricaUtente() {
+  const res = await fetch("/api/utenti");
+}
+```
+
+-----
+
+#### Operazioni in Parallelo con `Promise.all`
+
+`await` esegue in sequenza: aspetta il primo, poi il secondo, poi il terzo.
+Se le operazioni sono **indipendenti**, puoi farle in parallelo con `Promise.all`, che accetta un array di Promise e restituisce un array di risultati quando tutte sono completate.
+
+```javascript
+// ❌ In sequenza: aspetta 3 x tempoRichiesta totali
+async function caricaTuttoSequenziale() {
+  const utente = await fetch("/api/utente").then(r => r.json());
+  const ordini = await fetch("/api/ordini").then(r => r.json());
+  const messaggi = await fetch("/api/messaggi").then(r => r.json());
+  return { utente, ordini, messaggi };
+}
+
+// ✅ In parallelo: aspetta solo la più lenta
+async function caricaTuttoParallelo() {
+  const [utente, ordini, messaggi] = await Promise.all([
+    fetch("/api/utente").then(r => r.json()),
+    fetch("/api/ordini").then(r => r.json()),
+    fetch("/api/messaggi").then(r => r.json()),
+  ]);
+  return { utente, ordini, messaggi };
+}
+```
+
+Se una delle Promise fallisce, l'intero `Promise.all` va in rejected, cioè fallisce subito e passa al `catch`.
+Le altre operazioni già partite non vengono cancellate automaticamente: semplicemente il risultato complessivo non viene più considerato riuscito.
+Se vuoi aspettare che tutte finiscano, sia in successo che in errore, usa `Promise.allSettled`.
+
+-----
+
+#### Classi di Errore Personalizzate
+
+`Error` è una classe come le altre, quindi puoi estenderla per creare tipi di errore specifici al tuo dominio.
+Il vantaggio è poter distinguere gli errori con `instanceof` e agire diversamente a seconda del tipo.
+
+```javascript
+class ErroreRete extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.name = "ErroreRete";
+    this.statusCode = statusCode;
+  }
+}
+
+class ErroreValidazione extends Error {
+  constructor(message, campo) {
+    super(message);
+    this.name = "ErroreValidazione";
+    this.campo = campo;
+  }
+}
+```
+
+Poi nel codice che può fallire:
+
+```javascript
+async function inviaForm(dati) {
+  if (!dati.email.includes("@")) {
+    throw new ErroreValidazione("Email non valida", "email");
+  }
+
+  const res = await fetch("/api/invia", { /* ... */ });
+  if (!res.ok) {
+    throw new ErroreRete("Invio fallito", res.status);
+  }
+
+  return await res.json();
+}
+```
+
+E chi chiama decide come gestire ogni tipo:
+
+```javascript
+try {
+  await inviaForm(dati);
+  mostraSuccesso();
+} catch (err) {
+  if (err instanceof ErroreValidazione) {
+    evidenziaCampo(err.campo, err.message);
+  } else if (err instanceof ErroreRete) {
+    mostraToast(`Errore server (${err.statusCode})`);
+  } else {
+    console.error("Errore imprevisto:", err);
+    mostraToast("Qualcosa è andato storto");
+  }
+}
+```
+
+Senza classi di errore personalizzate, l'alternativa è confrontare stringhe nei messaggi (una soluzione fragile e difficile da mantenere).
+Con le classi, la gestione è pulita e scala bene man mano che il codice cresce.
+
+**Regola:** `async`/`await` come scelta predefinita per codice asincrono moderno.
+`try`/`catch` per errori.
+Due livelli: console per te, UI per l'utente.
+`Promise.all` per operazioni indipendenti in parallelo.
+Classi di errore personalizzate quando vuoi distinguere tipi di errore nel `catch`.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Storage, PWA e Schemi
+
+### 26. Storage (`localStorage` e `IndexedDB`)
+
+Salvare dati che sopravvivono al refresh della pagina è un bisogno comune: preferenze utente, bozze di form, carrello, stato dell'app.
+Il browser ti dà due API principali, adatte a casi diversi.
+
+#### `localStorage`
+
+`localStorage` è uno storage chiave-valore, cioè salva dati associando un nome a un valore.
+È sincrono (blocca il codice finché l'operazione non finisce) e persistente (sopravvive al refresh e al riavvio del browser).
+Per `localStorage`, i browser applicano un limite pratico di circa 5 MB per origin.
+Qui "origin" significa la combinazione di protocollo, dominio e porta: `https://example.com` e `http://example.com` sono origin diverse, così come `https://example.com` e `https://example.com:3000`.
+
+```javascript
+// Salva
+localStorage.setItem("tema", "dark");
+
+// Leggi
+const tema = localStorage.getItem("tema"); // "dark"
+
+// Rimuovi
+localStorage.removeItem("tema");
+
+// Svuota tutto
+localStorage.clear();
+```
+
+La cosa più importante da ricordare è che **`localStorage` memorizza solo stringhe**.
+Per salvare oggetti o array, trasformali in stringa con `JSON.stringify` e ricostruiscili con `JSON.parse` in lettura.
+
+```javascript
+// Salva un oggetto
+const impostazioni = { tema: "dark", linguaggio: "it", notifiche: true };
+localStorage.setItem("impostazioni", JSON.stringify(impostazioni));
+
+// Leggi e ricostruisci
+const dati = JSON.parse(localStorage.getItem("impostazioni"));
+console.log(dati.tema); // "dark"
+```
+
+Se la chiave non esiste, `getItem` restituisce `null`.
+`JSON.parse(null)` restituisce `null` senza errore, quindi la lettura è sicura anche quando non c'è nulla salvato.
+Ma se la chiave esiste con un valore che non è JSON valido, `JSON.parse` lancia errore.
+In pratica, usa `try`/`catch` quando il dato potrebbe non essere JSON valido.
+
+```javascript
+function leggiImpostazioni() {
+  try {
+    return JSON.parse(localStorage.getItem("impostazioni")) ?? {};
+  } catch {
+    return {};
+  }
+}
+```
+
+-----
+
+#### Quando Usare `localStorage`
+
+`localStorage` è adatto a dati piccoli, semplici e non sensibili:
+
+- Preferenze utente, come tema, lingua o layout preferito
+- Filtri e ordinamenti dell'ultima ricerca
+- Bozze di form che vuoi recuperare dopo un refresh
+- Carrello temporaneo o stato minimo dell'app
+- Pannelli aperti/chiusi, tab selezionata o ultima pagina visitata
+
+Non usarlo per dati sensibili o token di autenticazione: `localStorage` è leggibile da JavaScript, quindi un attacco XSS potrebbe leggerlo.
+
+È **sincrono**, quindi operazioni lente (salvare MB di dati) bloccano l'interfaccia.
+Inoltre il limite di circa 5 MB è reale: se lo raggiungi, `setItem` può lanciare un errore `QuotaExceededError`; se non lo gestisci, il codice si interrompe in quel punto.
+
+-----
+
+#### `IndexedDB` (Storage per Dati Grandi)
+
+Quando `localStorage` non basta (dati grandi, file, blob di immagini), `IndexedDB` è la scelta.
+È un database chiave-valore completo, asincrono, con indici e transazioni, adatto a quantità di dati molto più grandi di `localStorage`.
+La quota effettiva dipende dal browser, dallo spazio disponibile e dal dispositivo, quindi non va trattata come un numero fisso.
+Gli indici servono a cercare velocemente i dati, le transazioni servono a raggruppare operazioni che devono riuscire o fallire insieme.
+
+Il costo è la complessità: l'API nativa è verbosa.
+Nella pratica spesso si usa un wrapper, cioè una piccola libreria che rende l'API più leggibile, ma il concetto importante qui è capire quando passare da `localStorage` a `IndexedDB`.
+
+Non entriamo nel dettaglio dell'API nativa di `IndexedDB` perché è un argomento a sé stante.
+Il concetto che conta è: quando devi salvare dati pesanti (file, immagini, PDF), `localStorage` non basta, e `IndexedDB` è lo strumento giusto.
+
+-----
+
+#### Cookie (Menzione Breve)
+
+I cookie esistono ancora ma hanno un caso d'uso specifico: dati che devono arrivare al server a ogni richiesta HTTP, per esempio autenticazione con session ID.
+Sono piccoli (circa 4 KB per cookie) e vengono inclusi automaticamente nelle richieste verso il dominio a cui appartengono.
+
+Per dati solo client-side, **usa `localStorage` o `IndexedDB`**, non i cookie.
+I cookie hanno overhead di rete, cioè aumentano leggermente il peso di ogni richiesta perché vanno al server ogni volta.
+Hanno anche complicazioni di sicurezza, come gli attacchi **CSRF** (Cross-Site Request Forgery).
+Un attacco CSRF funziona proprio sfruttando l'invio automatico dei cookie.
+Immagina di essere loggato su `banca.example`: il browser conserva il cookie di sessione.
+Se poi visiti un sito malevolo, quel sito potrebbe provare a far partire una richiesta verso `banca.example`.
+Se il browser allega automaticamente il cookie e il server non verifica correttamente che la richiesta arrivi davvero dalla pagina legittima, il server potrebbe credere che l'azione arrivi da te.
+
+**Regola:** `localStorage` per dati piccoli, semplici e non sensibili, con `JSON.stringify`/`parse` per oggetti.
+`IndexedDB` per dati grandi.
+Cookie solo quando il server deve riceverli a ogni richiesta.
+
+<br />
+<br />
+<br />
+<br />
+
+### 27. Service Workers e PWA (Cenni)
+
+Un **Service Worker** è uno script JavaScript separato dalla pagina.
+Il browser può avviarlo quando deve gestire eventi specifici e può usarlo per **intercettare le richieste di rete** del tuo sito.
+Non è uno script sempre acceso.
+Il browser lo attiva quando serve, per esempio per un evento `fetch`, `push`, `install` o `activate`.
+Intercettare significa che può mettersi in mezzo tra la pagina e la rete, decidendo se rispondere con dati dalla cache o lasciar partire la richiesta normale.
+Questo sblocca capacità tipiche delle app installate: funzionamento offline, cache controllata, notifiche push, sincronizzazione in background e aggiornamenti gestiti.
+
+I Service Worker sono il cuore delle **PWA** (Progressive Web App), siti web che si comportano come app installabili.
+
+#### Cosa Può Fare un Service Worker
+
+Le capacità principali sono queste:
+
+1. **Intercettare le richieste**: quando la pagina chiede un file CSS, un'immagine o una chiamata API, il service worker può vedere quella richiesta e decidere se rispondere dalla cache, andare in rete o costruire una risposta.
+2. **Funzionare offline**: se hai salvato in cache i file essenziali, la pagina può aprirsi anche senza connessione.
+3. **Gestire strategie di cache**: puoi trattare asset statici, HTML e dati API in modo diverso.
+4. **Ricevere eventi in background**: in browser e contesti supportati, può gestire notifiche push o sincronizzazioni rimandate.
+5. **Gestire aggiornamenti**: può installare una nuova versione e permetterti di avvisare l'utente quando è pronta.
+
+-----
+
+#### Registrare un Service Worker
+
+La registrazione si fa dal codice della pagina, per esempio in `app.js`: è la pagina che dice al browser quale file deve usare come service worker.
+
+```javascript
+// Nella pagina principale
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js")
+    .then(reg => console.log("SW registrato:", reg.scope))
+    .catch(err => console.error("Registrazione fallita:", err));
+}
+```
+
+`sw.js` è il file del service worker.
+Non viene eseguito come un normale script della pagina: gira in un contesto separato, senza accesso diretto al DOM, e risponde a eventi specifici.
+La struttura generale ruota attorno a tre eventi chiave:
+
+- **`install`**: avviene quando il service worker viene installato, ed è il momento in cui puoi mettere in cache i file iniziali
+- **`activate`**: avviene quando il service worker prende il controllo, ed è il posto tipico per pulire cache vecchie
+- **`fetch`**: passa da qui ogni richiesta controllata dal service worker, e puoi decidere se rispondere dalla cache o dalla rete
+
+```javascript
+const CACHE_NAME = "app-v1";
+const ASSET_INIZIALI = ["/", "/styles.css", "/app.js"];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSET_INIZIALI))
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then(nomiCache =>
+      Promise.all(
+        nomiCache
+          .filter(nome => nome !== CACHE_NAME)
+          .map(nome => caches.delete(nome))
+      )
+    )
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then(rispostaInCache => {
+      return rispostaInCache || fetch(event.request);
+    })
+  );
+});
+```
+
+`event.waitUntil()` dice al browser che l'evento non è finito finché la Promise non si risolve.
+`event.respondWith()` dice al browser quale risposta usare per quella richiesta.
+Nel codice sopra, se una risposta è già in cache viene usata subito; altrimenti la richiesta passa alla rete.
+
+-----
+
+#### Strategie di Cache
+
+Le strategie di cache decidono l'ordine con cui provi cache e rete.
+Non esiste una strategia giusta per tutto: dipende dal tipo di risorsa.
+Gli esempi sotto sono pensati per richieste `GET`, cioè richieste di lettura come HTML, CSS, JavaScript, immagini o dati pubblici.
+Per questo gli snippet ignorano richieste non `GET`, come `POST`, perché non vanno salvate e riusate come se fossero file statici.
+
+**Cache-first**: cerca in cache, se c'è la usa; se no, vai in rete.
+Ideale per asset statici, come librerie da CDN, icone e font, che cambiano raramente.
+Una CDN è una rete di server usata per distribuire file velocemente da punti geografici diversi.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.match(event.request).then(rispostaInCache => {
+      if (rispostaInCache) return rispostaInCache;
+      return fetch(event.request);
+    })
+  );
+});
+```
+
+**Network-first**: prova la rete, se fallisce usa la cache.
+Ideale per HTML, JSON, contenuti dinamici che devi mantenere freschi ma dove una risposta offline è meglio di un errore.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    fetch(event.request).catch(async () => {
+      const rispostaInCache = await caches.match(event.request);
+      if (rispostaInCache) return rispostaInCache;
+      throw new Error("Nessuna risposta disponibile");
+    })
+  );
+});
+```
+
+**Stale-while-revalidate**: servi dalla cache (subito, veloce), ma intanto chiedi alla rete per aggiornare la cache per la prossima volta.
+Ottimo compromesso tra velocità e freschezza.
+
+```javascript
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const rispostaInCache = await cache.match(event.request);
+      const rispostaRete = fetch(event.request).then((risposta) => {
+        if (risposta.ok) {
+          cache.put(event.request, risposta.clone());
+        }
+        return risposta;
+      });
+
+      return rispostaInCache || rispostaRete;
+    })
+  );
+});
+```
+
+Esistono anche strategie più rigide: **cache-only**, dove rispondi solo dalla cache, e **network-only**, dove passi sempre dalla rete.
+Sono meno comuni, ma utili quando vuoi comportamento molto prevedibile.
+
+-----
+
+#### Rilevare Aggiornamenti
+
+Un Service Worker vecchio può continuare a servire una versione vecchia del sito mentre la pagina è aperta.
+Quando una nuova versione viene installata, spesso resta in attesa finché le vecchie schede non vengono chiuse o finché non decidi tu di far ricaricare la pagina.
+Per questo molte app mostrano un messaggio quando una nuova versione è pronta.
+
+```javascript
+navigator.serviceWorker.register("./sw.js").then(reg => {
+  reg.addEventListener("updatefound", () => {
+    const nuovo = reg.installing;
+    nuovo.addEventListener("statechange", () => {
+      if (nuovo.state === "installed" && navigator.serviceWorker.controller) {
+        // Una nuova versione è pronta, ma la vecchia è ancora attiva
+        mostraToastAggiornamento();
+      }
+    });
+  });
+});
+```
+
+Il toast tipico dice "Aggiornamento disponibile" con un bottone "Ricarica" che esegue `window.location.reload()`.
+
+-----
+
+#### Quando Ha Senso Aggiungere un Service Worker
+
+I Service Worker sono potenti ma aggiungono complessità.
+Ha senso introdurre un service worker quando il sito deve funzionare anche con connessione assente o instabile, quando usa asset statici pesanti che l'utente rivede spesso, quando vuoi migliorare i caricamenti successivi alla prima visita, o quando stai costruendo una PWA installabile con aggiornamenti controllati.
+
+Quando ti servirà davvero, la documentazione MDN sulla Service Worker API è il punto migliore da cui partire.
+
+**Regola:** Service Worker per funzionamento offline, cache controllata, aggiornamenti gestiti e PWA installabili.
+Registra con `navigator.serviceWorker.register`.
+Gestisci il `updatefound` per notificare l'utente delle nuove versioni.
+Non aggiungerlo a un sito che non ne ha davvero bisogno.
+
+-----
+
+#### Web Workers (Cenni)
+
+Un **Web Worker** è uno script che gira in un thread separato, parallelo al thread principale.
+Il thread principale è quello che gestisce la pagina, gli eventi e l'interfaccia.
+Non manipola il DOM (non ne ha accesso), ma può eseguire calcoli pesanti senza bloccare l'interfaccia.
+
+Il caso d'uso tipico: hai un'operazione costosa (interpretare un file grande, fare compressione, elaborare immagini, eseguire OCR, calcoli scientifici).
+Se la esegui nel thread principale, blocchi la Call Stack e l'utente vede la pagina congelata.
+Se la metti in un Worker, gira in parallelo e la UI resta reattiva.
+
+```javascript
+// worker.js (file separato)
+self.addEventListener("message", (e) => {
+  const risultato = calcoloPesante(e.data);
+  self.postMessage(risultato);
+});
+
+// app.js
+const worker = new Worker("./worker.js");
+
+worker.addEventListener("message", (e) => {
+  console.log("Risultato dal worker:", e.data);
+});
+
+worker.postMessage({ input: "qualcosa" });
+```
+
+I Worker comunicano con il thread principale via messaggi (`postMessage`), non possono toccare variabili condivise.
+Questo è estremamente positivo per la sicurezza, perché evita conflitti di accesso allo stesso dato, ma significa che i dati passati vengono copiati o trasferiti.
+
+**Regola:** Service Worker per offline e cache, Web Worker per calcoli pesanti in parallelo.
+Entrambi sono strumenti specifici, usali quando il bisogno è concreto.
+
+<br />
+<br />
+<br />
+<br />
+
+### 28. Espressioni Regolari (Regex)
+
+Le **espressioni regolari** (regex) sono un linguaggio a sé stante dentro JavaScript per descrivere schemi in una stringa.
+Ti permettono di validare input, estrarre porzioni di testo, sostituire pezzi e dividere stringhe seguendo uno schema.
+La sintassi è densa la prima volta, ma una volta capita permette operazioni che altrimenti richiederebbero molte righe di codice.
+
+#### Dichiarare una Regex
+
+Una regex si dichiara tra due slash `/.../` o con il costruttore `new RegExp()`.
+Dopo gli slash finali puoi mettere **flag** che modificano il comportamento.
+
+```javascript
+const regex1 = /ciao/;             // Letterale
+const regex2 = new RegExp("ciao"); // Costruttore (utile con variabili)
+
+// Con flag
+const regex3 = /ciao/i;  // i = case insensitive, non distingue maiuscole/minuscole
+const regex4 = /ciao/g;  // g = globale (trova tutte le occorrenze)
+const regex5 = /ciao/gi; // Combinati
+```
+
+I flag più comuni:
+- `i` (insensitive): non distingue tra maiuscole e minuscole
+- `g` (global): cerca tutte le occorrenze, non si ferma alla prima
+- `m` (multiline): `^` e `$` corrispondono all'inizio e fine di ogni riga, non solo dell'intera stringa
+- `u` (unicode): supporto completo Unicode
+
+-----
+
+#### I Metodi
+
+Per **controllare se c'è una corrispondenza**, usi `.test()` sulla regex (restituisce booleano).
+
+```javascript
+/ciao/.test("ciao mondo"); // true
+/ciao/.test("buongiorno"); // false
+/ciao/i.test("Ciao");      // true (case insensitive)
+```
+
+Per **estrarre le parti che corrispondono**, usi `.match()` sulla stringa (restituisce un array o `null`).
+
+```javascript
+"Ciao mondo, ciao a tutti".match(/ciao/gi);
+// ["Ciao", "ciao"]
+```
+
+Per **sostituire**, usi `.replace()` o `.replaceAll()` (come abbiamo visto nella <Link to="/it/docs/vademecum/javascript-real-world/foundations#metodi-essenziali">sezione 2</Link>, ma accettano anche regex).
+Con una regex, `.replaceAll()` richiede il flag `g`, perché deve sapere che vuoi sostituire tutte le occorrenze.
+
+```javascript
+"ciao mondo".replace(/mondo/, "universo"); // "ciao universo"
+
+// Con g flag, sostituisce tutte le occorrenze
+"aaa bbb aaa".replace(/aaa/g, "XXX");       // "XXX bbb XXX"
+"aaa bbb aaa".replaceAll(/aaa/g, "XXX");    // "XXX bbb XXX"
+```
+
+Per **iterare su tutte le corrispondenze con dettagli**, usi `.matchAll()` (con flag `g`).
+
+```javascript
+for (const match of "a1 b2 c3".matchAll(/([a-z])(\d)/g)) {
+  console.log(match[0], match[1], match[2]);
+  // "a1" "a" "1"
+  // "b2" "b" "2"
+  // "c3" "c" "3"
+}
+```
+
+-----
+
+#### La Sintassi di Base
+
+Queste sono le primitive che compongono qualsiasi regex.
+Impararle a memoria può essere difficile, quindi non esitare a consultare questa sezione quando necessario.
+
+**Caratteri letterali**: corrispondono a se stessi.
+
+```javascript
+/ciao/.test("ciao"); // true
+```
+
+**Classi di caratteri**: corrispondono a uno qualsiasi tra un insieme di caratteri, dichiarati tra `[]`.
+
+```javascript
+/[aeiou]/.test("banana"); // true (c'è una vocale)
+/[0-9]/.test("hello2");   // true (c'è una cifra)
+/[a-zA-Z]/.test("Hello"); // true (c'è una lettera)
+/[^0-9]/.test("123a");    // true (c'è qualcosa che NON è una cifra, grazie al ^ all'interno)
+```
+
+**Classi abbreviate**: scorciatoie per classi comuni.
+
+- `\d` = cifra (uguale a `[0-9]`)
+- `\D` = non cifra
+- `\w` = lettera ASCII, cifra o underscore (uguale a `[A-Za-z0-9_]`)
+- `\W` = non lettera ASCII, cifra o underscore
+- `\s` = spazio (space, tab, newline)
+- `\S` = non spazio
+- `.` = qualunque carattere tranne il newline
+
+```javascript
+/\d{3}/.test("abc 123 def"); // true (tre cifre consecutive)
+/\w+/.test("hello world");   // true (una o più lettere/cifre/underscore)
+```
+
+**Ancore**: posizionano la corrispondenza.
+
+- `^` = inizio della stringa (o riga, con flag `m`)
+- `$` = fine della stringa (o riga, con flag `m`)
+- `\b` = confine di parola
+
+```javascript
+/^ciao/.test("ciao mondo");  // true
+/^ciao/.test("dici ciao");   // false (non è all'inizio)
+
+/mondo$/.test("ciao mondo"); // true
+/^ciao$/.test("ciao");       // true (la stringa è ESATTAMENTE "ciao")
+```
+
+**Quantificatori**: controllano quante volte un elemento può comparire.
+
+- `*` = 0 o più volte
+- `+` = 1 o più volte
+- `?` = 0 o 1 volta (opzionale)
+- `{n}` = esattamente n volte
+- `{n,m}` = da n a m volte
+- `{n,}` = almeno n volte
+
+```javascript
+/\d{4}/.test("anno 2026"); // true (esattamente 4 cifre)
+/\d{4,}/.test("123");      // false (meno di 4 cifre)
+/colou?r/.test("color");   // true (u opzionale, match anche "colour")
+/a+b/.test("aaab");        // true (a una o più volte, seguita da b)
+```
+
+**Gruppi e alternanza**:
+
+- `(...)` = gruppo (cattura, utile in `.match()` per estrarre)
+- `(?:...)` = gruppo non catturante
+- `|` = alternanza (OR)
+
+```javascript
+/(gatto|cane)/.test("ho un cane");         // true (corrisponde a "cane")
+/^(ciao|salve) mondo$/.test("ciao mondo"); // true
+```
+
+-----
+
+#### Schemi di Uso Comune
+
+Ecco gli schemi che incontrerai e riutilizzerai in progetti reali.
+
+**Validare un'email** (versione semplice, adatta come controllo preliminare nella maggior parte dei form):
+
+```javascript
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+emailRegex.test("mario@example.com"); // true
+emailRegex.test("non-valida");        // false
+```
+
+`[^\s@]+` significa "uno o più caratteri che non siano spazi né chiocciole".
+`^` e `$` ancorano alla stringa intera.
+Lo schema dice: almeno un carattere, una `@`, almeno un carattere, un punto, almeno un carattere.
+
+La versione completa secondo lo standard RFC 5322 è molto più complessa e poco leggibile.
+Nella pratica, una regex semplice come questa combinata con l'invio di un'email di conferma copre i casi reali.
+
+**Validare un numero di telefono** (formato USA, solo come esempio di regex più articolata):
+
+```javascript
+const phoneRegex = /^(1\s?)?(\(\d{3}\)|\d{3})[\s\-]?\d{3}[\s\-]?\d{4}$/;
+
+phoneRegex.test("(555) 123-4567"); // true
+phoneRegex.test("555-123-4567");   // true
+phoneRegex.test("1 555 123 4567"); // true
+phoneRegex.test("555.123.4567");   // false (punti non gestiti)
+```
+
+Decomponendo questa regex pezzo per pezzo:
+
+- `^(1\s?)?` = prefisso di nazione opzionale: un `1` seguito da uno spazio opzionale, il tutto reso opzionale dal `?` finale
+- `(\(\d{3}\)|\d{3})` = il prefisso di area: o 3 cifre tra parentesi `(555)` o 3 cifre senza parentesi `555`, grazie all'alternanza `|`
+- `[\s\-]?` = un separatore opzionale (spazio o trattino)
+- `\d{3}` = il primo blocco centrale: esattamente 3 cifre
+- `[\s\-]?` = altro separatore opzionale
+- `\d{4}$` = l'ultimo blocco: esattamente 4 cifre, ancorato a fine stringa
+
+Se la regex è breve, non serve commentarla.
+Se invece è lunga, critica o poco evidente, commentare i pezzi principali aiuta molto; in alternativa, valuta codice esplicito più leggibile.
+
+**Estrarre tutti i link da un testo**:
+
+```javascript
+const testo = "Vai su https://example.com o su http://altro-sito.org";
+const links = testo.match(/https?:\/\/[^\s]+/g);
+// ["https://example.com", "http://altro-sito.org"]
+```
+
+`https?` = `http` con `s` opzionale.
+`\/\/` = due slash letterali preceduti da backslash.
+`[^\s]+` = uno o più caratteri che non siano spazi.
+
+**Pulire spazi multipli**:
+
+```javascript
+"ciao    mondo     bello".replace(/\s+/g, " ");
+// "ciao mondo bello"
+```
+
+**Validare una password robusta** (almeno 8 caratteri, almeno una maiuscola, una minuscola, una cifra):
+
+```javascript
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+passwordRegex.test("Password123"); // true
+passwordRegex.test("password");     // false (no maiuscola, no cifra)
+```
+
+I `(?=...)` sono **lookahead**: controllano che qualcosa sia presente senza "consumare" caratteri.
+In pratica guardano avanti nella stringa per verificare una condizione, ma non spostano la posizione della corrispondenza.
+Lo schema dice: deve esserci una minuscola, deve esserci una maiuscola, deve esserci una cifra, e il totale deve essere almeno 8 caratteri.
+
+**Estrarre parti con gruppi**:
+
+```javascript
+const data = "2026-04-14";
+const match = data.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+// match[0] = "2026-04-14" (corrispondenza completa)
+// match[1] = "2026"       (primo gruppo)
+// match[2] = "04"         (secondo gruppo)
+// match[3] = "14"         (terzo gruppo)
+```
+
+Con i **gruppi nominati** (moderni, ES2018), puoi dare nomi ai gruppi per leggerli in modo esplicito:
+
+```javascript
+const match = "2026-04-14".match(/^(?<anno>\d{4})-(?<mese>\d{2})-(?<giorno>\d{2})$/);
+match.groups.anno;   // "2026"
+match.groups.mese;   // "04"
+match.groups.giorno; // "14"
+```
+
+-----
+
+#### Quando Non Usare Regex
+
+Le regex sono potenti ma non sono sempre la scelta giusta.
+
+**Interpretare HTML o JSON**: non farlo mai con regex.
+L'HTML è annidato ricorsivamente, cioè un tag può contenerne altri, che a loro volta possono contenerne altri ancora.
+La regex non può descrivere questa struttura in modo affidabile.
+Usa `DOMParser` per l'HTML e `JSON.parse` per il JSON.
+
+**Operazioni che una stringa semplice può fare**: se ti basta `.includes()`, `.startsWith()`, `.split()`, non tirare fuori la regex.
+
+```javascript
+// ❌ Usare una regex dove non serve
+/ciao/.test(stringa);
+
+// ✅ Più semplice e leggibile
+stringa.includes("ciao");
+```
+
+**Quando la capisce solo chi l'ha scritta**: se una regex diventa lunga 200 caratteri, probabilmente stai costruendo un parser (un meccanismo che interpreta una stringa secondo una struttura) che merita di diventare codice vero.
+Valuta quindi se farlo step by step con `.split()` e logica esplicita, è più lento ma molto più leggibile.
+
+**Regola:** `.test()` per controllare, `.match()` e `.matchAll()` per estrarre, `.replace()` per sostituire.
+Usa i flag `i` (case insensitive) e `g` (globale) secondo il bisogno.
+Commenta le regex quando sono lunghe, critiche o poco evidenti.
+Non interpretare HTML o JSON con regex.
+Quando hai dubbi, verifica con uno strumento dedicato come regex101.
+
+<br />
+<br />
+<br />
+<br />
+
+### 29. Schemi Avanzati Essenziali
+
+Quattro schemi che userai costantemente in progetti reali.
+
+#### Debounce e Throttle
+
+Alcuni eventi arrivano rapidamente e ripetutamente: scroll, resize, input che cambia a ogni carattere.
+Reagire a ogni evento può essere inefficiente o dannoso.
+
+**Debounce**: esegui la funzione **solo dopo** che l'utente ha smesso di generare l'evento per N millisecondi.
+Ideale per ricerca live: non vuoi chiamare l'API a ogni tasto, vuoi aspettare che l'utente abbia finito di digitare.
+
+```javascript
+function debounce(fn, ms) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
+// Uso
+const ricercaDebounced = debounce((query) => {
+  const params = new URLSearchParams({ q: query });
+  fetch(`/api/cerca?${params}`).then(r => r.json()).then(mostraRisultati);
+}, 300);
+
+input.addEventListener("input", (e) => ricercaDebounced(e.target.value));
+// L'utente digita "javascript" in 1 secondo
+// Solo 1 chiamata al server, 300ms dopo l'ultimo tasto
+```
+
+Mentre scrivo questa pagina in Docusaurus, vedo un effetto simile: quando salvo il file `.mdx`, la modifica non appare nel browser nello stesso istante, perché il dev server deve rilevare il cambiamento, ricompilare la pagina interessata e aggiornare il browser con hot reload, cioè un aggiornamento automatico senza ricaricare tutto manualmente.
+Non è lo stesso identico meccanismo del debounce, ma l'idea pratica è vicina: tra una modifica e il risultato visibile c'è un piccolo tempo di attesa usato per evitare lavoro continuo e rendere l'aggiornamento gestibile.
+
+**Throttle**: esegui la funzione **al massimo una volta ogni** N millisecondi.
+Ideale per gestori dello scroll: calcolare a ogni frame sarebbe spesso inutile, mentre aggiornare ogni 100ms può bastare per mantenere l'interfaccia fluida.
+
+```javascript
+function throttle(fn, ms) {
+  let ultimaEsecuzione = 0;
+  return function (...args) {
+    const ora = Date.now();
+    if (ora - ultimaEsecuzione >= ms) {
+      ultimaEsecuzione = ora;
+      fn.apply(this, args);
+    }
+  };
+}
+
+// Uso
+const scrollHandler = throttle(() => {
+  aggiornaHeaderSticky();
+}, 100);
+
+window.addEventListener("scroll", scrollHandler);
+```
+
+La differenza concettuale: debounce **aspetta la fine** (l'utente smette), throttle **limita la frequenza** (al massimo una volta ogni tot).
+
+-----
+
+#### Escape HTML e Sanitizzazione (`escapeHtml`)
+
+Quando inserisci input utente in `innerHTML` (cosa che abbiamo visto essere pericolosa nella <a href="#textcontent-vs-innerhtml-sicuro-vs-pericoloso">sezione 20</a>), devi evitare che il browser lo interpreti come HTML.
+Per testo semplice, puoi fare **escape HTML**, cioè sostituire i caratteri speciali con le loro entità.
+Così il browser mostra il testo letteralmente invece di interpretarlo come markup o codice.
+
+```javascript
+function escapeHtml(stringa) {
+  return stringa
+    .replace(/&/g, "&amp;") // Deve essere il primo
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+const commentoUtente = '<img src=x onerror="rubaCookie()">';
+el.innerHTML = `Ha scritto: ${escapeHtml(commentoUtente)}`;
+// Mostra letteralmente il testo, non interpreta l'attributo onerror
+```
+
+È importante l'ordine: `&` deve essere sostituita per prima, altrimenti sostituirebbe i `&` delle entità che introduci dopo.
+
+Questa è la base manuale per mostrare testo in sicurezza.
+La **sanitizzazione** è un passaggio più ampio: serve quando vuoi accettare vero HTML ma rimuovere parti pericolose.
+Se vuoi accettare vero HTML scritto dall'utente, l'escape non basta: serve una sanitizzazione completa con strumenti dedicati e mantenuti.
+Implementarla a mano è rischioso, perché i casi pericolosi includono attributi `on*`, URL `javascript:` ed entità HTML costruite per aggirare controlli superficiali.
+
+Come abbiamo visto nella <Link to="/it/docs/vademecum/html-real-world-vademecum#11-entità-html-e-caratteri-speciali">sezione sulle entità HTML del vademecum HTML</Link>, questo meccanismo sfrutta esattamente le stesse entità: `&lt;`, `&gt;`, `&amp;`.
+
+-----
+
+#### Architettura Guidata da Configurazione
+
+Uno schema di organizzazione potente: **definisci il comportamento con dati, non con codice**.
+Invece di avere una funzione che fa una cosa specifica con un `if` per ogni variante, hai un oggetto di configurazione e una funzione generica che legge la configurazione.
+
+```javascript
+// ❌ Scritto direttamente nel codice: ogni variante richiede di cambiare la funzione
+function creaForm(tipo) {
+  if (tipo === "contatto") {
+    creaCampo("Nome", "text");
+    creaCampo("Email", "email");
+    creaCampo("Messaggio", "textarea");
+  } else if (tipo === "iscrizione") {
+    creaCampo("Email", "email");
+    creaCampo("Password", "password");
+  }
+  // Aggiungere un nuovo tipo = modificare il codice
+}
+
+// ✅ Guidato da configurazione: i dati descrivono, il codice esegue
+const FORM_CONFIG = {
+  contatto: [
+    { label: "Nome", type: "text" },
+    { label: "Email", type: "email" },
+    { label: "Messaggio", type: "textarea" },
+  ],
+  iscrizione: [
+    { label: "Email", type: "email" },
+    { label: "Password", type: "password" },
+  ],
+};
+
+function creaForm(tipo) {
+  FORM_CONFIG[tipo].forEach(campo => creaCampo(campo.label, campo.type));
+}
+
+// Aggiungere un tipo = aggiungere una voce in FORM_CONFIG. Codice invariato.
+```
+
+Questo schema scala bene poiché il codice resta piccolo e stabile, le variazioni crescono nella configurazione.
+È il principio dietro molti framework e librerie di UI.
+
+-----
+
+#### Immutabilità
+
+Non modificare i dati originali, produci copie.
+All'inizio può sembrare uno spreco e potresti chiederti "perché creare un nuovo array invece di modificare quello che ho?", ma rende il codice più prevedibile e più facile da debuggare.
+
+```javascript
+// ❌ Mutazione: modifica l'array passato
+function aggiungiProdotto(carrello, prodotto) {
+  carrello.push(prodotto); // Chi ha passato il carrello lo ritrova modificato
+  return carrello;
+}
+
+// ✅ Immutabilità: crea un nuovo array
+function aggiungiProdotto(carrello, prodotto) {
+  return [...carrello, prodotto];
+}
+```
+
+Per oggetti:
+
+```javascript
+// ✅ Aggiorna una proprietà creando un nuovo oggetto
+function aggiornaTema(utente, nuovoTema) {
+  return { ...utente, tema: nuovoTema };
+}
+```
+
+L'immutabilità è una pratica fondamentale in React e framework simili: spesso la UI capisce che qualcosa è cambiato confrontando i riferimenti degli oggetti, non ispezionando ogni proprietà interna.
+Se modifichi direttamente lo stesso oggetto o lo stesso array, quel rilevamento diventa più fragile.
+
+**Regola:** debounce per "aspetta che finisca", throttle per "limita la frequenza".
+`escapeHtml` quando metti input utente in `innerHTML`.
+Configurazione per scalare senza toccare il codice.
+Immutabilità per codice prevedibile e testabile.
+
+<br />
+<br />
+<br />
+<br />
+
+### 30. Testing (Cenni)
+
+I test sono controlli automatici che scrivi una volta e riesegui ogni volta che cambi il codice, così puoi sapere subito se una modifica ha rotto un comportamento importante.
+
+Senza test, ogni modifica importante va verificata a mano.
+All'inizio sembra più veloce, ma appena il progetto cresce inizi a perdere tempo ricontrollando sempre gli stessi flussi.
+
+#### Due Tipi di Test
+
+**Unit test**: testano singole funzioni in isolamento, sono velocissimi (pochi millisecondi) e precisi (se falliscono sai esattamente dove).
+
+```javascript
+// Funzione da testare
+export function calcolaIva(prezzo, aliquota = 0.22) {
+  return prezzo * (1 + aliquota);
+}
+
+// Test con Vitest
+import { expect, test } from "vitest";
+import { calcolaIva } from "./core.js";
+
+test("calcolaIva somma l'IVA al prezzo", () => {
+  expect(calcolaIva(100)).toBe(122);
+  expect(calcolaIva(100, 0.10)).toBe(110);
+});
+```
+
+Gli unit test sono dove la separazione pure functions vs DOM (<Link to="/it/docs/vademecum/javascript-real-world/oop-and-modules#18-separazione-pure-functions-vs-dom">sezione 18</Link>) paga.
+Una funzione pura si testa in una riga, mentre una che tocca il DOM richiede un ambiente browser emulato.
+
+**End-to-end test (E2E)**: testano il flusso completo dell'applicazione nel browser simulando l'utente, sono più lenti degli unit test, ma verificano nello stesso flusso UI, routing (cioè il codice che decide quale pagina o vista mostrare), API e logica applicativa.
+
+```javascript
+// Test con Playwright
+import { test, expect } from "@playwright/test";
+
+test("l'utente può aggiungere un prodotto al carrello", async ({ page }) => {
+  await page.goto("http://localhost:3000");
+  await page.click("text=Aggiungi al carrello");
+  await expect(page.locator("#carrello-count")).toHaveText("1");
+});
+```
+
+Playwright apre un browser reale (headless per impostazione predefinita, cioè senza finestra visibile), carica la pagina, clicca, verifica cosa vede.
+Se qualcosa nel flusso è rotto (UI, API, logica), il test fallisce.
+
+-----
+
+#### Lo Strumento Giusto per il Giusto Livello
+
+La piramide del testing è un concetto diffuso: tanti unit test e pochi E2E test.
+
+Le funzioni pure del core sono il punto migliore per gli unit test: hanno input e output chiari, girano velocemente e, se falliscono, indicano il problema con precisione.
+I flussi utente critici, come login, checkout o registrazione, meritano invece E2E test perché vengono eseguiti nel browser come li eseguirebbe un utente.
+I componenti UI stanno nel mezzo: puoi testarli con test di integrazione quando conta il comportamento, oppure con visual regression quando l'aspetto visivo è parte importante del risultato.
+
+Per progetti piccoli, parti da unit test sul core.
+Aggiungi E2E quando i flussi critici meritano copertura.
+Non cercare di testare tutto, bensì focalizzati su quello che si rompe più spesso e su quello che sarebbe problematico se si rompesse.
+
+-----
+
+#### Quando Non Servono i Test
+
+Il punto non è avere tanti test, ma avere test che controllano il comportamento giusto.
+Gli agenti e gli strumenti AI possono generare molti test rapidamente, ma un test che verifica solo che una funzione esista, che venga chiamata o che un componente renderizzi senza errori serve a poco.
+Un buon test controlla un risultato osservabile: dato questo input, mi aspetto questo output; dopo questo click, mi aspetto questo cambiamento nella pagina.
+
+I test pagano molto su regole di business, calcoli, trasformazioni dati, moduli riutilizzati e flussi che non vuoi rompere.
+Pagano meno su esperimenti di UI destinati a cambiare spesso, codice di collegamento banale o configurazioni che vengono già validate dagli strumenti.
+
+Sempre più spesso gli agenti vengono usati anche per test esplorativi e regressioni massive, ma anche lì serve una direzione chiara: cosa deve funzionare, cosa non deve rompersi, cosa deve vedere un utente reale.
+
+-----
+
+#### Setup Tipico
+
+Il setup cambia in base allo stack: Vite, Next, Docusaurus, Node puro e altri ambienti hanno comandi e convenzioni diverse.
+Lo schema però è quasi sempre lo stesso: installi gli strumenti di test come dipendenze di sviluppo, aggiungi script in `package.json`, metti gli unit test accanto ai moduli o in una cartella dedicata, e tieni gli E2E in una cartella separata perché hanno tempi e requisiti diversi.
+Un esempio minimale può essere questo:
+
+```json
+// package.json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  }
+}
+```
+
+Nel tuo progetto reale, i nomi degli script e le cartelle possono cambiare.
+Quello che conta è separare i test veloci del core dai test più lenti che aprono un browser ed eseguono i flussi utente.
+
+**Regola:** Vitest per unit test di funzioni pure, Playwright per E2E di flussi critici.
+La piramide: tanti unit, pochi E2E.
+Testa quello che si rompe spesso, non tutto per dovere.
+Senza test, perdi feedback automatico e devi ricontrollare tutto a mano.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (Browser e Async in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|---------------|-----------------|
+| `<script defer>` | Default per JS della tua app, nell'head | Senza defer, DOM non ancora esistente |
+| `<script async>` | Solo per script indipendenti dal DOM | Ordine non garantito tra script |
+| `type="module"` | Scope proprio, defer automatico | CORS aprendo file con `file://` |
+| `getElementById` | Diretto per id, intenzione chiara | Usare `querySelector("#id")` per abitudine |
+| `querySelectorAll` | NodeList statica, prevedibile | Usare `getElements*` live |
+| Proprietà vs metodi | Proprietà senza `()`, metodi con `()` | `textContent("Ciao")` come chiamata |
+| `textContent` | Testo puro, sicuro | `innerHTML` con input utente senza escape o sanitizzazione |
+| `classList` | `add`, `remove`, `toggle`, `contains` | Modificare `.style` direttamente |
+| `data-*` + `dataset` | Collegamento tra HTML e JavaScript | Dimenticare che sono sempre stringhe |
+| `addEventListener` | Sempre questo, mai `onclick` | Passare `fn()` invece di `fn` |
+| `removeEventListener` | Serve lo stesso riferimento di funzione | Usare due funzioni anonime identiche |
+| `e.target` vs `e.currentTarget` | target = origine, currentTarget = listener | Confonderli nella delegation |
+| Pointer Events | Mouse, touch e penna con gli stessi eventi | Dimenticare `pointerleave` o `pointercancel` |
+| Event delegation | Un listener sul genitore, `closest()` per filtrare | Un listener per ogni elemento |
+| `<dialog>` + `showModal()` | Modale con focus trap e backdrop automatici | Ignorarlo e costruire modali manualmente |
+| Promise | pending, fulfilled, rejected | Usare catene di Promise senza `.catch()` |
+| `fetch` | Non va in rejected su 4xx/5xx, controlla `res.ok` | Credere che `.catch()` catturi gli errori HTTP |
+| `fetch` body | JSON con stringa, `FormData` lasciato al browser | Impostare header JSON anche con `FormData` |
+| `async`/`await` | `try`/`catch` per errori | Usare `await` dove non è consentito |
+| `Promise.all` | Operazioni indipendenti in parallelo | Usare `await` sequenziale quando si può parallelizzare |
+| `localStorage` | Stringhe, circa 5 MB per origin, sincrono | Salvare oggetti senza `JSON.stringify` |
+| `IndexedDB` | Dati grandi, asincrono, quota variabile | Usare l'API nativa direttamente quando un wrapper basta |
+| Service Worker | Offline, cache controllata, aggiornamenti gestiti | Aggiungerlo quando non serve |
+| Web Worker | Calcoli pesanti in thread separato | Usarlo dove non serve davvero |
+| Event Loop | Microtask (Promise) prima di Task (setTimeout) | Bloccare la Call Stack con codice sincrono pesante |
+| `FormData` | Raccoglie dati da `<form>` via `name` | Campi senza `name` non vengono inclusi |
+| `URL` / `URLSearchParams` | Costruire URL in modo sicuro | Concatenare stringhe a mano |
+| `AbortController` | Annullare `fetch` dal browser | Pensare che fermi sempre anche il server |
+| Classi di errore | Distinguere tipi di errore con `instanceof` | Confrontare stringhe nei messaggi |
+| `navigator.clipboard` | Copia testo via Promise, richiede click utente | Chiamarla fuori da un gestore evento |
+| Regex | `.test()`, `.match()`, `.replace()` con schemi testuali | Interpretare HTML o JSON con regex |
+| `replaceAll` con regex | Serve una regex globale con flag `g` | Usare una regex senza `g` |
+| Debounce | Aspetta la fine (ricerca live) | Confonderlo con throttle |
+| Throttle | Limita la frequenza (scroll) | Usarlo dove serve debounce |
+| `escapeHtml` | Escape di testo prima di `innerHTML` | Confonderlo con sanitizzazione completa di HTML |
+| Configurazione | Dati descrivono, codice esegue | Hardcodare ogni variante |
+| Immutabilità | Crea copie, non mutare | Usare `push`, `splice`, `sort` su stato condiviso |
+| Unit test | Vitest, funzioni pure, millisecondi | Perdere feedback automatico sui calcoli |
+| E2E test | Playwright, flussi critici, browser reale | Usarlo per ogni dettaglio, troppo lento |

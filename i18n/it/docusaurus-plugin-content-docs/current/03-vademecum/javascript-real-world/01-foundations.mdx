@@ -1,0 +1,1144 @@
+---
+sidebar_position: 1
+title: Fondamenti
+description: Variabili, tipi primitivi, stringhe, numeri, booleani e date. I mattoni di base del linguaggio JavaScript.
+---
+
+import Link from '@docusaurus/Link';
+
+# JavaScript Real World Vademecum
+
+# Parte I: Fondamenti
+
+JavaScript è il linguaggio che dà comportamento alle pagine web.
+Quando clicchi un bottone e qualcosa succede, o quando la pagina si aggiorna senza un refresh, dietro c'è JavaScript.
+Prima di farlo muovere, devi conoscere i suoi mattoni base: come memorizzare i dati e quali tipi puoi usare.
+
+---
+
+## Fondamenti e Tipi di Dati
+
+### 1. Variabili (I Contenitori di Dati)
+
+Una variabile è un contenitore con un nome, dentro al quale metti un valore.
+Quando nel codice scrivi il nome, JavaScript va a prendere il valore corrispondente.
+È il modo in cui il linguaggio ricorda i dati mentre il programma è in esecuzione.
+
+JavaScript ti dà tre parole chiave per creare variabili: `let`, `const` e `var`.
+Le prime due sono moderne e le userai tutti i giorni.
+La terza è vecchia, piena di trappole, e ti serve solo sapere perché evitarla.
+
+#### `let` (La Lavagna)
+
+`let` crea una variabile il cui valore può essere **riassegnato** nel tempo.
+Lo usi quando sai che il valore cambierà durante l'esecuzione del programma.
+
+```javascript
+let contatore = 0;
+contatore = contatore + 1;  // Ora vale 1
+contatore = contatore + 1;  // Ora vale 2
+```
+
+Il nome `let` viene da "let this variable be equal to..." ("che questa variabile sia uguale a...").
+L'idea è che stai dichiarando qualcosa di modificabile, come una lavagna su cui puoi cancellare e riscrivere.
+
+I casi d'uso più frequenti sono tre: contatori (il numero di tentativi, il punteggio in un gioco), stato temporaneo (se un menu è aperto o chiuso) e accumulatori (il totale di un carrello mentre sommi i prezzi).
+
+```javascript
+// Un contatore che cresce
+let tentativi = 0;
+tentativi = tentativi + 1;
+
+// Uno stato booleano che si inverte
+let menuAperto = false;
+menuAperto = true;
+
+// Un accumulatore in un ciclo
+let totale = 0;
+const prezzi = [10, 25, 5];
+for (const prezzo of prezzi) {
+  totale = totale + prezzo;
+}
+```
+
+`let` ha il **block scope**: la variabile esiste solo dentro le parentesi graffe `{}` in cui è dichiarata, mentre fuori da quelle graffe, non esiste.
+
+```javascript
+if (true) {
+  let dentro = "ciao";
+  console.log(dentro); // "ciao"
+}
+
+console.log(dentro); // ❌ ReferenceError: dentro is not defined
+```
+
+Questo comportamento è molto utile perché tiene le variabili confinate al loro contesto.
+Una variabile usata dentro un `if` non "sporca" il resto del codice. Ne riparleremo in modo più approfondito nella <Link to="/it/docs/vademecum/javascript-real-world/structures-and-flow#11-scope-e-closures">sezione 11</Link>.
+
+-----
+
+#### `const` (La Cassaforte)
+
+`const` crea una variabile il cui valore **non può essere riassegnato**.
+Una volta dichiarata, il nome punta a quel valore per sempre.
+
+```javascript
+const nomeUtente = "Mario";
+nomeUtente = "Giuseppe";  // ❌ TypeError: Assignment to constant variable
+```
+
+Il nome viene da "constant" (costante).
+L'idea è che stai dichiarando un nome che non deve essere riassegnato.
+
+C'è un dettaglio critico che può confondere.
+`const` rende costante **il riferimento**, non il **contenuto**.
+Se la variabile contiene un oggetto o un array, puoi modificarne il contenuto.
+Quello che non puoi fare è far puntare la variabile a un oggetto o array diverso.
+
+```javascript
+const numeri = [1, 2, 3];
+
+// ✅ Questo funziona: stai modificando il contenuto dell'array
+numeri.push(4);
+console.log(numeri); // [1, 2, 3, 4]
+
+// ❌ Questo fallisce: stai provando a far puntare numeri a un array diverso
+numeri = [5, 6, 7]; // TypeError
+```
+
+Pensa a `const` come a una cassaforte inchiodata al pavimento.
+Non puoi spostare la cassaforte, ma puoi aprirla e cambiare quello che c'è dentro. Per bloccare davvero anche il contenuto dovresti usare `Object.freeze()`, ma nella pratica quotidiana ti servirà raramente.
+
+La regola operativa è semplice.
+**Usa sempre `const` come prima scelta** e passa a `let` solo quando scopri che devi riassegnare. Questo approccio ha due vantaggi concreti. Il primo è che rende il codice più prevedibile, perché quando vedi `const` sai che quel nome punterà sempre allo stesso valore. Il secondo è che `const` ti abitua a pensare in modo più immutabile, uno stile che pagherà molto quando passerai a React o a librerie/framework simili dove le modifiche dirette allo stato sono vietate.
+
+**Regola:** `const` sempre, `let` solo se scopri di dover riassegnare.
+
+-----
+
+#### `var` (Da Evitare)
+
+`var` è la parola chiave storica di JavaScript, in uso sin dal 1995.
+Funziona ancora, ma ha due comportamenti che causano bug silenziosi. Per questo, nel codice moderno, si usano `let` e `const`.
+
+Il primo problema è che `var` ha **function scope**, non block scope.
+La variabile esiste in tutta la funzione in cui è dichiarata, indipendentemente dalle parentesi graffe in cui la scrivi.
+
+```javascript
+function test() {
+  if (true) {
+    var dentro = "ciao";
+  }
+  console.log(dentro); // "ciao" (anche se sembra che dovrebbe essere fuori scope)
+}
+```
+
+Con `let`, lo stesso codice darebbe un errore perché `dentro` non esisterebbe fuori dall'`if`.
+Con `var`, esiste.
+Questo crea confusione e bug quando pensi di aver isolato una variabile e invece è visibile anche altrove.
+
+Il secondo problema è il cosiddetto **hoisting**.
+JavaScript anticipa le dichiarazioni `var` all'inizio della funzione, ma non i valori. Il risultato è che puoi usare una variabile prima di averla dichiarata, e invece di un errore ottieni `undefined`.
+
+```javascript
+console.log(nome); // undefined (non un errore!)
+
+var nome = "Mario";
+console.log(nome); // "Mario"
+```
+
+Con `let` o `const`, il primo `console.log` darebbe un errore chiaro (`ReferenceError`), che è il comportamento desiderabile.
+L'errore ti dice subito che qualcosa non va, mentre `undefined` può propagarsi silenziosamente e far nascere bug più avanti.
+
+**Regola:** non usare mai `var` nel codice nuovo.
+Se vedi `var` in un progetto vecchio, sai cosa significa, ma quando scrivi tu, scegli tra `const` e `let`.
+
+-----
+
+#### `null` vs `undefined`
+
+JavaScript ha due valori per dire "qui non c'è niente" e rappresentano situazioni diverse.
+
+`undefined` è il valore automatico che JavaScript assegna quando qualcosa è privo di valore, per esempio una variabile non inizializzata, una proprietà inesistente o il ritorno di una funzione senza `return`.
+
+```javascript
+// 1. Variabile dichiarata ma non inizializzata
+let x;
+console.log(x); // undefined
+
+// 2. Proprietà inesistente in un oggetto
+const oggetto = { nome: "Mario" };
+console.log(oggetto.cognome); // undefined
+
+// 3. Funzione senza return esplicito
+function saluta() {
+  console.log("ciao"); // ciao
+  // Nessun return specificato
+}
+const risultato = saluta(); // Esegue la funzione (stampa a console "ciao")
+console.log(risultato); // undefined (questo è il valore di return)
+```
+
+`null` invece è un valore che **tu** assegni esplicitamente per dire "qui dovrebbe esserci un valore, ma per ora non c'è".
+È un'assenza intenzionale, decisa dal programmatore.
+
+```javascript
+// Stai dicendo: "il giocatore non ha ancora scelto un'arma"
+let armaSelezionata = null;
+
+// Quando la sceglierà, metterai qualcosa di concreto
+armaSelezionata = "spada";
+```
+
+La distinzione pratica è questa.
+Se trovi `undefined`, spesso è un sintomo, perché JavaScript non sapeva quale valore mettere.
+Se trovi `null`, è una decisione, perché qualcuno ha scritto esplicitamente "qui niente, per ora".
+
+Entrambi sono falsy e generano un `TypeError` se provi ad accedere alle loro proprietà, ma semanticamente significano cose diverse.
+Usa `null` per indicare un'assenza intenzionale, lascia `undefined` per i valori non inizializzati.
+
+```javascript
+// Esempio pratico nel DOM
+const utente = {
+  nome: "Mario",
+  avatar: null, // L'utente non ha impostato un avatar, è una scelta
+  // telefono non esiste nell'oggetto
+};
+
+console.log(utente.avatar);   // null (sappiamo che è intenzionale)
+console.log(utente.telefono); // undefined (la proprietà non esiste)
+```
+
+**Regola:** `const` come default, `let` quando devi riassegnare, `var` mai.
+Usa `null` per dire "assenza intenzionale", lascia `undefined` per "valore non ancora impostato".
+
+-----
+
+#### `typeof` (Scoprire il Tipo Durante l'Esecuzione)
+
+L'operatore `typeof` restituisce una stringa che descrive il tipo del valore che gli passi.
+Serve quando ricevi dati di origine incerta (da un form, da un'API, da un parametro opzionale) e vuoi sapere cosa hai in mano prima di agire.
+
+```javascript
+console.log(typeof "ciao");            // "string"
+console.log(typeof 42);                // "number"
+console.log(typeof true);              // "boolean"
+console.log(typeof undefined);         // "undefined"
+console.log(typeof { nome: "Mario" }); // "object"
+console.log(typeof [1, 2, 3]);         // "object" (gli array sono oggetti)
+console.log(typeof function() {});     // "function"
+```
+
+Nota due cose.
+`typeof` di un array restituisce `"object"`, non `"array"`.
+Se devi distinguere, usi `Array.isArray()`:
+
+```javascript
+console.log(Array.isArray([1, 2, 3]));         // true
+console.log(Array.isArray({ nome: "Mario" })); // false
+```
+
+Un'altra stranezza è `typeof null`:
+
+```javascript
+console.log(typeof null); // "object"
+```
+
+È un bug storico di JavaScript, presente dal 1995 e mai sistemato per retrocompatibilità.
+Se devi controllare se un valore è `null`, confronta direttamente:
+
+```javascript
+if (valore === null) {
+  console.log("valore è null");
+}
+```
+
+Un pattern utile per capire se una variabile è stata dichiarata: `typeof` non lancia errore se la variabile non esiste, restituisce semplicemente `"undefined"`.
+
+```javascript
+// variabileForseInesistente non è definita
+console.log(typeof variabileForseInesistente); // "undefined"
+```
+
+-----
+
+#### Confronto Stretto (`===`) vs Debole (`==`)
+
+JavaScript ha due operatori di uguaglianza: `===` (stretto) e `==` (debole).
+La differenza è che `==` applica **coercizione di tipo** (ovvero conversione automatica di tipo) prima del confronto, mentre `===` confronta il tipo e il valore senza conversioni.
+
+```javascript
+5 === "5";   // false (numero vs stringa, tipi diversi)
+5 == "5";    // true (la stringa viene convertita in numero prima)
+
+0 === false; // false
+0 == false;  // true (false convertito in 0)
+
+null === undefined; // false
+null == undefined;  // true (sono infatti considerati equivalenti)
+```
+
+Il problema di `==` è che le regole di conversione sono complesse e generano risultati che possono stupirti, per farti alcuni esempi: `[] == false` è `true`, `"" == 0` è `true`, `"1,2" == [1, 2]` è `true`.
+
+La pratica moderna è **usare sempre `===` e `!==`** come regola generale.
+Non perdi nulla, guadagni prevedibilità. I principali linter, come ESLint, segnalano spesso `==` come errore.
+
+```javascript
+// ✅ Corretto
+if (eta === 18) {
+  /* ... */
+}
+if (nome !== "admin") {
+  /* ... */
+}
+```
+
+L'unica eccezione difendibile è `valore == null`, che con `==` cattura sia `null` che `undefined` in un colpo solo.
+Anche lì, molti preferiscono esplicitare `valore === null || valore === undefined` (`||` significa "oppure").
+Nella pratica quotidiana, `===` ovunque.
+
+**Regola:** `typeof` per scoprire il tipo durante l'esecuzione, con l'eccezione `typeof null === "object"`.
+`Array.isArray` per gli array. Sempre `===` e `!==`, mai `==` e `!=`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 2. Stringhe (I Testi del Programma)
+
+Una stringa è una sequenza di caratteri racchiusa tra virgolette.
+È il modo in cui immagazzini ogni testo che il programma usa, come nomi, email, messaggi e HTML generato dinamicamente.
+Senza stringhe non c'è interfaccia con l'utente.
+
+#### Dichiarare una Stringa
+
+JavaScript ti dà tre modi per delimitare una stringa: virgolette singole `'...'`, virgolette doppie `"..."` e backtick `` `...` ``.
+
+```javascript
+const nome = 'Mario';
+const cognome = "Rossi";
+const saluto = `Ciao a tutti`;
+```
+
+Le prime due sono equivalenti.
+Non c'è una differenza tecnica tra `'...'` e `"..."`, quindi scegli una convenzione e mantienila coerente in tutto il progetto.
+L'unico motivo per preferire una all'altra è se la stringa contiene l'altro tipo di virgoletta (così eviti di dover usare il backslash per fare escape).
+
+```javascript
+const frase1 = "L'estate sta finendo"; // Doppie perché dentro c'è l'apostrofo
+const frase2 = 'Disse: "ciao"';        // Singole perché dentro ci sono le doppie
+```
+
+I backtick sono un mondo a parte.
+Servono a creare i **template literals**, cioè stringhe più potenti che permettono interpolazione e testo su più righe.
+Sono la scelta moderna nella maggior parte dei casi.
+
+-----
+
+#### Template Literals e Interpolazione
+
+Prima dei backtick (che arrivano con ES6 nel 2015), se volevi mettere il valore di una variabile dentro una stringa dovevi concatenare con il `+`:
+
+```javascript
+const nome = "Mario";
+const eta = 27;
+const frase = "Ciao " + nome + ", hai " + eta + " anni.";
+// "Ciao Mario, hai 27 anni."
+```
+
+È verboso, facile da sbagliare (spazi dimenticati, parentesi fuori posto) e difficile da leggere quando la stringa è complessa.
+I template literals risolvono questo problema con la sintassi `${...}`, chiamata **interpolazione**. Dentro una stringa delimitata da backtick, qualsiasi espressione JavaScript dentro `${...}` viene valutata (cioè calcolata per ottenere un risultato) e inserita nel testo.
+
+```javascript
+const nome = "Mario";
+const eta = 27;
+const frase = `Ciao ${nome}, hai ${eta} anni.`;
+// "Ciao Mario, hai 27 anni."
+```
+
+Dentro `${...}` puoi mettere qualsiasi espressione, non solo variabili: chiamate di funzione, operazioni matematiche, ternari (condizioni scritte in forma compatta).
+
+```javascript
+const prezzo = 42.5;
+const quantita = 3;
+const messaggio = `Totale: ${(prezzo * quantita).toFixed(2)}€`;
+// "Totale: 127.50€"
+
+const utente = { nome: "Mario", admin: true };
+const benvenuto = `Benvenuto ${utente.admin ? "Admin" : "Ospite"}: ${utente.nome}`;
+// "Benvenuto Admin: Mario"
+```
+
+Il secondo superpotere dei template literals è che supportano **stringhe multilinea** senza codice aggiuntivo.
+Vanno a capo dove le scrivi.
+
+```javascript
+const email = `Ciao Mario,
+
+Grazie per il tuo ordine #${ordineId}.
+Ti arriverà entro ${giorniConsegna} giorni.
+
+A presto.`;
+```
+
+Con le virgolette classiche dovresti usare `\n` per ogni ritorno a capo, rendendo la stringa illeggibile.
+
+**Regola:** usa i backtick di default.
+Passa a virgolette solo per stringhe semplici e statiche dove l'interpolazione non serve.
+
+-----
+
+#### Caratteri di Escape
+
+Alcuni caratteri hanno un significato speciale dentro una stringa e non possono essere scritti direttamente.
+Per usarli serve un **carattere di escape**, cioè un backslash `\` seguito da una lettera che rappresenta il carattere speciale.
+
+```javascript
+const a = "Disse: \"ciao\"";          // Virgolette doppie dentro stringa con doppie
+const b = 'L\'estate';                // Apostrofo dentro stringa con singole
+const c = "Prima riga\nSeconda riga"; // \n è l'a capo
+const d = "Colonna1\tColonna2";       // \t è il tab
+const e = "C:\\Users\\mario";         // \\ è un singolo backslash
+```
+
+I più frequenti sono `\n` (nuova riga), `\t` (tab) e `\\` (backslash).
+Gli altri li incontrerai raramente nella pratica.
+
+Con i backtick il problema dell'a capo sparisce, perché puoi andare a capo nella stringa stessa.
+Anche le virgolette interne non richiedono escape. Gli unici casi da ricordare sono il backtick stesso e la sequenza `${...}`, quando vuoi scriverla letteralmente invece di usarla come interpolazione.
+
+```javascript
+const frase = `Il backtick si scrive \` e il prezzo è letterale \${10}`;
+// "Il backtick si scrive ` e il prezzo è letterale ${10}"
+```
+
+-----
+
+#### Metodi Essenziali
+
+Le stringhe sono oggetti e hanno una collezione di metodi per trasformarle e ispezionarle.
+Una cosa cruciale da capire subito è che **le stringhe sono immutabili**. Ogni metodo non modifica la stringa originale, restituisce una stringa nuova. Se vuoi il risultato devi assegnarlo a qualcosa.
+
+```javascript
+const messaggio = "  Ciao Mondo  ";
+
+console.log(messaggio.trim()); // "Ciao Mondo"
+console.log(messaggio);        // "  Ciao Mondo  " (identico)
+
+const pulito = messaggio.trim(); // Ora pulito vale "Ciao Mondo"
+```
+
+I metodi che userai più spesso sono pochi ma importanti.
+Partiamo da `.length`, che più precisamente è una proprietà: restituisce il numero di caratteri.
+
+```javascript
+"Mario".length;   // 5
+"".length;        // 0
+"   ".length;     // 3 (gli spazi contano)
+```
+
+`.toUpperCase()` e `.toLowerCase()` convertono maiuscole e minuscole.
+
+```javascript
+"mario".toUpperCase(); // "MARIO"
+"MARIO".toLowerCase(); // "mario"
+```
+
+`.trim()` rimuove gli spazi all'inizio e alla fine.
+Essenziale quando gestisci campi input di un form, dove l'utente spesso aggiunge spazi accidentali.
+
+```javascript
+const email = "   mario@example.com   ";
+email.trim(); // "mario@example.com"
+```
+
+`.includes()` ti dice se una sottostringa è presente (restituisce `true` o `false`).
+È la versione moderna e leggibile di `.indexOf() !== -1`.
+
+```javascript
+const messaggio = "Benvenuto nel sito";
+messaggio.includes("Benvenuto"); // true
+messaggio.includes("Addio");     // false
+```
+
+`.startsWith()` e `.endsWith()` controllano se la stringa inizia o finisce con una certa sottostringa.
+Utilissimi per controllare input o riconoscere schemi.
+
+```javascript
+const file = "documento.pdf";
+file.endsWith(".pdf");  // true
+file.endsWith(".docx"); // false
+
+const url = "https://example.com";
+url.startsWith("https://"); // true
+```
+
+`.indexOf()` restituisce la posizione della prima occorrenza (partendo da 0) o `-1` se non la trova.
+`.includes()` è più leggibile quando ti serve solo sapere se c'è, ma `.indexOf()` è utile quando ti serve anche la posizione.
+
+```javascript
+"Mario Rossi".indexOf("Rossi"); // 6 (l'indice dove inizia "Rossi")
+"Mario Rossi".indexOf("Carlo"); // -1 (non trovato)
+```
+
+`.replace()` sostituisce la **prima** occorrenza di una sottostringa con un'altra.
+`.replaceAll()` sostituisce **tutte** le occorrenze.
+
+```javascript
+"Ciao, Ciao, Ciao".replace("Ciao", "Salve");
+// "Salve, Ciao, Ciao" (solo il primo)
+
+"Ciao, Ciao, Ciao".replaceAll("Ciao", "Salve");
+// "Salve, Salve, Salve" (tutti)
+```
+
+Ricorda sempre che queste operazioni non modificano l'originale, restituiscono una nuova stringa.
+Se dimentichi di assegnare il risultato a una variabile, il lavoro è perso.
+
+```javascript
+let testo = "Ciao mondo";
+
+// ❌ SBAGLIATO, il risultato viene buttato
+testo.toUpperCase();
+console.log(testo); // "Ciao mondo" (nessuna modifica)
+
+// ✅ CORRETTO, assegna il risultato
+testo = testo.toUpperCase();
+console.log(testo); // "CIAO MONDO"
+```
+
+-----
+
+#### `.split()` (Da Stringa ad Array)
+
+`.split()` prende una stringa e la spezza in un array, usando un **separatore** che specifichi tu.
+È il ponte più usato tra il mondo delle stringhe e quello degli array.
+
+```javascript
+"rosso,verde,blu".split(","); // ["rosso", "verde", "blu"]
+"Ciao mondo".split(" ");      // ["Ciao", "mondo"]
+"2026-04-14".split("-");      // ["2026", "04", "14"]
+```
+
+Se passi una stringa vuota `""` come separatore, ottieni un array con ogni singolo carattere.
+
+```javascript
+"Mario".split(""); // ["M", "a", "r", "i", "o"]
+```
+
+Nella pratica, `.split()` è quello che usi per elaborare dati testuali: dividere un CSV in righe, estrarre i segmenti di un URL e separare le parole di una frase per contarle.
+
+L'operazione inversa è `.join()`, che è un metodo degli array e ricompone un array in stringa usando un separatore.
+
+```javascript
+const parole = ["Ciao", "mondo", "bello"];
+parole.join(" ");  // "Ciao mondo bello"
+parole.join("-");  // "Ciao-mondo-bello"
+parole.join("");   // "Ciaomondobello"
+```
+
+-----
+
+#### `.codePointAt()` (Unicode Moderno per Emoji)
+
+Le stringhe in JavaScript supportano Unicode, cioè lo standard che permette di rappresentare lettere, simboli, caratteri internazionali ed emoji. Alcuni caratteri Unicode, come molte emoji, occupano più di un "posto" in memoria. Questo crea problemi con metodi classici come `.charCodeAt()`, che vedono un'emoji come due mezzi caratteri.
+
+`.codePointAt()` è la versione moderna e gestisce correttamente i caratteri Unicode completi.
+
+```javascript
+"A".codePointAt(0);    // 65 (il codice ASCII della A)
+"🍕".codePointAt(0);   // 127829 (il codice Unicode della pizza)
+```
+
+E `String.fromCodePoint()` fa l'operazione inversa: da codice a carattere.
+
+```javascript
+String.fromCodePoint(65);      // "A"
+String.fromCodePoint(127829);  // "🍕"
+```
+
+Nella pratica quotidiana non li userai spesso, ma se mai ti capita di elaborare testo con emoji, ricorda che esistono i metodi moderni con "codePoint" nel nome. Evita i vecchi `.charCodeAt()` e `String.fromCharCode()` quando serve supporto Unicode completo.
+
+**Regola:** i backtick come default per le stringhe.
+Le stringhe sono immutabili, assegna sempre il risultato dei metodi. Per spezzare in array usa `.split()`, per ricomporre `.join()`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 3. Numeri (I Dati Matematici)
+
+JavaScript ha un solo tipo (categoria di dato) per i numeri: `Number`.
+Non esistono `int`, `float`, `double` come in altri linguaggi.
+Un numero è un numero, che sia `5`, `3.14` o `-100`.
+Questa semplicità è comoda, ma porta con sé conseguenze pratiche che è importante conoscere.
+
+#### Operazioni di Base
+
+Le quattro operazioni funzionano come ti aspetti, con gli operatori `+`, `-`, `*`, `/`.
+L'elevamento a potenza usa `**` (da ES7) e il modulo (resto della divisione) usa `%`.
+
+```javascript
+10 + 5;   // 15
+10 - 5;   // 5
+10 * 5;   // 50
+10 / 4;   // 2.5 (non 2, come in linguaggi con divisione intera)
+10 ** 2;  // 100
+10 % 3;   // 1 (10 diviso 3 dà resto 1)
+```
+
+Il modulo è utile in tanti pattern, per esempio capire se un numero è pari o dispari, ruotare dentro un intervallo di valori o alternare comportamenti a ogni N iterazioni.
+
+```javascript
+// È pari?
+12 % 2 === 0; // true
+13 % 2 === 0; // false
+
+// Produce "pari" per le righe pari e "dispari" per le righe dispari
+const indiceRiga = 4;
+const tipoRiga = indiceRiga % 2 === 0 ? "pari" : "dispari";
+console.log(tipoRiga); // "pari"
+```
+
+Gli operatori composti `+=`, `-=`, `*=`, `/=` abbreviano l'operazione "prendi il valore, fai qualcosa, rimettilo".
+
+```javascript
+let totale = 100;
+totale += 50;  // Equivalente a: totale = totale + 50
+totale -= 20;  // totale = 130
+totale *= 2;   // totale = 260
+```
+
+E `++` e `--` incrementano o decrementano di 1.
+Sono comodi nei cicli, ma evita di combinarli con altre espressioni perché il comportamento "prima o dopo" crea bug sottili.
+
+```javascript
+let contatore = 0;
+contatore++;  // Ora vale 1. È facile da leggere.
+
+// ❌ Codice che confonde, evitalo
+const x = contatore++ + 10;  // Ora vale 11. Funziona, ma è difficile da leggere
+```
+
+-----
+
+#### `NaN` (Non Un Numero)
+
+`NaN` sta per "Not a Number".
+È il valore che JavaScript restituisce quando un'operazione matematica produce qualcosa che non può essere rappresentato come numero.
+
+```javascript
+"ciao" * 3;          // NaN
+Math.sqrt(-1);       // NaN
+parseInt("abc");     // NaN
+0 / 0;               // NaN (matematicamente indefinito)
+```
+
+Il trabocchetto di `NaN` è che **non è uguale a sé stesso**.
+Sembra assurdo ma è per scelta del linguaggio: `NaN === NaN` restituisce `false`.
+Questo significa che non puoi controllare se un valore è `NaN` confrontandolo con `NaN`.
+
+```javascript
+const risultato = "ciao" * 3;
+risultato === NaN;  // false (!!)
+```
+
+Per verificare se un valore è `NaN` devi usare `Number.isNaN()`:
+
+```javascript
+Number.isNaN(risultato); // true
+```
+
+Esiste anche `isNaN()` (senza il prefisso `Number`), ma è una trappola.
+Il suo comportamento è più permissivo: prima converte l'argomento (ciò che si trova tra parentesi) in numero, poi controlla se quel numero è `NaN`.
+Il risultato è che `isNaN("ciao")` restituisce `true` perché `"ciao"` diventa `NaN` durante la conversione, anche se `"ciao"` non è letteralmente `NaN`, è solo una stringa.
+
+```javascript
+isNaN("ciao");          // true (convertito prima, confuso)
+Number.isNaN("ciao");   // false ("ciao" è una stringa, non NaN)
+
+Number.isNaN(NaN);      // true (solo il vero NaN passa il controllo)
+```
+
+Usa quindi `Number.isNaN()`, è più prevedibile perché non fa conversioni.
+
+-----
+
+#### `Infinity` e Divisioni per Zero
+
+JavaScript ha un valore speciale `Infinity` per rappresentare un numero più grande di qualunque altro, e il suo opposto `-Infinity`.
+
+```javascript
+1 / 0;               // Infinity (non un errore, come in altri linguaggi)
+-1 / 0;              // -Infinity
+1 / Infinity;        // 0
+Infinity + 1;        // Infinity
+Infinity - Infinity; // NaN (indefinito matematicamente)
+```
+
+A livello pratico, `Infinity` lo incontri quando qualcuno divide per zero senza controllo o in alcuni pattern matematici, come inizializzare un minimo a `Infinity` e cercare il più piccolo in una lista.
+Non è un errore, JavaScript non lancia eccezioni per la divisione per zero, semplicemente restituisce `Infinity`.
+Tocca a te controllare, se la tua logica deve considerarlo un caso anomalo.
+
+-----
+
+#### Conversioni da Stringa a Numero
+
+Quando leggi input dall'utente (ad esempio un form, un URL, un campo di testo), i valori arrivano come stringhe.
+Per farci operazioni matematiche devi convertirli in numeri.
+JavaScript ti dà tre strumenti:
+
+`Number()` è la conversione rigorosa: se la stringa contiene qualcosa che non è un numero valido, ottieni `NaN`.
+
+```javascript
+Number("42");     // 42
+Number("42.5");   // 42.5
+Number("42px");   // NaN (contiene caratteri non numerici)
+Number("");       // 0 (stringa vuota diventa 0)
+Number("  42  "); // 42 (gli spazi vengono ignorati)
+```
+
+`parseInt()` è tollerante: legge finché trova numeri e si ferma al primo carattere non numerico.
+Il secondo argomento è la **base** (10 per decimale), ed è buona pratica passarla sempre esplicitamente per evitare comportamenti inaspettati.
+È più facile capirlo con il codice che con le parole:
+
+```javascript
+parseInt("42", 10);   // 42
+parseInt("42px", 10); // 42
+parseInt("px42", 10); // NaN (non c'è niente di numerico all'inizio)
+parseInt("42.7", 10); // 42 (taglia la parte decimale)
+```
+
+`parseFloat()` è come `parseInt` ma tiene la parte decimale.
+Anche lui è tollerante: legge finché trova un numero valido e si ferma quando incontra un carattere non numerico.
+Non accetta la base come argomento.
+
+```javascript
+parseFloat("42");      // 42
+parseFloat("42.5");    // 42.5
+parseFloat("42.5px");  // 42.5
+parseFloat("");        // NaN (a differenza di Number("") che dà 0)
+parseFloat("  42.5 "); // 42.5 (gli spazi vengono ignorati)
+parseFloat("px42.5");  // NaN (non c'è niente di numerico all'inizio)
+```
+
+La differenza pratica con `Number()` è che `Number("42.5px")` restituisce `NaN`, mentre `parseFloat("42.5px")` riesce comunque a estrarre `42.5`.
+
+Nella pratica lo vedrai così:
+
+```javascript
+// Un campo input di un form
+const eta = parseInt(document.querySelector("#eta").value, 10);
+const prezzo = parseFloat(document.querySelector("#prezzo").value);
+
+// Se l'utente inserisce "25 anni", parseInt estrae 25
+// Se inserisce "€12.50", parseFloat estrae 12.5 solo se togli il € prima
+```
+
+C'è anche un trucco comune, ovvero, prefissare una stringa con `+` per convertirla in numero, come farebbe `Number()`.
+
+```javascript
++"42";   // 42
++"42.5"; // 42.5
++"ciao"; // NaN
+```
+
+È conciso ma meno esplicito di `Number()`.
+Per chi legge il codice, `Number("42")` è più chiaro di `+"42"`.
+Usalo con parsimonia.
+
+-----
+
+#### Il Modulo `Math`
+
+`Math` è un oggetto globale che contiene funzioni matematiche.
+Non crei istanze, chiami direttamente i suoi metodi.
+
+`Math.floor()`, `Math.ceil()` e `Math.round()` arrotondano.
+`floor` arrotonda verso il basso, `ceil` verso l'alto, `round` al più vicino.
+
+```javascript
+Math.floor(4.7); // 4
+Math.ceil(4.2);  // 5
+Math.round(4.5); // 5
+Math.round(4.4); // 4
+
+// Attenzione con i negativi: floor va verso il basso in senso matematico
+Math.floor(-4.2); // -5 (più basso di -4)
+Math.ceil(-4.7);  // -4 (più alto di -5)
+```
+
+`Math.random()` restituisce un numero decimale casuale tra 0 (incluso) e 1 (escluso).
+Per ottenere un intero casuale in un intervallo, combini `random` con `floor` e un po' di matematica.
+
+```javascript
+Math.random(); // 0.7354... (ogni volta diverso)
+
+// Numero intero casuale tra min (incluso) e max (incluso)
+function intCasuale(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+intCasuale(1, 6);   // Un tiro di dado: 1, 2, 3, 4, 5 o 6
+intCasuale(0, 100); // Un numero tra 0 e 100
+```
+
+La formula è sempre la stessa: `Math.floor(Math.random() * (max - min + 1)) + min`.
+Per capire il `+ 1`, pensa a un dado: tra 1 e 6 ci sono 6 risultati possibili, non 5.
+Se facessi `max - min`, avresti `6 - 1 = 5`; aggiungendo `+ 1` ottieni il numero corretto di valori possibili.
+Il `* (max - min + 1)` allarga il risultato di `Math.random()` fino alla dimensione dell'intervallo, `Math.floor()` taglia la parte decimale e il `+ min` sposta il numero finale in avanti, così l'intervallo parte da `min` invece che da `0`.
+
+Altri metodi utili sono `Math.max()` e `Math.min()`, che restituiscono il massimo o il minimo tra i valori passati.
+`Math.abs()` restituisce il valore assoluto, cioè la distanza da zero senza il segno negativo. `Math.sqrt()` restituisce la radice quadrata, `Math.pow(base, esponente)` l'elevamento a potenza (equivalente a `base ** esponente`).
+
+```javascript
+Math.max(10, 5, 20, 3); // 20
+Math.min(10, 5, 20, 3); // 3
+Math.abs(-7);           // 7
+Math.sqrt(16);          // 4
+Math.pow(2, 10);        // 1024 (uguale a 2 ** 10)
+```
+
+`Math.max` e `Math.min` non accettano un array, solo argomenti separati.
+Per passare un array usi lo spread, cioè i tre puntini `...` davanti all'array (lo vedremo meglio nella <Link to="/it/docs/vademecum/javascript-real-world/structures-and-flow#7-operatori">sezione 7</Link>):
+
+```javascript
+const punteggi = [10, 5, 20, 3];
+Math.max(...punteggi); // 20
+```
+
+-----
+
+#### Il Problema del Floating Point
+
+Questa è la trappola più famosa dei numeri in JavaScript, e sorprende chiunque la incontri per la prima volta.
+
+```javascript
+0.1 + 0.2; // 0.30000000000000004
+```
+
+Non è un bug di JavaScript. Il punto è che noi esseri umani scriviamo i numeri decimali in base 10 (abbiamo infatti dieci dita).
+Il computer, invece, rappresenta i numeri in base 2, usando sequenze di 0 e 1, come miliardi di interruttori accesi o spenti.
+
+Dopo la virgola, quindi, il computer non ragiona in decimi, centesimi e millesimi.
+Ragiona con metà, quarti, ottavi, sedicesimi e così via:
+
+```javascript
+1 / 2  // 0.5
+1 / 4  // 0.25
+1 / 8  // 0.125
+1 / 16 // 0.0625
+1 / 32 // 0.03125
+```
+
+Per noi `0.1` è semplice: è un decimo. Per il computer, invece, `0.1` deve essere costruito con quei pezzi.
+Può avvicinarsi molto, ma non può rappresentarlo in modo perfetto, quindi salva il valore più vicino che riesce a rappresentare.
+
+Quando il computer somma due approssimazioni, il risultato eredita quell'errore minuscolo e può mostrarti `0.30000000000000004` invece di `0.3`.
+Questo comportamento deriva dallo standard IEEE-754, usato anche da molti altri linguaggi.
+
+Nella maggior parte dei casi non noterai problemi, perché le differenze sono nell'ordine di 10⁻¹⁷.
+Ma ci sono due situazioni in cui devi stare attento: **mostrare** numeri decimali all'utente, e **confrontarli**.
+
+Per mostrarli con un numero fisso di cifre decimali, usa `.toFixed(n)`, che restituisce una **stringa** con esattamente `n` decimali.
+
+```javascript
+const totale = 0.1 + 0.2;
+totale.toFixed(2); // "0.30" (stringa!)
+```
+
+Il ritorno è una stringa, non un numero.
+Se ti serve riutilizzarlo in calcoli, riconvertilo:
+
+```javascript
+const totaleArrotondato = parseFloat(totale.toFixed(2)); // 0.3 (numero)
+```
+
+Per confrontare due numeri decimali, non usare `===` diretto.
+Confronta la differenza con una tolleranza minuscola, detta **epsilon** (cioè un margine di errore accettabile).
+
+```javascript
+// ❌ SBAGLIATO, può fallire per errori di floating point
+if ((0.1 + 0.2) === 0.3) { /* ... */ }  // false, il test fallisce
+
+// ✅ CORRETTO, usa una tolleranza
+const sonoUguali = Math.abs((0.1 + 0.2) - 0.3) < Number.EPSILON;
+// true
+```
+
+`Number.EPSILON` vale circa `2.22e-16`. È la distanza tra `1` e il numero rappresentabile successivo più vicino.
+Per confronti semplici su numeri piccoli, è un modo per dire: "considera uguali due decimali se la loro differenza è così piccola da essere solo rumore di floating point".
+
+Nel nostro esempio, `Math.abs((0.1 + 0.2) - 0.3)` misura quanto il risultato è distante da `0.3`.
+Se quella distanza è minore di `Number.EPSILON`, li consideriamo uguali.
+
+Per questo, quando la precisione conta davvero, come in app bancarie, carrelli e fatture, la pratica professionale è lavorare in centesimi, cioè con numeri interi.
+Un prezzo di `12.50€` diventa `1250` centesimi.
+Converti in centesimi all'ingresso, fai i calcoli sugli interi e riconverti in euro solo quando devi mostrare il risultato.
+
+**Regola:** `Number.isNaN` invece di `isNaN`.
+`parseInt` con la base 10 esplicita.
+Per mostrare decimali usa `.toFixed(n)`, per confronti semplici su numeri piccoli usa una tolleranza con `Number.EPSILON`.
+Per precisione finanziaria, lavora in centesimi interi.
+
+<br />
+<br />
+<br />
+<br />
+
+### 4. Booleani, Date e Valori Speciali
+
+I booleani sono il tipo più semplice: `true` o `false`, non c'è altro.
+Ma JavaScript ha un sistema che converte automaticamente altri valori in booleani nei contesti in cui serve una decisione (un `if`, un ternario, un `while`).
+Capire questo sistema, chiamato truthy/falsy, è fondamentale per scrivere codice prevedibile.
+
+#### Truthy e Falsy
+
+Quando JavaScript incontra un valore in un contesto booleano, lo converte a `true` o `false`.
+I valori che diventano `false` si chiamano **falsy**, tutti gli altri sono **truthy**.
+
+I valori falsy da memorizzare sono questi:
+
+```javascript
+false
+0     // zero numerico
+""    // stringa vuota
+null
+undefined
+NaN
+```
+
+Tutto il resto è truthy, incluse alcune cose che potrebbero sorprenderti:
+
+```javascript
+"0"     // stringa "0" (è una stringa non vuota)
+"false" // stringa "false" (è una stringa non vuota)
+[]      // array vuoto
+{}      // oggetto vuoto
+```
+
+Nella pratica, questo sistema è potente, perché puoi controllare se una stringa ha del contenuto senza confrontarla esplicitamente con `""`, e puoi controllare se una variabile è stata inizializzata senza testare contro `null` e `undefined` separatamente.
+
+```javascript
+// ❌ Prolisso
+if (nome !== "" && nome !== null && nome !== undefined) {
+  // ...
+}
+
+// ✅ Sfrutta il fatto che "", null e undefined sono tutti falsy
+if (nome) {
+  // ...
+}
+```
+
+Fai solo attenzione a una cosa.
+Se `0` o `""` sono valori validi per il tuo caso, il controllo `if (nome)` li esclude. Per quei casi esiste l'operatore `??` (nullish coalescing), che vedremo nella <Link to="/it/docs/vademecum/javascript-real-world/structures-and-flow#-nullish-coalescing-quando-0-e--sono-validi">sezione 7</Link>.
+
+Il doppio NOT (`!!`) è un trucco per convertire esplicitamente un valore in booleano:
+
+```javascript
+!!"ciao"; // true
+!!"";     // false
+!!0;      // false
+!!42;     // true
+!!null;   // false
+!!{};     // true
+```
+
+Il primo `!` nega il valore (rendendolo il booleano opposto), il secondo lo nega di nuovo (tornando al booleano originale).
+È utile quando devi restituire un booleano esplicito da una funzione che riceve valori di tipo misto.
+
+-----
+
+#### Date (Il Tempo in JavaScript)
+
+L'oggetto `Date` rappresenta un momento nel tempo.
+Lo crei con `new Date()`, e senza argomenti restituisce l'istante corrente.
+
+```javascript
+const adesso = new Date();
+console.log(adesso);
+// 2026-04-14T10:30:00.000Z (circa)
+```
+
+Puoi creare una data specifica passando anno, mese, giorno, ora, minuti, secondi.
+
+```javascript
+const dataEvento = new Date(2026, 3, 14, 18, 30, 0);
+// 14 aprile 2026, 18:30:00
+```
+
+Qui c'è un trabocchetto di JavaScript: **il mese è zero-indexed**, cioè il conteggio parte da 0.
+Gennaio è 0, dicembre è 11; quindi aprile è 3, non 4.
+Questo comportamento esiste dagli anni '90, è un'eredità di Java, e non verrà mai cambiato per ragioni di retrocompatibilità.
+Devi solo ricordartelo.
+
+```javascript
+// ❌ TRAPPOLA, questo crea il 14 maggio, non aprile!
+const errata = new Date(2026, 4, 14);
+
+// ✅ CORRETTO, mese 3 = aprile
+const giusta = new Date(2026, 3, 14);
+```
+
+L'altra opzione è passare una stringa in formato ISO 8601, che è lo standard internazionale.
+Qui il mese è 1-based, cioè il conteggio parte da 1 come nel calendario normale, perché è una stringa interpretata dal parser (il meccanismo che interpreta la stringa).
+
+```javascript
+const data = new Date("2026-04-14T18:30:00");
+// 14 aprile 2026, 18:30
+```
+
+Quando ricevi date da un server (quasi sempre come stringhe ISO in un JSON), questo è il formato che incontrerai.
+La stringa ISO è la forma più sicura per passare date tra sistemi, perché evita ambiguità culturali. Una data come `04/05/2026` può significare `4 maggio 2026` in Italia, ma `5 aprile 2026` negli Stati Uniti. Il formato ISO `2026-05-04`, invece, è sempre anno-mese-giorno.
+Se nella stringa c'è anche l'orario, conviene includere sempre anche il fuso orario, per esempio `Z` per UTC o `+02:00` per un offset specifico. Una stringa come `"2026-04-14T18:30:00"` senza fuso viene interpretata come ora locale dell'ambiente che la legge.
+
+Per estrarre parti di una data usi i metodi `.get...()`:
+
+```javascript
+const data = new Date(2026, 3, 14, 18, 30);
+
+data.getFullYear(); // 2026
+data.getMonth();    // 3 (aprile, zero-indexed!)
+data.getDate();     // 14 (giorno del mese, questo è 1-based)
+data.getDay();      // 2 (giorno della settimana: 0 = domenica, 6 = sabato)
+data.getHours();    // 18
+data.getMinutes();  // 30
+```
+
+Nota la doppia incoerenza: `getMonth()` è zero-indexed, `getDate()` (il giorno del mese) è one-indexed, `getDay()` (il giorno della settimana) è zero-indexed ma con domenica come 0.
+
+-----
+
+#### `Date.now()` e `performance.now()` (Timestamp e Durate)
+
+`Date.now()` restituisce il numero di **millisecondi** trascorsi dal 1° gennaio 1970 UTC, la cosiddetta "epoch", cioè il punto zero da cui JavaScript conta il tempo. È un numero grande, ed è il modo standard per rappresentare un istante come singolo valore.
+
+```javascript
+Date.now(); // 1776432600000 (circa, varia ogni millisecondo)
+```
+
+Il suo caso d'uso principale è **misurare il tempo di esecuzione** di un'operazione: prendi il timestamp prima, esegui l'operazione, prendi il timestamp dopo, sottrai.
+
+```javascript
+const inizio = Date.now();
+
+// Un'operazione qualsiasi
+for (let i = 0; i < 1000000; i++) {
+  Math.sqrt(i);
+}
+
+const fine = Date.now();
+console.log(`Durata: ${fine - inizio} ms`);
+```
+
+`Date.now()` è più diretto di `new Date().getTime()` perché non crea un oggetto `Date` intermedio, e restituisce lo stesso valore.
+Usalo sempre per i timestamp.
+
+Per misurare durate brevi con più precisione esiste `performance.now()`.
+A differenza di `Date.now()`, non restituisce un timestamp assoluto, ma un tempo relativo: quanti millisecondi sono passati dall'avvio della pagina.
+
+```javascript
+console.log(performance.now()); // 1243.52
+```
+
+Vuol dire che sono passati `1243.52` millisecondi dall'inizio della pagina.
+È utile quando vuoi misurare durate molto brevi, per esempio il tempo impiegato da una funzione.
+
+-----
+
+#### Limiti di `Date`
+
+L'oggetto `Date` nativo di JavaScript è utile per iniziare, ma ha alcune scomodità che abbiamo visto: mesi zero-indexed, API poco coerente, gestione dei fusi orari delicata e formattazione dell'output non sempre immediata.
+
+Per questo, nei progetti in cui le date sono centrali (calendari, prenotazioni, report, scadenze), non basta "andare a intuito".
+Devi essere esplicito sul formato che ricevi, sul fuso orario che usi e sul formato che mostri all'utente.
+
+Per ora ti basta conoscere `Date`, i suoi metodi principali e le sue trappole più comuni.
+Quando dovrai lavorare seriamente con calendari, scadenze, fusi orari o formattazioni locali, approfondisci formati ISO e gestione dei fusi orari.
+Nei progetti più complessi esistono anche librerie dedicate, ma il primo passo è capire bene questi concetti.
+
+-----
+
+#### Cenni su `Symbol` e `BigInt`
+
+JavaScript ha altri due tipi primitivi che incontrerai raramente ma vale la pena sapere che esistono.
+
+`Symbol` è un tipo che produce valori garantiti unici.
+Ogni `Symbol()` crea un identificatore diverso da qualunque altro, anche se passi la stessa descrizione.
+Si usa soprattutto nelle librerie e nelle API del linguaggio, quando serve una chiave che non deve sovrapporsi ad altre chiavi.
+
+```javascript
+const a = Symbol("descrizione");
+const b = Symbol("descrizione");
+a === b; // false (sono due Symbol diversi, nonostante la descrizione uguale)
+```
+
+Nella pratica quotidiana non li crei tu.
+Li incontri in API come `Symbol.iterator` (che vedremo nel prossimo capitolo quando parleremo di iteratori).
+
+`BigInt` serve quando devi lavorare con numeri interi più grandi di quelli che `Number` può rappresentare in modo sicuro.
+`Number` gestisce bene gli interi fino a `2^53 - 1`, cioè `9007199254740991`. Oltre quel limite, JavaScript può perdere precisione.
+
+```javascript
+console.log(Number.MAX_SAFE_INTEGER); // 9007199254740991
+
+console.log(9007199254740991 + 1); // 9007199254740992
+console.log(9007199254740991 + 2); // 9007199254740992 (sorpresa)
+```
+
+Per dire a JavaScript "questo è un intero enorme, trattalo come `BigInt`", aggiungi una `n` finale oppure usi `BigInt()`.
+
+```javascript
+const grande = 9007199254740993n;
+const enorme = BigInt("9007199254740993");
+
+console.log(grande + 1n); // 9007199254740994n
+```
+
+La `n` fa parte della sintassi: indica che quel numero non è un `Number`, ma un `BigInt`. Per questo non puoi mischiare `BigInt` e `Number` nella stessa operazione.
+
+```javascript
+9007199254740993n + 1;  // TypeError
+9007199254740993n + 1n; // 9007199254740994n
+```
+
+Li userai raramente, per esempio con identificatori molto grandi, timestamp ad alta precisione o crittografia.
+Per la stragrande maggioranza dei casi, `Number` basta e avanza.
+
+**Regola:** i valori falsy principali sono `false`, `0`, `""`, `null`, `undefined`, `NaN` e, quando usi `BigInt`, `0n`.
+Tutto il resto è truthy, inclusi `[]`, `{}` e `"0"`.
+I mesi in `Date` sono zero-indexed (gennaio = 0).
+Usa `Date.now()` per timestamp e `performance.now()` per misurare durate brevi con più precisione.
+Quando le date diventano centrali nel progetto, tratta formato e fuso orario come decisioni esplicite.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (Fondamenti in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|---------------|-----------------|
+| `let` | Block scope, per valori che riassegnerai | Usarla anche quando `const` basterebbe |
+| `const` | Prima scelta, blocca il riferimento ma non il contenuto | Pensare che congeli anche oggetti e array |
+| `var` | Non usarla mai nel codice nuovo | Function scope e hoisting con `undefined` |
+| `null` vs `undefined` | `null` è intenzionale, `undefined` è assente | Confondere i due, trattarli come sinonimi |
+| `typeof` | Restituisce stringa con il tipo durante l'esecuzione | `typeof null === "object"` è un bug storico |
+| `===` vs `==` | Sempre `===` per confronti senza sorprese | Usare `==` e incappare nella coercizione |
+| Template literals | Backtick e `${...}` come default | Usare la concatenazione con `+` |
+| Stringhe immutabili | Ogni metodo restituisce una nuova stringa | Dimenticare di assegnare il risultato |
+| `.split()` | Ponte stringa -> array | Passare il separatore sbagliato |
+| `Number` | Un solo tipo per tutti i numeri | Confrontare decimali con `===` (floating point) |
+| `NaN` | Non è uguale a sé stesso | Usare `NaN === NaN` per il controllo |
+| `Number.isNaN` | Il controllo corretto per `NaN` | Usare il vecchio `isNaN` globale |
+| `parseInt` | Passa sempre la base 10 | Dimenticarla e ottenere comportamenti strani |
+| Floating point | Lavora in centesimi per precisione finanziaria | Sommare prezzi decimali e fidarsi del risultato |
+| Truthy/Falsy | Pochi valori falsy, tutto il resto truthy | `[]`, `{}`, `"0"` sono tutti truthy |
+| `Date` | Mesi zero-indexed (gennaio = 0) | Scrivere `new Date(2026, 4)` per aprile |
+| `Date.now()` | Millisecondi dal 1970, perfetto per timestamp | Creare `new Date()` quando basta `Date.now()` |

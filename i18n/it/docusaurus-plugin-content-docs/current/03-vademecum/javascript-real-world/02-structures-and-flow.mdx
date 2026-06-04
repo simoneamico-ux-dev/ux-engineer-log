@@ -1,0 +1,1820 @@
+---
+sidebar_position: 2
+title: Strutture Dati e Flusso
+description: Array, oggetti, operatori, controllo del flusso, cicli, funzioni, scope e closures.
+---
+
+import Link from '@docusaurus/Link';
+
+# Parte II: Strutture Dati e Flusso
+
+Dopo i tipi primitivi, serve un modo per organizzare informazioni più ricche.
+Un utente, un carrello, un messaggio, un ordine o una notifica non vivono quasi mai come valori isolati, ma come gruppi di dati collegati tra loro.
+
+Questa parte introduce array, oggetti, operatori, condizioni, cicli e funzioni.
+Sono gli strumenti con cui JavaScript modella dati complessi, li trasforma e decide quale codice eseguire.
+
+---
+
+## Strutture Dati
+
+### 5. Array (Le Liste Ordinate)
+
+Un array è una lista ordinata di valori. 
+Lo usi ogni volta che hai "più cose dello stesso tipo", ad esempio una lista di prodotti, una serie di messaggi, i risultati di una query al database o le notifiche da mostrare all'utente.
+
+#### Creare e Accedere
+
+Un array si dichiara con le parentesi quadre `[]` e i valori all'interno sono separati da una virgola. 
+I valori possono essere di qualunque tipo, anche misto.
+
+```javascript
+const colori = ["rosso", "verde", "blu"];
+const numeri = [10, 20, 30, 40];
+const misto = ["testo", 42, true, null]; // Valido ma raro nella pratica
+```
+
+Accedi a un elemento usando l'**indice**, un numero che parte da 0. 
+Il primo elemento è a indice 0, il secondo a indice 1, e così via.
+
+```javascript
+const colori = ["rosso", "verde", "blu"];
+colori[0]; // "rosso"
+colori[1]; // "verde"
+colori[2]; // "blu"
+colori[3]; // undefined (non esiste)
+```
+
+Il fatto che gli indici partano da 0 è una convenzione ereditata dal C, ed è condivisa dalla maggior parte dei linguaggi moderni. 
+All'inizio è controintuitiva (il "primo" elemento è a posizione 0), ma è così universale che ci si abitua in fretta.
+
+La proprietà `.length` ti dice quanti elementi ci sono:
+
+```javascript
+["rosso", "verde", "blu"].length; // 3
+[].length;                        // 0
+```
+
+E l'ultimo elemento si ottiene con `array.length - 1`, o con il più moderno `.at(-1)`, dove `at` significa "alla posizione":
+
+```javascript
+const colori = ["rosso", "verde", "blu"];
+colori[colori.length - 1]; // "blu" (il vecchio metodo)
+colori.at(-1);             // "blu" (il metodo moderno)
+colori.at(-2);             // "verde"
+```
+
+-----
+
+#### Metodi Distruttivi (Modificano l'Originale)
+
+Alcuni metodi modificano l'array su cui li chiami, invece di restituire una copia nuova. 
+Si chiamano **distruttivi** e vanno usati con consapevolezza, specialmente quando stai passando l'array ad altre funzioni o lo stai usando in contesti dove è importante preservare l'immutabilità, come in React.
+
+`.push()` aggiunge uno o più elementi alla fine, `.pop()` rimuove l'ultimo e lo restituisce, cioè te lo dà come valore utilizzabile.
+
+```javascript
+const coda = ["Anna", "Bruno"];
+coda.push("Carlo");          // coda è ora ["Anna", "Bruno", "Carlo"]
+coda.push("Diana", "Elena"); // Puoi aggiungerne più di uno
+
+const ultimo = coda.pop();   // "Elena", e coda diventa ["Anna", "Bruno", "Carlo", "Diana"]
+```
+
+`.unshift()` aggiunge all'**inizio**, `.shift()` rimuove il primo. 
+I nomi sono ereditati da concetti storici di manipolazione di liste (shift = spostamento).
+
+```javascript
+const coda = ["Bruno", "Carlo"];
+coda.unshift("Anna");  // ["Anna", "Bruno", "Carlo"]
+const primo = coda.shift(); // "Anna", e coda diventa ["Bruno", "Carlo"]
+```
+
+`.splice()` è il coltellino svizzero dei metodi distruttivi: rimuove, inserisce o sostituisce elementi in una posizione arbitraria.
+
+```javascript
+const lettere = ["a", "b", "c", "d", "e"];
+
+// splice(indice da cui partire, quanti elementi rimuovere, elementi da inserire...)
+lettere.splice(1, 2);           // Rimuove 2 elementi da indice 1
+console.log(lettere);           // ["a", "d", "e"]
+
+lettere.splice(1, 0, "X", "Y"); // Da indice 1, rimuove 0 elementi e inserisce "X" e "Y"
+console.log(lettere);           // ["a", "X", "Y", "d", "e"]
+```
+
+`.sort()` ordina l'array. 
+Il trabocchetto è che **senza una funzione di confronto ordina alfabeticamente**, convertendo i numeri in stringhe. 
+Questo dà risultati sbagliati con i numeri.
+
+```javascript
+// ❌ Sorpresa: ordinamento alfabetico
+[10, 2, 1, 20].sort();
+// [1, 10, 2, 20]
+// Perché confronta le stringhe: "1", "10", "2", "20"
+
+// ✅ Passa una funzione di confronto per ordinare correttamente
+[10, 2, 30, 4].sort((a, b) => a - b); // [2, 4, 10, 30]
+[10, 2, 30, 4].sort((a, b) => b - a); // [30, 10, 4, 2] (decrescente)
+```
+
+La funzione di confronto deve restituire un numero negativo se `a` va prima di `b`, positivo se va dopo, zero se sono uguali. 
+`a - b` fa esattamente questo: se `a` è più piccolo di `b`, il risultato è negativo e `a` viene messo prima; se `a` è più grande, il risultato è positivo e viene messo dopo; se sono uguali, il risultato è `0` e l'ordine non cambia.
+
+-----
+
+#### Metodi Non Distruttivi (Restituiscono Copia)
+
+I metodi non distruttivi lasciano l'originale intatto. 
+Alcuni restituiscono un nuovo array, altri restituiscono un valore, ma il punto è che non modificano l'array di partenza.
+
+`.slice()` estrae una porzione. 
+Attenzione a non confonderlo con `.splice()`: la `s` in più cambia tutto.
+
+```javascript
+const colori = ["rosso", "verde", "blu", "giallo"];
+
+colori.slice(1, 3);  // ["verde", "blu"] (da indice 1 a indice 3 escluso)
+colori.slice(1);     // ["verde", "blu", "giallo"] (da indice 1 alla fine)
+colori.slice(-2);    // ["blu", "giallo"] (ultimi due)
+
+console.log(colori); // ["rosso", "verde", "blu", "giallo"] (intatto)
+```
+
+`.concat()` unisce due array in uno nuovo (moderno: spread operator `...`, che vedremo tra poco).
+
+```javascript
+const a = [1, 2];
+const b = [3, 4];
+a.concat(b); // [1, 2, 3, 4]
+```
+
+`.includes()` controlla se un elemento è presente, restituisce booleano. 
+
+```javascript
+[1, 2, 3].includes(2);  // true
+[1, 2, 3].includes(99); // false
+```
+
+`.indexOf()` restituisce la posizione o `-1` se non c'è.
+
+```javascript
+[1, 2, 3].indexOf(2);   // 1
+[1, 2, 3].indexOf(99);  // -1
+```
+
+`.find()` restituisce il primo elemento che soddisfa una condizione, `.findIndex()` ne restituisce l'indice.
+
+```javascript
+const utenti = [
+  { nome: "Anna", eta: 25 },
+  { nome: "Bruno", eta: 32 },
+  { nome: "Carlo", eta: 19 },
+];
+
+utenti.find(u => u.eta > 30);        // { nome: "Bruno", eta: 32 }
+utenti.findIndex(u => u.nome === "Carlo"); // 2
+```
+
+-----
+
+#### Metodi Funzionali (`map`, `filter`, `reduce`)
+
+Questi tre metodi sono il cuore del JavaScript moderno. 
+Prendono una funzione in ingresso e producono un risultato trasformando l'array. 
+Li userai molto spesso.
+
+`.map()` trasforma ogni elemento secondo una funzione, restituendo un **nuovo array** della stessa lunghezza.
+
+```javascript
+const prezzi = [10, 20, 30];
+const prezziConIva = prezzi.map(p => p * 1.22);
+// [12.2, 24.4, 36.6]
+
+const utenti = [
+  { nome: "Anna", eta: 25 },
+  { nome: "Bruno", eta: 32 },
+];
+const nomi = utenti.map(u => u.nome);
+// ["Anna", "Bruno"]
+```
+
+`.filter()` tiene solo gli elementi che soddisfano una condizione, restituendo un **nuovo array** più corto (o uguale).
+
+```javascript
+const numeri = [1, 2, 3, 4, 5, 6];
+const pari = numeri.filter(n => n % 2 === 0);
+// [2, 4, 6]
+
+const utenti = [
+  { nome: "Anna", eta: 25, attivo: true },
+  { nome: "Bruno", eta: 32, attivo: false },
+  { nome: "Carlo", eta: 19, attivo: true },
+];
+const attivi = utenti.filter(u => u.attivo);
+// [{ nome: "Anna", ... }, { nome: "Carlo", ... }]
+```
+
+`.reduce()` è il più potente e il più intimidatorio. 
+Riduce un array a un singolo valore, accumulando il risultato iterazione dopo iterazione. 
+Accetta due argomenti: la funzione riduttrice e il **valore iniziale**.
+
+```javascript
+const numeri = [10, 20, 30, 40];
+
+// Somma: inizia da 0, a ogni passo aggiungi l'elemento corrente
+const totale = numeri.reduce((acc, n) => acc + n, 0);
+// 100
+```
+
+La funzione riduttrice riceve due parametri: l'**accumulatore** (il risultato accumulato finora) e l'**elemento corrente**. 
+Restituisce il nuovo valore dell'accumulatore per l'iterazione successiva.
+
+```javascript
+// Passo 1: acc=0,  n=10 -> restituisce 10
+// Passo 2: acc=10, n=20 -> restituisce 30
+// Passo 3: acc=30, n=30 -> restituisce 60
+// Passo 4: acc=60, n=40 -> restituisce 100
+```
+
+Il **valore iniziale** è il secondo argomento di `.reduce()`.
+ **Passalo sempre**. 
+Senza valore iniziale, `.reduce()` usa il primo elemento come accumulatore e inizia dal secondo, e con array vuoti dà un errore.
+
+```javascript
+// ❌ Fallisce se l'array è vuoto
+[].reduce((acc, n) => acc + n); // TypeError
+
+// ✅ Sempre sicuro
+[].reduce((acc, n) => acc + n, 0); // 0
+```
+
+`.reduce()` non serve solo per le somme. Serve ogni volta che devi produrre un valore singolo da un array: il massimo, la concatenazione di stringhe, una mappa di frequenza, un oggetto costruito pezzo per pezzo.
+
+```javascript
+// Costruire una mappa di frequenza delle parole
+const parole = ["gatto", "cane", "gatto", "pesce", "cane", "gatto"];
+const frequenze = parole.reduce((acc, parola) => {
+  acc[parola] = (acc[parola] || 0) + 1;
+  return acc;
+}, {});
+// { gatto: 3, cane: 2, pesce: 1 }
+```
+
+`.some()` restituisce `true` se **almeno uno** soddisfa la condizione, `.every()` se **tutti** la soddisfano.
+
+```javascript
+const eta = [25, 17, 30, 22];
+eta.some(e => e < 18);   // true (17 è minorenne)
+eta.every(e => e >= 18); // false (17 è minorenne)
+```
+
+`.forEach()` è simile a `map` ma non restituisce niente. 
+Esegue una funzione per ogni elemento, utile quando vuoi solo produrre un effetto esterno, come aggiornare il DOM, loggare o incrementare un contatore esterno.
+
+```javascript
+const nomi = ["Anna", "Bruno", "Carlo"];
+nomi.forEach(nome => console.log(`Ciao, ${nome}!`));
+```
+
+**Non puoi fermare un `.forEach()` in anticipo.** `break` e `return` non lo interrompono. 
+Se ti serve uscire dall'iterazione presto, usa un `for...of` classico.
+
+-----
+
+#### `Set` (Valori Unici)
+
+`Set` è una struttura dati imparentata con gli array, ma con un vincolo: i valori sono tutti **unici**. 
+Aggiungere lo stesso valore due volte non fa nulla.
+
+```javascript
+const tagsUnici = new Set();
+tagsUnici.add("javascript");
+tagsUnici.add("react");
+tagsUnici.add("javascript"); // Ignorato, già presente
+console.log(tagsUnici.size); // 2
+```
+
+L'uso più frequente è **rimuovere duplicati da un array** in una riga, combinando `Set` con lo spread operator `...`.
+
+```javascript
+const conDuplicati = [1, 2, 2, 3, 3, 3, 4];
+const unici = [...new Set(conDuplicati)]; // [1, 2, 3, 4]
+```
+
+Qui succedono due cose. 
+`new Set(conDuplicati)` elimina i duplicati. 
+I tre puntini `...` sono lo **spread operator**: prendono i valori del `Set` e li inseriscono dentro un nuovo array, perché le parentesi quadre esterne `[...]` stanno creando l'array finale. 
+Lo vedremo meglio nella sezione sugli operatori.
+
+-----
+
+#### `Map` (Coppie Chiave-Valore Ordinate)
+
+`Map` è il fratello di `Set`: una struttura chiave-valore, come un oggetto, ma con tre vantaggi concreti rispetto agli oggetti letterali.
+
+Il primo: le chiavi possono essere **di qualunque tipo**, non solo stringhe. 
+Puoi usare oggetti, funzioni, numeri come chiavi.
+
+```javascript
+const mappa = new Map();
+
+mappa.set("stringa", 1);
+mappa.set(42, "numero come chiave");
+mappa.set({ id: 1 }, "oggetto come chiave");
+```
+
+Il secondo: l'ordine di inserimento è **garantito**. 
+Iterando una `Map` ottieni le coppie nell'ordine in cui le hai aggiunte. Con gli oggetti l'ordine è in gran parte rispettato nei browser moderni, ma `Map` comunica meglio l'intenzione quando l'ordine è parte della logica.
+
+```javascript
+const passaggi = new Map();
+
+passaggi.set("login", "L'utente accede");
+passaggi.set("carrello", "Aggiunge prodotti");
+passaggi.set("pagamento", "Completa l'acquisto");
+
+for (const [chiave, descrizione] of passaggi) {
+  console.log(chiave, descrizione);
+}
+// login L'utente accede
+// carrello Aggiunge prodotti
+// pagamento Completa l'acquisto
+```
+
+Il terzo: ha una proprietà `.size` nativa, mentre con un oggetto devi usare `Object.keys(obj).length`.
+
+```javascript
+const punteggi = new Map();
+punteggi.set("Mario", 100);
+punteggi.set("Luigi", 85);
+punteggi.set("Peach", 120);
+
+punteggi.get("Mario"); // 100
+punteggi.has("Luigi"); // true
+punteggi.size;         // 3
+punteggi.delete("Luigi");
+
+for (const [nome, punti] of punteggi) {
+  console.log(`${nome}: ${punti}`);
+}
+```
+
+Nella pratica userai oggetti letterali `{}` quando sai già quali proprietà ti servono e le chiavi sono stringhe, che è la maggior parte dei casi. 
+Passerai a `Map` quando le chiavi nascono durante l'esecuzione del programma, quando devi aggiungere e rimuovere coppie spesso, o quando devi rileggere gli elementi nello stesso ordine in cui li hai inseriti.
+
+Esiste anche `WeakMap`, una variante in cui le chiavi devono essere oggetti e il garbage collector (il meccanismo del browser che libera memoria eliminando oggetti non più usati) può rimuoverle automaticamente quando l'oggetto non è più referenziato altrove.
+
+Lo scenario tipico è associare dati temporanei a oggetti senza impedirne la pulizia dalla memoria. 
+Per esempio, una libreria potrebbe collegare informazioni interne a un elemento DOM: quando quell'elemento viene rimosso dalla pagina e non è più usato da nessuna parte, anche i dati collegati nella `WeakMap` possono sparire automaticamente.
+
+```javascript
+const datiInterni = new WeakMap();
+const bottone = document.querySelector("button");
+
+datiInterni.set(bottone, { click: 0 });
+datiInterni.get(bottone); // { click: 0 }
+```
+
+La differenza rispetto a una `Map` normale è che `datiInterni` non impedisce al bottone di essere liberato dalla memoria quando il bottone non serve più.
+
+Serve in scenari avanzati di gestione della memoria, non nel lavoro quotidiano.
+
+-----
+
+#### Schemi Utili
+
+**Intervallo di numeri**: a volte ti serve creare rapidamente una sequenza, per esempio le pagine `1, 2, 3, 4, 5` di una paginazione o una griglia di dieci celle.
+
+```javascript
+const intervallo = Array.from({ length: 10 }, (_, i) => i + 1);
+// [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+`Array.from()` crea un array partendo da qualcosa che assomiglia a una lista. 
+`{ length: 10 }` dice: "crea 10 posizioni". 
+La funzione `(_, i) => i + 1` viene chiamata per ogni posizione: `_` è il valore corrente, che qui ignoriamo; `i` è l'indice, che parte da `0`. 
+Per questo facciamo `i + 1`: vogliamo partire da `1`, non da `0`.
+
+**Copia superficiale**: l'operatore spread `...` copia gli elementi di primo livello in un nuovo array. 
+Utile per non modificare l'originale.
+
+```javascript
+const originale = [1, 2, 3];
+const copia = [...originale];
+copia.push(4);
+console.log(originale); // [1, 2, 3] (intatto)
+console.log(copia);     // [1, 2, 3, 4]
+```
+
+Questo è particolarmente importante quando lavori con oggetti di stato o passi array a funzioni di cui non ti fidi. 
+Ad esempio, se una funzione usa `.push()`, `.splice()` o `.sort()` sull'array che riceve, modifica anche il tuo array originale.
+
+**Regola:** distingui metodi distruttivi da non distruttivi. 
+Per le trasformazioni usa `map`, `filter`, `reduce`. 
+Passa sempre il valore iniziale a `reduce`. 
+Per l'ordinamento dei numeri, usa `.sort((a, b) => a - b)`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. Oggetti (I Contenitori Strutturati)
+
+Un oggetto è una collezione di coppie **chiave-valore**. 
+Se gli array sono liste ordinate, gli oggetti sono strutture con nomi: ogni valore ha una sua etichetta. 
+Gli oggetti sono la forma che usi per rappresentare entità del mondo reale, come un utente, un prodotto, un evento o un ordine.
+
+#### Creare e Accedere
+
+Un oggetto si dichiara con le parentesi graffe `{}`, con coppie `chiave: valore` separate da virgola.
+
+```javascript
+const utente = {
+  nome: "Mario",
+  cognome: "Rossi",
+  eta: 27,
+  admin: true,
+};
+```
+
+Accedi alle proprietà in due modi: **dot notation** e **bracket notation**.
+
+```javascript
+utente.nome;       // "Mario"
+utente["cognome"]; // "Rossi"
+```
+
+La dot notation è più leggibile e si usa quando la chiave può essere scritta come un normale nome JavaScript. 
+Se invece la chiave contiene spazi, trattini o altri simboli, oppure viene decisa durante l'esecuzione, devi usare la bracket notation.
+
+```javascript
+// Chiavi problematiche richiedono bracket notation
+const config = { "api-url": "https://example.com" };
+config["api-url"]; // OK
+// config.api-url; // ❌ Errore di sintassi
+
+// Chiave dinamica
+const campo = "nome";
+utente[campo]; // "Mario" (equivalente a utente.nome)
+```
+
+Accedere a una proprietà che non esiste restituisce `undefined`, non dà quindi errore. 
+Questo si collega al nostro discorso su `undefined` della <Link to="/it/docs/vademecum/javascript-real-world/foundations#null-vs-undefined">sezione 1</Link>.
+
+```javascript
+utente.telefono; // undefined (non c'è, ma nessun errore)
+```
+
+-----
+
+#### Modificare e Aggiungere Proprietà
+
+Anche se l'oggetto è in una `const`, puoi modificare e aggiungere proprietà (come abbiamo visto, `const` blocca il riferimento, non il contenuto).
+
+```javascript
+const utente = { nome: "Mario" };
+utente.eta = 27;       // Aggiunge nuova proprietà
+utente.nome = "Marco"; // Modifica esistente
+delete utente.eta;     // Rimuove la proprietà
+```
+
+`delete` funziona, ma nella pratica moderna si preferisce creare un nuovo oggetto senza quella proprietà, soprattutto in contesti di stato immutabile.
+
+-----
+
+#### Optional Chaining (`?.`)
+
+Quando accedi a proprietà annidate e non sai se i livelli intermedi esistono, il rischio è un errore del tipo "Cannot read property X of undefined".
+
+```javascript
+const utente = { nome: "Mario" };
+utente.indirizzo.via; // ❌ TypeError: Cannot read property 'via' of undefined
+```
+
+L'**optional chaining** `?.` risolve questo: se il valore prima del `?.` è `null` o `undefined`, l'espressione si ferma e restituisce `undefined` invece di andare in errore.
+
+```javascript
+utente.indirizzo?.via;          // undefined (niente errore)
+utente?.indirizzo?.via?.numero; // undefined (qualsiasi livello mancante)
+```
+
+È diventato uno strumento quotidiano da quando è stato introdotto nel 2020. 
+Lo usi ogni volta che lavori con dati che arrivano da un'API (dove i campi possono essere presenti o no).
+
+```javascript
+const risposta = {
+  profilo: {
+    indirizzo: null,
+  },
+};
+
+const citta = risposta?.profilo?.indirizzo?.citta ?? "Non specificata";
+console.log(citta); // "Non specificata"
+```
+
+-----
+
+#### Shorthand Property Names
+
+Quando stai creando un oggetto e il nome della variabile coincide con il nome della chiave, puoi abbreviare.
+
+```javascript
+const nome = "Mario";
+const eta = 27;
+
+// Forma lunga
+const utenteCompleto = { nome: nome, eta: eta };
+
+// Forma breve (shorthand)
+const utenteBreve = { nome, eta };
+```
+
+Questo è pulitissimo quando stai costruendo oggetti da variabili che hai già, ed è lo stile standard nel JavaScript moderno.
+
+-----
+
+#### Destrutturazione
+
+La destrutturazione è l'operazione inversa: **estrarre** proprietà da un oggetto e assegnarle a variabili in una sola riga.
+
+```javascript
+const utente = { nome: "Mario", eta: 27, admin: true };
+
+const { nome, eta } = utente;
+// Ora hai: nome = "Mario", eta = 27
+```
+
+La destrutturazione è una scorciatoia, sarebbe stato equivalente scrivere:
+
+```javascript
+const nome = utente.nome;
+const eta = utente.eta;
+```
+
+Puoi rinominare mentre destrutturi:
+
+```javascript
+const { nome: nomeUtente, eta: etaUtente } = utente;
+// nomeUtente = "Mario", etaUtente = 27
+```
+
+Puoi dare valori predefiniti per proprietà che potrebbero mancare:
+
+```javascript
+const { nome = "Ospite", admin = false } = utente;
+// Se utente.admin non esiste, admin = false
+```
+
+E puoi destrutturare livelli annidati:
+
+```javascript
+const ordine = {
+  cliente: { nome: "Mario", email: "mario@example.com" },
+  totale: 42.50,
+};
+
+const { cliente: { nome, email }, totale } = ordine;
+// nome = "Mario", email = "mario@example.com", totale = 42.50
+```
+
+Qui `cliente: { nome, email }` significa: entra dentro `ordine.cliente` ed estrai le proprietà `nome` ed `email`. 
+Attenzione: in questo caso non viene creata una variabile `cliente`, vengono create solo `nome`, `email` e `totale`.
+
+La destrutturazione funziona anche con gli array, ma qui non contano i nomi, bensì la posizione.
+
+```javascript
+const colori = ["rosso", "verde", "blu"];
+
+const [primo, secondo] = colori;
+// primo = "rosso", secondo = "verde"
+```
+
+`primo` prende l'elemento in posizione `0`, `secondo` prende l'elemento in posizione `1`. 
+I nomi `primo` e `secondo` li scegli tu.
+
+```javascript
+// Salta elementi lasciando la posizione vuota
+const [, , terzo] = colori;
+// terzo = "blu"
+```
+
+Le due virgole iniziali significano: salta il primo e il secondo elemento, prendi il terzo.
+
+Un uso classico della destrutturazione di array è lo scambio di due variabili senza una terza variabile temporanea.
+La versione lunga sarebbe questa:
+
+```javascript
+let a = 1;
+let b = 2;
+
+const temporanea = a;
+a = b;
+b = temporanea;
+// a = 2, b = 1
+```
+
+Con la destrutturazione puoi scrivere lo stesso scambio in una riga:
+
+```javascript
+let a = 1;
+let b = 2;
+[a, b] = [b, a]; // a = 2, b = 1
+```
+
+-----
+
+#### `Object.keys`, `Object.values`, `Object.entries`
+
+Questi tre metodi ti permettono di iterare su un oggetto, trasformandolo temporaneamente in un array.
+
+```javascript
+const utente = { nome: "Mario", eta: 27, admin: true };
+
+Object.keys(utente);    // ["nome", "eta", "admin"]
+Object.values(utente);  // ["Mario", 27, true]
+Object.entries(utente); // [["nome", "Mario"], ["eta", 27], ["admin", true]]
+```
+
+`Object.entries` è particolarmente utile perché combinato con `.map()` o `for...of` ti dà sia la chiave che il valore.
+
+```javascript
+const frequenze = { gatto: 3, cane: 2, pesce: 1 };
+
+for (const [parola, conteggio] of Object.entries(frequenze)) {
+  console.log(`${parola}: ${conteggio}`);
+}
+// gatto: 3
+// cane: 2
+// pesce: 1
+```
+
+`Object.hasOwn()` (moderno) controlla se una proprietà appartiene direttamente all'oggetto, senza ereditarla dal prototype. 
+Sostituisce il vecchio `obj.hasOwnProperty("chiave")`.
+
+```javascript
+Object.hasOwn(utente, "nome");   // true
+Object.hasOwn(utente, "colore"); // false
+```
+
+**Regola:** usa la dot notation, passa alla bracket notation solo quando la chiave è dinamica o problematica. 
+Sfrutta optional chaining per accessi annidati incerti. La destrutturazione è lo strumento per estrarre più proprietà in una riga.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Operatori e Controllo del Flusso
+
+### 7. Operatori
+
+Gli operatori trasformano valori. Alcuni li conosci già (`+`, `-`, `===`), altri sono meno noti ma risolvono problemi comuni con pochi caratteri. 
+Ecco quelli che userai frequentemente.
+
+#### `||` (OR) per Valori Predefiniti
+
+L'operatore OR logico restituisce il **primo valore truthy** che trova. 
+Non restituisce `true` o `false`, restituisce uno dei due operandi.
+
+```javascript
+const nome = utenteInput || "Ospite";
+```
+
+Se `utenteInput` è truthy (una stringa non vuota), `nome` prende quel valore. 
+Se è falsy (stringa vuota, `null`, `undefined`), `nome` prende `"Ospite"`.
+
+È il modo classico per impostare valori predefiniti:
+
+```javascript
+function saluta(nome) {
+  const nomeFinale = nome || "Sconosciuto";
+  console.log(`Ciao ${nomeFinale}`);
+}
+```
+
+Uno schema ricorrente è l'**incremento con valore di riserva**, utile per contare frequenze senza inizializzare:
+
+```javascript
+const conteggi = {};
+const parole = ["gatto", "cane", "gatto"];
+
+for (const parola of parole) {
+  conteggi[parola] = (conteggi[parola] || 0) + 1;
+}
+// La prima volta che vedi "gatto", conteggi["gatto"] è undefined
+// (undefined || 0) + 1 = 0 + 1 = 1
+// La seconda volta: (1 || 0) + 1 = 1 + 1 = 2
+```
+
+-----
+
+#### `??` (Nullish Coalescing) quando `0` e `""` sono Validi
+
+Il problema con `||` è che considera **tutti** i falsy come "mancanti", incluse le stringhe vuote e lo zero. 
+Raramente è ciò che desideri.
+
+```javascript
+const quantita = quantitaInput || 10;
+// Se l'utente scrive 0, quantita diventa 10 (ma 0 era un valore valido!)
+```
+
+L'operatore **nullish coalescing** `??` è più preciso: considera "mancante" **solo** `null` e `undefined`.
+
+```javascript
+const quantita = quantitaInput ?? 10;
+// Se quantitaInput è 0, quantita resta 0.
+// Se è null o undefined, quantita diventa 10.
+```
+
+Regola pratica: **`||`** per stringhe dove il vuoto va considerato come "non impostato", **`??`** per numeri e casi dove zero o stringa vuota sono valori legittimi.
+
+```javascript
+const nome = input.nome || "Anonimo";  // "" -> "Anonimo"
+const punti = input.punti ?? 0;        // 0 resta 0, solo null/undefined -> 0
+const commenti = input.commenti ?? ""; // null/undefined -> ""
+```
+
+-----
+
+#### `!` (NOT) e il Pattern Toggle
+
+L'operatore `!` inverte un valore booleano. 
+Il caso d'uso più comune è il **toggle** di uno stato.
+
+```javascript
+let menuAperto = false;
+// Quando l'utente clicca il bottone del menu
+menuAperto = !menuAperto;
+// Prima era false, ora è true. 
+// Al prossimo click, torna false.
+```
+
+Come abbiamo visto nella <Link to="/it/docs/vademecum/javascript-real-world/foundations#4-booleani-date-e-valori-speciali">sezione 4</Link>, `!!` (doppio NOT) converte qualsiasi valore in un booleano esplicito. 
+È utile quando devi restituire un booleano da una funzione e vuoi essere chiaro sul tipo del risultato.
+
+```javascript
+function haTelefono(utente) {
+  return !!utente.telefono;
+  // true se telefono è definito e non vuoto, false altrimenti
+}
+```
+
+-----
+
+#### Spread `...` (Espansione)
+
+Lo spread operator espande un iterabile (array, oggetto, stringa) nei suoi elementi. 
+È uno degli strumenti più usati nel JavaScript moderno, lo incontri ovunque.
+
+**Copia di array** (come abbiamo visto nella <a href="#metodi-non-distruttivi-restituiscono-copia">sezione 5</a>):
+
+```javascript
+const originale = [1, 2, 3];
+const copia = [...originale];          // [1, 2, 3]
+const conAggiunta = [...originale, 4]; // [1, 2, 3, 4]
+const inMezzo = [0, ...originale, 4];  // [0, 1, 2, 3, 4]
+```
+
+**Unione di array:**
+
+```javascript
+const a = [1, 2];
+const b = [3, 4];
+const unito = [...a, ...b]; // [1, 2, 3, 4]
+```
+
+**Copia e unione di oggetti:**
+
+```javascript
+const base = { nome: "Mario", eta: 27 };
+const conRuolo = { ...base, ruolo: "admin" };
+// { nome: "Mario", eta: 27, ruolo: "admin" }
+
+const predefiniti = { tema: "light", linguaggio: "it" };
+const utente = { tema: "dark" };
+const finale = { ...predefiniti, ...utente };
+// { tema: "dark", linguaggio: "it" }
+// Le proprietà successive sovrascrivono quelle precedenti
+```
+
+Questo schema (prima i valori predefiniti, poi le sovrascritture) è usatissimo nella configurazione di componenti e librerie.
+
+**Passaggio argomenti a funzioni:** se una funzione accetta argomenti separati (come `Math.max`), puoi passarle un array con lo spread.
+
+```javascript
+const numeri = [10, 5, 20, 3];
+Math.max(...numeri); // 20
+```
+
+-----
+
+#### Rest `...` (Raccogliere il Resto)
+
+Lo stesso simbolo `...` può fare due cose diverse. 
+Quando lo usi per costruire un array o un oggetto, espande. 
+Quando lo usi nella **destrutturazione** o nei **parametri di una funzione**, raccoglie quello che resta.
+
+```javascript
+const numeri = [1, 2, 3, 4, 5];
+
+const [primo, secondo, ...resto] = numeri;
+// primo = 1
+// secondo = 2
+// resto = [3, 4, 5]
+```
+
+Qui `...resto` significa: dopo aver preso il primo e il secondo elemento, metti tutti gli altri valori in un array chiamato `resto`.
+
+Con gli oggetti funziona allo stesso modo, ma raccoglie le proprietà rimaste in un nuovo oggetto:
+
+```javascript
+const utente = { nome: "Mario", eta: 27, admin: true };
+
+const { nome, ...altreProprieta } = utente;
+// nome = "Mario"
+// altreProprieta = { eta: 27, admin: true }
+```
+
+Nei parametri di una funzione, invece, `...` raccoglie tutti gli argomenti ricevuti in un array:
+
+```javascript
+function somma(...numeri) {
+  return numeri.reduce((acc, n) => acc + n, 0);
+}
+somma(1, 2, 3, 4); // 10
+```
+
+Viene chiamato **spread** quando espande e **rest** quando raccoglie. 
+La sintassi è la stessa, ma il significato dipende da dove la usi.
+
+**Regola:** `||` per valori predefiniti quando il vuoto è "mancante". 
+`??` per numeri e casi dove zero è valido. 
+Spread per copiare e unire, evitando mutazioni. Rest per raccogliere argomenti variabili.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. Controllo del Flusso
+
+Il controllo del flusso è il modo in cui il programma decide cosa fare. 
+Le decisioni dipendono dai valori che hai, e JavaScript ti dà quattro strumenti principali.
+
+#### `if`, `else if`, `else`
+
+La struttura condizionale di base. 
+La condizione va tra parentesi tonde, il blocco da eseguire tra parentesi graffe.
+
+```javascript
+const eta = 25;
+
+if (eta < 18) {
+  console.log("Minorenne");
+} else if (eta < 65) {
+  console.log("Adulto");
+} else {
+  console.log("Anziano");
+}
+```
+
+`else if` serve quando le condizioni fanno parte della stessa decisione e vuoi eseguire **un solo ramo**. 
+Se invece i controlli sono indipendenti tra loro, puoi usare più `if` separati.
+
+```javascript
+if (utente.admin) {
+  mostraPannelloAdmin();
+}
+
+if (utente.notificheAttive) {
+  caricaNotifiche();
+}
+
+if (utente.emailVerificata) {
+  abilitaInvio();
+}
+```
+
+Attenzione però: un `else` si collega sempre all'`if` immediatamente precedente, non a tutti gli `if` scritti sopra. 
+Quando vuoi gestire alternative esclusive, usa `if / else if / else`; quando vuoi fare controlli separati, usa più `if`.
+
+Le graffe sono tecnicamente opzionali se il blocco ha una sola riga, ma **mettile sempre**. 
+Il vantaggio è che quando aggiungi una riga in futuro non crei un bug silenzioso.
+
+```javascript
+// ❌ RISCHIOSO, senza graffe
+if (eta < 18)
+  console.log("Minorenne");
+  // Aggiungi questa riga pensando che sia parte dell'if, ma non lo è
+  negaAccesso();
+// negaAccesso() viene chiamato sempre!
+
+// ✅ SICURO, sempre con graffe
+if (eta < 18) {
+  console.log("Minorenne");
+  negaAccesso();
+}
+```
+
+Le condizioni sfruttano il sistema truthy/falsy. 
+`if (nome)` è valido e significa "se `nome` è truthy", equivalente a "se `nome` non è vuoto/null/undefined".
+
+-----
+
+#### Operatore Ternario
+
+Il ternario è un `if/else` compresso in un'espressione. 
+La sintassi è: `condizione ? valoreSeVero : valoreSeFalso`.
+
+```javascript
+const eta = 25;
+const tipo = eta >= 18 ? "Adulto" : "Minorenne";
+```
+
+Funziona bene per **assegnazioni semplici** dove hai due possibili valori. 
+Non usarlo per logica complessa, e **non annidarlo**. 
+Un ternario annidato è difficilissimo da leggere.
+
+```javascript
+// ❌ SBAGLIATO, illeggibile
+const eta = 25;
+const tipoAnnidato = eta < 13 ? "Bambino" : eta < 18 ? "Adolescente" : eta < 65 ? "Adulto" : "Anziano";
+
+// ✅ CORRETTO, usa if/else
+let tipo;
+if (eta < 13) {
+  tipo = "Bambino";
+} else if (eta < 18) {
+  tipo = "Adolescente";
+} else if (eta < 65) {
+  tipo = "Adulto";
+} else {
+  tipo = "Anziano";
+}
+```
+
+Il ternario è anche comodo nei template literals e nel JSX di React:
+
+```javascript
+const saluto = `Ciao ${utente.admin ? "amministratore" : "ospite"}`;
+```
+
+-----
+
+#### `switch`
+
+Lo `switch` confronta un valore contro più casi possibili. 
+È un'alternativa a una catena di `if/else if` quando tutti i controlli sono su uguaglianza con lo stesso valore.
+
+Il caso ideale è una lista di valori specifici e separati tra loro: giorni della settimana, opzioni di un menu, ruoli utente, stati di un ordine, filtri di una select. 
+Se invece devi controllare intervalli (`eta < 18`), condizioni diverse tra loro o combinazioni logiche, resta su `if / else if`.
+
+```javascript
+const giorno = "martedi";
+
+switch (giorno) {
+  case "lunedi":
+  case "martedi":
+  case "mercoledi":
+  case "giovedi":
+  case "venerdi":
+    console.log("Giorno lavorativo");
+    break;
+  case "sabato":
+  case "domenica":
+    console.log("Weekend");
+    break;
+  default:
+    console.log("Giorno non riconosciuto");
+}
+```
+
+Un esempio pratico, tratto dal progetto <Link to="/it/docs/path/js-algorithms/football-team-cards">Football Team Cards</Link>, è filtrare una lista in base al valore scelto in un menu a tendina:
+
+```javascript
+function filtraGiocatori(filtro) {
+  switch (filtro) {
+    case "nickname":
+      return giocatori.filter(giocatore => giocatore.nickname !== null);
+    case "attaccante":
+      return giocatori.filter(giocatore => giocatore.ruolo === "attaccante");
+    case "centrocampista":
+      return giocatori.filter(giocatore => giocatore.ruolo === "centrocampista");
+    case "difensore":
+      return giocatori.filter(giocatore => giocatore.ruolo === "difensore");
+    default:
+      return giocatori;
+  }
+}
+```
+
+Qui `switch` è leggibile perché `filtro` è sempre lo stesso valore, e ogni `case` rappresenta una scelta precisa dell'interfaccia.
+
+Lo `switch` usa il confronto stretto `===`. 
+I `break` sono **obbligatori** dopo ogni caso, altrimenti l'esecuzione prosegue nel caso successivo (comportamento chiamato "fall-through"). 
+Questo può essere voluto (come nell'esempio sopra, dove i giorni lavorativi condividono il corpo), ma più spesso è un bug.
+
+```javascript
+// ❌ Bug silenzioso: dimentichi il break
+switch (ruolo) {
+  case "admin":
+    console.log("Admin");
+    // Manca break!
+  case "utente":
+    console.log("Utente");
+    break;
+}
+// Se ruolo è "admin", stampa "Admin" E "Utente"
+```
+
+Nella pratica moderna, viene spesso preferita una catena di `if/else` o un oggetto usato come tabella di ricerca invece dello `switch`, perché è meno soggetto a errori.
+
+```javascript
+// Alternativa con oggetto usato come tabella di ricerca
+const saluti = {
+  lunedi: "Buon lunedì!",
+  venerdi: "Buon venerdì!",
+  sabato: "Buon sabato!",
+};
+const messaggio = saluti[giorno] ?? "Buongiorno";
+```
+
+-----
+
+#### Pattern "Return Early" (Guard Clauses)
+
+Quando una funzione ha più condizioni da controllare prima di fare il lavoro vero, la tentazione è annidare gli `if`. 
+Il risultato è la **piramide della rovina**, codice che scorre sempre più a destra.
+
+```javascript
+// ❌ PIRAMIDE DELLA ROVINA
+function processaPagamento(utente, importo) {
+  if (utente) {
+    if (utente.attivo) {
+      if (importo > 0) {
+        if (utente.saldo >= importo) {
+          // Finalmente il lavoro vero
+          utente.saldo -= importo;
+          return "Pagamento riuscito";
+        } else {
+          return "Saldo insufficiente";
+        }
+      } else {
+        return "Importo non valido";
+      }
+    } else {
+      return "Utente non attivo";
+    }
+  } else {
+    return "Utente mancante";
+  }
+}
+```
+
+Lo schema **return early** (detto anche **guard clauses**, cioè "clausole di guardia") ribalta la logica: gestisci prima i casi problematici ed esci subito, lasciando il lavoro vero alla fine senza annidamenti.
+
+```javascript
+// ✅ RETURN EARLY
+function processaPagamento(utente, importo) {
+  if (!utente) return "Utente mancante";
+  if (!utente.attivo) return "Utente non attivo";
+  if (importo <= 0) return "Importo non valido";
+  if (utente.saldo < importo) return "Saldo insufficiente";
+
+  // Lavoro vero, nessun annidamento
+  utente.saldo -= importo;
+  return "Pagamento riuscito";
+}
+```
+
+Il codice è più piatto, più facile da leggere, e ogni condizione di errore è isolata su una riga. 
+Questo schema è uno dei segnali di un codice più maturo. 
+Usalo quando rende la funzione più chiara.
+
+**Regola:** usa sempre le graffe negli `if`. 
+Il ternario va bene per assegnazioni semplici a due vie, mai annidato. 
+Return early invece di annidare condizioni.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Cicli
+
+I cicli ripetono un blocco di codice più volte. 
+JavaScript ha diverse forme, ognuna adatta a un caso specifico.
+
+#### `for` Classico
+
+Il ciclo `for` tradizionale, ereditato dal C. 
+È fatto di tre parti: inizializzazione, condizione, incremento.
+
+```javascript
+for (let i = 0; i < 10; i++) {
+  console.log(i);
+}
+// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+```
+
+Lo usi quando ti serve **l'indice** per un motivo specifico (saltare elementi, iterare al contrario, accedere a più array in parallelo).
+
+```javascript
+// Iterare al contrario
+const nomi = ["Anna", "Bruno", "Carlo"];
+for (let i = nomi.length - 1; i >= 0; i--) {
+  console.log(nomi[i]); // Carlo, Bruno, Anna
+}
+
+// Saltare di due
+for (let i = 0; i < 10; i += 2) {
+  console.log(i); // 0, 2, 4, 6, 8
+}
+```
+
+-----
+
+#### `while` e `do...while`
+
+`while` ripete finché una condizione è vera. 
+Il controllo è **prima** di eseguire il blocco.
+
+```javascript
+let tentativi = 0;
+while (tentativi < 3) {
+  console.log("Tentativo ", tentativi);
+  tentativi++;
+}
+// Tentativo 0
+// Tentativo 1
+// Tentativo 2
+```
+
+`do...while` è identico, ma la condizione è controllata **dopo** l'esecuzione. 
+Questo garantisce almeno un'iterazione anche se la condizione è falsa subito.
+
+```javascript
+let tentativi = 0;
+do {
+  console.log("Almeno una volta");
+  tentativi++;
+} while (tentativi < 0); // Dopo tentativi++, tentativi vale 1, quindi 1 < 0 è falso
+// Almeno una volta
+```
+
+`while` lo usi quando non sai in anticipo quante iterazioni servono, per esempio aspettare che una condizione cambi o svuotare una lista finché contiene elementi.
+
+-----
+
+#### `for...of` (Il Modo Moderno)
+
+`for...of` itera sui **valori** di un iterabile, cioè qualcosa che può essere percorso elemento per elemento, come array, stringhe, `Set` e `Map`. 
+È il ciclo più leggibile per scorrere un array quando non ti serve l'indice.
+
+```javascript
+const colori = ["rosso", "verde", "blu"];
+for (const colore of colori) {
+  console.log(colore);
+}
+// "rosso", "verde", "blu"
+```
+
+Funziona anche con le stringhe (iterando carattere per carattere) e con qualsiasi oggetto iterabile:
+
+```javascript
+for (const lettera of "ciao") {
+  console.log(lettera); // "c", "i", "a", "o"
+}
+```
+
+Se ti serve anche l'indice puoi combinare con `.entries()`:
+
+```javascript
+for (const [indice, colore] of colori.entries()) {
+  console.log(indice, colore);
+}
+// 0 "rosso", 1 "verde", 2 "blu"
+```
+
+-----
+
+#### `for...in` (Per le Chiavi degli Oggetti)
+
+`for...in` itera sulle **chiavi** di un oggetto. 
+Non sui valori, sulle chiavi.
+
+```javascript
+const utente = { nome: "Mario", eta: 27, admin: true };
+for (const chiave in utente) {
+  console.log(chiave, utente[chiave]);
+}
+// "nome" "Mario", "eta" 27, "admin" true
+```
+
+Attenzione: **non usare `for...in` sugli array**. 
+Tecnicamente funziona (perché gli indici degli array sono chiavi), ma ha comportamenti strani (itera anche su proprietà aggiunte al prototype, l'ordine non è garantito negli oggetti non-numerici). 
+Per gli array usa `for...of` o `.forEach()`.
+
+Quindi: **`for...of` per valori, `for...in` per chiavi.** Se confondi i due il codice farà cose che non ti aspettavi.
+
+Nella pratica, `for...in` è diventato meno comune da quando esistono `Object.keys`, `Object.values` e `Object.entries`, che spesso sono più espliciti:
+
+```javascript
+// Invece di for...in
+for (const [chiave, valore] of Object.entries(utente)) {
+  console.log(chiave, valore);
+}
+```
+
+-----
+
+#### `break` e `continue`
+
+`break` esce immediatamente dal ciclo. 
+`continue` salta il resto dell'iterazione corrente e va alla successiva.
+
+```javascript
+// Trova il primo numero pari e fermati
+for (const n of [1, 3, 5, 4, 7, 8]) {
+  if (n % 2 === 0) {
+    console.log("Primo pari:", n);
+    break; // Esce appena trova 4
+  }
+}
+
+// Salta i numeri negativi
+for (const n of [1, -2, 3, -4, 5]) {
+  if (n < 0) continue; // Salta e passa al prossimo
+  console.log(n); // 1, 3, 5
+}
+```
+
+Nei metodi funzionali come `.forEach`, `.map`, `.filter` **non puoi usare `break` o `continue`**. 
+Se ti serve fermare un'iterazione, usa un `for...of` classico. 
+In alternativa, `.some()` e `.every()` si fermano appena trovano il loro risultato, e possono sostituire un `break` in contesti funzionali.
+
+**Regola:** `for...of` per scorrere valori di array. 
+`for...in` per chiavi di oggetti. 
+`for` classico solo quando serve l'indice per una ragione specifica. 
+`.forEach` è comodo ma non si può fermare in anticipo.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Funzioni, Scope e Closures
+
+### 10. Funzioni (Il Cuore di JavaScript)
+
+Una funzione è un blocco di codice riutilizzabile che prende input (parametri), esegue qualcosa, ed eventualmente restituisce un valore (return). 
+In JavaScript le funzioni sono "first-class citizens" (cittadini di prima classe): possono essere assegnate a variabili, passate come argomenti e restituite da altre funzioni. 
+Questa flessibilità è alla base di molti schemi moderni.
+
+#### Dichiarazione Classica vs Arrow Function
+
+La dichiarazione classica usa la parola chiave `function`.
+
+```javascript
+function somma(a, b) {
+  return a + b;
+}
+somma(3, 4); // 7
+```
+
+L'arrow function (introdotta con ES6 nel 2015) è una sintassi più concisa, con le frecce `=>`.
+
+```javascript
+const somma = (a, b) => {
+  return a + b;
+};
+somma(3, 4); // 7
+```
+
+Tre differenze pratiche tra le due:
+
+**Hoisting**: JavaScript tratta le dichiarazioni classiche come se fossero disponibili dall'inizio dello scope, cioè dell'area di codice in cui quella funzione esiste, quindi puoi chiamarle prima di dichiararle. 
+Le arrow function assegnate a `const`/`let` no.
+
+```javascript
+// ✅ Funziona con dichiarazione classica
+saluta(); // "ciao"
+function saluta() { console.log("ciao"); }
+
+// ❌ Non funziona con arrow function
+salutaArrow(); // ReferenceError
+const salutaArrow = () => console.log("ciao");
+```
+
+**Sintassi più breve**: le arrow function permettono una forma compatta quando la funzione è semplice. 
+Il caso più comune è una funzione con un solo parametro e una sola espressione.
+
+```javascript
+const quadrato = x => x * x;
+const saluta = () => console.log("ciao"); // Parentesi obbligatorie per zero parametri
+```
+
+**Comportamento di `this`**: le arrow function non hanno un proprio `this`, ereditano quello del contesto dove sono definite. 
+Questo è il motivo principale per cui le arrow sono molto usate nei gestori evento e in molti callback. Ne parleremo in dettaglio nella <Link to="/it/docs/vademecum/javascript-real-world/oop-and-modules#il-problema-di-this-con-addeventlistener">sezione 13</Link>.
+
+Regola pratica: usa le arrow function per callback, funzioni brevi e funzioni inline; usa la dichiarazione classica quando vuoi una funzione nominata, quando ti serve hoisting o quando la funzione è un metodo di oggetto/classe dove il `this` dinamico è il comportamento voluto.
+
+-----
+
+#### Return Implicito
+
+Con le arrow function, se il corpo è un'unica espressione, puoi omettere graffe e `return`. 
+Il valore dell'espressione viene restituito automaticamente.
+
+```javascript
+// Forma lunga
+const doppioLungo = (x) => {
+  return x * 2;
+};
+
+// Forma breve con return implicito
+const doppioBreve = x => x * 2;
+```
+
+Il trabocchetto: se vuoi restituire un **oggetto** con return implicito, devi avvolgerlo in parentesi tonde, altrimenti JavaScript interpreta le graffe come il corpo della funzione, non come un oggetto letterale.
+
+```javascript
+// ❌ SBAGLIATO, graffe interpretate come corpo funzione
+const creaSbagliato = (nome) => { nome: nome };
+creaSbagliato("Mario"); // undefined (quel "nome:" diventa una label)
+
+// ✅ CORRETTO, parentesi attorno all'oggetto
+const creaCorretto = (nome) => ({ nome: nome });
+creaCorretto("Mario"); // { nome: "Mario" }
+```
+
+-----
+
+#### Parametri di Default
+
+Puoi dare valori predefiniti ai parametri con la sintassi `=`. 
+Se il parametro è `undefined` al momento della chiamata, viene usato il valore predefinito.
+
+```javascript
+function saluta(nome = "Ospite", lingua = "it") {
+  const saluti = { it: "Ciao", en: "Hello" };
+  return `${saluti[lingua]} ${nome}`;
+}
+
+saluta();                // "Ciao Ospite"
+saluta("Mario");         // "Ciao Mario"
+saluta("Mario", "en");   // "Hello Mario"
+saluta(undefined, "en"); // "Hello Ospite"
+```
+
+Nel primo parametro, `nome = "Ospite"` significa: se chi chiama la funzione non passa un nome, usa `"Ospite"`. 
+Nel secondo, `lingua = "it"` significa: se non viene indicata una lingua, usa l'italiano.
+
+L'ultima chiamata è importante: `saluta(undefined, "en")` usa il valore predefinito per `nome`, ma permette comunque di passare `"en"` come secondo argomento. 
+Questo funziona perché il default scatta solo quando il valore ricevuto è `undefined`.
+
+Questo sostituisce il vecchio schema `nome = nome || "Ospite"`, che aveva il difetto di trattare come mancanti anche valori falsy validi, come stringhe vuote e zero.
+
+-----
+
+#### Destrutturazione nei Parametri
+
+Puoi destrutturare direttamente nella lista dei parametri. 
+È lo schema più usato per le funzioni che accettano un "oggetto di configurazione".
+
+```javascript
+// Invece di
+function crea(options) {
+  const nome = options.nome;
+  const eta = options.eta;
+  const admin = options.admin || false;
+  // ...
+}
+
+// Puoi scrivere
+function crea({ nome, eta, admin = false }) {
+  // nome, eta e admin sono direttamente disponibili
+}
+
+crea({ nome: "Mario", eta: 27, admin: true });
+```
+
+Questo ha tre vantaggi: l'ordine dei parametri non conta, perché passi un oggetto e non una sequenza; puoi saltare parametri che non ti interessano; la chiamata è più leggibile, perché vedi subito cosa stai passando.
+
+-----
+
+#### Callback (Funzioni Passate come Argomenti)
+
+Una **callback** è una funzione che passi a un'altra funzione, perché questa la chiami quando è il momento giusto. 
+È un concetto fondamentale in JavaScript, perché è il modo con cui gestisci operazioni asincrone ed eventi.
+
+L'analogia del ristorante funziona bene: quando ordini una pizza da asporto, non resti in piedi davanti al forno ad aspettare. 
+Dai il tuo numero di telefono (la callback), vai a fare altro, e il pizzaiolo ti richiama quando è pronta.
+
+```javascript
+setTimeout(() => {
+  console.log("Sono passati 2 secondi");
+}, 2000); // 2000 millisecondi = 2 secondi
+// setTimeout è una funzione che accetta una callback e un tempo in millisecondi.
+// Dopo quel tempo chiama la callback.
+```
+
+I metodi funzionali degli array che abbiamo visto (`map`, `filter`, `reduce`, `forEach`) sono tutti basati su callback: la funzione che passi viene chiamata per ogni elemento.
+
+```javascript
+[1, 2, 3].map(x => x * 2); // [2, 4, 6]
+// La funzione x => x * 2 è una callback chiamata 3 volte
+```
+
+In JavaScript, le funzioni sono valori normali. 
+Puoi passarle, salvarle in variabili e metterle in array. 
+Questo è il senso di "first-class citizens": in JavaScript le funzioni possono essere trattate come qualsiasi altro valore. 
+Per questo puoi passarle ad altre funzioni, restituirle da funzioni e costruire schemi come callback, funzioni di ordine superiore e currying.
+
+-----
+
+#### Currying e Applicazione Parziale
+
+Il **currying** è uno schema dove una funzione con più parametri viene trasformata in una catena di funzioni che prendono un parametro alla volta. 
+La funzione esterna restituisce una nuova funzione, che a sua volta può restituirne un'altra.
+
+```javascript
+// Senza currying
+function somma(a, b) {
+  return a + b;
+}
+somma(3, 4); // 7
+
+// Con currying
+const sommaCurried = a => b => a + b;
+sommaCurried(3)(4); // 7
+
+// Il valore pratico: puoi "bloccare" il primo argomento
+const aggiungi10 = sommaCurried(10);
+aggiungi10(5);  // 15
+aggiungi10(20); // 30
+```
+
+`aggiungi10` è una funzione specializzata che "ricorda" il `10` grazie al meccanismo delle **closures**, che vedremo nella prossima sezione. 
+È uno dei motivi per cui imparare le closures è importante: il currying sembra magia finché non capisci cosa sta succedendo sotto.
+
+Questo schema è comune nella programmazione funzionale: parti da una funzione generica, come `somma`, e crei versioni più specifiche, come `aggiungi10`.
+La programmazione funzionale è uno stile in cui costruisci il programma componendo funzioni e preferisci trasformare i dati creando nuovi valori, invece di modificare direttamente quelli esistenti.
+
+-----
+
+#### Convenzione `_` per Parametri Non Usati
+
+A volte una funzione deve avere certi parametri perché il contesto li passa, ma tu ne usi solo alcuni. 
+La convenzione è usare `_` come nome per quelli che ignori, per segnalare a chi legge il codice che lo stai facendo apposta.
+
+```javascript
+// .map() passa (valore, indice, array intero) alla callback
+// Se ti serve solo l'indice, segnali gli altri come ignorati
+const numeri = [10, 20, 30];
+const indici = numeri.map((_, indice) => indice);
+// [0, 1, 2]
+```
+
+-----
+
+#### IIFE (Funzione Invocata Immediatamente)
+
+Un'**IIFE** (Immediately Invoked Function Expression) è una funzione dichiarata e chiamata sul posto. 
+La sintassi è una funzione avvolta tra parentesi, seguita da `()` per invocarla.
+
+```javascript
+(function () {
+  console.log("Eseguita subito");
+})();
+
+// Versione arrow
+(() => {
+  console.log("Eseguita subito");
+})();
+```
+
+L'uso classico, prima dei moduli ES (li vedremo nella <Link to="/it/docs/vademecum/javascript-real-world/oop-and-modules#17-es-modules-import-ed-export">sezione 17</Link>), era **creare uno scope isolato**: le variabili dentro l'IIFE non inquinano lo scope globale. 
+Nel browser, lo scope globale è l'area più esterna della pagina: tutto ciò che finisce lì è disponibile ovunque e rischia di entrare in conflitto con altri nomi.
+Era il modo standard per proteggere il codice di una libreria.
+
+```javascript
+// Schema storico: creare un'area privata per non aggiungere nomi allo scope globale
+(function () {
+  const configurazione = { /* ... */ };
+  const funzioneInterna = () => { /* ... */ };
+  // Queste variabili restano qui dentro e non diventano disponibili ovunque
+})();
+```
+
+Con i moduli ES questo schema è diventato raro: ogni modulo ha già il suo scope isolato. Le IIFE oggi si vedono principalmente in librerie con supporto a browser vecchi che non usano moduli, oppure quando vuoi eseguire subito un blocco di logica e tenere private le variabili temporanee.
+
+```javascript
+// Calcolare un valore iniziale complesso in una const
+const configurazione = (() => {
+  const env = leggiEnv();
+  const base = calcolaBase(env);
+  return { env, base, timestamp: Date.now() };
+})();
+```
+
+**Regola:** arrow function per callback, funzioni brevi e funzioni inline. 
+Funzione classica quando vuoi un nome esplicito, hoisting o `this` dinamico. 
+Graffe sempre, tranne quando vuoi il return implicito con una sola espressione. 
+Destrutturazione nei parametri quando accetti un oggetto di configurazione. 
+Le callback sono funzioni passate come argomenti, la base di molto JavaScript moderno.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Scope e Closures
+
+Lo **scope** è la regione di codice in cui una variabile è accessibile. 
+Capire dove le variabili vivono e muoiono è prerequisito per capire le closures, uno dei concetti più potenti e più fraintesi di JavaScript.
+
+#### Global vs Local vs Block Scope
+
+Quando dichiari una variabile, JavaScript la mette in uno scope. 
+Ci sono tre livelli.
+
+Lo **scope globale** è il più esterno. 
+Una variabile dichiarata fuori da qualsiasi funzione o blocco è globale, accessibile ovunque nel programma.
+
+```javascript
+const nomeApp = "Il Mio Sito"; // Globale
+
+function saluta() {
+  console.log(nomeApp); // Accessibile anche qui
+}
+```
+
+Lo **scope locale** (detto anche **function scope**) è quello creato da una funzione. 
+Le variabili dichiarate dentro una funzione esistono solo lì.
+
+```javascript
+function calcola() {
+  const risultato = 42; // Locale a calcola
+  return risultato;
+}
+
+console.log(risultato); // ❌ ReferenceError
+```
+
+Lo **scope di blocco** è quello creato da qualsiasi coppia di `{}` (un `if`, un `for`, un blocco generico). 
+Solo `let` e `const` rispettano lo scope di blocco; `var` lo ignora, ecco perché nel codice moderno si evita.
+
+```javascript
+if (true) {
+  let dentro = "ciao";    // Scope del blocco if
+  const anche = "qui";    // Scope del blocco if
+  var invece = "ovunque"; // Scope della funzione contenente (o globale)
+}
+
+console.log(dentro); // ❌ ReferenceError
+console.log(invece); // "ovunque"
+```
+
+-----
+
+#### Scope Chain (La Catena di Ricerca)
+
+Quando JavaScript cerca una variabile, parte dallo scope più interno e risale. 
+Se la trova, si ferma. 
+Se arriva allo scope globale senza trovarla, lancia un `ReferenceError`.
+
+```javascript
+const globale = "G";
+
+function esterna() {
+  const media = "M";
+
+  function interna() {
+    const locale = "L";
+    console.log(locale);  // "L" (trovata subito, scope locale)
+    console.log(media);   // "M" (risalita, scope di esterna)
+    console.log(globale); // "G" (risalita fino al globale)
+  }
+
+  interna();
+}
+```
+
+Ogni funzione ha accesso alle variabili del suo scope e di tutti gli scope che la contengono. La ricerca segue sempre questo ordine: locale -> scope esterno -> ... -> globale.
+
+-----
+
+#### Shadowing
+
+Se dichiari una variabile con lo stesso nome di una esistente in uno scope esterno, quella interna "copre" la esterna. 
+Si chiama **shadowing**.
+
+```javascript
+const x = "esterno";
+
+function test() {
+  const x = "interno"; // Copre l'esterna
+  console.log(x); // "interno"
+}
+
+test();
+console.log(x); // "esterno" (non toccata)
+```
+
+Lo shadowing non è errato di per sé (a volte è voluto), ma se lo fai accidentalmente può creare bug difficili da trovare. 
+Evitalo quando non ha un motivo preciso.
+
+-----
+
+#### Closures (La Memoria delle Funzioni)
+
+Una **closure** è una funzione che "si ricorda" delle variabili del suo scope esterno, anche dopo che quello scope è terminato. 
+Nel contatore qui sotto, per esempio, la funzione interna non salva una copia di `conteggio` a `0`: mantiene accesso a quella variabile, quindi può ritrovarla e aggiornarla a ogni chiamata.
+
+```javascript
+function creaContatore() {
+  let conteggio = 0;
+
+  return function incrementa() {
+    conteggio++;
+    return conteggio;
+  };
+}
+
+const contatore = creaContatore();
+contatore(); // 1
+contatore(); // 2
+contatore(); // 3
+```
+
+Cosa sta succedendo? `creaContatore` dichiara una variabile locale `conteggio`, e restituisce una funzione che la legge e la modifica. 
+Normalmente, quando `creaContatore` finisce, la sua variabile locale dovrebbe sparire. 
+Ma la funzione restituita ha ancora un riferimento a `conteggio`, quindi JavaScript la tiene in vita.
+
+Ogni volta che chiami `contatore()`, stai chiamando la funzione interna, che accede alla stessa `conteggio` che vive nella closure.
+
+Se crei un secondo contatore, ha il **suo** `conteggio`, completamente separato:
+
+```javascript
+const contatore1 = creaContatore();
+const contatore2 = creaContatore();
+
+contatore1(); // 1
+contatore1(); // 2
+contatore2(); // 1 (ha il suo conteggio privato)
+contatore2(); // 2
+contatore1(); // 3
+```
+
+Questo è il meccanismo che permette a **ogni iterazione di un `for` con `let`** di avere la sua copia di `i`: ogni callback è una closure sulla sua specifica `i`.
+
+-----
+
+#### Perché il Currying Funziona
+
+Ora puoi capire il currying della sezione precedente. 
+Quando fai:
+
+```javascript
+const somma = a => b => a + b;
+const aggiungi10 = somma(10);
+```
+
+`somma(10)` esegue la funzione esterna, che restituisce la funzione interna. 
+La funzione interna è una **closure su `a`**: si ricorda che `a = 10` anche dopo che `somma(10)` è finita. 
+Quando poi chiami `aggiungi10(5)`, la funzione interna accede al suo `a` memorizzato e fa `10 + 5`.
+
+```javascript
+aggiungi10(5); // 15 (a = 10 dalla closure, b = 5 dal parametro)
+```
+
+Le closures permettono quindi di mantenere accessibili parti di stato dentro le funzioni, senza doverle mettere in variabili globali.
+
+-----
+
+#### Pattern: Data Privacy
+
+Le closures ti permettono di creare variabili "private", cioè variabili che il codice esterno (in questo caso tutto ciò che sta fuori da `creaConto`) non può leggere o modificare direttamente.
+L'accesso passa solo dalle funzioni che decidi di restituire all'esterno.
+Uno schema classico:
+
+```javascript
+function creaConto(saldoIniziale) {
+  let saldo = saldoIniziale; // Variabile "privata"
+
+  return {
+    deposita(importo) {
+      saldo += importo;
+      return saldo;
+    },
+    preleva(importo) {
+      if (importo > saldo) return "Fondi insufficienti";
+      saldo -= importo;
+      return saldo;
+    },
+    vediSaldo() {
+      return saldo;
+    },
+  };
+}
+
+const conto = creaConto(100);
+conto.deposita(50); // 150
+conto.preleva(30);  // 120
+conto.vediSaldo();  // 120
+
+// saldo non è accessibile direttamente
+conto.saldo; // undefined
+
+// Anche se qualcuno prova ad aggiungere una proprietà saldo
+conto.saldo = 999999;
+conto.vediSaldo(); // 120, il saldo privato non cambia
+```
+
+Nessuno può modificare `saldo` dall'esterno saltando le funzioni del conto. 
+L'unico modo per toccare il saldo è passare attraverso `deposita`, `preleva` e `vediSaldo`, che possono controllare i dati, rifiutare operazioni non valide o registrare quello che succede.
+
+Prima delle classi, che vedremo nella <Link to="/it/docs/vademecum/javascript-real-world/oop-and-modules#12-classi-lo-stampo">sezione 12</Link>, questo era lo schema standard per incapsulare stato in JavaScript, cioè tenere i dati interni protetti e accessibili solo tramite funzioni controllate. 
+Oggi hai anche altri strumenti, ma capirlo resta importante: molte librerie e molte factory function usano ancora questo schema per proteggere dati interni e offrire all'esterno solo operazioni controllate.
+
+-----
+
+#### Iterators e Generators (Cenni)
+
+Un **iteratore** è un oggetto che produce valori uno alla volta, tramite un metodo `next()` che restituisce `{ value, done }`. 
+Ogni volta che chiami `next()`, l'iteratore avanza e ti dà il prossimo valore. 
+Quando ha finito, `done` diventa `true`.
+
+Gli array, le stringhe, i `Set` e le `Map` sono **iterabili** proprio perché hanno un iteratore interno. 
+Quando usi `for...of`, JavaScript usa quell'iteratore internamente e chiama `next()` più volte, finché `done` diventa `true`.
+
+Un **generatore** è un modo elegante per scrivere iteratori. Si tratta di una funzione speciale, marcata con `function*`, che usa `yield` per produrre valori solo quando servono, uno alla volta.
+
+```javascript
+function* contaFinoA(max) {
+  let i = 1;
+  while (i <= max) {
+    yield i;
+    i++;
+  }
+}
+
+const conta = contaFinoA(3);
+conta.next(); // { value: 1, done: false }
+conta.next(); // { value: 2, done: false }
+conta.next(); // { value: 3, done: false }
+conta.next(); // { value: undefined, done: true }
+
+// Oppure con for...of
+for (const n of contaFinoA(5)) {
+  console.log(n); // 1, 2, 3, 4, 5
+}
+```
+
+Si usa raramente, ciononostante diventa utile in casi specifici: sequenze infinite (un generatore di ID unici), elaborazione progressiva di dataset enormi (processi un elemento alla volta senza caricarli tutti in memoria), schemi complessi di macchine a stati, cioè logiche in cui un sistema può trovarsi in stati diversi e ogni evento lo sposta da uno stato all'altro.
+
+**Regola:** `let` e `const` hanno block scope, `var` ha function scope (non usarla). 
+Una closure è una funzione che si ricorda delle variabili del suo scope esterno. 
+Currying, factory come `creaContatore` e dati privati sono tutti schemi basati sulle closures.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (Strutture e Flusso in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|---------------|-----------------|
+| Array distruttivi | `push`, `pop`, `splice`, `sort` modificano l'originale | Aspettarsi una copia |
+| Array non distruttivi | `slice`, `map`, `filter`, `reduce` restituiscono copia | Dimenticare di assegnare il risultato |
+| `sort` numerico | Passa `(a, b) => a - b` | Ordinamento alfabetico predefinito |
+| `reduce` | Passa sempre il valore iniziale | Fallisce su array vuoti se lo ometti |
+| `Set` | Valori unici, ottimo per deduplica | Confonderlo con un array |
+| `Map` | Coppie chiave-valore con chiavi di qualsiasi tipo | Usarla dove basta un oggetto letterale |
+| IIFE | Funzione che si invoca sul posto | Usarla dove i moduli ES bastano |
+| Generators | `function*` con `yield`, per produrre valori uno alla volta | Usarli quando non servono davvero |
+| Optional chaining `?.` | Blocca la catena se trova `null`/`undefined` | Usarlo dove dovresti controllare esplicitamente |
+| Spread `...` | Copia e unisce array/oggetti | Confondere copia superficiale con copia profonda |
+| `\|\|` vs `??` | `\|\|` considera falsy, `??` solo null/undefined | Usare `\|\|` dove `0` o `""` sono validi |
+| `if/else` | Graffe sempre, anche per singola riga | Bug silenzioso aggiungendo righe |
+| Ternario | Solo per assegnazioni semplici | Annidarlo |
+| `switch` | `break` obbligatorio dopo ogni case | Dimenticare `break` e causare fall-through |
+| Return early | Guard clauses invece di annidamenti | La piramide della rovina |
+| `for...of` | Itera sui valori | Usarlo sugli oggetti (usa `for...in` o `Object.entries`) |
+| `for...in` | Itera sulle chiavi | Usarlo sugli array |
+| `.forEach` | Comodo ma non si ferma con break | Aspettarsi di poterlo interrompere |
+| Arrow function | Niente `this` proprio, sintassi breve | Return implicito di oggetto senza parentesi `()` |
+| Destrutturazione | Estrae proprietà in variabili | Non rinominare quando servirebbe |
+| Callback | Funzione passata per essere chiamata dopo | Chiamarla subito con `()` invece di passarla |
+| Closure | Funzione che ricorda lo scope esterno | Pensare che salvi una copia del valore iniziale |
+| Scope | `let`/`const` block, `var` function | Usare `var` e finire nei problemi di scope |

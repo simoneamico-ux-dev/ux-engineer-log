@@ -1,0 +1,1225 @@
+---
+sidebar_position: 3
+title: OOP and Modules
+description: Classes, constructor, this, inheritance with extends and super, static methods, getters and setters, ES Modules, separation between pure functions and the DOM.
+---
+
+import Link from '@docusaurus/Link';
+
+# Part III: OOP and Modules
+
+As a project grows, you need tools to organize code.
+**Classes** let you group data and behavior into reusable "blueprints".
+**Modules** split code into files that communicate with each other explicitly.
+Together, they help you grow the project without turning everything into a single file that is hard to maintain.
+
+---
+
+## Classes and Object-Oriented Programming
+
+### 12. Classes (The Blueprint)
+
+A class is a **blueprint** for creating objects.
+It defines once which properties and methods all objects created from that blueprint will have, and then you create as many instances as you want, each with its own specific data.
+
+A cookie cutter has a fixed shape (a star, a heart), and every cookie that comes out of it has that shape.
+The cookies may also have different colors and ingredients, but the structure is shared.
+To stay with this analogy: the class is the cutter and every instance is a cookie.
+
+```javascript
+class Player {
+  constructor(name, level) {
+    this.name = name;
+    this.level = level;
+    this.points = 0;
+  }
+
+  earnPoints(amount) {
+    this.points += amount;
+  }
+}
+
+const mario = new Player("Mario", 1);
+const luigi = new Player("Luigi", 1);
+
+mario.earnPoints(100);
+luigi.earnPoints(50);
+
+console.log(mario.name, mario.points); // "Mario" 100
+console.log(luigi.name, luigi.points); // "Luigi" 50
+```
+
+`Player` is the class (the blueprint).
+`mario` and `luigi` are **instances**: distinct objects created from the same class, each with its own properties.
+Calling `mario.earnPoints(100)` modifies only `mario`, not `luigi`.
+
+-----
+
+#### Syntactic Sugar over Prototypes
+
+Classes in JavaScript are **syntactic sugar**, meaning a more convenient and readable way to write something JavaScript could already do.
+The term "syntactic sugar" means it does not add completely new power to the language, but makes the syntax more pleasant to use.
+
+Before the `class` keyword existed (it arrived with ES6 in 2015), the same result was achieved by directly manipulating **prototypes**.
+Prototypes are the mechanism JavaScript uses to store shared methods, so objects can use them without having their own copy.
+
+An array, for example, does not contain its own personal copy of `.map()`.
+The `.map()` method lives in the prototype of arrays, meaning in `Array.prototype`, and all arrays use it from there.
+
+```javascript
+const numbers = [1, 2, 3];
+numbers.map(n => n * 2); // [2, 4, 6]
+```
+
+When you write `numbers.map(...)`, JavaScript first looks inside `numbers`.
+If it does not find `map` directly there, it climbs up to the array prototype and uses the method it finds.
+The same thing happens with classes: `mario` and `luigi` do not each have a separate copy of `earnPoints`, because the method is in `Player`'s prototype and the instances share it.
+
+When you write `class Player { ... }`, JavaScript internally creates a constructor function and a `prototype`, exactly as you would have done by hand.
+The modern syntax is simply more readable and less error-prone.
+
+You do not need to worry about prototypes to use classes every day.
+But it is useful to know they exist, because they explain why methods like `.map()`, `.filter()`, and `.trim()` are automatically available on arrays and strings.
+
+```javascript
+// What JavaScript does internally with classes (conceptually)
+function Player(name, level) {
+  this.name = name;
+  this.level = level;
+}
+Player.prototype.earnPoints = function(amount) {
+  this.points = (this.points || 0) + amount;
+};
+
+// Equivalent result
+const mario = new Player("Mario", 1);
+mario.earnPoints(100);
+```
+
+Never write code like this in practice.
+The `class` syntax is always the first choice.
+Just remember that underneath there is the prototype system, not a Java-style inheritance machine.
+
+**Rule:** use `class` to group data and behavior into a reusable blueprint.
+Every call to `new` creates an independent instance with its own properties.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. `constructor()`, `new`, and `this`
+
+Three concepts that work together and must be understood as a unit.
+
+#### `constructor()` (The Assembly Department)
+
+The `constructor` is the special method that is called automatically when you create a new instance with `new`.
+Its job is to set the initial state of the object: assign properties, set default values, start any initial configuration.
+
+```javascript
+class Cart {
+  constructor(customerId) {
+    this.customerId = customerId;
+    this.products = [];
+    this.appliedDiscount = 0;
+    this.createdAt = new Date();
+  }
+}
+
+const cart = new Cart("user-42");
+// cart is { customerId: "user-42", products: [], appliedDiscount: 0, createdAt: ... }
+```
+
+The `constructor` is optional.
+If you do not write it, JavaScript creates an empty one automatically.
+But if you have properties to initialize (which is very common), you write it yourself.
+
+You cannot have more than one `constructor` in a class.
+Unlike other languages (Java, C++), JavaScript does not support overloading, meaning multiple functions with the same name but different parameters.
+If you need multiple ways to create an instance, use **static methods** (we will see them in <a href="#static-methods-static">section 14</a>) or default parameters.
+
+-----
+
+#### The Four Steps of `new`
+
+When you write `new Player("Mario", 1)`, JavaScript does four things in sequence:
+
+1. **Creates** an empty object `{}`
+2. **Links** that object to the class prototype (so it will inherit the methods)
+3. **Runs** the `constructor` with `this` referring to the new object
+4. **Returns** the object (the `this` filled with properties)
+
+The result is that the assigned variable (`mario`) receives the ready object.
+
+```javascript
+const mario = new Player("Mario", 1);
+// mario is the new object with the properties set by the constructor
+```
+
+If you forget `new` with a modern class, JavaScript throws a clear error, something like `Class constructor ... cannot be invoked without 'new'`.
+This happens because, correctly, a class must create an instance and should not be called like a normal function.
+
+```javascript
+Player("Mario", 1); // ❌ TypeError: new is required
+```
+
+Always use `new` with classes.
+
+-----
+
+#### `this` (The Reference to the Instance)
+
+`this` is a keyword that, inside a class method, refers to the **specific instance** on which the method was called.
+It is not the class, but the concrete object.
+
+```javascript
+class Player {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    console.log(`Hi, I am ${this.name}`);
+  }
+}
+
+const mario = new Player("Mario");
+const luigi = new Player("Luigi");
+
+mario.greet(); // "Hi, I am Mario" (this = mario)
+luigi.greet(); // "Hi, I am Luigi" (this = luigi)
+```
+
+When you call `mario.greet()`, inside `greet` the `this` refers to `mario`.
+When you call `luigi.greet()`, the `this` refers to `luigi`.
+Same method, same code, `this` changes based on who called it.
+
+-----
+
+#### The `this` Problem with `addEventListener`
+
+A typical case where the value of `this` changes is when you pass a class method directly to `addEventListener`.
+The method runs on click, but it is no longer called as a method of the instance.
+As a consequence, inside that method `this` no longer points to the object created by the class.
+
+```javascript
+// ❌ PROBLEM
+class CounterButton {
+  constructor(button) {
+    this.button = button;
+    this.count = 0;
+    this.button.addEventListener("click", this.increment);
+  }
+
+  increment() {
+    this.count++; // ❌ this.count is undefined
+    console.log(this.count); // NaN (undefined + 1)
+  }
+}
+```
+
+The problem is that when `addEventListener` calls `increment`, it does not call it like `mario.greet()` or `account.viewBalance()`, meaning on a precise instance.
+It calls it as the event handler, so the call context changes.
+In the case of `addEventListener`, inside `increment` the `this` refers to the button that received the event, not to the `CounterButton` instance.
+
+The three most common solutions are these.
+
+**Solution 1: wrapper with arrow function**.
+A wrapper is a small function that wraps another call.
+Here we wrap `this.increment()` in an arrow function, which inherits `this` from the surrounding context, meaning from the `constructor`, where `this` is the instance.
+
+```javascript
+// ✅ SOLUTION 1
+class CounterButton {
+  constructor(button) {
+    this.button = button;
+    this.count = 0;
+    this.button.addEventListener("click", () => this.increment());
+  }
+
+  increment() {
+    this.count++;
+    console.log(this.count); // Works
+  }
+}
+```
+
+**Solution 2: `.bind(this)`**.
+The `.bind(this)` method creates a new function with `this` permanently bound to the value you pass.
+In this case you are saying: "when this function is called, inside it `this` must stay the instance".
+
+```javascript
+// ✅ SOLUTION 2
+class CounterButton {
+  constructor(button) {
+    this.button = button;
+    this.count = 0;
+    this.button.addEventListener("click", this.increment.bind(this));
+  }
+
+  increment() {
+    this.count++;
+    console.log(this.count);
+  }
+}
+```
+
+**Solution 3: class field with arrow function**.
+Or you define `increment` directly as an arrow function in a **class field**.
+In this case `this` is already the instance from the definition.
+
+```javascript
+// ✅ SOLUTION 3 (with class fields)
+class CounterButton {
+  constructor(button) {
+    this.button = button;
+    this.count = 0;
+    this.button.addEventListener("click", this.increment);
+  }
+
+  increment = () => {
+    this.count++;
+    console.log(this.count);
+  };
+}
+```
+
+In modern practice, solution 1 (wrapper with arrow function) is the most common because it is clear and does not require remembering `.bind`.
+Solution 3 is elegant but has a memory cost because every instance creates its own copy of the method instead of sharing it through `prototype`.
+
+**Rule:** `new` is required to create instances.
+`this` inside a method refers to the instance on which it was called.
+When you pass methods to event listeners or callbacks, protect `this` with an arrow wrapper or `.bind(this)`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Properties and Methods
+
+Inside a class you can declare properties (data) and methods (behavior) in different ways, each with its specific use.
+
+#### Class Properties (Class Fields)
+
+Modern syntax lets you declare properties directly in the class body, outside the `constructor`.
+They are useful for properties with the same initial value for all instances.
+
+```javascript
+class Player {
+  // Class fields: initial value shared by all instances
+  points = 0;
+  lives = 3;
+  inventory = [];
+
+  constructor(name) {
+    this.name = name;
+    // The constructor only sets personalized things
+  }
+}
+
+const mario = new Player("Mario");
+console.log(mario.points); // 0
+console.log(mario.lives);  // 3
+console.log(mario.name);   // "Mario"
+```
+
+Class fields make the `constructor` cleaner: instead of having all assignments there, you leave in the `constructor` only the ones that depend on parameters.
+
+**Be careful with arrays and objects as class fields:** every instance receives **its own initial value**, not a reference shared with the other instances.
+This is important for properties like `inventory = []`: every time you call `new Player(...)`, JavaScript creates a new array for that specific instance, so Mario's inventory and Luigi's inventory stay separate.
+
+-----
+
+#### Methods in the Prototype
+
+When you declare a method in the classic form (without `=`), that method lives in the class **prototype**, not in every instance.
+In practice, there is only one copy of the method, shared by all instances.
+JavaScript finds it through the **prototype chain**, meaning the chain of prototypes it climbs when looking for a property or method.
+
+```javascript
+class Player {
+  constructor(name) {
+    this.name = name;
+  }
+
+  // Method in the prototype: one shared copy
+  greet() {
+    console.log(`Hi, I am ${this.name}`);
+  }
+}
+
+const mario = new Player("Mario");
+const luigi = new Player("Luigi");
+
+// mario and luigi do not "have" greet as their own property
+// When you call mario.greet(), JavaScript looks for greet in mario,
+// does not find it, climbs up to Player's prototype, and finds it there
+```
+
+This management is memory efficient.
+With 1000 instances you do not have 1000 copies of the `greet` method: you have one copy in the shared `prototype`.
+
+The practical rule: **declare methods with the classic syntax `greet() { ... }`** when you do not need bound `this`.
+**Use an arrow function as a class field `greet = () => { ... }`** only when `this` must be preserved in callbacks, as we saw in <a href="#the-this-problem-with-addeventlistener">section 13</a> with `addEventListener`.
+
+-----
+
+#### Private Fields (`#`)
+
+Historically, JavaScript did not have the concept of private properties: all properties of an instance were accessible from the outside.
+The convention was to use an underscore `_email` to say "do not touch this", but it was only a visual indication, not a real constraint.
+
+Since 2022, the `#` syntax declares truly private fields, which the language itself prevents from being read or modified from the outside.
+The hash sign is part of the field name: `#balance` and `balance` are two different things.
+
+```javascript
+class BankAccount {
+  #balance = 0; // Private field
+
+  deposit(amount) {
+    this.#balance += amount;
+  }
+
+  get balance() {
+    return this.#balance;
+  }
+}
+
+const account = new BankAccount();
+account.deposit(100);
+console.log(account.balance);  // 100 (through getter)
+console.log(account.#balance); // ❌ SyntaxError: Private field '#balance' must be declared in an enclosing class
+```
+
+You can also make methods private, not only fields:
+
+```javascript
+class Calculator {
+  #history = [];
+
+  calculate(a, b, operation) {
+    const result = this.#execute(a, b, operation);
+    this.#history.push({ a, b, operation, result });
+    return result;
+  }
+
+  #execute(a, b, op) {
+    // Internal method, not accessible from the outside
+    if (op === "+") return a + b;
+    if (op === "-") return a - b;
+    throw new Error("Invalid operation");
+  }
+}
+```
+
+Compared to the closure pattern we saw in the previous file (`createAccount` with private variables through closure), private fields with `#` are more explicit, more integrated into class syntax, and work well with classes and inheritance.
+The closure pattern remains useful in functional contexts; `#` is the natural choice in modern classes.
+
+One detail: private fields are tied to the class where they are declared, and a subclass cannot access them directly.
+If a child class wants to use "private" data from the parent, it must go through public methods or methods designed specifically for that access.
+In other languages these methods are often called "protected", meaning accessible to child classes too, but JavaScript does not have a real `protected`.
+
+-----
+
+#### Static Methods (`static`)
+
+A `static` method belongs to the class, not to the instances.
+You call it on the class itself, without using `new`.
+
+```javascript
+class Player {
+  constructor(name, level) {
+    this.name = name;
+    this.level = level;
+  }
+
+  // Instance method: called on the instance
+  greet() {
+    console.log(`Hi, I am ${this.name}`);
+  }
+
+  // Static method: called on the class
+  static createGuest() {
+    return new Player("Guest", 1);
+  }
+
+  static compare(a, b) {
+    return a.level - b.level;
+  }
+}
+
+// You call static methods on the class
+const guest = Player.createGuest();
+const players = [new Player("Mario", 3), guest];
+const sorted = [...players].sort(Player.compare);
+```
+
+The typical uses of static methods are two.
+
+**Factory methods**: methods that create already configured objects, offering alternative ways to create instances.
+`Player.createGuest()` is more expressive than `new Player("Guest", 1)`, and hides the details of how it is built.
+
+**Utility functions that work on the class**: `Player.compare(a, b)` does not make sense to call on an instance because it compares two players.
+It lives on the class because it is a tool related to the class but independent from individual instances.
+
+`Math` (which you saw in <Link to="/docs/vademecum/javascript-real-world/foundations#the-math-module">section 3</Link>) is not a class, but it communicates the idea well: it is a global object with methods you use directly, like `Math.floor()`, `Math.random()`, and `Math.max()`.
+You do not create "an instance of Math".
+
+**Rule:** class fields for properties with a common initial value.
+Classic methods to share a single copy through the prototype.
+Arrow function as class field only when you need to preserve `this`.
+`static` for factory methods and utility functions that live on the class.
+
+<br />
+<br />
+<br />
+<br />
+
+### 15. Inheritance (`extends` and `super`)
+
+Inheritance lets you build a class **starting from** another one, reusing its properties and methods and extending them.
+It is the mechanism with which you create hierarchies: an `Enemy` is a type of `Character`, an `Admin` is a type of `User`.
+
+#### `extends`
+
+The `extends` keyword connects a child class to a parent class.
+The child **inherits** everything: properties declared in the constructor, methods, class fields.
+
+```javascript
+class Character {
+  constructor(name, health) {
+    this.name = name;
+    this.health = health;
+  }
+
+  takeDamage(amount) {
+    this.health -= amount;
+    console.log(`${this.name} took ${amount} damage, health: ${this.health}`);
+  }
+}
+
+class Player extends Character {
+  // Player inherits everything from Character
+}
+
+const mario = new Player("Mario", 100);
+mario.takeDamage(20); // "Mario took 20 damage, health: 80"
+```
+
+`Player` does not have its own constructor or its own `takeDamage` method, but it works because it inherits them from `Character`.
+
+-----
+
+#### `super()` (Calling the Parent Constructor)
+
+If the child class defines its own `constructor`, it **must** call `super()` before using `this`.
+`super()` runs the constructor of the parent class.
+
+```javascript
+class Character {
+  constructor(name, health) {
+    this.name = name;
+    this.health = health;
+  }
+}
+
+class Player extends Character {
+  constructor(name, health, level) {
+    super(name, health); // Runs Character.constructor
+    this.level = level;  // Then you add the specific properties
+  }
+}
+
+const mario = new Player("Mario", 100, 5);
+// mario has: name, health (from the parent), level (from the child)
+```
+
+If you use `this` before `super()`, you get an error.
+The reason is that `super()` is what "creates" the base object with the parent's properties; only after that can you extend it.
+
+```javascript
+class Player extends Character {
+  constructor(name, health, level) {
+    this.level = level; // ❌ ReferenceError
+    super(name, health);
+  }
+}
+```
+
+-----
+
+#### `super.method()` (Calling a Parent Method)
+
+Inside a method of the child, `super.methodName()` calls the version of the method defined in the parent.
+It is useful when you do **override** (redefine a parent method) but still want to reuse its original logic.
+
+```javascript
+class Character {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    console.log(`I am ${this.name}`);
+  }
+}
+
+class Enemy extends Character {
+  greet() {
+    super.greet(); // Calls the parent's version
+    console.log("And I will destroy you!"); // Add behavior
+  }
+}
+
+const goomba = new Enemy("Goomba");
+goomba.greet();
+// "I am Goomba"
+// "And I will destroy you!"
+```
+
+Without `super.greet()`, you would need to rewrite the parent's logic in the child.
+`super` avoids that duplication.
+
+-----
+
+#### Complete Override
+
+If you want to completely replace a parent method, just declare it in the child with the same name and do not call `super`.
+The child's version wins.
+
+```javascript
+class Character {
+  greet() {
+    console.log("Hi!");
+  }
+}
+
+class Enemy extends Character {
+  greet() {
+    console.log("GRRRR!"); // No call to super.greet()
+  }
+}
+
+new Enemy().greet();       // "GRRRR!" (the parent version is not run)
+```
+
+-----
+
+#### Complete Example
+
+Putting everything together, here is an example that shows how classes work together:
+
+```javascript
+class Character {
+  health = 100;
+
+  constructor(name) {
+    this.name = name;
+  }
+
+  takeDamage(amount) {
+    this.health -= amount;
+    if (this.health <= 0) {
+      this.die();
+    }
+  }
+
+  die() {
+    console.log(`${this.name} has fallen.`);
+  }
+}
+
+class Player extends Character {
+  constructor(name) {
+    super(name);
+    this.lives = 3;
+  }
+
+  die() {
+    this.lives--;
+    if (this.lives > 0) {
+      this.health = 100;
+      console.log(`${this.name} respawns, lives left: ${this.lives}`);
+    } else {
+      super.die(); // Calls the parent version
+      console.log("Game Over.");
+    }
+  }
+}
+
+const mario = new Player("Mario");
+mario.takeDamage(200);
+// "Mario respawns, lives left: 2"
+```
+
+Notice how `Player` extends the behavior of `Character`: it reimplements `die()` to add multiple-lives logic, but calls `super.die()` for the final behavior when the lives truly run out.
+
+-----
+
+#### `instanceof` (Checking Membership)
+
+The `instanceof` operator checks whether an object is an instance of a certain class (or of one of its subclasses).
+It returns a boolean.
+
+```javascript
+class Character {}
+class Player extends Character {}
+class Enemy extends Character {}
+
+const mario = new Player();
+const goomba = new Enemy();
+
+mario instanceof Player;     // true
+mario instanceof Character;  // true (it is a subclass)
+mario instanceof Enemy;      // false
+
+goomba instanceof Character; // true
+goomba instanceof Player;    // false
+```
+
+`instanceof` climbs the inheritance chain, so an instance of `Player` is also an instance of `Character`.
+This is useful when you want to accept a category of objects, regardless of the specific type.
+
+```javascript
+function takeDamage(entity) {
+  if (!(entity instanceof Character)) {
+    throw new Error("Only characters can take damage");
+  }
+  // Continue...
+}
+```
+
+A useful difference from `typeof`: `typeof mario` returns `"object"`, without information about the class.
+`instanceof` tells you the specific class (or hierarchy).
+
+Careful: `instanceof` checks the **prototype**, not only the name.
+If two different classes have the same name (rare, but possible with modules), the check is on the reference, not on the string.
+
+**Rule:** `extends` to inherit from a parent class.
+`super()` is required in the child constructor before using `this`.
+`super.method()` to reuse parent logic inside an override.
+`instanceof` to verify membership in a class or its hierarchy.
+
+<br />
+<br />
+<br />
+<br />
+
+### 16. Getters and Setters
+
+Getters and setters are special methods that behave like properties.
+You use them without parentheses, as if you were reading or writing a field, but internally they run code.
+They are useful when a "property" requires calculation, validation, normalization, or logging what happens.
+
+#### `get` (Calculated Properties)
+
+A `get` is a method that reads.
+You define it as a function, but use it as a property.
+
+```javascript
+class Person {
+  constructor(name, lastName) {
+    this.name = name;
+    this.lastName = lastName;
+  }
+
+  get fullName() {
+    return `${this.name} ${this.lastName}`;
+  }
+}
+
+const user = new Person("Mario", "Rossi");
+console.log(user.fullName); // "Mario Rossi" (no parentheses!)
+```
+
+The advantage: whoever uses the class does not need to know whether `fullName` is a stored property or calculated on the fly.
+The interface is clean, the implementation is hidden.
+
+Another classic use is exposing derived values that you want to calculate every time:
+
+```javascript
+class Cart {
+  constructor() {
+    this.products = [];
+  }
+
+  addProduct(product) {
+    this.products.push(product);
+  }
+
+  get total() {
+    return this.products.reduce((acc, p) => acc + p.price, 0);
+  }
+
+  get itemCount() {
+    return this.products.length;
+  }
+}
+
+const cart = new Cart();
+cart.addProduct({ name: "Book", price: 15 });
+cart.addProduct({ name: "Coffee", price: 3 });
+
+console.log(cart.total);     // 18 (calculated every time)
+console.log(cart.itemCount); // 2
+```
+
+-----
+
+#### `set` (Transparent Validation)
+
+A `set` is a method that writes.
+You use it as if you were assigning a property, but internally it runs logic.
+The main use case is **validation**.
+
+```javascript
+class User {
+  constructor(email) {
+    this.email = email; // Calls the setter
+  }
+
+  set email(value) {
+    if (!value.includes("@")) {
+      throw new Error("Invalid email");
+    }
+    this._email = value.toLowerCase(); // Normalize
+  }
+
+  get email() {
+    return this._email;
+  }
+}
+
+const user = new User("MARIO@example.com");
+console.log(user.email); // "mario@example.com" (normalized by the setter)
+
+user.email = "newemail"; // ❌ Error: Invalid email
+```
+
+Notice the `_email` convention with underscore: the initial underscore signals that this property is "internal".
+Here `_email` stores the real value, while the `email` getter and setter control how that value is read and written.
+It is a common pattern for separating public interface and internal storage.
+
+-----
+
+#### When to Use Them (and When Not To)
+
+Getters and setters are powerful, but do not abuse them.
+The operating rule is **use getters and setters when there is a good reason**, leaving normal properties for simple cases.
+
+Good reasons for a getter: the value is calculated (cart total), changes over time (the current time), is derived from other fields (full name from first and last name).
+
+Good reasons for a setter: validate before saving, normalize the data (`trim`, `toLowerCase`), emit an event when it changes, start a new render.
+Normalize means transforming data into a coherent form before saving it, for example converting an email to lowercase.
+
+If the only thing the setter does is `this._x = x` and the only thing the getter does is `return this._x`, you do not need them.
+You are writing extra code without gain.
+A normal property is more than enough.
+
+**Rule:** `get` for derived or calculated properties.
+`set` for validation and normalization.
+Do not wrap simple properties with getters/setters that do nothing.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Modules and Architecture
+
+### 17. ES Modules (`import` and `export`)
+
+So far we have written code in a single file.
+In reality, when a project grows, code is split into dozens or hundreds of files, each with a precise responsibility.
+**ES modules** are the standard system for making files communicate: every file declares what it **exposes** (export), and other files declare what they **use** (import).
+
+#### `export` (Making Available)
+
+There are two export styles: **named export** and **default export** (the main export of the file).
+
+**Named export**: you expose functions, constants, or classes with their specific name.
+A file can have as many as you want.
+
+```javascript
+// core.js
+export const DARK_LUMINANCE_THRESHOLD = 0.4;
+
+export function calculateScale(pageWidth, screenWidth) {
+  return screenWidth / pageWidth;
+}
+
+export function normalizeText(text) {
+  return text.trim().toLowerCase();
+}
+```
+
+You can also declare first and export at the end:
+
+```javascript
+// core.js
+const DARK_LUMINANCE_THRESHOLD = 0.4;
+
+function calculateScale(pageWidth, screenWidth) {
+  return screenWidth / pageWidth;
+}
+
+function normalizeText(text) {
+  return text.trim().toLowerCase();
+}
+
+export { DARK_LUMINANCE_THRESHOLD, calculateScale, normalizeText };
+```
+
+**Default export**: exposes **only one** main value from the file.
+A file can have only one default export.
+
+```javascript
+// Cart.js
+export default class Cart {
+  constructor() {
+    this.products = [];
+  }
+}
+```
+
+The common-sense rule: **named export when the file exposes multiple things**, **default export when the file represents a single entity**, for example a class or a component.
+In this kind of structure you will mostly see named exports, because files like `core.js`, `ocr.js`, and `session.js` expose multiple functions related to the same responsibility.
+
+-----
+
+#### `import` (Using What Another File Exposes)
+
+On the receiving side, you import with the matching syntax.
+
+**Named import**: curly braces are required and names must match exactly the exported ones.
+
+```javascript
+// app.js
+import { calculateScale, DARK_LUMINANCE_THRESHOLD } from "./core.js";
+
+console.log(calculateScale(1000, 500)); // 0.5
+console.log(DARK_LUMINANCE_THRESHOLD);  // 0.4
+```
+
+**Default import**: no braces, you choose the name, even though the convention is to use the name of the exported class or function.
+
+```javascript
+// app.js
+import Cart from "./Cart.js";
+
+const c = new Cart();
+```
+
+You can **rename** on the fly during import with `as`, useful to avoid conflicts between identical names from different files.
+
+```javascript
+import { calculateScale as pageScale } from "./core.js";
+
+pageScale(1000, 500); // 0.5
+```
+
+You can **import everything** into a namespace object with `*`:
+
+```javascript
+import * as Core from "./core.js";
+
+Core.calculateScale(1000, 500);
+Core.normalizeText("  Hello  ");
+```
+
+This is convenient when you import many functions from a module and want to keep the module name in the code for clarity.
+The tradeoff is that it can make **tree-shaking** less immediate, the optimization that removes unused code from the final bundle.
+Modern bundlers often manage to optimize anyway, but specific imports remain clearer.
+
+-----
+
+#### Combining Named and Default in the Same File
+
+A file can have a default export and named exports together.
+The import combines them with a comma.
+
+```javascript
+// utils.js
+export default function format(value) { /* ... */ }
+export const VERSION = "1.0";
+export function normalize(text) { /* ... */ }
+```
+
+```javascript
+// app.js
+import format, { VERSION, normalize } from "./utils.js";
+```
+
+The default comes first, without braces; the named imports come after, with braces.
+
+-----
+
+#### `<script type="module">` (Using Modules in the Browser)
+
+In the browser, modules are activated by declaring `type="module"` on the `<script>` tag.
+
+```html
+<script type="module" src="app.js"></script>
+```
+
+This changes three things in the browser's behavior:
+
+1. **Own scope**: variables declared in the module do not pollute the global scope. In the browser, `window` is the global object of the page; writing `const x = 5` in a module does not create `window.x`, so that name does not become available everywhere.
+2. **Automatic `defer`**: the browser waits until the HTML is read and transformed into the DOM before running the module, without needing the `defer` attribute. We will see this in detail in <Link to="/docs/vademecum/javascript-real-world/browser-and-async#19-script-loading-when-your-js-runs">section 19</Link>.
+3. **Automatic strict mode**: modules run in strict mode without needing to declare it. This means JavaScript applies stricter rules and blocks some historical behaviors that are unsafe or ambiguous.
+
+A practical effect: if you open an HTML file directly with `file://` (without a local server), modules can fail for security reasons, often indicated as CORS.
+CORS is the mechanism by which the browser decides which files or servers can communicate with each other.
+In development, use your project's local server; even a simple static server is enough.
+
+-----
+
+#### Organizing Files by Responsibility
+
+The real value of modules is not only syntactic, it is organizational.
+They force you to think "what does this file expose?" and "which files depend on others?".
+For example, in a real project you might find a structure like this.
+
+```
+veil/
+  app.js          (orchestrator that connects UI, PDF reading, OCR, export, and session)
+  core.js         (pure functions for calculations, text, and rules without DOM)
+  ocr.js          (text recognition in images and selectable layers)
+  export.js       (PDF export and preparation of the final PDF)
+  session.js      (persistence, saving and restoring session and files)
+  sw.js           (service worker for cache and offline behavior)
+  sw-register.js  (registers the service worker without blocking the app)
+  tests/
+    unit/         (fast tests on pure functions)
+    e2e/          (browser tests on real flows)
+```
+
+Files that depend on other modules declare their dependencies at the top with `import`.
+By reading those lines, you immediately understand what the file needs.
+In this structure `app.js` remains the connection point with the browser, while `core.js` contains pure and testable code.
+This does not mean splitting everything by force: if a piece of code is tightly tied to the page state, it can stay in the orchestrator.
+`ocr.js`, `export.js`, and `session.js` isolate specific responsibilities, so you can read and modify an area of the code without knowing every detail of the rest of the project.
+
+**Rule:** named export for files with multiple things, default export for single entities.
+`import` explicitly declares dependencies.
+`type="module"` in the script tag activates the module system in the browser.
+
+<br />
+<br />
+<br />
+<br />
+
+### 18. Separation Between Pure Functions and the DOM
+
+Here is the most important organization pattern for writing testable and maintainable code.
+It is not a language feature, it is a **design choice**.
+It can be summarized in one rule: **separate pure functions from code that touches the DOM**.
+
+#### What a Pure Function Is
+
+A **pure function** has two characteristics:
+
+1. Given the same input, it always returns the same output
+2. It has no **side effects**, meaning it does not change anything outside itself: it does not modify external variables, does not touch the DOM, does not make network calls, does not write to `localStorage`
+
+```javascript
+// ✅ PURE: only input -> output
+function calculateVat(price, rate) {
+  return price * (1 + rate);
+}
+
+// ❌ NOT PURE: modifies the DOM
+function showPrice(price) {
+  document.querySelector("#price").textContent = `€${price}`;
+}
+
+// ❌ NOT PURE: depends on external state that can change
+let discount = 0.1;
+function applyDiscount(price) {
+  return price * (1 - discount);
+}
+```
+
+Pure functions are predictable, easy to read (everything they do is in the input and output), and very easy to test: pass an input, check the output.
+
+-----
+
+#### Why Separate Them from the DOM
+
+Code that touches the DOM inevitably produces side effects: the DOM is global and mutable state, meaning a structure shared by the page that can change over time.
+When you mix data reading, calculations, rules, and DOM changes in the same file, two things become difficult:
+
+**Testing**: to test a function that modifies the DOM, you need to emulate a browser (with Jest + jsdom, or Playwright).
+To test a pure function, you only need to call the function and compare the output.
+The difference is between milliseconds (pure function) and seconds (test with DOM).
+
+**Reasoning**: when a function has side effects, to understand what it does you need to reconstruct the whole context it runs in.
+A pure function, instead, can be read and understood in isolation.
+
+-----
+
+#### The Pattern in Practice
+
+The approach is to split the code into two layers:
+
+**"Core" layer** (files like `core.js`, `logic.js`, `validations.js`): contains only pure functions.
+It should not read or modify the page with `document` or `window`, nor make network requests with `fetch`, and it should not depend on external variables that can change.
+It must receive data as parameters and return a result.
+If you pass it the same arguments, it must always produce the same output.
+
+**"UI" layer** (files like `app.js`, `ui.js`): reads from the DOM, calls core functions to do calculations, writes results to the DOM.
+It is the "glue" between pure functions that calculate results and the real page where data is taken from and updates are shown.
+
+```javascript
+// core.js (logic only, zero DOM)
+export function calculateTotal(products, discount = 0) {
+  const subtotal = products.reduce((acc, p) => acc + p.price * p.quantity, 0);
+  return subtotal * (1 - discount);
+}
+
+export function validateEmail(email) {
+  return email.includes("@") && email.includes(".");
+}
+
+export function formatPrice(number) {
+  return `€${number.toFixed(2)}`;
+}
+```
+
+```javascript
+// app.js (the glue)
+import { calculateTotal, validateEmail, formatPrice } from "./core.js";
+
+const products = readProductsFromDOM();
+const total = calculateTotal(products, 0.1); // Pure calculation
+document.querySelector("#total").textContent = formatPrice(total);
+
+document.querySelector("#email").addEventListener("blur", (e) => {
+  const value = e.target.value;
+  if (!validateEmail(value)) {
+    showEmailError();
+  }
+});
+
+function readProductsFromDOM() {
+  // ...
+}
+
+function showEmailError() {
+  // ...
+}
+```
+
+`core.js` is testable with lightweight tools like Vitest in milliseconds.
+`app.js` requires a browser or an emulator, but it is much smaller because most of the logic is in the core.
+
+-----
+
+#### Recognizing the Temptation
+
+The temptation to mix is strong, especially at the beginning.
+A typical signal:
+
+```javascript
+// ❌ Mixed: calculation and DOM in the same place
+function updateCart() {
+  const products = document.querySelectorAll(".product");
+  let total = 0;
+  products.forEach((el) => {
+    const price = parseFloat(el.dataset.price);
+    const quantity = parseInt(el.querySelector(".quantity").value, 10);
+    total += price * quantity;
+  });
+  document.querySelector("#total").textContent = `€${total.toFixed(2)}`;
+}
+```
+
+This function does three things: reads from the DOM, calculates, then writes to the DOM.
+If you want to test the calculation, you need to create a fake DOM, and if you change the HTML structure, the calculation breaks too.
+If you want to reuse the total logic elsewhere, you need to duplicate it...
+
+The separated version:
+
+```javascript
+// ✅ core.js
+export function calculateCartTotal(products) {
+  return products.reduce((acc, p) => acc + p.price * p.quantity, 0);
+}
+
+// ✅ app.js
+import { calculateCartTotal } from "./core.js";
+
+function updateCart() {
+  const products = readProductsFromDOM();
+  const total = calculateCartTotal(products);
+  document.querySelector("#total").textContent = `€${total.toFixed(2)}`;
+}
+
+function readProductsFromDOM() {
+  return Array.from(document.querySelectorAll(".product")).map((el) => ({
+    price: parseFloat(el.dataset.price),
+    quantity: parseInt(el.querySelector(".quantity").value, 10),
+  }));
+}
+```
+
+Now `calculateCartTotal` is pure, testable, reusable.
+If you change the HTML structure, you touch only `readProductsFromDOM`.
+If you want to calculate the total starting from data that arrives from the server (not from the DOM), you use `calculateCartTotal` directly.
+
+-----
+
+#### Why This Pattern Pays Off
+
+The concrete reasons show up when the project grows:
+
+- **Tests**: the core is tested in milliseconds with lightweight tools.
+The UI requires tests closer to the browser, but there is much less logic to verify there.
+- **Reusability**: you reuse pure functions everywhere.
+Cart logic can live in the same code that runs on the server, in the browser, in a test.
+- **Refactoring**: changing the UI does not break the core.
+Changing the core, with tests that keep passing, is safer.
+- **Debugging**: if a core test passes but the app does not work, the problem is in the UI layer.
+You have isolated where to look.
+
+React, Vue, and modern frameworks push in this direction by design: components that receive data, produce an interface, and leave the framework the task of updating the DOM.
+Understanding the principle now, in pure JavaScript, prepares you to use those libraries and/or frameworks better later.
+
+**Rule:** keep pure logic in files separate from code that touches the DOM.
+The core takes data, returns data, does not know the browser.
+The UI reads the DOM, calls the core, writes the DOM.
+This separation is one of the most useful investments you can make in a JavaScript project.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Summary (OOP and Modules in Brief)
+
+| Concept | Key rule | Common trap |
+|---------|----------|-------------|
+| `class` | Blueprint for creating objects, more convenient syntax over prototypes | Thinking it is like Java (overloading does not exist) |
+| `new` | Creates instance, links prototype, runs constructor | Calling a class like a normal function |
+| `this` | Refers to the instance on which the method is called | Losing it when you pass methods as callbacks |
+| `addEventListener` + class | Use arrow wrapper or `.bind(this)` | `this` becomes the button, not the instance |
+| Class field | Property with common initial value | Believing the array is shared between instances |
+| Classic method | Lives in the prototype, one shared copy | Redefining it as an arrow without reason |
+| `static` | Method of the class, not of the instance | Calling it on an instance instead of the class |
+| Private `#` fields | Truly private, not just convention | Confusing them with the `_` convention |
+| `instanceof` | Verifies membership in class or subclass | Using it where `typeof` is enough |
+| `extends` | Inherit properties and methods | Not calling `super()` in the constructor |
+| `super()` | Required before `this` in the child constructor | ReferenceError if you omit it |
+| `super.method()` | Calls the parent version in the override | Forgetting it and duplicating logic |
+| `get` / `set` | Derived properties and transparent validation | Wrapping simple properties for no reason |
+| Named export | Multiple things from the file, precise names | Renaming on the fly without `as` |
+| Default export | Only one main entity per file | Having more than one |
+| `type="module"` | Own scope, automatic defer, strict mode | Opening with `file://` and running into CORS |
+| Pure functions | Input -> output, zero side effects | Mixing them with DOM code |
+| Core / UI | Separate pure logic from DOM manipulation | Putting everything in one file |

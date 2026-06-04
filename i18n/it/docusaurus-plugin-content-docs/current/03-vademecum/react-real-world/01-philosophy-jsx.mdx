@@ -8,13 +8,13 @@ description: Perché React esiste, il cambio di mentalità e il layer sintattico
 
 # Parte I: Il Paradigma React
 
-Prima di scrivere un singolo componente, devi capire *perché* React esiste e cosa ha cambiato per sempre. Questa prima parte non è un'introduzione opzionale: è la differenza tra usare React meccanicamente e capirlo davvero.
+Prima di scrivere componenti, conviene capire il problema che React prova a risolvere: mantenere la UI sincronizzata con i dati. Questa parte introduce il cambio di mentalità, JSX e il modo in cui React decide cosa aggiornare nel browser.
 
 ---
 
 ## Il Paradigma React
 
-### 1. Perché "React"? (Il Nome Ha una Storia)
+### 1. Perché "React"?
 
 React non si chiama così per caso. Il nome rivela tutto l'intento della libreria: creare interfacce utente che **reagiscono** automaticamente ai dati. Per capire la rivoluzione, devi prima capire il problema che doveva risolvere.
 
@@ -60,11 +60,11 @@ React prende ispirazione dal concetto di *programmazione reattiva*, ma non ne è
 <br />
 <br />
 
-### 2. Libreria vs Framework (Il Modello IKEA)
+### 2. Libreria vs Framework
 
 Sentirai spesso la domanda: "React è una libreria o un framework?". La risposta corretta è: **è una libreria**. Ma capirne il *perché* è più utile della risposta in sé.
 
-#### Cos'è una Libreria? (IKEA)
+#### Cos'è una Libreria?
 
 Una **libreria** è una collezione di strumenti che tu chiami quando ne hai bisogno. Tu sei in controllo. Decidi quando usarla, come integrarla, e cosa fare con il resto dell'applicazione.
 
@@ -78,7 +78,7 @@ Quando usi React, è il *tuo* codice che importa e chiama i componenti di React.
 
 -----
 
-#### Cos'è un Framework? (Il Condominio di Lusso)
+#### Cos'è un Framework?
 
 Un **framework** è l'opposto: è lui che chiama te. Questo concetto ha un nome preciso: *Inversion of Control* (Inversione del Controllo).
 
@@ -139,9 +139,7 @@ Prima delle SPA, tutto il web funzionava così. Ogni click su un link o ogni sub
 3. Il browser riceveva l'HTML e **demoliva l'intera pagina corrente**
 4. Il browser ridisegnava tutto da zero con la nuova pagina
 
-*Analogia: Un teatro dove tra una scena e l'altra viene demolito il palco, ricostruito, ridipinto e riallestito da zero, mentre il pubblico aspetta al buio.*
-
-Il "trauma del browser" è quello schermo bianco di qualche secondo tra una pagina e l'altra. Funzionava, ma la UX era discontinua.
+In una MPA, il browser richiede una nuova pagina HTML a ogni navigazione e ricostruisce il documento. Questo può produrre una schermata bianca temporanea tra una pagina e l'altra: il modello funziona, ma l'esperienza può risultare meno continua.
 
 -----
 
@@ -149,9 +147,7 @@ Il "trauma del browser" è quello schermo bianco di qualche secondo tra una pagi
 
 React ha reso popolare un approccio diverso: l'intera app vive in un **unico file `index.html`**. React intercetta i click sui link, capisce quale "pagina" mostrare e **sostituisce solo la parte del DOM che deve cambiare**, senza mai ricaricare il browser.
 
-*Analogia: Lo stesso teatro, ma il palco rimane fermo. Il pubblico non si alza mai. Mentre lo spettacolo continua, alcuni operai silenziosi cambiano solo le scenografie necessarie.*
-
-Nessuna pagina bianca. Transizioni istantanee. UX fluida come un'app nativa.
+In una SPA, il documento resta lo stesso e JavaScript cambia solo la vista mostrata all'utente. La navigazione può quindi risultare più continua, perché il browser non deve scaricare una nuova pagina completa a ogni passaggio.
 
 ```jsx
 // Con React Router, la "navigazione" è un'illusione controllata
@@ -201,7 +197,7 @@ Strumenti SSG principali: Gatsby, Astro, Next.js (con `getStaticProps`). Ideale 
 
 -----
 
-#### RSC (React Server Components), la Nuova Frontiera
+#### RSC (React Server Components)
 
 Con SSR e SSG, il server genera l'HTML ma poi spedisce comunque al browser tutto il JavaScript necessario per far funzionare React. I **React Server Components** fanno un passo ulteriore: certi componenti vengono eseguiti **esclusivamente sul server** e al browser arriva solo il loro risultato HTML, senza che una singola riga del loro codice JavaScript venga mai scaricata dall'utente.
 
@@ -238,7 +234,7 @@ Ibrida        React iniettato in una pagina HTML esistente
 <br />
 <br />
 
-### 4. Virtual DOM e Riconciliazione (Il Progetto dell'Architetto)
+### 4. Virtual DOM e Riconciliazione
 
 Con JavaScript Vanilla manipoli il DOM direttamente: selezioni un elemento, ne cambi il testo, ne aggiungi un altro. React invece non tocca mai il DOM direttamente. Per capire perché ha scelto questa strada, bisogna capire quanto costa al browser ogni singola modifica del DOM.
 
@@ -263,7 +259,7 @@ In app complesse con decine di aggiornamenti al secondo, questo processo può re
 
 -----
 
-#### Il Virtual DOM (Il Progetto su Carta)
+#### Il Virtual DOM
 
 React risolve questo problema interponendo un livello intermedio tra il tuo codice e il DOM reale: il **Virtual DOM**. È una rappresentazione leggera in JavaScript dell'albero del DOM, un semplice oggetto che descrive come dovrebbe apparire la UI in un dato momento.
 
@@ -281,7 +277,7 @@ Creare o modificare questo oggetto è velocissimo perché avviene interamente in
 
 -----
 
-#### Diffing (Trova le Differenze)
+#### Diffing (Confrontare le Differenze)
 
 Ogni volta che lo stato della tua app cambia, React esegue quattro passaggi:
 1. Chiama di nuovo il tuo componente (che è una funzione)
@@ -320,11 +316,11 @@ Da sviluppatore, non interagisci mai direttamente con il Virtual DOM. Il tuo lav
 <br />
 <br />
 
-### 5. Dichiarativo vs. Imperativo (Il Passeggero del Taxi)
+### 5. Dichiarativo vs. Imperativo
 
 Questo è il cambiamento mentale più importante quando passi da JavaScript Vanilla a React. Non riguarda solo la sintassi: cambia il modo in cui ragioni sul codice.
 
-#### Il Modo Imperativo (L'Istruttore di Guida)
+#### Il Modo Imperativo
 
 Con JavaScript Vanilla, scrivi il codice in modo **imperativo**: descrivi ogni singolo passo da eseguire, nell'ordine preciso. È come un istruttore di guida che ti detta ogni gesto, dall'ordine in cui controllare gli specchietti fino al momento esatto in cui premere un pedale.
 
@@ -359,7 +355,7 @@ Se dimentichi un passaggio l'app si rompe, e se la struttura HTML cambia devi ri
 
 -----
 
-#### Il Modo Dichiarativo (Il Passeggero del Taxi)
+#### Il Modo Dichiarativo
 
 Con React il ragionamento si ribalta. Scrivi il codice in modo **dichiarativo**: descrivi lo **stato finale desiderato** e React capisce da solo come arrivarci. È come salire su un taxi e dire "Piazza del Duomo, grazie" senza specificare quale strada prendere. Dai la destinazione, non le istruzioni.
 
@@ -395,11 +391,11 @@ Il vantaggio del pensiero dichiarativo non è solo estetico e di facilità di le
 <br />
 <br />
 
-### 6. JSX (Il Lupo Travestito da Pecora)
+### 6. JSX
 
 JSX sembra HTML e si comporta quasi come HTML, ma non lo è. Capire la sua vera natura è fondamentale per evitare decine di bug incomprensibili.
 
-#### JSX Non È HTML (Sotto il Cofano)
+#### JSX Non È HTML
 
 Nessun browser al mondo sa interpretare JSX. Tag come `<Navbar />` o espressioni come `{variabile}` non fanno parte di nessuno standard web. Il JSX che scrivi non arriva mai al browser: prima di quel momento, un compilatore come **Babel** (o quello integrato in Vite) lo traduce interamente in chiamate JavaScript pure.
 
@@ -422,7 +418,7 @@ JSX è quindi **zucchero sintattico**: una scrittura visivamente simile all'HTML
 
 -----
 
-#### Il Portale Dimensionale `{ }` (Statico vs. Dinamico)
+#### Le Graffe `{ }` (Statico vs. Dinamico)
 
 Le graffe `{ }` in JSX funzionano come un portale tra due mondi. Tutto ciò che scrivi fuori dalle graffe è testo statico, esattamente come nell'HTML tradizionale. Nel momento in cui apri una graffa, entri nel mondo JavaScript e puoi inserire qualsiasi espressione: variabili, calcoli, chiamate a funzione, operatori ternari.
 
@@ -460,7 +456,7 @@ const eta = 25;
 
 -----
 
-#### Il Trucco dell'Interruttore (Come Babel Legge il JSX)
+#### Come Babel Legge il JSX
 
 Per capire come JSX e JavaScript possano convivere nello stesso file, è utile sapere come ragiona il compilatore. Babel parte in **modalità JavaScript** e aspetta espressioni JS normali. Quando incontra un `<` seguito da una lettera, capisce che sta iniziando un tag e passa in **modalità UI** (interpreta il markup). Quando incontra una `{` all'interno del markup, riapre il portale JavaScript per valutare l'espressione. E così via, alternando continuamente le due modalità.
 
@@ -558,7 +554,7 @@ function Saluto() {
 
 -----
 
-#### Fragment `<>`, la Busta della Spesa Invisibile
+#### Fragment `<>`, un Contenitore Senza Nodo DOM
 
 Un componente React è una funzione, e una funzione JavaScript può restituire un solo valore. Questo significa che non puoi restituire due elementi JSX fratelli direttamente.
 
@@ -586,7 +582,7 @@ function DueTitoli() {
 }
 ```
 
-Il **Fragment** risolve il problema in modo pulito: raggruppa gli elementi per soddisfare la regola del "singolo valore di ritorno", ma una volta nel browser sparisce completamente senza lasciare traccia nel DOM. È come una busta della spesa trasparente che raggruppa i prodotti per il trasporto e poi si dissolve.
+Il **Fragment** risolve il problema in modo pulito: raggruppa più elementi per soddisfare la regola del singolo valore restituito, ma non crea un nodo DOM aggiuntivo nel browser.
 
 ```jsx
 // ✅ CORRETTO, il Fragment raggruppa senza aggiungere nodi al DOM

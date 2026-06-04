@@ -1,0 +1,1820 @@
+---
+sidebar_position: 2
+title: Data Structures and Flow
+description: Arrays, objects, operators, flow control, loops, functions, scope, and closures.
+---
+
+import Link from '@docusaurus/Link';
+
+# Part II: Data Structures and Flow
+
+After primitive types, you need a way to organize richer information.
+A user, a cart, a message, an order, or a notification almost never lives as an isolated value, but as a group of related data.
+
+This part introduces arrays, objects, operators, conditions, loops, and functions.
+They are the tools JavaScript uses to model complex data, transform it, and decide which code to run.
+
+---
+
+## Data Structures
+
+### 5. Arrays (Ordered Lists)
+
+An array is an ordered list of values. 
+You use it whenever you have "more things of the same type", for example a product list, a series of messages, database query results, or notifications to show to the user.
+
+#### Creating and Accessing
+
+An array is declared with square brackets `[]`, and the values inside are separated by commas. 
+Values can be of any type, even mixed.
+
+```javascript
+const colors = ["red", "green", "blue"];
+const numbers = [10, 20, 30, 40];
+const mixed = ["text", 42, true, null]; // Valid but rare in practice
+```
+
+You access an element using the **index**, a number that starts from 0. 
+The first element is at index 0, the second at index 1, and so on.
+
+```javascript
+const colors = ["red", "green", "blue"];
+colors[0]; // "red"
+colors[1]; // "green"
+colors[2]; // "blue"
+colors[3]; // undefined (it does not exist)
+```
+
+The fact that indexes start from 0 is a convention inherited from C, and it is shared by most modern languages. 
+At first it is counterintuitive (the "first" element is at position 0), but it is so universal that you get used to it quickly.
+
+The `.length` property tells you how many elements there are:
+
+```javascript
+["red", "green", "blue"].length; // 3
+[].length;                       // 0
+```
+
+And the last element is obtained with `array.length - 1`, or with the more modern `.at(-1)`, where `at` means "at this position":
+
+```javascript
+const colors = ["red", "green", "blue"];
+colors[colors.length - 1]; // "blue" (the old method)
+colors.at(-1);             // "blue" (the modern method)
+colors.at(-2);             // "green"
+```
+
+-----
+
+#### Destructive Methods (Modify the Original)
+
+Some methods modify the array you call them on, instead of returning a new copy. 
+They are called **destructive** and should be used consciously, especially when you are passing the array to other functions or using it in contexts where preserving immutability matters, such as React.
+
+`.push()` adds one or more elements to the end, `.pop()` removes the last one and returns it, meaning it gives it back to you as a usable value.
+
+```javascript
+const queue = ["Anna", "Bruno"];
+queue.push("Carlo");          // queue is now ["Anna", "Bruno", "Carlo"]
+queue.push("Diana", "Elena"); // You can add more than one
+
+const last = queue.pop();     // "Elena", and queue becomes ["Anna", "Bruno", "Carlo", "Diana"]
+```
+
+`.unshift()` adds to the **beginning**, `.shift()` removes the first one. 
+The names are inherited from historical list-manipulation concepts (shift = move).
+
+```javascript
+const queue = ["Bruno", "Carlo"];
+queue.unshift("Anna");       // ["Anna", "Bruno", "Carlo"]
+const first = queue.shift(); // "Anna", and queue becomes ["Bruno", "Carlo"]
+```
+
+`.splice()` is the Swiss army knife of destructive methods: it removes, inserts, or replaces elements at an arbitrary position.
+
+```javascript
+const letters = ["a", "b", "c", "d", "e"];
+
+// splice(start index, how many elements to remove, elements to insert...)
+letters.splice(1, 2);           // Removes 2 elements from index 1
+console.log(letters);           // ["a", "d", "e"]
+
+letters.splice(1, 0, "X", "Y"); // From index 1, removes 0 elements and inserts "X" and "Y"
+console.log(letters);           // ["a", "X", "Y", "d", "e"]
+```
+
+`.sort()` sorts the array. 
+The trap is that **without a comparison function it sorts alphabetically**, converting numbers to strings. 
+This gives wrong results with numbers.
+
+```javascript
+// ❌ Surprise: alphabetical sorting
+[10, 2, 1, 20].sort();
+// [1, 10, 2, 20]
+// Because it compares the strings: "1", "10", "2", "20"
+
+// ✅ Pass a comparison function to sort correctly
+[10, 2, 30, 4].sort((a, b) => a - b); // [2, 4, 10, 30]
+[10, 2, 30, 4].sort((a, b) => b - a); // [30, 10, 4, 2] (descending)
+```
+
+The comparison function must return a negative number if `a` goes before `b`, a positive number if it goes after, and zero if they are equal. 
+`a - b` does exactly this: if `a` is smaller than `b`, the result is negative and `a` is placed first; if `a` is larger, the result is positive and it is placed after; if they are equal, the result is `0` and the order does not change.
+
+-----
+
+#### Non-Destructive Methods (Return a Copy)
+
+Non-destructive methods leave the original intact. 
+Some return a new array, others return a value, but the point is that they do not modify the starting array.
+
+`.slice()` extracts a portion. 
+Be careful not to confuse it with `.splice()`: the extra `p` changes everything.
+
+```javascript
+const colors = ["red", "green", "blue", "yellow"];
+
+colors.slice(1, 3); // ["green", "blue"] (from index 1 to index 3 excluded)
+colors.slice(1);    // ["green", "blue", "yellow"] (from index 1 to the end)
+colors.slice(-2);   // ["blue", "yellow"] (last two)
+
+console.log(colors); // ["red", "green", "blue", "yellow"] (intact)
+```
+
+`.concat()` joins two arrays into a new one (modern style: spread operator `...`, which we will see shortly).
+
+```javascript
+const a = [1, 2];
+const b = [3, 4];
+a.concat(b); // [1, 2, 3, 4]
+```
+
+`.includes()` checks whether an element is present, and returns a boolean. 
+
+```javascript
+[1, 2, 3].includes(2);  // true
+[1, 2, 3].includes(99); // false
+```
+
+`.indexOf()` returns the position or `-1` if it is not there.
+
+```javascript
+[1, 2, 3].indexOf(2);  // 1
+[1, 2, 3].indexOf(99); // -1
+```
+
+`.find()` returns the first element that satisfies a condition, `.findIndex()` returns its index.
+
+```javascript
+const users = [
+  { name: "Anna", age: 25 },
+  { name: "Bruno", age: 32 },
+  { name: "Carlo", age: 19 },
+];
+
+users.find(u => u.age > 30);              // { name: "Bruno", age: 32 }
+users.findIndex(u => u.name === "Carlo"); // 2
+```
+
+-----
+
+#### Functional Methods (`map`, `filter`, `reduce`)
+
+These three methods are the heart of modern JavaScript. 
+They take a function as input and produce a result by transforming the array. 
+You will use them very often.
+
+`.map()` transforms every element according to a function, returning a **new array** with the same length.
+
+```javascript
+const prices = [10, 20, 30];
+const pricesWithVat = prices.map(p => p * 1.22);
+// [12.2, 24.4, 36.6]
+
+const users = [
+  { name: "Anna", age: 25 },
+  { name: "Bruno", age: 32 },
+];
+const names = users.map(u => u.name);
+// ["Anna", "Bruno"]
+```
+
+`.filter()` keeps only the elements that satisfy a condition, returning a **new array** that is shorter (or equal).
+
+```javascript
+const numbers = [1, 2, 3, 4, 5, 6];
+const even = numbers.filter(n => n % 2 === 0);
+// [2, 4, 6]
+
+const users = [
+  { name: "Anna", age: 25, active: true },
+  { name: "Bruno", age: 32, active: false },
+  { name: "Carlo", age: 19, active: true },
+];
+const activeUsers = users.filter(u => u.active);
+// [{ name: "Anna", ... }, { name: "Carlo", ... }]
+```
+
+`.reduce()` is the most powerful and the most intimidating. 
+It reduces an array to a single value, accumulating the result iteration after iteration. 
+It accepts two arguments: the reducer function and the **initial value**.
+
+```javascript
+const numbers = [10, 20, 30, 40];
+
+// Sum: start from 0, at every step add the current element
+const total = numbers.reduce((acc, n) => acc + n, 0);
+// 100
+```
+
+The reducer function receives two parameters: the **accumulator** (the result accumulated so far) and the **current element**. 
+It returns the new accumulator value for the next iteration.
+
+```javascript
+// Step 1: acc=0,  n=10 -> returns 10
+// Step 2: acc=10, n=20 -> returns 30
+// Step 3: acc=30, n=30 -> returns 60
+// Step 4: acc=60, n=40 -> returns 100
+```
+
+The **initial value** is the second argument of `.reduce()`.
+ **Always pass it**. 
+Without an initial value, `.reduce()` uses the first element as the accumulator and starts from the second, and with empty arrays it throws an error.
+
+```javascript
+// ❌ Fails if the array is empty
+[].reduce((acc, n) => acc + n); // TypeError
+
+// ✅ Always safe
+[].reduce((acc, n) => acc + n, 0); // 0
+```
+
+`.reduce()` is not only for sums. It is useful every time you need to produce a single value from an array: the maximum, string concatenation, a frequency map, an object built piece by piece.
+
+```javascript
+// Build a word frequency map
+const words = ["cat", "dog", "cat", "fish", "dog", "cat"];
+const frequencies = words.reduce((acc, word) => {
+  acc[word] = (acc[word] || 0) + 1;
+  return acc;
+}, {});
+// { cat: 3, dog: 2, fish: 1 }
+```
+
+`.some()` returns `true` if **at least one** element satisfies the condition, `.every()` if **all** of them do.
+
+```javascript
+const ages = [25, 17, 30, 22];
+ages.some(a => a < 18);   // true (17 is underage)
+ages.every(a => a >= 18); // false (17 is underage)
+```
+
+`.forEach()` is similar to `map` but returns nothing. 
+It runs a function for every element, useful when you only want to produce an external effect, like updating the DOM, logging, or incrementing an external counter.
+
+```javascript
+const names = ["Anna", "Bruno", "Carlo"];
+names.forEach(name => console.log(`Hello, ${name}!`));
+```
+
+**You cannot stop a `.forEach()` early.** `break` and `return` do not interrupt it. 
+If you need to exit the iteration early, use a classic `for...of`.
+
+-----
+
+#### `Set` (Unique Values)
+
+`Set` is a data structure related to arrays, but with one constraint: all values are **unique**. 
+Adding the same value twice does nothing.
+
+```javascript
+const uniqueTags = new Set();
+uniqueTags.add("javascript");
+uniqueTags.add("react");
+uniqueTags.add("javascript"); // Ignored, already present
+console.log(uniqueTags.size); // 2
+```
+
+The most frequent use is **removing duplicates from an array** in one line, combining `Set` with the spread operator `...`.
+
+```javascript
+const withDuplicates = [1, 2, 2, 3, 3, 3, 4];
+const unique = [...new Set(withDuplicates)]; // [1, 2, 3, 4]
+```
+
+Two things happen here. 
+`new Set(withDuplicates)` removes duplicates. 
+The three dots `...` are the **spread operator**: they take the values from the `Set` and insert them into a new array, because the outer square brackets `[...]` are creating the final array. 
+We will see this better in the operators section.
+
+-----
+
+#### `Map` (Ordered Key-Value Pairs)
+
+`Map` is the sibling of `Set`: a key-value structure, like an object, but with three concrete advantages over object literals.
+
+The first: keys can be **of any type**, not only strings. 
+You can use objects, functions, and numbers as keys.
+
+```javascript
+const map = new Map();
+
+map.set("string", 1);
+map.set(42, "number as key");
+map.set({ id: 1 }, "object as key");
+```
+
+The second: insertion order is **guaranteed**. 
+When you iterate a `Map`, you get pairs in the order in which you added them. With objects, order is mostly respected in modern browsers, but `Map` communicates the intention better when order is part of the logic.
+
+```javascript
+const steps = new Map();
+
+steps.set("login", "The user signs in");
+steps.set("cart", "Adds products");
+steps.set("payment", "Completes the purchase");
+
+for (const [key, description] of steps) {
+  console.log(key, description);
+}
+// login The user signs in
+// cart Adds products
+// payment Completes the purchase
+```
+
+The third: it has a native `.size` property, while with an object you must use `Object.keys(obj).length`.
+
+```javascript
+const scores = new Map();
+scores.set("Mario", 100);
+scores.set("Luigi", 85);
+scores.set("Peach", 120);
+
+scores.get("Mario"); // 100
+scores.has("Luigi"); // true
+scores.size;         // 3
+scores.delete("Luigi");
+
+for (const [name, points] of scores) {
+  console.log(`${name}: ${points}`);
+}
+```
+
+In practice, you will use object literals `{}` when you already know which properties you need and the keys are strings, which is most cases. 
+You will move to `Map` when keys are created while the program runs, when you need to add and remove pairs often, or when you need to read elements again in the same order in which you inserted them.
+
+There is also `WeakMap`, a variant where keys must be objects and the garbage collector (the browser mechanism that frees memory by removing objects that are no longer used) can remove them automatically when the object is no longer referenced elsewhere.
+
+The typical scenario is associating temporary data with objects without preventing memory cleanup. 
+For example, a library could attach internal information to a DOM element: when that element is removed from the page and is no longer used anywhere, the related data in the `WeakMap` can disappear automatically too.
+
+```javascript
+const internalData = new WeakMap();
+const button = document.querySelector("button");
+
+internalData.set(button, { clicks: 0 });
+internalData.get(button); // { clicks: 0 }
+```
+
+The difference from a normal `Map` is that `internalData` does not prevent the button from being released from memory when the button is no longer needed.
+
+It is useful in advanced memory-management scenarios, not in everyday work.
+
+-----
+
+#### Useful Patterns
+
+**Number range**: sometimes you need to quickly create a sequence, for example pages `1, 2, 3, 4, 5` in pagination or a grid of ten cells.
+
+```javascript
+const range = Array.from({ length: 10 }, (_, i) => i + 1);
+// [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+`Array.from()` creates an array starting from something that looks like a list. 
+`{ length: 10 }` says: "create 10 positions". 
+The function `(_, i) => i + 1` is called for every position: `_` is the current value, which we ignore here; `i` is the index, which starts from `0`. 
+That is why we do `i + 1`: we want to start from `1`, not from `0`.
+
+**Shallow copy**: the spread operator `...` copies first-level elements into a new array. 
+Useful to avoid modifying the original.
+
+```javascript
+const original = [1, 2, 3];
+const copy = [...original];
+copy.push(4);
+console.log(original); // [1, 2, 3] (intact)
+console.log(copy);     // [1, 2, 3, 4]
+```
+
+This is especially important when you work with state objects or pass arrays to functions you do not trust. 
+For example, if a function uses `.push()`, `.splice()`, or `.sort()` on the array it receives, it also modifies your original array.
+
+**Rule:** distinguish destructive methods from non-destructive ones. 
+For transformations use `map`, `filter`, `reduce`. 
+Always pass the initial value to `reduce`. 
+For numeric sorting, use `.sort((a, b) => a - b)`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 6. Objects (Structured Containers)
+
+An object is a collection of **key-value** pairs. 
+If arrays are ordered lists, objects are structures with names: every value has its own label. 
+Objects are the form you use to represent real-world entities, such as a user, a product, an event, or an order.
+
+#### Creating and Accessing
+
+An object is declared with curly braces `{}`, with `key: value` pairs separated by commas.
+
+```javascript
+const user = {
+  name: "Mario",
+  lastName: "Rossi",
+  age: 27,
+  admin: true,
+};
+```
+
+You access properties in two ways: **dot notation** and **bracket notation**.
+
+```javascript
+user.name;        // "Mario"
+user["lastName"]; // "Rossi"
+```
+
+Dot notation is more readable and is used when the key can be written like a normal JavaScript name. 
+If the key contains spaces, hyphens, or other symbols, or if it is decided at runtime, you must use bracket notation.
+
+```javascript
+// Problematic keys require bracket notation
+const config = { "api-url": "https://example.com" };
+config["api-url"]; // OK
+// config.api-url; // ❌ Syntax error
+
+// Dynamic key
+const field = "name";
+user[field]; // "Mario" (equivalent to user.name)
+```
+
+Accessing a property that does not exist returns `undefined`, so it does not throw an error. 
+This connects to our discussion about `undefined` in <Link to="/docs/vademecum/javascript-real-world/foundations#null-vs-undefined">section 1</Link>.
+
+```javascript
+user.phone; // undefined (it is not there, but no error)
+```
+
+-----
+
+#### Modifying and Adding Properties
+
+Even if the object is in a `const`, you can modify and add properties (as we saw, `const` locks the reference, not the contents).
+
+```javascript
+const user = { name: "Mario" };
+user.age = 27;       // Adds a new property
+user.name = "Marco"; // Modifies an existing one
+delete user.age;     // Removes the property
+```
+
+`delete` works, but in modern practice people prefer to create a new object without that property, especially in immutable state contexts.
+
+-----
+
+#### Optional Chaining (`?.`)
+
+When you access nested properties and do not know whether the intermediate levels exist, the risk is an error like "Cannot read property X of undefined".
+
+```javascript
+const user = { name: "Mario" };
+user.address.street; // ❌ TypeError: Cannot read property 'street' of undefined
+```
+
+The **optional chaining** operator `?.` solves this: if the value before `?.` is `null` or `undefined`, the expression stops and returns `undefined` instead of throwing an error.
+
+```javascript
+user.address?.street;          // undefined (no error)
+user?.address?.street?.number; // undefined (any missing level)
+```
+
+It has become an everyday tool since it was introduced in 2020. 
+You use it whenever you work with data coming from an API (where fields may or may not be present).
+
+```javascript
+const response = {
+  profile: {
+    address: null,
+  },
+};
+
+const city = response?.profile?.address?.city ?? "Not specified";
+console.log(city); // "Not specified"
+```
+
+-----
+
+#### Shorthand Property Names
+
+When you are creating an object and the variable name matches the key name, you can shorten it.
+
+```javascript
+const name = "Mario";
+const age = 27;
+
+// Long form
+const fullUser = { name: name, age: age };
+
+// Short form (shorthand)
+const shortUser = { name, age };
+```
+
+This is very clean when you are building objects from variables you already have, and it is the standard style in modern JavaScript.
+
+-----
+
+#### Destructuring
+
+Destructuring is the inverse operation: **extracting** properties from an object and assigning them to variables in one line.
+
+```javascript
+const user = { name: "Mario", age: 27, admin: true };
+
+const { name, age } = user;
+// Now you have: name = "Mario", age = 27
+```
+
+Destructuring is a shortcut, it would have been equivalent to write:
+
+```javascript
+const name = user.name;
+const age = user.age;
+```
+
+You can rename while destructuring:
+
+```javascript
+const { name: userName, age: userAge } = user;
+// userName = "Mario", userAge = 27
+```
+
+You can provide default values for properties that may be missing:
+
+```javascript
+const { name = "Guest", admin = false } = user;
+// If user.admin does not exist, admin = false
+```
+
+And you can destructure nested levels:
+
+```javascript
+const order = {
+  customer: { name: "Mario", email: "mario@example.com" },
+  total: 42.50,
+};
+
+const { customer: { name, email }, total } = order;
+// name = "Mario", email = "mario@example.com", total = 42.50
+```
+
+Here `customer: { name, email }` means: go inside `order.customer` and extract the `name` and `email` properties. 
+Careful: in this case no `customer` variable is created, only `name`, `email`, and `total` are created.
+
+Destructuring also works with arrays, but here names do not matter, positions do.
+
+```javascript
+const colors = ["red", "green", "blue"];
+
+const [first, second] = colors;
+// first = "red", second = "green"
+```
+
+`first` takes the element at position `0`, `second` takes the element at position `1`. 
+You choose the names `first` and `second`.
+
+```javascript
+// Skip elements by leaving the position empty
+const [, , third] = colors;
+// third = "blue"
+```
+
+The two initial commas mean: skip the first and second element, take the third.
+
+A classic use of array destructuring is swapping two variables without a third temporary variable.
+The long version would be this:
+
+```javascript
+let a = 1;
+let b = 2;
+
+const temporary = a;
+a = b;
+b = temporary;
+// a = 2, b = 1
+```
+
+With destructuring you can write the same swap in one line:
+
+```javascript
+let a = 1;
+let b = 2;
+[a, b] = [b, a]; // a = 2, b = 1
+```
+
+-----
+
+#### `Object.keys`, `Object.values`, `Object.entries`
+
+These three methods let you iterate over an object by temporarily turning it into an array.
+
+```javascript
+const user = { name: "Mario", age: 27, admin: true };
+
+Object.keys(user);    // ["name", "age", "admin"]
+Object.values(user);  // ["Mario", 27, true]
+Object.entries(user); // [["name", "Mario"], ["age", 27], ["admin", true]]
+```
+
+`Object.entries` is especially useful because, combined with `.map()` or `for...of`, it gives you both the key and the value.
+
+```javascript
+const frequencies = { cat: 3, dog: 2, fish: 1 };
+
+for (const [word, count] of Object.entries(frequencies)) {
+  console.log(`${word}: ${count}`);
+}
+// cat: 3
+// dog: 2
+// fish: 1
+```
+
+`Object.hasOwn()` (modern) checks whether a property belongs directly to the object, without being inherited from the prototype. 
+It replaces the old `obj.hasOwnProperty("key")`.
+
+```javascript
+Object.hasOwn(user, "name");  // true
+Object.hasOwn(user, "color"); // false
+```
+
+**Rule:** use dot notation, move to bracket notation only when the key is dynamic or problematic. 
+Use optional chaining for uncertain nested access. Destructuring is the tool for extracting multiple properties in one line.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Operators and Flow Control
+
+### 7. Operators
+
+Operators transform values. You already know some of them (`+`, `-`, `===`), others are less known but solve common problems with very few characters. 
+Here are the ones you will use frequently.
+
+#### `||` (OR) for Default Values
+
+The logical OR operator returns the **first truthy value** it finds. 
+It does not return `true` or `false`, it returns one of the two operands.
+
+```javascript
+const name = userInput || "Guest";
+```
+
+If `userInput` is truthy (a non-empty string), `name` takes that value. 
+If it is falsy (empty string, `null`, `undefined`), `name` takes `"Guest"`.
+
+It is the classic way to set default values:
+
+```javascript
+function greet(name) {
+  const finalName = name || "Unknown";
+  console.log(`Hello ${finalName}`);
+}
+```
+
+A recurring pattern is the **increment with fallback value**, useful for counting frequencies without initializing:
+
+```javascript
+const counts = {};
+const words = ["cat", "dog", "cat"];
+
+for (const word of words) {
+  counts[word] = (counts[word] || 0) + 1;
+}
+// The first time you see "cat", counts["cat"] is undefined
+// (undefined || 0) + 1 = 0 + 1 = 1
+// The second time: (1 || 0) + 1 = 1 + 1 = 2
+```
+
+-----
+
+#### `??` (Nullish Coalescing) when `0` and `""` Are Valid
+
+The problem with `||` is that it treats **all** falsy values as "missing", including empty strings and zero. 
+Rarely is that what you want.
+
+```javascript
+const quantity = quantityInput || 10;
+// If the user writes 0, quantity becomes 10 (but 0 was a valid value!)
+```
+
+The **nullish coalescing** operator `??` is more precise: it considers "missing" **only** `null` and `undefined`.
+
+```javascript
+const quantity = quantityInput ?? 10;
+// If quantityInput is 0, quantity stays 0.
+// If it is null or undefined, quantity becomes 10.
+```
+
+Practical rule: **`||`** for strings where empty should be considered "not set", **`??`** for numbers and cases where zero or an empty string are legitimate values.
+
+```javascript
+const name = input.name || "Anonymous"; // "" -> "Anonymous"
+const points = input.points ?? 0;       // 0 stays 0, only null/undefined -> 0
+const comments = input.comments ?? "";  // null/undefined -> ""
+```
+
+-----
+
+#### `!` (NOT) and the Toggle Pattern
+
+The `!` operator inverts a boolean value. 
+The most common use case is **toggling** a state.
+
+```javascript
+let menuOpen = false;
+// When the user clicks the menu button
+menuOpen = !menuOpen;
+// It was false before, now it is true. 
+// On the next click, it becomes false again.
+```
+
+As we saw in <Link to="/docs/vademecum/javascript-real-world/foundations#4-booleans-dates-and-special-values">section 4</Link>, `!!` (double NOT) converts any value to an explicit boolean. 
+It is useful when you need to return a boolean from a function and want to be clear about the result type.
+
+```javascript
+function hasPhone(user) {
+  return !!user.phone;
+  // true if phone is defined and not empty, false otherwise
+}
+```
+
+-----
+
+#### Spread `...` (Expansion)
+
+The spread operator expands an iterable (array, object, string) into its elements. 
+It is one of the most used tools in modern JavaScript, you meet it everywhere.
+
+**Array copy** (as we saw in <a href="#non-destructive-methods-return-a-copy">section 5</a>):
+
+```javascript
+const original = [1, 2, 3];
+const copy = [...original];              // [1, 2, 3]
+const withAddition = [...original, 4];   // [1, 2, 3, 4]
+const inTheMiddle = [0, ...original, 4]; // [0, 1, 2, 3, 4]
+```
+
+**Joining arrays:**
+
+```javascript
+const a = [1, 2];
+const b = [3, 4];
+const joined = [...a, ...b]; // [1, 2, 3, 4]
+```
+
+**Copying and joining objects:**
+
+```javascript
+const base = { name: "Mario", age: 27 };
+const withRole = { ...base, role: "admin" };
+// { name: "Mario", age: 27, role: "admin" }
+
+const defaults = { theme: "light", language: "en" };
+const user = { theme: "dark" };
+const final = { ...defaults, ...user };
+// { theme: "dark", language: "en" }
+// Later properties overwrite earlier ones
+```
+
+This pattern (defaults first, overrides after) is extremely common in component and library configuration.
+
+**Passing arguments to functions:** if a function accepts separate arguments (like `Math.max`), you can pass it an array with spread.
+
+```javascript
+const numbers = [10, 5, 20, 3];
+Math.max(...numbers); // 20
+```
+
+-----
+
+#### Rest `...` (Collecting the Rest)
+
+The same symbol `...` can do two different things. 
+When you use it to build an array or object, it expands. 
+When you use it in **destructuring** or in **function parameters**, it collects what remains.
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const [first, second, ...rest] = numbers;
+// first = 1
+// second = 2
+// rest = [3, 4, 5]
+```
+
+Here `...rest` means: after taking the first and second element, put all the other values into an array called `rest`.
+
+With objects it works the same way, but it collects the remaining properties into a new object:
+
+```javascript
+const user = { name: "Mario", age: 27, admin: true };
+
+const { name, ...otherProperties } = user;
+// name = "Mario"
+// otherProperties = { age: 27, admin: true }
+```
+
+In function parameters, instead, `...` collects all received arguments into an array:
+
+```javascript
+function sum(...numbers) {
+  return numbers.reduce((acc, n) => acc + n, 0);
+}
+sum(1, 2, 3, 4); // 10
+```
+
+It is called **spread** when it expands and **rest** when it collects. 
+The syntax is the same, but the meaning depends on where you use it.
+
+**Rule:** `||` for default values when empty means "missing". 
+`??` for numbers and cases where zero is valid. 
+Spread to copy and join, avoiding mutations. Rest to collect variable arguments.
+
+<br />
+<br />
+<br />
+<br />
+
+### 8. Flow Control
+
+Flow control is how the program decides what to do. 
+Decisions depend on the values you have, and JavaScript gives you four main tools.
+
+#### `if`, `else if`, `else`
+
+The basic conditional structure. 
+The condition goes inside parentheses, the block to run inside curly braces.
+
+```javascript
+const age = 25;
+
+if (age < 18) {
+  console.log("Underage");
+} else if (age < 65) {
+  console.log("Adult");
+} else {
+  console.log("Senior");
+}
+```
+
+`else if` is for when conditions are part of the same decision and you want to run **only one branch**. 
+If the checks are independent from each other, you can use multiple separate `if` statements.
+
+```javascript
+if (user.admin) {
+  showAdminPanel();
+}
+
+if (user.notificationsEnabled) {
+  loadNotifications();
+}
+
+if (user.emailVerified) {
+  enableSend();
+}
+```
+
+Be careful though: an `else` always connects to the immediately previous `if`, not to all the `if`s written above. 
+When you want to manage exclusive alternatives, use `if / else if / else`; when you want separate checks, use multiple `if`s.
+
+Curly braces are technically optional if the block has a single line, but **always use them**. 
+The advantage is that when you add a line in the future you do not create a silent bug.
+
+```javascript
+// ❌ RISKY, without braces
+if (age < 18)
+  console.log("Underage");
+  // You add this line thinking it is part of the if, but it is not
+  denyAccess();
+// denyAccess() is always called!
+
+// ✅ SAFE, always with braces
+if (age < 18) {
+  console.log("Underage");
+  denyAccess();
+}
+```
+
+Conditions use the truthy/falsy system. 
+`if (name)` is valid and means "if `name` is truthy", equivalent to "if `name` is not empty/null/undefined".
+
+-----
+
+#### Ternary Operator
+
+The ternary is an `if/else` compressed into an expression. 
+The syntax is: `condition ? valueIfTrue : valueIfFalse`.
+
+```javascript
+const age = 25;
+const type = age >= 18 ? "Adult" : "Underage";
+```
+
+It works well for **simple assignments** where you have two possible values. 
+Do not use it for complex logic, and **do not nest it**. 
+A nested ternary is very hard to read.
+
+```javascript
+// ❌ WRONG, unreadable
+const age = 25;
+const nestedType = age < 13 ? "Child" : age < 18 ? "Teenager" : age < 65 ? "Adult" : "Senior";
+
+// ✅ CORRECT, use if/else
+let type;
+if (age < 13) {
+  type = "Child";
+} else if (age < 18) {
+  type = "Teenager";
+} else if (age < 65) {
+  type = "Adult";
+} else {
+  type = "Senior";
+}
+```
+
+The ternary is also convenient in template literals and in React JSX:
+
+```javascript
+const greeting = `Hello ${user.admin ? "administrator" : "guest"}`;
+```
+
+-----
+
+#### `switch`
+
+`switch` compares one value against multiple possible cases. 
+It is an alternative to an `if/else if` chain when all checks are equality checks against the same value.
+
+The ideal case is a list of specific and separate values: days of the week, menu options, user roles, order states, filters from a select element. 
+If instead you need to check ranges (`age < 18`), conditions that differ from each other, or logical combinations, stay with `if / else if`.
+
+```javascript
+const day = "tuesday";
+
+switch (day) {
+  case "monday":
+  case "tuesday":
+  case "wednesday":
+  case "thursday":
+  case "friday":
+    console.log("Workday");
+    break;
+  case "saturday":
+  case "sunday":
+    console.log("Weekend");
+    break;
+  default:
+    console.log("Unrecognized day");
+}
+```
+
+A practical example, taken from the <Link to="/docs/path/js-algorithms/football-team-cards">Football Team Cards</Link> project, is filtering a list based on the value chosen in a dropdown menu:
+
+```javascript
+function filterPlayers(filter) {
+  switch (filter) {
+    case "nickname":
+      return players.filter(player => player.nickname !== null);
+    case "forward":
+      return players.filter(player => player.position === "forward");
+    case "midfielder":
+      return players.filter(player => player.position === "midfielder");
+    case "defender":
+      return players.filter(player => player.position === "defender");
+    default:
+      return players;
+  }
+}
+```
+
+Here `switch` is readable because `filter` is always the same value, and each `case` represents a precise interface choice.
+
+`switch` uses strict comparison `===`. 
+`break` is **mandatory** after each case, otherwise execution continues into the next case (a behavior called "fall-through"). 
+This can be intentional (as in the example above, where workdays share the same body), but more often it is a bug.
+
+```javascript
+// ❌ Silent bug: you forget the break
+switch (role) {
+  case "admin":
+    console.log("Admin");
+    // Missing break!
+  case "user":
+    console.log("User");
+    break;
+}
+// If role is "admin", it prints "Admin" AND "User"
+```
+
+In modern practice, an `if/else` chain or an object used as a lookup table is often preferred over `switch`, because it is less error-prone.
+
+```javascript
+// Alternative with an object used as a lookup table
+const greetings = {
+  monday: "Happy Monday!",
+  friday: "Happy Friday!",
+  saturday: "Happy Saturday!",
+};
+const message = greetings[day] ?? "Good morning";
+```
+
+-----
+
+#### "Return Early" Pattern (Guard Clauses)
+
+When a function has multiple conditions to check before doing the real work, the temptation is to nest `if`s. 
+The result is the **pyramid of doom**, code that moves farther and farther to the right.
+
+```javascript
+// ❌ PYRAMID OF DOOM
+function processPayment(user, amount) {
+  if (user) {
+    if (user.active) {
+      if (amount > 0) {
+        if (user.balance >= amount) {
+          // Finally the real work
+          user.balance -= amount;
+          return "Payment successful";
+        } else {
+          return "Insufficient balance";
+        }
+      } else {
+        return "Invalid amount";
+      }
+    } else {
+      return "User not active";
+    }
+  } else {
+    return "Missing user";
+  }
+}
+```
+
+The **return early** pattern (also called **guard clauses**) flips the logic: handle problematic cases first and exit immediately, leaving the real work at the end without nesting.
+
+```javascript
+// ✅ RETURN EARLY
+function processPayment(user, amount) {
+  if (!user) return "Missing user";
+  if (!user.active) return "User not active";
+  if (amount <= 0) return "Invalid amount";
+  if (user.balance < amount) return "Insufficient balance";
+
+  // Real work, no nesting
+  user.balance -= amount;
+  return "Payment successful";
+}
+```
+
+The code is flatter, easier to read, and every error condition is isolated on one line. 
+This pattern is one of the signs of more mature code. 
+Use it when it makes the function clearer.
+
+**Rule:** always use braces in `if` statements. 
+The ternary is fine for simple two-way assignments, never nested. 
+Return early instead of nesting conditions.
+
+<br />
+<br />
+<br />
+<br />
+
+### 9. Loops
+
+Loops repeat a block of code multiple times. 
+JavaScript has several forms, each suited to a specific case.
+
+#### Classic `for`
+
+The traditional `for` loop, inherited from C. 
+It is made of three parts: initialization, condition, increment.
+
+```javascript
+for (let i = 0; i < 10; i++) {
+  console.log(i);
+}
+// 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+```
+
+You use it when you need **the index** for a specific reason (skipping elements, iterating backward, accessing multiple arrays in parallel).
+
+```javascript
+// Iterate backward
+const names = ["Anna", "Bruno", "Carlo"];
+for (let i = names.length - 1; i >= 0; i--) {
+  console.log(names[i]); // Carlo, Bruno, Anna
+}
+
+// Skip by two
+for (let i = 0; i < 10; i += 2) {
+  console.log(i); // 0, 2, 4, 6, 8
+}
+```
+
+-----
+
+#### `while` and `do...while`
+
+`while` repeats while a condition is true. 
+The check happens **before** running the block.
+
+```javascript
+let attempts = 0;
+while (attempts < 3) {
+  console.log("Attempt ", attempts);
+  attempts++;
+}
+// Attempt 0
+// Attempt 1
+// Attempt 2
+```
+
+`do...while` is identical, but the condition is checked **after** execution. 
+This guarantees at least one iteration even if the condition is false immediately.
+
+```javascript
+let attempts = 0;
+do {
+  console.log("At least once");
+  attempts++;
+} while (attempts < 0); // After attempts++, attempts is 1, so 1 < 0 is false
+// At least once
+```
+
+You use `while` when you do not know in advance how many iterations you need, for example waiting for a condition to change or emptying a list while it still contains elements.
+
+-----
+
+#### `for...of` (The Modern Way)
+
+`for...of` iterates over the **values** of an iterable, meaning something that can be traversed element by element, such as arrays, strings, `Set`, and `Map`. 
+It is the most readable loop for going through an array when you do not need the index.
+
+```javascript
+const colors = ["red", "green", "blue"];
+for (const color of colors) {
+  console.log(color);
+}
+// "red", "green", "blue"
+```
+
+It also works with strings (iterating character by character) and with any iterable object:
+
+```javascript
+for (const letter of "hello") {
+  console.log(letter); // "h", "e", "l", "l", "o"
+}
+```
+
+If you also need the index, you can combine it with `.entries()`:
+
+```javascript
+for (const [index, color] of colors.entries()) {
+  console.log(index, color);
+}
+// 0 "red", 1 "green", 2 "blue"
+```
+
+-----
+
+#### `for...in` (For Object Keys)
+
+`for...in` iterates over the **keys** of an object. 
+Not over the values, over the keys.
+
+```javascript
+const user = { name: "Mario", age: 27, admin: true };
+for (const key in user) {
+  console.log(key, user[key]);
+}
+// "name" "Mario", "age" 27, "admin" true
+```
+
+Careful: **do not use `for...in` on arrays**. 
+Technically it works (because array indexes are keys), but it has strange behaviors (it also iterates over properties added to the prototype, and order is not guaranteed for non-numeric object keys). 
+For arrays use `for...of` or `.forEach()`.
+
+So: **`for...of` for values, `for...in` for keys.** If you confuse the two, the code will do things you did not expect.
+
+In practice, `for...in` has become less common since `Object.keys`, `Object.values`, and `Object.entries` exist, because they are often more explicit:
+
+```javascript
+// Instead of for...in
+for (const [key, value] of Object.entries(user)) {
+  console.log(key, value);
+}
+```
+
+-----
+
+#### `break` and `continue`
+
+`break` exits the loop immediately. 
+`continue` skips the rest of the current iteration and moves to the next one.
+
+```javascript
+// Find the first even number and stop
+for (const n of [1, 3, 5, 4, 7, 8]) {
+  if (n % 2 === 0) {
+    console.log("First even:", n);
+    break; // Exits as soon as it finds 4
+  }
+}
+
+// Skip negative numbers
+for (const n of [1, -2, 3, -4, 5]) {
+  if (n < 0) continue; // Skip and move to the next one
+  console.log(n);      // 1, 3, 5
+}
+```
+
+In functional methods like `.forEach`, `.map`, `.filter`, you **cannot use `break` or `continue`**. 
+If you need to stop an iteration, use a classic `for...of`. 
+Alternatively, `.some()` and `.every()` stop as soon as they find their result, and can replace a `break` in functional contexts.
+
+**Rule:** `for...of` to iterate over array values. 
+`for...in` for object keys. 
+Classic `for` only when you need the index for a specific reason. 
+`.forEach` is convenient but cannot be stopped early.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Functions, Scope, and Closures
+
+### 10. Functions (The Heart of JavaScript)
+
+A function is a reusable block of code that takes inputs (parameters), does something, and optionally returns a value. 
+In JavaScript, functions are "first-class citizens": they can be assigned to variables, passed as arguments, and returned by other functions. 
+This flexibility is the foundation of many modern patterns.
+
+#### Classic Declaration vs Arrow Function
+
+The classic declaration uses the `function` keyword.
+
+```javascript
+function sum(a, b) {
+  return a + b;
+}
+sum(3, 4); // 7
+```
+
+The arrow function (introduced with ES6 in 2015) is a more concise syntax, with the `=>` arrow.
+
+```javascript
+const sum = (a, b) => {
+  return a + b;
+};
+sum(3, 4); // 7
+```
+
+Three practical differences between the two:
+
+**Hoisting**: JavaScript treats classic declarations as if they were available from the beginning of the scope, meaning the area of code where that function exists, so you can call them before declaring them. 
+Arrow functions assigned to `const`/`let` do not work this way.
+
+```javascript
+// ✅ Works with classic declaration
+greet(); // "hello"
+function greet() { console.log("hello"); }
+
+// ❌ Does not work with arrow function
+greetArrow(); // ReferenceError
+const greetArrow = () => console.log("hello");
+```
+
+**Shorter syntax**: arrow functions allow a compact form when the function is simple. 
+The most common case is a function with one parameter and one expression.
+
+```javascript
+const square = x => x * x;
+const greet = () => console.log("hello"); // Parentheses required for zero parameters
+```
+
+**Behavior of `this`**: arrow functions do not have their own `this`, they inherit it from the context where they are defined. 
+This is the main reason arrows are widely used in event handlers and many callbacks. We will discuss it in detail in <Link to="/docs/vademecum/javascript-real-world/oop-and-modules#the-this-problem-with-addeventlistener">section 13</Link>.
+
+Practical rule: use arrow functions for callbacks, short functions, and inline functions; use classic declarations when you want a named function, when you need hoisting, or when the function is an object/class method where dynamic `this` is the intended behavior.
+
+-----
+
+#### Implicit Return
+
+With arrow functions, if the body is a single expression, you can omit braces and `return`. 
+The value of the expression is returned automatically.
+
+```javascript
+// Long form
+const longDouble = (x) => {
+  return x * 2;
+};
+
+// Short form with implicit return
+const shortDouble = x => x * 2;
+```
+
+The trap: if you want to return an **object** with implicit return, you must wrap it in parentheses, otherwise JavaScript interprets the braces as the function body, not as an object literal.
+
+```javascript
+// ❌ WRONG, braces interpreted as function body
+const createWrong = (name) => { name: name };
+createWrong("Mario"); // undefined (that "name:" becomes a label)
+
+// ✅ CORRECT, parentheses around the object
+const createCorrect = (name) => ({ name: name });
+createCorrect("Mario"); // { name: "Mario" }
+```
+
+-----
+
+#### Default Parameters
+
+You can give default values to parameters with the `=` syntax. 
+If the parameter is `undefined` at call time, the default value is used.
+
+```javascript
+function greet(name = "Guest", language = "en") {
+  const greetings = { it: "Ciao", en: "Hello" };
+  return `${greetings[language]} ${name}`;
+}
+
+greet();                // "Hello Guest"
+greet("Mario");         // "Hello Mario"
+greet("Mario", "it");   // "Ciao Mario"
+greet(undefined, "it"); // "Ciao Guest"
+```
+
+In the first parameter, `name = "Guest"` means: if whoever calls the function does not pass a name, use `"Guest"`. 
+In the second, `language = "en"` means: if no language is provided, use English.
+
+The last call is important: `greet(undefined, "it")` uses the default value for `name`, but still lets you pass `"it"` as the second argument. 
+This works because the default kicks in only when the received value is `undefined`.
+
+This replaces the old pattern `name = name || "Guest"`, which had the flaw of treating valid falsy values, such as empty strings and zero, as missing.
+
+-----
+
+#### Destructuring in Parameters
+
+You can destructure directly in the parameter list. 
+It is the most common pattern for functions that accept a "configuration object".
+
+```javascript
+// Instead of
+function create(options) {
+  const name = options.name;
+  const age = options.age;
+  const admin = options.admin || false;
+  // ...
+}
+
+// You can write
+function create({ name, age, admin = false }) {
+  // name, age, and admin are directly available
+}
+
+create({ name: "Mario", age: 27, admin: true });
+```
+
+This has three advantages: parameter order does not matter, because you pass an object and not a sequence; you can skip parameters you do not care about; the call is more readable, because you immediately see what you are passing.
+
+-----
+
+#### Callbacks (Functions Passed as Arguments)
+
+A **callback** is a function you pass to another function, so that the latter can call it when the right moment comes. 
+It is a fundamental concept in JavaScript, because it is how you manage asynchronous operations and events.
+
+The restaurant analogy works well: when you order a takeaway pizza, you do not stand in front of the oven waiting. 
+You give your phone number (the callback), go do something else, and the pizzaiolo calls you back when it is ready.
+
+```javascript
+setTimeout(() => {
+  console.log("2 seconds have passed");
+}, 2000); // 2000 milliseconds = 2 seconds
+// setTimeout is a function that accepts a callback and a time in milliseconds.
+// After that time it calls the callback.
+```
+
+The functional array methods we saw (`map`, `filter`, `reduce`, `forEach`) are all based on callbacks: the function you pass is called for every element.
+
+```javascript
+[1, 2, 3].map(x => x * 2); // [2, 4, 6]
+// The function x => x * 2 is a callback called 3 times
+```
+
+In JavaScript, functions are normal values. 
+You can pass them, save them in variables, and put them in arrays. 
+This is the meaning of "first-class citizens": in JavaScript, functions can be treated like any other value. 
+This is why you can pass them to other functions, return them from functions, and build patterns like callbacks, higher-order functions, and currying.
+
+-----
+
+#### Currying and Partial Application
+
+**Currying** is a pattern where a function with multiple parameters is transformed into a chain of functions that take one parameter at a time. 
+The outer function returns a new function, which in turn can return another one.
+
+```javascript
+// Without currying
+function sum(a, b) {
+  return a + b;
+}
+sum(3, 4); // 7
+
+// With currying
+const curriedSum = a => b => a + b;
+curriedSum(3)(4); // 7
+
+// The practical value: you can "lock" the first argument
+const add10 = curriedSum(10);
+add10(5);  // 15
+add10(20); // 30
+```
+
+`add10` is a specialized function that "remembers" the `10` thanks to the mechanism of **closures**, which we will see in the next section. 
+It is one of the reasons why learning closures is important: currying looks like magic until you understand what is happening underneath.
+
+This pattern is common in functional programming: you start from a generic function, like `sum`, and create more specific versions, like `add10`.
+Functional programming is a style where you build the program by composing functions and prefer transforming data by creating new values, instead of directly modifying existing ones.
+
+-----
+
+#### `_` Convention for Unused Parameters
+
+Sometimes a function must have certain parameters because the context passes them, but you only use some of them. 
+The convention is to use `_` as the name for the ones you ignore, to signal to whoever reads the code that you are doing it on purpose.
+
+```javascript
+// .map() passes (value, index, whole array) to the callback
+// If you only need the index, mark the others as ignored
+const numbers = [10, 20, 30];
+const indexes = numbers.map((_, index) => index);
+// [0, 1, 2]
+```
+
+-----
+
+#### IIFE (Immediately Invoked Function Expression)
+
+An **IIFE** (Immediately Invoked Function Expression) is a function declared and called on the spot. 
+The syntax is a function wrapped in parentheses, followed by `()` to invoke it.
+
+```javascript
+(function () {
+  console.log("Run immediately");
+})();
+
+// Arrow version
+(() => {
+  console.log("Run immediately");
+})();
+```
+
+The classic use, before ES modules (we will see them in <Link to="/docs/vademecum/javascript-real-world/oop-and-modules#17-es-modules-import-and-export">section 17</Link>), was **creating an isolated scope**: variables inside the IIFE do not pollute the global scope. 
+In the browser, the global scope is the outermost area of the page: everything that ends up there is available everywhere and risks conflicting with other names.
+It was the standard way to protect library code.
+
+```javascript
+// Historical pattern: create a private area to avoid adding names to the global scope
+(function () {
+  const configuration = { /* ... */ };
+  const internalFunction = () => { /* ... */ };
+  // These variables stay in here and do not become available everywhere
+})();
+```
+
+With ES modules this pattern has become rare: every module already has its own isolated scope. IIFEs today are mostly seen in libraries that support old browsers without modules, or when you want to immediately run a block of logic and keep temporary variables private.
+
+```javascript
+// Calculate a complex initial value in a const
+const configuration = (() => {
+  const env = readEnv();
+  const base = calculateBase(env);
+  return { env, base, timestamp: Date.now() };
+})();
+```
+
+**Rule:** arrow functions for callbacks, short functions, and inline functions. 
+Classic function when you want an explicit name, hoisting, or dynamic `this`. 
+Braces always, except when you want implicit return with a single expression. 
+Destructuring in parameters when you accept a configuration object. 
+Callbacks are functions passed as arguments, the foundation of much modern JavaScript.
+
+<br />
+<br />
+<br />
+<br />
+
+### 11. Scope and Closures
+
+**Scope** is the region of code where a variable is accessible. 
+Understanding where variables live and die is a prerequisite for understanding closures, one of the most powerful and most misunderstood concepts in JavaScript.
+
+#### Global vs Local vs Block Scope
+
+When you declare a variable, JavaScript puts it into a scope. 
+There are three levels.
+
+The **global scope** is the outermost one. 
+A variable declared outside any function or block is global, accessible everywhere in the program.
+
+```javascript
+const appName = "My Site"; // Global
+
+function greet() {
+  console.log(appName); // Accessible here too
+}
+```
+
+The **local scope** (also called **function scope**) is the one created by a function. 
+Variables declared inside a function exist only there.
+
+```javascript
+function calculate() {
+  const result = 42; // Local to calculate
+  return result;
+}
+
+console.log(result); // ❌ ReferenceError
+```
+
+The **block scope** is the one created by any pair of `{}` (an `if`, a `for`, a generic block). 
+Only `let` and `const` respect block scope; `var` ignores it, which is why modern code avoids it.
+
+```javascript
+if (true) {
+  let inside = "hello";     // Scope of the if block
+  const also = "here";      // Scope of the if block
+  var instead = "anywhere"; // Scope of the containing function (or global)
+}
+
+console.log(inside);  // ❌ ReferenceError
+console.log(instead); // "anywhere"
+```
+
+-----
+
+#### Scope Chain (The Search Chain)
+
+When JavaScript looks for a variable, it starts from the innermost scope and climbs upward. 
+If it finds it, it stops. 
+If it reaches the global scope without finding it, it throws a `ReferenceError`.
+
+```javascript
+const global = "G";
+
+function outer() {
+  const middle = "M";
+
+  function inner() {
+    const local = "L";
+    console.log(local);  // "L" (found immediately, local scope)
+    console.log(middle); // "M" (climbed up, outer's scope)
+    console.log(global); // "G" (climbed up to global)
+  }
+
+  inner();
+}
+```
+
+Every function has access to the variables of its own scope and of all the scopes that contain it. The search always follows this order: local -> outer scope -> ... -> global.
+
+-----
+
+#### Shadowing
+
+If you declare a variable with the same name as one that exists in an outer scope, the inner one "covers" the outer one. 
+This is called **shadowing**.
+
+```javascript
+const x = "outer";
+
+function test() {
+  const x = "inner"; // Covers the outer one
+  console.log(x); // "inner"
+}
+
+test();
+console.log(x); // "outer" (untouched)
+```
+
+Shadowing is not wrong by itself (sometimes it is intentional), but if you do it accidentally it can create bugs that are hard to find. 
+Avoid it when there is no precise reason.
+
+-----
+
+#### Closures (Function Memory)
+
+A **closure** is a function that "remembers" variables from its outer scope, even after that scope has finished. 
+In the counter below, for example, the inner function does not save a copy of `count` at `0`: it keeps access to that variable, so it can find it again and update it at every call.
+
+```javascript
+function createCounter() {
+  let count = 0;
+
+  return function increment() {
+    count++;
+    return count;
+  };
+}
+
+const counter = createCounter();
+counter(); // 1
+counter(); // 2
+counter(); // 3
+```
+
+What is happening? `createCounter` declares a local variable `count`, and returns a function that reads and modifies it. 
+Normally, when `createCounter` finishes, its local variable should disappear. 
+But the returned function still has a reference to `count`, so JavaScript keeps it alive.
+
+Every time you call `counter()`, you are calling the inner function, which accesses the same `count` that lives in the closure.
+
+If you create a second counter, it has **its own** `count`, completely separate:
+
+```javascript
+const counter1 = createCounter();
+const counter2 = createCounter();
+
+counter1(); // 1
+counter1(); // 2
+counter2(); // 1 (it has its own private count)
+counter2(); // 2
+counter1(); // 3
+```
+
+This is the mechanism that lets **each iteration of a `for` with `let`** have its own copy of `i`: every callback is a closure over its specific `i`.
+
+-----
+
+#### Why Currying Works
+
+Now you can understand the currying from the previous section. 
+When you do:
+
+```javascript
+const sum = a => b => a + b;
+const add10 = sum(10);
+```
+
+`sum(10)` runs the outer function, which returns the inner function. 
+The inner function is a **closure over `a`**: it remembers that `a = 10` even after `sum(10)` has finished. 
+When you then call `add10(5)`, the inner function accesses its stored `a` and does `10 + 5`.
+
+```javascript
+add10(5); // 15 (a = 10 from the closure, b = 5 from the parameter)
+```
+
+Closures therefore make it possible to keep pieces of state accessible inside functions, without having to put them in global variables.
+
+-----
+
+#### Pattern: Data Privacy
+
+Closures let you create "private" variables, meaning variables that external code (in this case everything outside `createAccount`) cannot read or modify directly.
+Access goes only through the functions you decide to return to the outside.
+A classic pattern:
+
+```javascript
+function createAccount(initialBalance) {
+  let balance = initialBalance; // "Private" variable
+
+  return {
+    deposit(amount) {
+      balance += amount;
+      return balance;
+    },
+    withdraw(amount) {
+      if (amount > balance) return "Insufficient funds";
+      balance -= amount;
+      return balance;
+    },
+    viewBalance() {
+      return balance;
+    },
+  };
+}
+
+const account = createAccount(100);
+account.deposit(50);  // 150
+account.withdraw(30); // 120
+account.viewBalance(); // 120
+
+// balance is not directly accessible
+account.balance; // undefined
+
+// Even if someone tries to add a balance property
+account.balance = 999999;
+account.viewBalance(); // 120, the private balance does not change
+```
+
+Nobody can modify `balance` from the outside by skipping the account functions. 
+The only way to touch the balance is to go through `deposit`, `withdraw`, and `viewBalance`, which can check data, reject invalid operations, or record what happens.
+
+Before classes, which we will see in <Link to="/docs/vademecum/javascript-real-world/oop-and-modules#12-classes-the-blueprint">section 12</Link>, this was the standard pattern for encapsulating state in JavaScript, meaning keeping internal data protected and accessible only through controlled functions. 
+Today you also have other tools, but understanding it remains important: many libraries and many factory functions still use this pattern to protect internal data and expose only controlled operations to the outside.
+
+-----
+
+#### Iterators and Generators (Notes)
+
+An **iterator** is an object that produces values one at a time, through a `next()` method that returns `{ value, done }`. 
+Every time you call `next()`, the iterator advances and gives you the next value. 
+When it is finished, `done` becomes `true`.
+
+Arrays, strings, `Set`, and `Map` are **iterable** precisely because they have an internal iterator. 
+When you use `for...of`, JavaScript uses that iterator internally and calls `next()` several times, until `done` becomes `true`.
+
+A **generator** is an elegant way to write iterators. It is a special function, marked with `function*`, that uses `yield` to produce values only when needed, one at a time.
+
+```javascript
+function* countTo(max) {
+  let i = 1;
+  while (i <= max) {
+    yield i;
+    i++;
+  }
+}
+
+const count = countTo(3);
+count.next(); // { value: 1, done: false }
+count.next(); // { value: 2, done: false }
+count.next(); // { value: 3, done: false }
+count.next(); // { value: undefined, done: true }
+
+// Or with for...of
+for (const n of countTo(5)) {
+  console.log(n); // 1, 2, 3, 4, 5
+}
+```
+
+They are used rarely, nevertheless they become useful in specific cases: infinite sequences (a unique ID generator), progressive processing of huge datasets (you process one element at a time without loading all of them into memory), complex state-machine patterns, meaning logic where a system can be in different states and every event moves it from one state to another.
+
+**Rule:** `let` and `const` have block scope, `var` has function scope (do not use it). 
+A closure is a function that remembers variables from its outer scope. 
+Currying, factories like `createCounter`, and private data are all patterns based on closures.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Summary (Structures and Flow in Brief)
+
+| Concept | Key rule | Common trap |
+|---------|----------|-------------|
+| Destructive arrays | `push`, `pop`, `splice`, `sort` modify the original | Expecting a copy |
+| Non-destructive arrays | `slice`, `map`, `filter`, `reduce` return a copy | Forgetting to assign the result |
+| Numeric `sort` | Pass `(a, b) => a - b` | Default alphabetical sorting |
+| `reduce` | Always pass the initial value | Fails on empty arrays if you omit it |
+| `Set` | Unique values, great for deduplication | Confusing it with an array |
+| `Map` | Key-value pairs with keys of any type | Using it where an object literal is enough |
+| IIFE | Function that invokes itself on the spot | Using it where ES modules are enough |
+| Generators | `function*` with `yield`, to produce values one at a time | Using them when they are not really needed |
+| Optional chaining `?.` | Stops the chain if it finds `null`/`undefined` | Using it where you should check explicitly |
+| Spread `...` | Copies and joins arrays/objects | Confusing shallow copy with deep copy |
+| `\|\|` vs `??` | `\|\|` treats falsy as missing, `??` only null/undefined | Using `\|\|` where `0` or `""` are valid |
+| `if/else` | Braces always, even for one line | Silent bug when adding lines |
+| Ternary | Only for simple assignments | Nesting it |
+| `switch` | `break` required after each case | Forgetting `break` and causing fall-through |
+| Return early | Guard clauses instead of nesting | The pyramid of doom |
+| `for...of` | Iterates over values | Using it on objects (use `for...in` or `Object.entries`) |
+| `for...in` | Iterates over keys | Using it on arrays |
+| `.forEach` | Convenient but does not stop with break | Expecting to be able to interrupt it |
+| Arrow function | No own `this`, short syntax | Implicit return of object without parentheses `()` |
+| Destructuring | Extracts properties into variables | Not renaming when needed |
+| Callback | Function passed to be called later | Calling it immediately with `()` instead of passing it |
+| Closure | Function that remembers outer scope | Thinking it saves a copy of the initial value |
+| Scope | `let`/`const` block, `var` function | Using `var` and ending up in scope problems |

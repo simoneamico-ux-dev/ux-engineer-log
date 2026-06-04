@@ -14,11 +14,11 @@ Lo State è la memoria di React. Gli Events sono il suo sistema nervoso. Insieme
 
 ## State ed Eventi
 
-### 13. Gli Eventi (Il Sistema Nervoso Diplomatico)
+### 13. Gli Eventi
 
 Un'applicazione senza eventi è un manifesto: si guarda ma non si tocca. Gli eventi sono i canali attraverso cui l'utente comunica con la tua app. React ha costruito un sistema elegante per gestirli in modo uniforme su ogni browser, e capirne i meccanismi ti salva da bug sottili e comportamenti inaspettati.
 
-#### Il Sistema degli Eventi Sintetici (L'Adattatore Universale)
+#### Il Sistema degli Eventi Sintetici
 
 I browser sono anarchici. Chrome, Firefox, Safari: ogni motore ha scritto la propria implementazione degli eventi. Un evento di click su Chrome può avere proprietà diverse da quello su Firefox. Un campo `event.which` esiste in alcuni browser e non in altri.
 
@@ -74,7 +74,7 @@ Risultato: performance migliore, zero listener orfani in memoria.
 
 -----
 
-#### `onClick={fn}` vs `onClick={fn()}` (La Ricetta vs La Torta)
+#### `onClick={fn}` vs `onClick={fn()}`
 
 C'è una differenza enorme tra passare una funzione e chiamarla.
 
@@ -118,7 +118,7 @@ Le props si chiamano `on...` perché descrivono un evento che può accadere (`on
 
 ```jsx
 // Il componente figlio espone una prop onElimina
-function CartaProdotto({ prodotto, onElimina }) {
+function CardProdotto({ prodotto, onElimina }) {
   return (
     <div>
       <h3>{prodotto.nome}</h3>
@@ -134,7 +134,7 @@ function ListaProdotti() {
   }
 
   return (
-    <CartaProdotto
+    <CardProdotto
       prodotto={prodottoEsempio}
       onElimina={() => handleEliminazione(prodottoEsempio.id)}
     />
@@ -146,11 +146,11 @@ Invece sui tag HTML nativi (`<button>`, `<input>`, `<form>`) i nomi sono fissi e
 
 -----
 
-#### `e.preventDefault()` (Ferma l'Istinto del Browser)
+#### `e.preventDefault()` (Bloccare il Comportamento Predefinito)
 
 Ogni tag HTML ha un comportamento predefinito. Il browser esegue quell'azione automaticamente, senza chiedere permesso. Un `<form>` con submit ricarica la pagina intera, un `<a href="...">` cliccato cambia URL e naviga via, un `<input type="checkbox">` spunta o rimuove la spunta, e un drag su un'immagine avvia il trascinamento nativo.
 
-`e.preventDefault()` dice al browser: "Ferma il tuo istinto. Mi occupo io di cosa fare."
+`e.preventDefault()` dice al browser di non eseguire il comportamento predefinito, perché sarà il tuo codice a gestire l'azione.
 
 ```jsx
 function FormContatto({ onInvio }) {
@@ -174,21 +174,21 @@ function FormContatto({ onInvio }) {
 
 -----
 
-#### `e.stopPropagation()` (Ferma la Bolla)
+#### `e.stopPropagation()` (Fermare la Propagazione)
 
 Quando un evento scatta su un elemento figlio, risale automaticamente verso i genitori (Bubbling). A volte questo è indesiderato.
 
 Immagina questo classico scenario: una Card cliccabile che apre i dettagli del prodotto. Dentro la Card c'è un bottone "Mi Piace". Senza `stopPropagation`, cliccare "Mi Piace" triggera anche il click della Card intera e l'utente finisce nella pagina dettagli quando voleva solo mettere like.
 
 ```jsx
-function CartaArticolo({ articolo, onApriDettagli }) {
+function CardArticolo({ articolo, onApriDettagli }) {
   function handleLike(e) {
     e.stopPropagation(); // Ferma qui, non risalire alla Card
     console.log("Like aggiunto a:", articolo.titolo);
   }
 
   return (
-    <div onClick={onApriDettagli} className="carta-cliccabile">
+    <div onClick={onApriDettagli} className="card-cliccabile">
       <h3>{articolo.titolo}</h3>
       <button onClick={handleLike}>❤️ Mi Piace</button>
     </div>
@@ -200,7 +200,7 @@ Quindi, `preventDefault` è un problema di **Natura** (cosa fa il browser o il t
 
 -----
 
-#### `e.target` (La Prova del Delitto)
+#### `e.target` (Elemento che Ha Generato l'Evento)
 
 `e.target` punta fisicamente all'elemento HTML che ha scatenato l'evento. Da `e.target` puoi estrarre informazioni sull'input dell'utente.
 
@@ -263,11 +263,11 @@ function SceltoColore() {
 
 ---
 
-### 14. useState (La Memoria Esterna)
+### 14. useState
 
 Puoi fare click, hover, focus con gli eventi. Ma se vuoi che qualcosa *cambi* visivamente in risposta a quell'interazione, hai bisogno di state. Lo stato è il meccanismo che dice a React: "Qualcosa è cambiato, ridisegna".
 
-#### Il Problema (Le Funzioni Hanno l'Alzheimer)
+#### Perché le Variabili Locali Non Bastano
 
 React costruisce la tua UI chiamando le funzioni componente. Le chiama di nuovo ogni volta che qualcosa cambia. Ogni volta che una funzione viene chiamata, le variabili locali vengono create da zero e poi dimenticate.
 
@@ -294,7 +294,7 @@ La variabile `conteggio` viene incrementata in memoria, ma React non lo sa e per
 
 -----
 
-#### useState (Il Post-it sul Frigo)
+#### useState (Memoria del Componente)
 
 `useState` è una funzione speciale di React (un **Hook**) che risolve entrambi i problemi: conserva il valore tra un render e l'altro, e quando il valore cambia dice a React di ridisegnare. È come se React Core avesse un frigo con post-it. Ogni `useState` corrisponde a un post-it. Tra un render e l'altro, la nota rimane attaccata al frigo. Al prossimo render, React la rilegge e la usa.
 
@@ -351,7 +351,7 @@ Al Re-render React chiama di nuovo `Contatore()`, incontra `useState(0)` ma IGNO
 
 -----
 
-#### La Regola dell'Ordine degli Scaffali (Gli Hook in Cima)
+#### La Regola degli Hook in Cima
 
 React non salva lo state per nome. Lo salva per **posizione**, nell'ordine in cui gli Hook vengono chiamati dentro il componente.
 
@@ -368,7 +368,7 @@ function ProfiloProfessionista() {
 }
 ```
 
-Se al prossimo render React chiama solo 2 Hook invece di 3 (perché ne hai messo uno dentro un `if`), gli scaffali si scambiano. `eta` legge dal cassetto di `nome`. Disastro silenzioso.
+Se al prossimo render React chiama solo 2 Hook invece di 3 (perché ne hai messo uno dentro un `if`), gli scaffali si scambiano. `eta` finisce per leggere il valore nella posizione sbagliata, e il componente usa uno state che non corrisponde più al nome della variabile.
 
 ```jsx
 // ❌ MAI fare questo. Hook dentro un if
@@ -390,7 +390,7 @@ function Componente({ carica }) {
 
 -----
 
-#### Isolamento (Il Principio dello Stampino)
+#### Isolamento dello State
 
 Ogni istanza di un componente ha il suo spazio privato di state. Due `<Contatore />` nella stessa pagina nascono dalla stessa funzione ma vivono vite indipendenti: se porti il conteggio del primo a 5, il secondo resta a 0.
 
@@ -411,7 +411,7 @@ Cliccare +1 sul primo `<Contatore />` non tocca minimamente il secondo.
 
 -----
 
-#### Immutabilità nel Tempo (Il Flipbook Animato)
+#### Immutabilità nel Tempo
 
 `const conteggio = false` è immutabile per **quel render specifico**. Essendo una costante, non può cambiare mentre il componente sta disegnando.
 
@@ -423,7 +423,7 @@ React funziona esattamente così. Quando chiami `setIsVisibile(true)` non modifi
 
 -----
 
-#### La Bugia del `console.log` (Stale Closure)
+#### Perché `console.log` Può Mostrare il Valore Precedente (Stale Closure)
 
 Dopo aver chiamato `setIsVisibile(true)`, potresti essere tentato di fare `console.log(isVisibile)` per vedere se è cambiato. Otterrai ancora `false`. Questo non è un bug, è la conseguenza di come funzionano le closure in JavaScript.
 
@@ -466,7 +466,7 @@ function Interruttore() {
 
 -----
 
-#### Batching (Il Motore dell'Efficienza)
+#### Batching (Aggiornamenti Raggruppati)
 
 React non esegue ogni `setState` immediatamente, uno per uno. Aspetta un momento per raccogliere tutti i cambiamenti di stato e poi esegue **un unico re-render** per tutti.
 
@@ -562,7 +562,7 @@ Dopo il Commit, il browser riceve le modifiche al DOM e aggiorna i pixel sullo s
 
 -----
 
-#### Perché Questa Architettura È Geniale
+#### Perché Questa Architettura Funziona
 
 Il DOM del browser è pesante. Ogni nodo porta centinaia di proprietà. Ogni modifica al DOM reale può triggerare Reflow (ricalcolo del layout) e Repaint (ridisegno dei pixel), operazioni costose.
 

@@ -8,17 +8,17 @@ description: Costruire pezzi di UI riutilizzabili e passare dati con il flusso u
 
 # Parte II: Componenti e Props
 
-Un componente è solo una funzione. Le props sono solo i suoi argomenti. Una volta che riesci a vederlo così, tutto il resto si incastra da solo. Questa seconda parte ti porta dal concetto astratto di "componente" alla realtà concreta di come i dati fluiscono in un'app React.
+Un componente React è una funzione che restituisce UI, e le props sono i dati che riceve dall'esterno. Quando questo diventa chiaro, componenti, composizione e riutilizzo smettono di sembrare concetti separati.
 
 ---
 
 ## Componenti e Props
 
-### 7. Componenti (Lo Stampino per Biscotti)
+### 7. Componenti
 
 #### Un Componente È Solo una Funzione
 
-Tutto il "mistero" di React si dissolve in un'osservazione semplice: un componente React è **solo una funzione JavaScript** che riceve un oggetto di dati (le *props*) e restituisce UI (codice JSX).
+Il punto centrale è semplice: un componente React è **una funzione JavaScript** che riceve un oggetto di dati (le *props*) e restituisce UI (codice JSX).
 
 Confronta queste due funzioni.
 
@@ -40,13 +40,13 @@ Questa osservazione ha conseguenze profonde: tutto ciò che vale per le funzioni
 
 -----
 
-#### PascalCase (La Lista VIP)
+#### PascalCase
 
 React usa la maiuscola iniziale come **segnale discriminante** per capire che tipo di elemento stai creando. Non è una convenzione stilistica, è una regola tecnica con conseguenze precise.
 
 Quando Babel incontra un tag JSX, controlla la prima lettera. Se è **minuscola** (`<navbar />`) genera `React.createElement('navbar')` e cerca un tag HTML standard nel browser. Se è **maiuscola** (`<Navbar />`) genera `React.createElement(Navbar)` e cerca una funzione JavaScript con quel nome.
 
-È come una lista degli invitati alla porta di un locale esclusivo. Chi si presenta con la minuscola (`div`, `span`, `button`) è un tag HTML che il browser conosce già: React lo lascia passare direttamente nel DOM senza fargli domande. Chi si presenta con la maiuscola (`Navbar`, `ContatoreLike`, `CardProdotto`) è un VIP, cioè un componente custom. React non lo mette nel DOM così com'è: lo *chiama come funzione*, riceve il JSX che quella funzione restituisce, e inserisce nel DOM solo il risultato. È per questo che la maiuscola non è una preferenza estetica ma un meccanismo tecnico: senza di essa React non sa che deve eseguire del codice.
+La maiuscola iniziale è quindi un segnale per React. Con una minuscola, React tratta il tag come HTML nativo; con una maiuscola, cerca una funzione o un componente JavaScript da eseguire. Non è una preferenza estetica: senza PascalCase React non capisce che deve chiamare il componente.
 
 ```jsx
 // ❌ SBAGLIATO, React pensa che 'saluto' sia un tag HTML sconosciuto
@@ -65,7 +65,7 @@ function Saluto({ nome }) {
 
 -----
 
-#### Named Export vs. Default Export (Il Citofono vs. "Chi Abita Qui?")
+#### Named Export vs. Default Export
 
 Ogni componente deve essere esportato dal suo file per poter essere importato altrove. Hai due opzioni:
 
@@ -106,9 +106,9 @@ I Named Exports sono quasi sempre preferibili nei progetti moderni, per tre ragi
 ```jsx
 // ✅ PRATICA MODERNA PREFERITA
 // Nel file del componente
-export function CartaProdotto({ titolo, prezzo }) {
+export function CardProdotto({ titolo, prezzo }) {
   return (
-    <div className="carta">
+    <div className="card">
       <h2>{titolo}</h2>
       <p>€{prezzo}</p>
     </div>
@@ -116,7 +116,7 @@ export function CartaProdotto({ titolo, prezzo }) {
 }
 
 // Nell'app
-import { CartaProdotto } from './CartaProdotto';
+import { CardProdotto } from './CardProdotto';
 ```
 
 -----
@@ -158,17 +158,17 @@ const formattaPrezzo = (n) => `€${n.toFixed(2)}`;
 
 -----
 
-#### Componenti "Stupidi" vs. "Intelligenti" (Lo Stampino vs. Il Cervello)
+#### Componenti Presentazionali e Container
 
 In React esiste una separazione concettuale fondamentale tra due tipi di componenti.
 
 Un **componente presentazionale** (detto anche stateless) riceve dati via props e li mostra, senza logica interna e senza decisioni. Non sa chi è Mario o Tiffany, sa solo come visualizzare i dati che gli arrivano. Proprio per questo è facile da riusare e da testare.
 
 ```jsx
-// Componente "stupido", sa solo come mostrare una carta
-function CartaUtente({ nome, ruolo, urlAvatar }) {
+// Componente "stupido", sa solo come mostrare una card
+function CardUtente({ nome, ruolo, urlAvatar }) {
   return (
-    <div className="carta-utente">
+    <div className="card-utente">
       <img src={urlAvatar} alt={nome} />
       <h3>{nome}</h3>
       <span className={`badge ${ruolo}`}>{ruolo}</span>
@@ -189,7 +189,7 @@ function PaginaTeam() {
 
   return (
     <div>
-      {membri.map(m => <CartaUtente key={m.id} {...m} />)}
+      {membri.map(m => <CardUtente key={m.id} {...m} />)}
     </div>
   );
 }
@@ -199,7 +199,7 @@ La separazione ideale è che l'UI sia stupida e la logica sia intelligente, senz
 
 -----
 
-#### Il Nesting e il Problema della Matrioska
+#### Il Nesting e il Problema dell'Annidamento Eccessivo
 
 React incoraggia a scomporre la UI in componenti piccoli che si annidano l'uno dentro l'altro. Questo è ottimo, ma fino a un certo punto. Quando un singolo componente fa troppo, è come un ristorante dove lo chef cucina, serve ai tavoli e lava i piatti contemporaneamente: funziona con un cliente, ma con trenta è un disastro.
 
@@ -220,7 +220,7 @@ function Pagina() {
       </div>
       <main>
         <div className="prodotti">
-          <div className="carta-prodotto">
+          <div className="card-prodotto">
             <img src="..." />
             <h2>Prodotto 1</h2>
             <button>Aggiungi</button>
@@ -252,7 +252,7 @@ function Pagina() {
 <br />
 <br />
 
-### 8. La Struttura del Progetto (La Cucina di Vite)
+### 8. La Struttura del Progetto
 
 #### Le Cartelle di un Progetto React
 
@@ -275,7 +275,7 @@ La cartella **`node_modules/`** è dove `npm install` scarica le librerie reali.
 
 -----
 
-#### `package.json` vs. `node_modules` (La Lista della Spesa vs. La Dispensa)
+#### `package.json` vs. `node_modules`
 
 Questa distinzione confonde tutti all'inizio. Il `package.json` è la tua **lista della spesa**, un file di testo leggero che elenca i nomi e le versioni delle librerie che ti servono. La cartella `node_modules` è la **dispensa fisica**, dove i pacchetti veri vengono scaricati e occupano spazio reale sul disco.
 
@@ -334,7 +334,7 @@ npm run dev
 
 ### 9. Props (Gli Argomenti della Funzione)
 
-#### Le Props Sono Solo Argomenti (Il Pacco Anonimo)
+#### Le Props Sono Solo Argomenti
 
 Le props non sono un meccanismo misterioso di React, sono letteralmente gli argomenti di una funzione JavaScript. Per capirlo basta guardare cosa fa Babel quando incontra un componente con attributi.
 
@@ -401,7 +401,7 @@ Il destructuring nei parametri è la pratica moderna preferita perché richiede 
 
 -----
 
-#### La Trappola Mortale (Parentesi Senza Graffe)
+#### Errore Comune (Parentesi Senza Graffe)
 
 Questo è l'errore che fa impazzire i principianti perché non produce un errore esplicito ma un comportamento silenziosamente sbagliato.
 
@@ -440,7 +440,7 @@ function Saluto({ nome }) { } // 'nome' = "Mario" ← CORRETTO
 
 -----
 
-#### La Prop `children` (La Cornice)
+#### La Prop `children` (Contenuto tra i Tag)
 
 A volte non vuoi passare dati come attributi ma vuoi passare altri elementi JSX "dentro" al componente, come fai con i tag HTML normali. È come una cornice: chi la produce disegna i bordi in legno e decide la forma, ma non sa e non deve necessariamente sapere che foto ci metterai dentro.
 
@@ -450,36 +450,36 @@ React mette automaticamente tutto ciò che sta tra il tag di apertura e quello d
 // Chi usa il componente decide il "contenuto del buco"
 function App() {
   return (
-    <Carta>                           {/* → children */}
-      <h2>Titolo della Carta</h2>     {/* → children */}
+    <Card>                           {/* → children */}
+      <h2>Titolo della Card</h2>     {/* → children */}
       <p>Testo descrittivo qui</p>    {/* → children */}
-    </Carta>
+    </Card>
   );
 }
 
-// Carta non sa cosa c'è dentro, riceve solo 'children'
-function Carta({ children }) {
+// Card non sa cosa c'è dentro, riceve solo 'children'
+function Card({ children }) {
   return (
-    <div className="carta-ombra">
+    <div className="card-ombra">
       {children}     {/* Qui React disegna quello che gli è stato passato */}
     </div>
   );
 }
 ```
 
-`children` può essere qualsiasi cosa: testo, un singolo elemento, un array di elementi, addirittura un'altra funzione (pattern avanzato). Carta non controlla cosa le viene messo dentro.
+`children` può essere qualsiasi cosa: testo, un singolo elemento, un array di elementi, addirittura un'altra funzione (pattern avanzato). Card non controlla cosa le viene messo dentro.
 
 I componenti "contenitore" come Modal, Card, Layout e Panel usano quasi sempre `children` perché devono poter contenere qualsiasi cosa senza dover conoscere il contenuto in anticipo.
 
 -----
 
-#### Spread Operator per le Props (Rovesciare il Portafoglio)
+#### Spread Operator per le Props
 
 Quando hai un oggetto con molte proprietà e vuoi passarle tutte come props a un componente figlio, scrivere ogni prop singolarmente è noioso e soprattutto fragile.
 
 ```jsx
 // ❌ NOIOSO e fragile, se aggiungi proprietà all'oggetto devi ricordarti di aggiungerle anche qui
-function CartaUtente({ utente }) {
+function CardUtente({ utente }) {
   return (
     <Profilo
       nome={utente.nome}
@@ -496,7 +496,7 @@ Lo spread operator `{...oggetto}` ti permette di passare tutte le proprietà del
 
 ```jsx
 // ✅ COMPATTO, tutte le proprietà vengono passate automaticamente
-function CartaUtente({ utente }) {
+function CardUtente({ utente }) {
   return <Profilo {...utente} />;
 }
 // Equivalente a: <Profilo nome={...} eta={...} citta={...} ruolo={...} urlAvatar={...} />
@@ -513,7 +513,7 @@ const datiUtente = { nome: "Mario", eta: 25, admin: true };
 
 -----
 
-#### Le Props Sono Read-Only (La Cascata Unidirezionale)
+#### Le Props Sono Read-Only (Flusso Unidirezionale)
 
 Una delle leggi fondamentali di React è che un componente figlio **non può mai modificare le sue props**. Sono read-only.
 
@@ -552,7 +552,7 @@ Questo si chiama **One-Way Data Flow** (flusso di dati unidirezionale). È una c
 <br />
 <br />
 
-### 10. Stili Inline (CSS Travestito da JavaScript)
+### 10. Stili Inline
 
 #### Le Doppie Graffe Demistificate `{{ }}`
 
@@ -606,7 +606,7 @@ const mioStile = {
 
 -----
 
-#### Il Potere Dinamico (Perché Usare Oggetti?)
+#### Stili Dinamici (Perché Usare Oggetti?)
 
 La vera utilità degli stili inline in React non è la comodità ma la **dinamicità**, perché un oggetto JavaScript può contenere logica.
 

@@ -8,17 +8,17 @@ description: Building reusable UI pieces and passing data with unidirectional fl
 
 # Part II: Components and Props
 
-A component is just a function. Props are just its arguments. Once you can see it that way, everything else falls into place on its own. This second part takes you from the abstract concept of "component" to the concrete reality of how data flows in a React app.
+A React component is a function that returns UI, and props are the data it receives from the outside. Once this becomes clear, components, composition, and reuse stop feeling like separate concepts.
 
 ---
 
 ## Components and Props
 
-### 7. Components (The Cookie Cutter)
+### 7. Components
 
 #### A Component Is Just a Function
 
-All the "mystery" of React dissolves into one simple observation: a React component is **just a JavaScript function** that receives a data object (*props*) and returns UI (JSX code).
+The core point is simple: a React component is **a JavaScript function** that receives a data object (*props*) and returns UI (JSX code).
 
 Compare these two functions.
 
@@ -40,13 +40,13 @@ This observation has profound consequences: everything that applies to JavaScrip
 
 -----
 
-#### PascalCase (The VIP List)
+#### PascalCase
 
 React uses the initial uppercase letter as a **distinguishing signal** to understand what type of element you are creating. It is not a stylistic convention, it is a technical rule with precise consequences.
 
 When Babel encounters a JSX tag, it checks the first letter. If it is **lowercase** (`<navbar />`) it generates `React.createElement('navbar')` and looks for a standard HTML tag in the browser. If it is **uppercase** (`<Navbar />`) it generates `React.createElement(Navbar)` and looks for a JavaScript function with that name.
 
-It is like a guest list at the door of an exclusive club. Those who show up in lowercase (`div`, `span`, `button`) are HTML tags that the browser already knows: React lets them pass directly into the DOM without asking questions. Those who show up in uppercase (`Navbar`, `LikeCounter`, `ProductCard`) are VIPs, meaning custom components. React does not put them in the DOM as-is: it *calls them as functions*, receives the JSX that function returns, and inserts only the result into the DOM. That is why the uppercase is not an aesthetic preference but a technical mechanism: without it React does not know it needs to execute code.
+The initial uppercase letter is therefore a signal for React. With a lowercase tag, React treats it as native HTML; with an uppercase tag, it looks for a JavaScript function or component to execute. It is not an aesthetic preference: without PascalCase React does not understand that it needs to call the component.
 
 ```jsx
 // ❌ WRONG, React thinks 'greeting' is an unknown HTML tag
@@ -65,7 +65,7 @@ function Greeting({ name }) {
 
 -----
 
-#### Named Export vs. Default Export (The Doorbell vs. "Who Lives Here?")
+#### Named Export vs. Default Export
 
 Every component must be exported from its file so it can be imported elsewhere. You have two options:
 
@@ -158,7 +158,7 @@ const formatPrice = (n) => `$${n.toFixed(2)}`;
 
 -----
 
-#### "Dumb" vs. "Smart" Components (The Cookie Cutter vs. The Brain)
+#### Presentational and Container Components
 
 In React there is a fundamental conceptual separation between two types of components.
 
@@ -199,7 +199,7 @@ The ideal separation is that the UI is dumb and the logic is smart, without mixi
 
 -----
 
-#### Nesting and the Matryoshka Problem
+#### Nesting and the Problem of Excessive Nesting
 
 React encourages breaking the UI into small components that nest inside one another. This is great, but only up to a point. When a single component does too much, it is like a restaurant where the chef cooks, serves tables, and washes dishes all at the same time: it works with one customer, but with thirty it is a disaster.
 
@@ -252,7 +252,7 @@ function Page() {
 <br />
 <br />
 
-### 8. Project Structure (The Vite Kitchen)
+### 8. Project Structure
 
 #### The Folders of a React Project
 
@@ -275,7 +275,7 @@ The **`node_modules/`** folder is where `npm install` downloads the actual libra
 
 -----
 
-#### `package.json` vs. `node_modules` (The Shopping List vs. The Pantry)
+#### `package.json` vs. `node_modules`
 
 This distinction confuses everyone at first. The `package.json` is your **shopping list**, a lightweight text file that lists the names and versions of the libraries you need. The `node_modules` folder is the **physical pantry**, where the actual packages are downloaded and take up real disk space.
 
@@ -334,7 +334,7 @@ npm run dev
 
 ### 9. Props (The Function Arguments)
 
-#### Props Are Just Arguments (The Anonymous Package)
+#### Props Are Just Arguments
 
 Props are not a mysterious React mechanism, they are literally the arguments of a JavaScript function. To understand this, just look at what Babel does when it encounters a component with attributes.
 
@@ -401,7 +401,7 @@ Destructuring in the parameters is the preferred modern practice because it requ
 
 -----
 
-#### The Deadly Trap (Parentheses Without Curly Braces)
+#### Common Error (Parentheses Without Curly Braces)
 
 This is the error that drives beginners crazy because it does not produce an explicit error but a silently wrong behavior.
 
@@ -440,7 +440,7 @@ function Greeting({ name }) { } // 'name' = "Mario" ← CORRECT
 
 -----
 
-#### The `children` Prop (The Picture Frame)
+#### The `children` Prop (Content Between Tags)
 
 Sometimes you do not want to pass data as attributes but want to pass other JSX elements "inside" the component, just like you do with normal HTML tags. It is like a picture frame: whoever makes it designs the wooden borders and decides the shape, but does not know and does not necessarily need to know what photo you will put inside.
 
@@ -473,7 +473,7 @@ function Card({ children }) {
 
 -----
 
-#### Spread Operator for Props (Dumping the Wallet)
+#### Spread Operator for Props
 
 When you have an object with many properties and you want to pass them all as props to a child component, writing each prop individually is tedious and above all fragile.
 
@@ -513,7 +513,7 @@ const userData = { name: "Mario", age: 25, admin: true };
 
 -----
 
-#### Props Are Read-Only (The One-Way Waterfall)
+#### Props Are Read-Only (Unidirectional Flow)
 
 One of the fundamental laws of React is that a child component **can never modify its props**. They are read-only.
 
@@ -552,7 +552,7 @@ This is called **One-Way Data Flow** (unidirectional data flow). It is a deliber
 <br />
 <br />
 
-### 10. Inline Styles (CSS Disguised as JavaScript)
+### 10. Inline Styles
 
 #### The Double Curly Braces Demystified `{{ }}`
 
@@ -606,7 +606,7 @@ const myStyle = {
 
 -----
 
-#### The Dynamic Power (Why Use Objects?)
+#### Dynamic Styles (Why Use Objects?)
 
 The real usefulness of inline styles in React is not convenience but **dynamism**, because a JavaScript object can contain logic.
 

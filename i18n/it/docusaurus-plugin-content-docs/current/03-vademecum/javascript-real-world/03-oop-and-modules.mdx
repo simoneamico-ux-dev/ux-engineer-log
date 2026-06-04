@@ -1,0 +1,1225 @@
+---
+sidebar_position: 3
+title: OOP e Moduli
+description: Classi, constructor, this, ereditarietà con extends e super, metodi statici, getter e setter, ES Modules, separazione tra funzioni pure e DOM.
+---
+
+import Link from '@docusaurus/Link';
+
+# Parte III: OOP e Moduli
+
+Man mano che un progetto cresce, servono strumenti per organizzare il codice.
+Le **classi** ti permettono di raggruppare dati e comportamenti in "stampi" riutilizzabili.
+I **moduli** dividono il codice in file che comunicano tra loro in modo esplicito.
+Insieme, ti aiutano a far crescere il progetto senza trasformare tutto in un unico file difficile da mantenere.
+
+---
+
+## Classi e Programmazione a Oggetti
+
+### 12. Classi (Lo Stampo)
+
+Una classe è uno **stampo** per creare oggetti.
+Definisce una volta che proprietà e metodi avranno tutti gli oggetti creati da quello stampo, e poi tu ne crei quante istanze vuoi, ciascuna con i suoi dati specifici.
+
+Lo stampo per i biscotti ha una forma fissa (una stella, un cuore), e ogni biscotto che ne esce ha quella forma.
+I biscotti potranno anche avere colori diversi, così come ingredienti, ma la struttura è comune.
+Per rimanere su quest'analogia: la classe è lo stampo e ogni istanza è un biscotto.
+
+```javascript
+class Giocatore {
+  constructor(nome, livello) {
+    this.nome = nome;
+    this.livello = livello;
+    this.punti = 0;
+  }
+
+  guadagnaPunti(quantita) {
+    this.punti += quantita;
+  }
+}
+
+const mario = new Giocatore("Mario", 1);
+const luigi = new Giocatore("Luigi", 1);
+
+mario.guadagnaPunti(100);
+luigi.guadagnaPunti(50);
+
+console.log(mario.nome, mario.punti); // "Mario" 100
+console.log(luigi.nome, luigi.punti); // "Luigi" 50
+```
+
+`Giocatore` è la classe (lo stampo).
+`mario` e `luigi` sono **istanze**: oggetti distinti creati dalla stessa classe, ciascuno con le sue proprietà.
+Chiamare `mario.guadagnaPunti(100)` modifica solo `mario` e non `luigi`.
+
+-----
+
+#### Zucchero Sintattico sopra i Prototipi
+
+Le classi in JavaScript sono **zucchero sintattico**, ovvero un modo più comodo e leggibile per scrivere qualcosa che JavaScript sapeva già fare.
+Il termine viene dall'inglese "syntactic sugar": non aggiunge un potere completamente nuovo al linguaggio, ma rende la sintassi più piacevole da usare.
+
+Prima che la parola chiave `class` esistesse (arrivata con ES6 nel 2015), lo stesso risultato si otteneva manipolando direttamente i **prototipi**.
+I prototipi sono il meccanismo con cui JavaScript conserva metodi condivisi, così gli oggetti possono usarli senza averne una copia propria.
+
+Un array, per esempio, non contiene una sua copia personale di `.map()`.
+Il metodo `.map()` vive nel prototipo degli array, cioè in `Array.prototype`, e tutti gli array lo usano da lì.
+
+```javascript
+const numeri = [1, 2, 3];
+numeri.map(n => n * 2); // [2, 4, 6]
+```
+
+Quando scrivi `numeri.map(...)`, JavaScript guarda prima dentro `numeri`.
+Se non trova `map` direttamente lì, risale al prototipo degli array e usa il metodo trovato.
+Con le classi succede lo stesso: `mario` e `luigi` non hanno ciascuno una copia separata di `guadagnaPunti`, perché il metodo sta nel prototipo di `Giocatore` e le istanze lo condividono.
+
+Quando scrivi `class Giocatore { ... }`, JavaScript crea internamente una funzione costruttore e un `prototype`, esattamente come avresti fatto a mano.
+La sintassi moderna è solo più leggibile e meno soggetta a errori.
+
+Non devi preoccuparti dei prototipi per usare le classi quotidianamente.
+Ma è utile sapere che esistono, perché spiegano perché metodi come `.map()`, `.filter()` e `.trim()` sono disponibili automaticamente su array e stringhe.
+
+```javascript
+// Quello che JavaScript fa internamente con le classi (concettualmente)
+function Giocatore(nome, livello) {
+  this.nome = nome;
+  this.livello = livello;
+}
+Giocatore.prototype.guadagnaPunti = function(quantita) {
+  this.punti = (this.punti || 0) + quantita;
+};
+
+// Risultato equivalente
+const mario = new Giocatore("Mario", 1);
+mario.guadagnaPunti(100);
+```
+
+Non scrivere mai codice così nella pratica.
+La sintassi `class` è sempre la prima scelta.
+Ricorda solo che alla base c'è il sistema a prototipi, non una macchina da ereditarietà in stile Java.
+
+**Regola:** usa `class` per raggruppare dati e comportamenti in uno stampo riutilizzabile.
+Ogni chiamata a `new` crea un'istanza indipendente con le sue proprietà.
+
+<br />
+<br />
+<br />
+<br />
+
+### 13. `constructor()`, `new` e `this`
+
+Tre concetti che lavorano insieme e vanno capiti come un'unità.
+
+#### `constructor()` (Il Reparto Assemblaggio)
+
+Il `constructor` è il metodo speciale che viene chiamato automaticamente quando crei una nuova istanza con `new`.
+Il suo lavoro è impostare lo stato iniziale dell'oggetto: assegnare le proprietà, impostare i valori predefiniti, avviare eventuali configurazioni iniziali.
+
+```javascript
+class Carrello {
+  constructor(clienteId) {
+    this.clienteId = clienteId;
+    this.prodotti = [];
+    this.scontoApplicato = 0;
+    this.dataCreazione = new Date();
+  }
+}
+
+const carrello = new Carrello("utente-42");
+// carrello è { clienteId: "utente-42", prodotti: [], scontoApplicato: 0, dataCreazione: ... }
+```
+
+Il `constructor` è opzionale.
+Se non lo scrivi, JavaScript ne crea uno vuoto in automatico.
+Ma se hai proprietà da inizializzare (cosa molto comune) lo scrivi tu.
+
+Non puoi avere più di un `constructor` in una classe.
+A differenza di altri linguaggi (Java, C++), JavaScript non supporta l'overloading, nonché più funzioni con lo stesso nome ma parametri diversi.
+Se ti servono più modi di creare un'istanza, usi **metodi statici** (li vedremo nella <a href="#metodi-statici-static">sezione 14</a>) o parametri predefiniti.
+
+-----
+
+#### I Quattro Passaggi di `new`
+
+Quando scrivi `new Giocatore("Mario", 1)`, JavaScript fa quattro cose in sequenza:
+
+1. **Crea** un oggetto vuoto `{}`
+2. **Lega** quell'oggetto al prototipo della classe (così erediterà i metodi)
+3. **Esegue** il `constructor` con `this` che si riferisce al nuovo oggetto
+4. **Restituisce** l'oggetto (il `this` pieno di proprietà)
+
+Il risultato è che la variabile assegnata (`mario`) riceve l'oggetto pronto.
+
+```javascript
+const mario = new Giocatore("Mario", 1);
+// mario è il nuovo oggetto con le proprietà impostate dal constructor
+```
+
+Se dimentichi `new` con una classe moderna, JavaScript lancia un errore chiaro, del tipo `Class constructor ... cannot be invoked without 'new'`.
+Questo accade perché, giustamente, una classe deve creare un'istanza e non va chiamata come una funzione normale.
+
+```javascript
+Giocatore("Mario", 1); // ❌ TypeError: serve new
+```
+
+Usa sempre `new` con le classi.
+
+-----
+
+#### `this` (Il Riferimento all'Istanza)
+
+`this` è una parola chiave che, dentro un metodo di classe, si riferisce all'**istanza specifica** su cui il metodo è stato chiamato.
+Non è la classe, bensì l'oggetto concreto.
+
+```javascript
+class Giocatore {
+  constructor(nome) {
+    this.nome = nome;
+  }
+
+  saluta() {
+    console.log(`Ciao, sono ${this.nome}`);
+  }
+}
+
+const mario = new Giocatore("Mario");
+const luigi = new Giocatore("Luigi");
+
+mario.saluta(); // "Ciao, sono Mario" (this = mario)
+luigi.saluta(); // "Ciao, sono Luigi" (this = luigi)
+```
+
+Quando chiami `mario.saluta()`, dentro `saluta` il `this` si riferisce a `mario`.
+Quando chiami `luigi.saluta()`, il `this` si riferisce a `luigi`.
+Lo stesso metodo, lo stesso codice, `this` cambia in base a chi ha chiamato.
+
+-----
+
+#### Il Problema di `this` con `addEventListener`
+
+Un caso tipico in cui il valore di `this` cambia è quando passi un metodo di classe direttamente a `addEventListener`.
+Il metodo viene eseguito al click, ma non viene più chiamato come metodo dell'istanza.
+Di conseguenza, dentro quel metodo `this` non indica più l'oggetto creato dalla classe.
+
+```javascript
+// ❌ PROBLEMA
+class PulsanteContatore {
+  constructor(bottone) {
+    this.bottone = bottone;
+    this.conteggio = 0;
+    this.bottone.addEventListener("click", this.incrementa);
+  }
+
+  incrementa() {
+    this.conteggio++; // ❌ this.conteggio è undefined
+    console.log(this.conteggio); // NaN (undefined + 1)
+  }
+}
+```
+
+Il problema è che quando `addEventListener` chiama `incrementa`, non lo chiama come `mario.saluta()` o `conto.vediSaldo()`, cioè su un'istanza precisa.
+Lo chiama come gestore dell'evento, quindi cambia il contesto della chiamata.
+Nel caso di `addEventListener`, dentro `incrementa` il `this` si riferisce al bottone che ha ricevuto l'evento, non all'istanza di `PulsanteContatore`.
+
+Le soluzioni più comuni sono tre.
+
+**Soluzione 1: wrapper con arrow function**.
+Un wrapper è una funzione piccola che avvolge un'altra chiamata.
+Qui avvolgiamo `this.incrementa()` in una arrow function, che eredita `this` dal contesto circostante, cioè dal `constructor`, dove `this` è l'istanza.
+
+```javascript
+// ✅ SOLUZIONE 1
+class PulsanteContatore {
+  constructor(bottone) {
+    this.bottone = bottone;
+    this.conteggio = 0;
+    this.bottone.addEventListener("click", () => this.incrementa());
+  }
+
+  incrementa() {
+    this.conteggio++;
+    console.log(this.conteggio); // Funziona
+  }
+}
+```
+
+**Soluzione 2: `.bind(this)`**.
+Il metodo `.bind(this)` crea una nuova funzione con `this` legato permanentemente al valore che passi.
+In questo caso stai dicendo: "quando questa funzione verrà chiamata, dentro di lei `this` deve restare l'istanza".
+
+```javascript
+// ✅ SOLUZIONE 2
+class PulsanteContatore {
+  constructor(bottone) {
+    this.bottone = bottone;
+    this.conteggio = 0;
+    this.bottone.addEventListener("click", this.incrementa.bind(this));
+  }
+
+  incrementa() {
+    this.conteggio++;
+    console.log(this.conteggio);
+  }
+}
+```
+
+**Soluzione 3: class field con arrow function**.
+Oppure definisci `incrementa` direttamente come arrow function in un **class field** (campo di classe).
+In questo caso `this` è già quello dell'istanza fin dalla definizione.
+
+```javascript
+// ✅ SOLUZIONE 3 (con class fields)
+class PulsanteContatore {
+  constructor(bottone) {
+    this.bottone = bottone;
+    this.conteggio = 0;
+    this.bottone.addEventListener("click", this.incrementa);
+  }
+
+  incrementa = () => {
+    this.conteggio++;
+    console.log(this.conteggio);
+  };
+}
+```
+
+Nella pratica moderna, la soluzione 1 (wrapper con arrow function) è la più comune perché è chiara e non richiede di ricordare `.bind`.
+La soluzione 3 è elegante ma ha un costo di memoria poiché ogni istanza crea una sua copia del metodo invece di condividerla tramite `prototype`.
+
+**Regola:** `new` è obbligatorio per creare istanze.
+`this` dentro un metodo si riferisce all'istanza su cui è stato chiamato.
+Quando passi metodi a event listener o callback, proteggi `this` con un wrapper arrow o `.bind(this)`.
+
+<br />
+<br />
+<br />
+<br />
+
+### 14. Proprietà e Metodi
+
+Dentro una classe puoi dichiarare proprietà (dati) e metodi (comportamenti) in vari modi, ciascuno con il suo uso specifico.
+
+#### Proprietà di Classe (Class Fields)
+
+La sintassi moderna ti permette di dichiarare proprietà direttamente nel corpo della classe, fuori dal `constructor`.
+Sono utili per proprietà con valore iniziale uguale per tutte le istanze.
+
+```javascript
+class Giocatore {
+  // Class fields: valore iniziale comune a tutte le istanze
+  punti = 0;
+  vite = 3;
+  inventario = [];
+
+  constructor(nome) {
+    this.nome = nome;
+    // Il constructor imposta solo le cose personalizzate
+  }
+}
+
+const mario = new Giocatore("Mario");
+console.log(mario.punti); // 0
+console.log(mario.vite);  // 3
+console.log(mario.nome);  // "Mario"
+```
+
+I class fields rendono il `constructor` più pulito: invece di avere tutte le assegnazioni lì dentro, lasci nel `constructor` solo quelle che dipendono dai parametri.
+
+**Attenzione con array e oggetti come class fields:** ogni istanza riceve **un suo valore iniziale**, non un riferimento condiviso con le altre istanze.
+Questo è importante per proprietà come `inventario = []`: ogni volta che chiami `new Giocatore(...)`, JavaScript crea un nuovo array per quella specifica istanza, così l'inventario di `mario` e quello di `luigi` restano separati.
+
+-----
+
+#### Metodi nel Prototype
+
+Quando dichiari un metodo nella forma classica (senza `=`), quel metodo vive nel **prototype** della classe, non in ogni istanza.
+In pratica esiste una sola copia del metodo, condivisa da tutte le istanze.
+JavaScript la trova tramite la **prototype chain**, cioè la catena dei prototipi che risale quando cerca una proprietà o un metodo.
+
+```javascript
+class Giocatore {
+  constructor(nome) {
+    this.nome = nome;
+  }
+
+  // Metodo nel prototype: una sola copia condivisa
+  saluta() {
+    console.log(`Ciao, sono ${this.nome}`);
+  }
+}
+
+const mario = new Giocatore("Mario");
+const luigi = new Giocatore("Luigi");
+
+// mario e luigi non "hanno" saluta come loro proprietà
+// Quando chiami mario.saluta(), JavaScript cerca saluta in mario,
+// non lo trova, risale al prototype di Giocatore e lo trova lì
+```
+
+Questa gestione è efficiente in termini di memoria.
+Con 1000 istanze non hai 1000 copie del metodo `saluta`: hai una sola copia nel `prototype` condiviso.
+
+La regola pratica: **dichiara i metodi con la sintassi classica `saluta() { ... }`** quando non ti serve il `this` legato.
+**Usa l'arrow function come class field `saluta = () => { ... }`** solo quando il `this` deve essere preservato in callback, come abbiamo visto nella <a href="#il-problema-di-this-con-addeventlistener">sezione 13</a> con `addEventListener`.
+
+-----
+
+#### Campi Privati (`#`)
+
+Storicamente JavaScript non aveva il concetto di proprietà private: tutte le proprietà di un'istanza erano accessibili dall'esterno.
+La convenzione era usare un underscore `_email` per dire "non toccarla", ma era solo un'indicazione visuale, non un vincolo reale.
+
+Dal 2022, la sintassi `#` dichiara campi davvero privati, che il linguaggio stesso impedisce di leggere o modificare dall'esterno.
+Il cancelletto fa parte del nome del campo: `#saldo` e `saldo` sono due cose diverse.
+
+```javascript
+class ContoBancario {
+  #saldo = 0; // Campo privato
+
+  deposita(importo) {
+    this.#saldo += importo;
+  }
+
+  get saldo() {
+    return this.#saldo;
+  }
+}
+
+const conto = new ContoBancario();
+conto.deposita(100);
+console.log(conto.saldo);  // 100 (via getter)
+console.log(conto.#saldo); // ❌ SyntaxError: Private field '#saldo' must be declared in an enclosing class
+```
+
+Puoi dichiarare privati anche i metodi, non solo i campi:
+
+```javascript
+class Calcolatrice {
+  #storico = [];
+
+  calcola(a, b, operazione) {
+    const risultato = this.#esegui(a, b, operazione);
+    this.#storico.push({ a, b, operazione, risultato });
+    return risultato;
+  }
+
+  #esegui(a, b, op) {
+    // Metodo interno, non accessibile dall'esterno
+    if (op === "+") return a + b;
+    if (op === "-") return a - b;
+    throw new Error("Operazione non valida");
+  }
+}
+```
+
+Rispetto allo schema con closures che abbiamo visto nel file precedente (`creaConto` con variabili private tramite closure), i campi privati con `#` sono più espliciti, più integrati nella sintassi delle classi e funzionano bene con classi ed ereditarietà.
+Lo schema con closure resta utile in contesti funzionali; il `#` è la scelta naturale nelle classi moderne.
+
+Un dettaglio: i campi privati sono legati alla classe dove sono dichiarati, e una sottoclasse non può accedervi direttamente.
+Se una classe figlia vuole usare dati "privati" del genitore, deve passarci tramite metodi pubblici o metodi pensati apposta per quell'accesso.
+In altri linguaggi questi metodi vengono spesso chiamati "protected", cioè accessibili anche alle classi figlie, ma JavaScript non ha un vero `protected`.
+
+-----
+
+#### Metodi Statici (`static`)
+
+Un metodo `static` appartiene alla classe, non alle istanze.
+Lo chiami sulla classe stessa, senza fare `new`.
+
+```javascript
+class Giocatore {
+  constructor(nome, livello) {
+    this.nome = nome;
+    this.livello = livello;
+  }
+
+  // Metodo di istanza: chiamato sull'istanza
+  saluta() {
+    console.log(`Ciao, sono ${this.nome}`);
+  }
+
+  // Metodo statico: chiamato sulla classe
+  static creaOspite() {
+    return new Giocatore("Ospite", 1);
+  }
+
+  static confronta(a, b) {
+    return a.livello - b.livello;
+  }
+}
+
+// Chiami i metodi statici sulla classe
+const ospite = Giocatore.creaOspite();
+const giocatori = [new Giocatore("Mario", 3), ospite];
+const ordinati = [...giocatori].sort(Giocatore.confronta);
+```
+
+Gli usi tipici dei metodi statici sono due.
+
+**Factory methods** (metodi factory): metodi che creano oggetti già configurati, offrendo modi alternativi di creare istanze.
+`Giocatore.creaOspite()` è più espressivo di `new Giocatore("Ospite", 1)`, e nasconde i dettagli di come viene costruita.
+
+**Funzioni di utilità che lavorano sulla classe**: `Giocatore.confronta(a, b)` non ha senso chiamarla su un'istanza perché confronta due giocatori.
+Vive sulla classe perché è uno strumento relativo alla classe ma indipendente dalle singole istanze.
+
+`Math` (che hai visto nella <Link to="/it/docs/vademecum/javascript-real-world/foundations#il-modulo-math">sezione 3</Link>) non è una classe, ma rende bene l'idea: è un oggetto globale con metodi che usi direttamente, come `Math.floor()`, `Math.random()` e `Math.max()`.
+Non crei "un'istanza di Math".
+
+**Regola:** class fields per proprietà con valore iniziale comune.
+Metodi classici per condividere una sola copia via prototype.
+Arrow function come class field solo quando devi preservare `this`.
+`static` per metodi factory e funzioni di utilità che vivono sulla classe.
+
+<br />
+<br />
+<br />
+<br />
+
+### 15. Ereditarietà (`extends` e `super`)
+
+L'ereditarietà ti permette di costruire una classe **a partire** da un'altra, riusandone proprietà e metodi ed estendendoli.
+È il meccanismo con cui crei gerarchie: un `Nemico` è un tipo di `Personaggio`, un `Admin` è un tipo di `Utente`.
+
+#### `extends`
+
+La parola chiave `extends` collega una classe figlia a una genitore.
+La figlia **eredita** tutto: proprietà dichiarate nel constructor, metodi, class fields.
+
+```javascript
+class Personaggio {
+  constructor(nome, vita) {
+    this.nome = nome;
+    this.vita = vita;
+  }
+
+  subisciDanno(quantita) {
+    this.vita -= quantita;
+    console.log(`${this.nome} ha subito ${quantita} danni, vita: ${this.vita}`);
+  }
+}
+
+class Giocatore extends Personaggio {
+  // Giocatore eredita tutto da Personaggio
+}
+
+const mario = new Giocatore("Mario", 100);
+mario.subisciDanno(20); // "Mario ha subito 20 danni, vita: 80"
+```
+
+`Giocatore` non ha il suo constructor né il suo metodo `subisciDanno`, ma funziona perché li eredita da `Personaggio`.
+
+-----
+
+#### `super()` (Chiamare il Costruttore del Genitore)
+
+Se la classe figlia definisce un suo `constructor`, **deve** chiamare `super()` prima di usare `this`.
+`super()` esegue il costruttore della classe genitore.
+
+```javascript
+class Personaggio {
+  constructor(nome, vita) {
+    this.nome = nome;
+    this.vita = vita;
+  }
+}
+
+class Giocatore extends Personaggio {
+  constructor(nome, vita, livello) {
+    super(nome, vita); // Esegue Personaggio.constructor
+    this.livello = livello; // Poi aggiungi le proprietà specifiche
+  }
+}
+
+const mario = new Giocatore("Mario", 100, 5);
+// mario ha: nome, vita (dal genitore), livello (dal figlio)
+```
+
+Se usi `this` prima di `super()`, ottieni un errore.
+Il motivo è che `super()` è quello che "crea" l'oggetto base con le proprietà del genitore; solo dopo puoi estenderlo.
+
+```javascript
+class Giocatore extends Personaggio {
+  constructor(nome, vita, livello) {
+    this.livello = livello; // ❌ ReferenceError
+    super(nome, vita);
+  }
+}
+```
+
+-----
+
+#### `super.metodo()` (Chiamare un Metodo del Genitore)
+
+Dentro un metodo della figlia, `super.nomeMetodo()` chiama la versione del metodo definita nel genitore.
+È utile quando fai **override** (ridefinisci un metodo del genitore) ma vuoi comunque riutilizzarne la logica originale.
+
+```javascript
+class Personaggio {
+  constructor(nome) {
+    this.nome = nome;
+  }
+
+  saluta() {
+    console.log(`Sono ${this.nome}`);
+  }
+}
+
+class Nemico extends Personaggio {
+  saluta() {
+    super.saluta(); // Chiama la versione del genitore
+    console.log("E ti distruggerò!"); // Aggiungi comportamento
+  }
+}
+
+const goomba = new Nemico("Goomba");
+goomba.saluta();
+// "Sono Goomba"
+// "E ti distruggerò!"
+```
+
+Senza `super.saluta()`, dovresti riscrivere la logica del genitore nella figlia.
+`super` evita quella duplicazione.
+
+-----
+
+#### Override Completo
+
+Se vuoi sostituire completamente un metodo del genitore, basta dichiararlo nella figlia con lo stesso nome e non chiamare `super`.
+La versione della figlia vince.
+
+```javascript
+class Personaggio {
+  saluta() {
+    console.log("Ciao!");
+  }
+}
+
+class Nemico extends Personaggio {
+  saluta() {
+    console.log("GRRRR!"); // Nessuna chiamata a super.saluta()
+  }
+}
+
+new Nemico().saluta(); // "GRRRR!" (la versione del genitore non viene eseguita)
+```
+
+-----
+
+#### Esempio Completo
+
+Mettendo tutto insieme ecco un esempio che mostra come le classi lavorano insieme:
+
+```javascript
+class Personaggio {
+  vita = 100;
+
+  constructor(nome) {
+    this.nome = nome;
+  }
+
+  subisciDanno(quantita) {
+    this.vita -= quantita;
+    if (this.vita <= 0) {
+      this.muori();
+    }
+  }
+
+  muori() {
+    console.log(`${this.nome} è caduto.`);
+  }
+}
+
+class Giocatore extends Personaggio {
+  constructor(nome) {
+    super(nome);
+    this.vite = 3;
+  }
+
+  muori() {
+    this.vite--;
+    if (this.vite > 0) {
+      this.vita = 100;
+      console.log(`${this.nome} rinasce, vite rimaste: ${this.vite}`);
+    } else {
+      super.muori(); // Chiama la versione del genitore
+      console.log("Game Over.");
+    }
+  }
+}
+
+const mario = new Giocatore("Mario");
+mario.subisciDanno(200);
+// "Mario rinasce, vite rimaste: 2"
+```
+
+Nota come `Giocatore` estende il comportamento di `Personaggio`: reimplementa `muori()` per aggiungere la logica delle vite multiple, ma chiama `super.muori()` per il comportamento finale quando le vite finiscono davvero.
+
+-----
+
+#### `instanceof` (Controllare l'Appartenenza)
+
+L'operatore `instanceof` verifica se un oggetto è un'istanza di una certa classe (o di una sua sottoclasse).
+Restituisce un booleano.
+
+```javascript
+class Personaggio {}
+class Giocatore extends Personaggio {}
+class Nemico extends Personaggio {}
+
+const mario = new Giocatore();
+const goomba = new Nemico();
+
+mario instanceof Giocatore;    // true
+mario instanceof Personaggio;  // true (è una sottoclasse)
+mario instanceof Nemico;       // false
+
+goomba instanceof Personaggio; // true
+goomba instanceof Giocatore;   // false
+```
+
+`instanceof` risale la catena dell'ereditarietà, quindi un'istanza di `Giocatore` risulta anche istanza di `Personaggio`.
+Questo è utile quando vuoi accettare una categoria di oggetti, indipendentemente dal tipo specifico.
+
+```javascript
+function subisciDanno(entita) {
+  if (!(entita instanceof Personaggio)) {
+    throw new Error("Solo i personaggi possono subire danno");
+  }
+  // Procedi...
+}
+```
+
+Una differenza utile rispetto a `typeof`: `typeof mario` restituisce `"object"`, senza informazioni sulla classe.
+`instanceof` ti dice la classe specifica (o la gerarchia).
+
+Attenzione: `instanceof` controlla il **prototipo**, non solo il nome.
+Se due classi diverse hanno lo stesso nome (cosa rara ma possibile con moduli), il controllo è sul riferimento, non sulla stringa.
+
+**Regola:** `extends` per ereditare da una classe genitore.
+`super()` obbligatorio nel constructor del figlio prima di usare `this`.
+`super.metodo()` per riusare la logica del genitore dentro un override.
+`instanceof` per verificare l'appartenenza a una classe o alla sua gerarchia.
+
+<br />
+<br />
+<br />
+<br />
+
+### 16. Getter e Setter
+
+Getter e setter sono metodi speciali che si comportano come proprietà.
+Li usi senza parentesi, come se stessi leggendo o scrivendo un campo, ma internamente eseguono codice.
+Servono quando una "proprietà" richiede calcolo, validazione, normalizzazione o registrazione di ciò che succede.
+
+#### `get` (Proprietà Calcolate)
+
+Un `get` è un metodo che legge.
+Lo definisci come una funzione, ma lo usi come proprietà.
+
+```javascript
+class Persona {
+  constructor(nome, cognome) {
+    this.nome = nome;
+    this.cognome = cognome;
+  }
+
+  get nomeCompleto() {
+    return `${this.nome} ${this.cognome}`;
+  }
+}
+
+const utente = new Persona("Mario", "Rossi");
+console.log(utente.nomeCompleto); // "Mario Rossi" (senza parentesi!)
+```
+
+Il vantaggio: chi usa la classe non deve sapere se `nomeCompleto` è una proprietà memorizzata o calcolata al volo.
+L'interfaccia è pulita, l'implementazione è nascosta.
+
+Un altro uso classico è esporre valori derivati che vuoi calcolare ogni volta:
+
+```javascript
+class Carrello {
+  constructor() {
+    this.prodotti = [];
+  }
+
+  aggiungiProdotto(prodotto) {
+    this.prodotti.push(prodotto);
+  }
+
+  get totale() {
+    return this.prodotti.reduce((acc, p) => acc + p.prezzo, 0);
+  }
+
+  get numeroArticoli() {
+    return this.prodotti.length;
+  }
+}
+
+const carrello = new Carrello();
+carrello.aggiungiProdotto({ nome: "Libro", prezzo: 15 });
+carrello.aggiungiProdotto({ nome: "Caffè", prezzo: 3 });
+
+console.log(carrello.totale);         // 18 (calcolato ogni volta)
+console.log(carrello.numeroArticoli); // 2
+```
+
+-----
+
+#### `set` (Validazione Trasparente)
+
+Un `set` è un metodo che scrive.
+Lo usi come se stessi assegnando una proprietà, ma internamente esegue logica.
+Il caso d'uso principale è la **validazione**.
+
+```javascript
+class Utente {
+  constructor(email) {
+    this.email = email; // Chiama il setter
+  }
+
+  set email(valore) {
+    if (!valore.includes("@")) {
+      throw new Error("Email non valida");
+    }
+    this._email = valore.toLowerCase(); // Normalizza
+  }
+
+  get email() {
+    return this._email;
+  }
+}
+
+const utente = new Utente("MARIO@example.com");
+console.log(utente.email); // "mario@example.com" (normalizzata dal setter)
+
+utente.email = "nuovaemail"; // ❌ Error: Email non valida
+```
+
+Nota la convenzione `_email` con underscore: il trattino basso iniziale segnala che quella proprietà è "interna".
+Qui `_email` memorizza il valore reale, mentre il getter e il setter `email` controllano come quel valore viene letto e scritto.
+È uno schema comune per separare interfaccia pubblica e memorizzazione interna.
+
+-----
+
+#### Quando Usarli (e Quando No)
+
+Getter e setter sono potenti, ma non abusarne.
+La regola operativa è quella di **usare getter e setter quando c'è una buona ragione**, lasciando le proprietà normali per i casi semplici.
+
+Buone ragioni per un getter: il valore è calcolato (totale di un carrello), cambia nel tempo (l'ora attuale), è derivato da altri campi (nome completo da nome e cognome).
+
+Buone ragioni per un setter: validare prima di salvare, normalizzare il dato (`trim`, `toLowerCase`), emettere un evento quando cambia, avviare un nuovo render.
+Normalizzare significa trasformare un dato in una forma coerente prima di salvarlo, per esempio convertire un'email in minuscolo.
+
+Se l'unica cosa che il setter fa è `this._x = x` e l'unica cosa che il getter fa è `return this._x`, non ti servono.
+Stai scrivendo codice in più senza guadagno.
+Una proprietà normale basta e avanza.
+
+**Regola:** `get` per proprietà derivate o calcolate.
+`set` per validazione e normalizzazione.
+Non avvolgere proprietà semplici con getter/setter che non fanno nulla.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+## Moduli e Architettura
+
+### 17. ES Modules (`import` ed `export`)
+
+Finora abbiamo scritto codice in un singolo file.
+Nella realtà, quando un progetto cresce, il codice viene diviso in decine o centinaia di file, ciascuno con una responsabilità precisa.
+I **moduli ES** sono il sistema standard per far comunicare i file: ogni file dichiara cosa **espone** (export), e altri file dichiarano cosa **usano** (import).
+
+#### `export` (Rendere Disponibile)
+
+Ci sono due stili di export: **named export** (export con nome) e **default export** (export principale del file).
+
+**Named export**: esponi funzioni, costanti o classi con il loro nome specifico.
+Un file può averne quanti vuoi.
+
+```javascript
+// core.js
+export const SOGLIA_LUMINANZA_SCURA = 0.4;
+
+export function calcolaScala(larghezzaPagina, larghezzaSchermo) {
+  return larghezzaSchermo / larghezzaPagina;
+}
+
+export function normalizzaTesto(testo) {
+  return testo.trim().toLowerCase();
+}
+```
+
+Puoi anche dichiarare prima e poi esportare alla fine:
+
+```javascript
+// core.js
+const SOGLIA_LUMINANZA_SCURA = 0.4;
+
+function calcolaScala(larghezzaPagina, larghezzaSchermo) {
+  return larghezzaSchermo / larghezzaPagina;
+}
+
+function normalizzaTesto(testo) {
+  return testo.trim().toLowerCase();
+}
+
+export { SOGLIA_LUMINANZA_SCURA, calcolaScala, normalizzaTesto };
+```
+
+**Default export**: espone **un solo** valore principale del file.
+Un file può avere un solo default export.
+
+```javascript
+// Carrello.js
+export default class Carrello {
+  constructor() {
+    this.prodotti = [];
+  }
+}
+```
+
+La regola di buon senso: **named export quando il file espone più cose**, **default export quando il file rappresenta una singola entità**, per esempio una classe o un componente.
+In una struttura di questo tipo vedrai soprattutto named export, perché file come `core.js`, `ocr.js` e `session.js` espongono più funzioni legate alla stessa responsabilità.
+
+-----
+
+#### `import` (Usare Cosa un Altro File Espone)
+
+Sul lato ricevente, importi con la sintassi speculare.
+
+**Named import**: le parentesi graffe sono obbligatorie e i nomi devono corrispondere esattamente a quelli esportati.
+
+```javascript
+// app.js
+import { calcolaScala, SOGLIA_LUMINANZA_SCURA } from "./core.js";
+
+console.log(calcolaScala(1000, 500)); // 0.5
+console.log(SOGLIA_LUMINANZA_SCURA);  // 0.4
+```
+
+**Default import**: niente graffe, il nome lo scegli tu, anche se la convenzione è usare il nome della classe o funzione esportata.
+
+```javascript
+// app.js
+import Carrello from "./Carrello.js";
+
+const c = new Carrello();
+```
+
+Puoi **rinominare** al volo durante l'import con `as`, è utile per evitare conflitti tra nomi identici da file diversi.
+
+```javascript
+import { calcolaScala as scalaPagina } from "./core.js";
+
+scalaPagina(1000, 500); // 0.5
+```
+
+Puoi **importare tutto** in un oggetto namespace con `*`:
+
+```javascript
+import * as Core from "./core.js";
+
+Core.calcolaScala(1000, 500);
+Core.normalizzaTesto("  Ciao  ");
+```
+
+Questo è comodo quando importi tante funzioni da un modulo e vuoi mantenere il nome del modulo nel codice per chiarezza.
+Il compromesso è che può rendere meno immediato il **tree-shaking**, l'ottimizzazione che rimuove il codice non usato dal bundle finale.
+I bundler moderni spesso riescono comunque a ottimizzare, ma gli import specifici restano più chiari.
+
+-----
+
+#### Combinare Named e Default nello Stesso File
+
+Un file può avere un default export e named export insieme.
+L'import li combina con la virgola.
+
+```javascript
+// utils.js
+export default function formatta(valore) { /* ... */ }
+export const VERSIONE = "1.0";
+export function normalizza(testo) { /* ... */ }
+```
+
+```javascript
+// app.js
+import formatta, { VERSIONE, normalizza } from "./utils.js";
+```
+
+Il default arriva per primo, senza graffe; i named arrivano dopo, con graffe.
+
+-----
+
+#### `<script type="module">` (Usare i Moduli nel Browser)
+
+Nel browser, i moduli si attivano dichiarando `type="module"` sul tag `<script>`.
+
+```html
+<script type="module" src="app.js"></script>
+```
+
+Questo cambia tre cose nel comportamento del browser:
+
+1. **Scope proprio**: le variabili dichiarate nel modulo non inquinano lo scope globale. Nel browser, `window` è l'oggetto globale della pagina; scrivere `const x = 5` in un modulo non crea `window.x`, quindi quel nome non diventa disponibile ovunque.
+2. **`defer` automatico**: il browser aspetta che l'HTML sia letto e trasformato in DOM prima di eseguire il modulo, senza bisogno dell'attributo `defer`. Lo vedremo in dettaglio nella <Link to="/it/docs/vademecum/javascript-real-world/browser-and-async#19-caricamento-script-quando-viene-eseguito-il-tuo-js">sezione 19</Link>.
+3. **Strict mode automatico**: i moduli girano in modalità strict senza bisogno di dichiararla. Significa che JavaScript applica regole più rigide e blocca alcuni comportamenti storici poco sicuri o ambigui.
+
+Un effetto pratico: se apri direttamente un file HTML con `file://` (senza un server locale), i moduli possono fallire per ragioni di sicurezza, spesso indicate come CORS.
+CORS è il meccanismo con cui il browser decide quali file o server possono comunicare tra loro.
+In sviluppo, usa il server locale del tuo progetto; anche un server statico semplice è sufficiente.
+
+-----
+
+#### Organizzare i File per Responsabilità
+
+Il valore vero dei moduli non è solo sintattico, è organizzativo.
+Ti costringono a pensare "cosa espone questo file?" e "quali file dipendono da altri?".
+Per esempio, in un progetto reale potresti trovare una struttura simile.
+
+```
+veil/
+  app.js          (orchestratore che collega UI, lettura PDF, OCR, export e sessione)
+  core.js         (funzioni pure per calcoli, testo e regole senza DOM)
+  ocr.js          (riconoscimento testo nelle immagini e layer selezionabili)
+  export.js       (export PDF e preparazione del PDF finale)
+  session.js      (persistenza, salvataggio e ripristino di sessione e file)
+  sw.js           (service worker per cache e funzionamento offline)
+  sw-register.js  (registra il service worker senza bloccare l'app)
+  tests/
+    unit/         (test veloci sulle funzioni pure)
+    e2e/          (test browser sui flussi reali)
+```
+
+I file che dipendono da altri moduli dichiarano le loro dipendenze in cima con gli `import`.
+Leggendo quelle righe, capisci subito di cosa ha bisogno il file.
+In questa struttura `app.js` resta il punto di collegamento con il browser, mentre `core.js` contiene codice puro e testabile.
+Questo non significa dividere tutto per forza: se una parte di codice è strettamente legata allo stato della pagina, può restare nell'orchestratore.
+`ocr.js`, `export.js` e `session.js` isolano responsabilità specifiche, così puoi leggere e modificare un'area del codice senza dover conoscere ogni dettaglio del resto del progetto.
+
+**Regola:** named export per file con più cose, default export per entità singole.
+`import` dichiara esplicitamente le dipendenze.
+`type="module"` nello script tag attiva il sistema dei moduli nel browser.
+
+<br />
+<br />
+<br />
+<br />
+
+### 18. Separazione Pure Functions vs DOM
+
+Ecco lo schema di organizzazione più importante per scrivere codice testabile e manutenibile.
+Non è una funzionalità del linguaggio, è una **scelta di progettazione**.
+Si riassume in una regola: **separa le funzioni pure dal codice che tocca il DOM**.
+
+#### Cos'è una Funzione Pura
+
+Una **funzione pura** ha due caratteristiche:
+
+1. Dato lo stesso input, restituisce sempre lo stesso output
+2. Non ha **effetti collaterali** (side effects), cioè non cambia qualcosa fuori da sé: non modifica variabili esterne, non tocca il DOM, non fa chiamate di rete, non scrive su `localStorage`
+
+```javascript
+// ✅ PURA: solo input -> output
+function calcolaIva(prezzo, aliquota) {
+  return prezzo * (1 + aliquota);
+}
+
+// ❌ NON PURA: modifica il DOM
+function mostraPrezzo(prezzo) {
+  document.querySelector("#prezzo").textContent = `${prezzo}€`;
+}
+
+// ❌ NON PURA: dipende da stato esterno che può cambiare
+let sconto = 0.1;
+function applicaSconto(prezzo) {
+  return prezzo * (1 - sconto);
+}
+```
+
+Le funzioni pure sono prevedibili, facili da leggere (tutto quello che fanno è nell'input e nell'output), e facilissime da testare: passi un input, controlli l'output.
+
+-----
+
+#### Perché Separarle dal DOM
+
+Il codice che tocca il DOM produce inevitabilmente effetti collaterali: il DOM è uno stato globale e mutevole, cioè una struttura condivisa dalla pagina che può cambiare nel tempo.
+Quando mescoli lettura dei dati, calcoli, regole e modifiche al DOM nello stesso file, diventano difficili due cose:
+
+**Testare**: per testare una funzione che modifica il DOM, devi emulare un browser (con Jest + jsdom, o Playwright).
+Per testare una funzione pura, basta chiamare la funzione e confrontare l'output.
+La differenza è tra millisecondi (funzione pura) e secondi (test con DOM).
+
+**Ragionare**: quando una funzione ha effetti collaterali, per capire cosa fa devi ricostruire tutto il contesto in cui gira.
+Una funzione pura, invece, si può leggere e capire in isolamento.
+
+-----
+
+#### Lo Schema in Pratica
+
+L'approccio è dividere il codice in due strati:
+
+**Strato "core"** (file come `core.js`, `logica.js`, `validazioni.js`): contiene solo funzioni pure.
+Non dovrebbe leggere o modificare la pagina con `document` o `window`, né fare richieste di rete con `fetch` e nemmeno dovrebbe dipendere da variabili esterne che possono cambiare.
+Deve ricevere i dati come parametri e restituire un risultato.
+Se gli passi gli stessi argomenti, deve produrre sempre lo stesso output.
+
+**Strato "UI"** (file come `app.js`, `ui.js`): legge dal DOM, chiama funzioni del core per fare i calcoli, scrive i risultati nel DOM.
+È il "collante" tra le funzioni pure che calcolano risultati e la pagina reale da cui prendere dati e in cui mostrare aggiornamenti.
+
+```javascript
+// core.js (solo logica, zero DOM)
+export function calcolaTotale(prodotti, sconto = 0) {
+  const subtotale = prodotti.reduce((acc, p) => acc + p.prezzo * p.quantita, 0);
+  return subtotale * (1 - sconto);
+}
+
+export function validaEmail(email) {
+  return email.includes("@") && email.includes(".");
+}
+
+export function formattaPrezzo(numero) {
+  return `€${numero.toFixed(2)}`;
+}
+```
+
+```javascript
+// app.js (il collante)
+import { calcolaTotale, validaEmail, formattaPrezzo } from "./core.js";
+
+const prodotti = leggiProdottiDaDOM();
+const totale = calcolaTotale(prodotti, 0.1); // Calcolo puro
+document.querySelector("#totale").textContent = formattaPrezzo(totale);
+
+document.querySelector("#email").addEventListener("blur", (e) => {
+  const valore = e.target.value;
+  if (!validaEmail(valore)) {
+    mostraErroreEmail();
+  }
+});
+
+function leggiProdottiDaDOM() {
+  // ...
+}
+
+function mostraErroreEmail() {
+  // ...
+}
+```
+
+`core.js` è testabile con strumenti leggeri come Vitest in millisecondi.
+`app.js` richiede un browser o un emulatore, ma è molto più piccolo perché il grosso della logica è nel core.
+
+-----
+
+#### Riconoscere la Tentazione
+
+La tentazione di mescolare è forte, soprattutto all'inizio.
+Un segnale tipico:
+
+```javascript
+// ❌ Mescolato: calcolo e DOM nello stesso posto
+function aggiornaCarrello() {
+  const prodotti = document.querySelectorAll(".prodotto");
+  let totale = 0;
+  prodotti.forEach((el) => {
+    const prezzo = parseFloat(el.dataset.prezzo);
+    const quantita = parseInt(el.querySelector(".quantita").value, 10);
+    totale += prezzo * quantita;
+  });
+  document.querySelector("#totale").textContent = `${totale.toFixed(2)}€`;
+}
+```
+
+Questa funzione fa tre cose: legge dal DOM, calcola e poi scrive nel DOM.
+Se vuoi testare il calcolo, devi creare un DOM finto e se cambi la struttura HTML, si rompe anche il calcolo.
+Se vuoi riusare la logica del totale altrove, devi duplicarla...
+
+La versione separata:
+
+```javascript
+// ✅ core.js
+export function calcolaTotaleCarrello(prodotti) {
+  return prodotti.reduce((acc, p) => acc + p.prezzo * p.quantita, 0);
+}
+
+// ✅ app.js
+import { calcolaTotaleCarrello } from "./core.js";
+
+function aggiornaCarrello() {
+  const prodotti = leggiProdottiDalDOM();
+  const totale = calcolaTotaleCarrello(prodotti);
+  document.querySelector("#totale").textContent = `${totale.toFixed(2)}€`;
+}
+
+function leggiProdottiDalDOM() {
+  return Array.from(document.querySelectorAll(".prodotto")).map((el) => ({
+    prezzo: parseFloat(el.dataset.prezzo),
+    quantita: parseInt(el.querySelector(".quantita").value, 10),
+  }));
+}
+```
+
+Ora `calcolaTotaleCarrello` è pura, testabile, riutilizzabile.
+Se cambi la struttura HTML, tocchi solo `leggiProdottiDalDOM`.
+Se vuoi calcolare il totale partendo da dati che arrivano dal server (non dal DOM), usi direttamente `calcolaTotaleCarrello`.
+
+-----
+
+#### Perché Questo Schema Conviene
+
+Le ragioni concrete si vedono quando il progetto cresce:
+
+- **Test**: il core si testa in millisecondi con strumenti leggeri.
+La UI richiede test più vicini al browser, ma c'è molta meno logica da verificare lì.
+- **Riusabilità**: le funzioni pure le riusi ovunque.
+La logica del carrello può vivere sullo stesso codice che gira sul server, sul browser, in un test.
+- **Refactoring**: cambiare la UI non rompe il core.
+Cambiare il core, con test che continuano a passare, è più sicuro.
+- **Debug**: se un test del core passa ma l'app non funziona, il problema è nello strato UI.
+Hai isolato dove cercare.
+
+React, Vue e i framework moderni spingono in questa direzione per progettazione: componenti che ricevono dati, producono interfaccia e lasciano al framework il compito di aggiornare il DOM.
+Capire il principio ora, in JavaScript puro, ti prepara a usare meglio quelle librerie e/o framework dopo.
+
+**Regola:** tieni la logica pura in file separati dal codice che tocca il DOM.
+Il core prende dati, restituisce dati, non conosce il browser.
+La UI legge il DOM, chiama il core, scrive il DOM.
+Questa separazione è uno degli investimenti più utili che puoi fare in un progetto JavaScript.
+
+<br />
+<br />
+<br />
+<br />
+
+---
+
+### Riepilogo (OOP e Moduli in Sintesi)
+
+| Concetto | Regola chiave | Trappola comune |
+|----------|---------------|-----------------|
+| `class` | Stampo per creare oggetti, sintassi più comoda sopra i prototipi | Pensare che sia come Java (overloading non esiste) |
+| `new` | Crea istanza, lega prototipo, esegue constructor | Chiamare una classe come una funzione normale |
+| `this` | Si riferisce all'istanza su cui il metodo è chiamato | Perderlo quando passi metodi come callback |
+| `addEventListener` + classe | Usa wrapper arrow o `.bind(this)` | `this` diventa il bottone, non l'istanza |
+| Class field | Proprietà con valore iniziale comune | Credere che l'array sia condiviso tra istanze |
+| Metodo classico | Vive nel prototype, una copia condivisa | Ridefinirlo come arrow senza motivo |
+| `static` | Metodo della classe, non dell'istanza | Chiamarlo su un'istanza invece che sulla classe |
+| Campi `#` privati | Privati davvero, non solo convenzione | Confondere con la convenzione `_` |
+| `instanceof` | Verifica appartenenza a classe o sottoclasse | Usarlo dove basta `typeof` |
+| `extends` | Ereditare proprietà e metodi | Non chiamare `super()` nel constructor |
+| `super()` | Obbligatorio prima di `this` nel constructor figlio | ReferenceError se lo ometti |
+| `super.metodo()` | Chiama la versione del genitore nell'override | Dimenticarlo e duplicare logica |
+| `get` / `set` | Proprietà derivate e validazione trasparente | Wrappare proprietà semplici senza motivo |
+| Named export | Più cose dal file, nomi precisi | Rinominare al volo senza `as` |
+| Default export | Una sola entità principale per file | Averne più di uno |
+| `type="module"` | Scope proprio, defer automatico, strict | Aprire con `file://` e incappare in CORS |
+| Funzioni pure | Input -> output, zero effetti collaterali | Mescolarle con codice DOM |
+| Core / UI | Separa logica pura da manipolazione DOM | Mettere tutto in un solo file |
