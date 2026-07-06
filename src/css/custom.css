@@ -57,33 +57,35 @@ pre,
     color-scheme: light; /* After testing on Samsung Internet as well, I added this line to prevent Samsung from applying strange filters, because it was turning the background into a dark red (wine color) */
 
     /* Color Palette (Coffee & Sand) */
-    --ifm-color-primary: #614a33;
-    --ifm-color-primary-dark: #7d5f40;
-    --ifm-color-primary-darker: #76593c;
-    --ifm-color-primary-darkest: #614a32;
-    --ifm-color-primary-light: #a68563;
-    --ifm-color-primary-lighter: #b09170;
-    --ifm-color-primary-lightest: #cfb89e;
+    --ifm-color-primary: #6f5740;
+    --ifm-color-primary-dark: #644e3a;
+    --ifm-color-primary-darker: #5e4a36;
+    --ifm-color-primary-darkest: #4e3d2d;
+    --ifm-color-primary-light: #7a6046;
+    --ifm-color-primary-lighter: #80644a;
+    --ifm-color-primary-lightest: #907153;
+    --accent-hover: #644e3a;
+    --accent-active: #5e4a36;
 
     /* Base UI & Fonts */
     --ifm-font-family-base: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
     --ifm-global-radius: 20px;
 
     /* Layout Backgrounds & Borders */
-    --frame-background: #9B795A;
-    --ifm-background-color: #E4D6C9;
-    --card-border-color: #6b6053;
+    --frame-background: #EAE8E7;
+    --ifm-background-color: #E6E4E2;
+    --card-border-color: rgba(0, 0, 0, 0.11);
     --ifm-color-content: #000000;
-    --ifm-navbar-background-color: #E4D6C9;
+    --ifm-navbar-background-color: var(--ifm-background-color);
     --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.18);
-    --button-border-color: #322d26;
-    --button-border-color-hover: #ae9a83;
+    --button-border-color: rgba(0, 0, 0, 0.34);
 
     /* Sidebar & Navigation */
-    --sidebar-separator: rgba(15, 33, 41, 0.14);
+    --sidebar-separator: rgba(0, 0, 0, 0.11);
     --ifm-toc-border-color: var(--sidebar-separator);
-    --ifm-menu-color: #574c45;       /* Inactive links (contrast fix) */
-    --ifm-toc-link-color: #574c45;   /* TOC Inactive links */
+    --ifm-hr-background-color: var(--sidebar-separator);
+    --ifm-menu-color: #191919;       /* Inactive links (contrast fix) */
+    --ifm-toc-link-color: #191919;   /* TOC Inactive links */
 
     /* Data Tables */
     --ifm-table-border-color: #a1907b; 
@@ -91,13 +93,13 @@ pre,
 
     /* Breadcrumbs (Navigation Path) */
     --ifm-breadcrumb-item-background-active: rgba(0, 0, 0, 0.06);
-    --ifm-breadcrumb-color-active: var(--ifm-color-primary-darkest);
+    --ifm-breadcrumb-color-active: var(--ifm-color-primary);
 
     /* Search Bar (Light Mode) */
-    --search-background: #d9ccbe;
-    --search-text: #423223;
-    --search-border-color: rgba(97, 74, 51, 0.3);
-    --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23614a33" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
+    --search-background: var(--frame-background);
+    --search-text: #3a3a3a;
+    --search-border-color: rgba(0, 0, 0, 0.34);
+    --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233a3a3a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
     
     /* Syntax Highlighting (Light Mode specific tokens) */
     --code-token-cyan-fix: #005a75; /* Dark Petrol (replaces unreadable Cyan) */
@@ -112,7 +114,7 @@ pre,
     */
     --caption-text-color: #574c45;                              /* italic figcaption, 5.84:1 */
     --callout-accent: #8d0a0a;                                  /* warning red for h4 + border, 5.94:1 on callout bg */
-    --ifm-blockquote-border-color: var(--card-border-color);    /* 4.26:1, reuses card border hue */
+    --ifm-blockquote-border-color: #6b6053;    /* warm grey, kept visible for the quote bar */
 }
 
 
@@ -124,39 +126,41 @@ pre,
 
     /* Color Palette (Warm Night) */
     --ifm-color-primary: #D4A373;
-    --ifm-color-primary-dark: #be8e5e;
-    --ifm-color-primary-darker: #b38556;
-    --ifm-color-primary-darkest: #946d45;
-    --ifm-color-primary-light: #decba4;
-    --ifm-color-primary-lighter: #eaddc5;
-    --ifm-color-primary-lightest: #f5efe2;
+    --ifm-color-primary-dark: #bf9368;
+    --ifm-color-primary-darker: #b48b62;
+    --ifm-color-primary-darkest: #947251;
+    --ifm-color-primary-light: #e9b37f;
+    --ifm-color-primary-lighter: #f4bb84;
+    --ifm-color-primary-lightest: #ffd496;
+    --accent-hover: #deb48a;
+    --accent-active: #ba8d5e;
+    --ifm-link-hover-color: var(--accent-hover);
 
     /* Layout Backgrounds */
-    --frame-background: #211411;
-    --ifm-background-color: #322620;
-    --card-border-color: #574C43;
+    --frame-background: #191919;
+    --ifm-background-color: #1C1C1C;
+    --card-border-color: rgba(255, 255, 255, 0.08);
     --card-border-color-hover: #998874;
     --ifm-color-content: #FFFFFF;
-    --ifm-navbar-background-color: #322620;
+    --ifm-navbar-background-color: var(--ifm-background-color);
     --ifm-navbar-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.35); /* Dark Mode adjustment (the black shadow is less visible, so the opacity has been increased) */
-    --button-border-color: #a7805a;
-    --button-border-color-hover: #716454;
+    --button-border-color: rgba(255, 255, 255, 0.34);
 
     /* Sidebar & Navigation */
-    --sidebar-separator: rgba(90, 124, 155, 0.35);
+    --sidebar-separator: rgba(255, 255, 255, 0.08);
     --ifm-toc-border-color: var(--sidebar-separator);
-    --ifm-menu-color: #b9a193;
-    --ifm-toc-link-color: #b9a193;
+    --ifm-menu-color: #E6E4E2;
+    --ifm-toc-link-color: #E6E4E2;
 
     /* Breadcrumbs */
     --ifm-breadcrumb-item-background-active: rgba(255, 255, 255, 0.1);
-    --ifm-breadcrumb-color-active: var(--ifm-color-primary-lightest);
+    --ifm-breadcrumb-color-active: var(--ifm-color-primary);
 
     /* Search Bar (Dark Mode) */
-    --search-background: #322720;
-    --search-text: #ffeac1;
-    --search-border-color: rgba(222, 203, 164, 0.2);
-    --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23decba4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
+    --search-background: var(--frame-background);
+    --search-text: #d4d4d4;
+    --search-border-color: rgba(255, 255, 255, 0.34);
+    --search-icon-url: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23d4d4d4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="23" y1="23" x2="16.65" y2="16.65"></line></svg>');
     
     /* Syntax Highlighting (Dark Mode specific tokens) */
     --code-token-keyword-fix: #d4aaff; /* Light Lavender (for contrast) */
@@ -212,16 +216,7 @@ body {
     border-radius: var(--ifm-global-radius);
     border: 1px solid var(--card-border-color);
     width: auto;
-
-    /* NAVBAR 3D ELEVATION FIX */
-    /*
-     * I added a very soft and diffused shadow to give a subtle sense of floating.
-     * I focused on lightness, as in the rest of the CSS, in order to avoid putting
-     * unnecessary load on the GPU.
-     * The effect is intentionally almost imperceptible on the main screen, but becomes
-     * more noticeable as you scroll down.
-    */
-    box-shadow: var(--ifm-navbar-shadow);
+    box-shadow: none;
 }
 
 .navbar__title {
@@ -244,12 +239,38 @@ body {
     border-top: none;
 }
 
+.footer .footer__title,
+.footer .footer__link-item,
+.footer .footer__copyright {
+    color: #191919;
+}
+
+[data-theme='dark'] .footer .footer__title,
+[data-theme='dark'] .footer .footer__link-item,
+[data-theme='dark'] .footer .footer__copyright {
+    color: #E6E4E2;
+}
+
+.article-meta {
+    margin: 0.5rem 0 2rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+[data-theme='dark'] .article-meta {
+    color: var(--ifm-color-emphasis-600);
+}
+
 .pagination-nav__link {
     border: 1px solid var(--button-border-color);
 }
 
 .pagination-nav__link:hover {
-    border-color: var(--button-border-color-hover);
+    border-color: var(--accent-hover, var(--ifm-color-primary));
+}
+
+.pagination-nav__link:active {
+    border-color: var(--accent-active, var(--ifm-color-primary));
 }
 
 /* COMPONENTS: Search Bar */
@@ -257,14 +278,15 @@ body {
 .navbar__search-input {
     background-color: var(--search-background) !important;
     color: var(--search-text) !important;
-    border: 1.75px solid var(--search-border-color) !important;
+    border: 1px solid var(--search-border-color) !important;
     border-radius: var(--ifm-global-radius) !important;
     transition: border-color 0.25s ease;
     background-image: var(--search-icon-url) !important; 
 }
 
+.navbar__search-input:hover,
 .navbar__search-input:focus {
-    border-color: var(--ifm-color-primary) !important;
+    border-color: var(--accent-hover, var(--ifm-color-primary)) !important;
 }
 
 /* Placeholder styling */
@@ -281,7 +303,7 @@ body {
 }
 
 .menu__list-item {
-    border-bottom: 2px solid var(--sidebar-separator);
+    border-bottom: 1px solid var(--sidebar-separator);
     margin-bottom: 4px;
     padding-bottom: 2.5px;
 }
@@ -329,7 +351,7 @@ body {
 
 /* Exception for Vademecum: Keep the separator line visible */
 .menu__list > .theme-doc-sidebar-item-category-level-1:last-child {
-    border-bottom: 2px solid var(--sidebar-separator);
+    border-bottom: 1px solid var(--sidebar-separator);
     padding-bottom: 4px;
     margin-bottom: 0;
 }
@@ -370,7 +392,7 @@ aside[class^='theme-doc-sidebar-container'] {
 
 .table-of-contents__link--active {
     font-weight: 750;
-    color: var(--ifm-color-primary);
+    color: var(--ifm-breadcrumb-color-active);
 }
 
 /* Code Block Highlighting */
