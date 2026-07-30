@@ -7,8 +7,9 @@ export default function Home() {
   const {i18n, siteConfig} = useDocusaurusContext();
   
   const isItalian = i18n.currentLocale === 'it';
-  
-  const redirectTarget = isItalian ? '/it/docs/featured/veil' : '/docs/featured/veil';
+  const {mainArticlePath} = siteConfig.customFields;
+  const localePrefix = isItalian ? '/it' : '';
+  const redirectTarget = `${localePrefix}${mainArticlePath}`;
 
   const seoTitle = 'UX Engineer Log | Simone Amico';
   const seoDescription = isItalian 

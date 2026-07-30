@@ -1,8 +1,10 @@
 import {themes as prismThemes} from 'prism-react-renderer';
+import siteContent from './site-content.cjs';
 
 const config = {
   title: 'UX Engineer Log',
   tagline: 'From Factory to UX Engineer',
+  customFields: siteContent,
   favicon: 'img/favicon.svg',
 
   future: {
@@ -120,7 +122,7 @@ const config = {
             items: [
               {
                 label: 'Featured',
-                to: '/docs/featured/veil',
+                to: siteContent.mainArticlePath,
               },
               {
                 label: 'Path',
