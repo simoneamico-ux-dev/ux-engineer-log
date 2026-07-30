@@ -41,6 +41,7 @@ function getLocaleInfo() {
     const path = window.location.pathname;
     const isItalian = path === '/it' || path.startsWith('/it/');
     return {
+        targetLocale: isItalian ? 'en' : 'it',
         targetLabel: isItalian ? 'EN' : 'IT',
         targetAriaLabel: isItalian ? 'Switch to English' : 'Passa all\'italiano',
         targetPath: isItalian
@@ -68,9 +69,10 @@ function ensureMobileLocaleToggle() {
         }
     }
 
-    const { targetLabel, targetAriaLabel, targetPath } = getLocaleInfo();
+    const { targetLocale, targetLabel, targetAriaLabel, targetPath } = getLocaleInfo();
     toggle.setAttribute('href', targetPath);
     toggle.setAttribute('aria-label', targetAriaLabel);
+    toggle.dataset.locale = targetLocale;
     toggle.textContent = targetLabel;
 
     return true;

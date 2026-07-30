@@ -65,6 +65,7 @@ const config = {
   clientModules: [
     require.resolve('./src/clientModules/focus-mode.js'),
     require.resolve('./src/clientModules/search-input-attrs.js'),
+    require.resolve('./src/clientModules/locale-preference.js'),
     require.resolve('./src/clientModules/mobile-locale-toggle.js'),
   ],
 
